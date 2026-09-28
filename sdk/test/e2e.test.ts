@@ -15,7 +15,7 @@ import { ClientService, EventType } from "../src/gen/capstan/v1/capstan_pb.ts";
 
 const enabled = process.env.CAPSTAN_E2E === "1";
 const root = fileURLToPath(new URL("../..", import.meta.url));
-const port = Number(process.env.CAPSTAN_E2E_PORT ?? 7299);
+const port = Number(process.env.CAPSTAN_E2E_PORT ?? 7609);
 const address = `http://127.0.0.1:${port}`;
 const apiKey = `cap_e2e_${randomBytes(16).toString("hex")}`;
 const adminUrl = process.env.CAPSTAN_TEST_DATABASE_URL ?? "postgres://capstan:capstan@127.0.0.1:55432/postgres?sslmode=disable";

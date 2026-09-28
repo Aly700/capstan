@@ -13,7 +13,14 @@ async function worker(env, method, body = {}, address = env.address) {
   if (!response.ok) { const error = new Error(value.message); error.code = value.code; throw error; }
   return value;
 }
-const poll = (env, queue = env.queue) => worker(env, "PollWorkflowTask", { taskQueue: queue, identity: "audit" });
+const poll = (env, queue = env.queue) => until("workflow task becomes claimable", async () => {
+  const task = await worker(env, "PollWorkflowTask", { taskQueue: queue, identity: "audit" });
+  return task.taskToken ? task : undefined;
+});
+const pollActivity = (env) => until("activity task becomes claimable", async () => {
+  const task = await worker(env, "PollActivityTask", { taskQueue: env.queue });
+  return task.taskToken ? task : undefined;
+});
 const complete = (env, task, commands = []) => worker(env, "CompleteWorkflowTask", { taskToken: task.taskToken, commands });
 const timer = (seq, fireAfter = "0.15s") => ({ startTimer: { seq, fireAfter } });
 const finish = { completeRun: { result: payload("done") } };
@@ -22,23 +29,23 @@ const finish = { completeRun: { result: payload("done") } };
 describe.skipIf(!enabled)("independent audit on real server processes", () => {
   it("rejects expired/duplicate completions and retains a keyed effect across a server kill", async () => {
     await managed(new Evidence("audit_recovery", 7601, { databasePrefix: "capstan_audit" }), async (env) => {
-      await env.rpc("StartRun", { runId: "effect", workflowType: "manual", taskQueue: env.queue, taskTimeout: "0.2s" });
+      await env.rpc("StartRun", { runId: "effect", workflowType: "manual", taskQueue: env.queue, taskTimeout: "1s" });
       const expiredWorkflow = await poll(env);
-      await delay(250);
+      await delay(1100);
       await expect(complete(env, expiredWorkflow, [finish])).rejects.toMatchObject({ code: "failed_precondition" });
       const retried = await poll(env);
       expect(Number(retried.attempt)).toBeGreaterThan(1);
-      await complete(env, retried, [{ scheduleActivity: { seq: "1", activityType: "effect", startToCloseTimeout: "0.3s", retryPolicy: { initialInterval: "0.1s", maximumAttempts: 5 } } }]);
-      const first = await worker(env, "PollActivityTask", { taskQueue: env.queue });
+      await complete(env, retried, [{ scheduleActivity: { seq: "1", activityType: "effect", startToCloseTimeout: "1s", retryPolicy: { initialInterval: "0.1s", maximumAttempts: 5 } } }]);
+      const first = await pollActivity(env);
       env.sql("create table audit_effect (key text primary key)");
       const apply = (key) => { expect(key).toBe("effect/1"); env.sql("insert into audit_effect values ('effect/1') on conflict do nothing"); };
       apply(first.idempotencyKey);
       // The destination committed; the process dies before CompleteActivityTask.
       await env.stop(env.server, "SIGKILL");
-      await delay(350);
+      await delay(1100);
       await env.startServer();
       await expect(worker(env, "CompleteActivityTask", { taskToken: first.taskToken })).rejects.toMatchObject({ code: "failed_precondition" });
-      const second = await worker(env, "PollActivityTask", { taskQueue: env.queue });
+      const second = await pollActivity(env);
       expect(second.idempotencyKey).toBe(first.idempotencyKey);
       apply(second.idempotencyKey);
       const outcomes = await Promise.allSettled([1, 2].map(() => worker(env, "CompleteActivityTask", { taskToken: second.taskToken, result: payload("applied") })));
