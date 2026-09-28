@@ -156,6 +156,22 @@ describe("capstan.model accounting and provider boundary", () => {
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
     expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 0n, outputTokens: 0n, errorCode: "ModelTimeoutUsageUnknown", usageUnknown: true });
   });
+  it.each([
+    {},
+    { input_tokens: 20 },
+    { input_tokens: -1, output_tokens: 9 },
+    { input_tokens: NaN, output_tokens: 9 },
+    { input_tokens: 20, output_tokens: 9, cache_read_input_tokens: "invalid" },
+  ])("malformed timeout usage stays charged at the reservation: %j", async (usage) => {
+    const s = setup(async () => { throw Object.assign(new Anthropic.APIConnectionTimeoutError(), { usage }); });
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: true, errorCode: "ModelTimeoutUsageUnknown" });
+  });
+  it.each([undefined, {}, { input_tokens: 11, output_tokens: -1 }])("missing or malformed successful usage fails closed: %j", async (usage) => {
+    const s = setup(async () => ({ ...response(), usage }) as unknown as Message);
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelUsageInvalid", nonRetryable: true });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: true, errorCode: "ModelUsageInvalid" });
+  });
   it("a reported zero-usage timeout is known usage", async () => {
     const s = setup(async () => { throw Object.assign(new Anthropic.APIConnectionTimeoutError(), { usage: { input_tokens: 0, output_tokens: 0 } }); });
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
