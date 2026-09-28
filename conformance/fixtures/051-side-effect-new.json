@@ -1,0 +1,58 @@
+{
+  "name": "side effect new",
+  "workflow": "newSideEffect",
+  "description": "A newly executed side effect records its JSON value once and completes with that same value.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "newSideEffect",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "recordMarker": {
+          "seq": "1",
+          "name": "side_effect",
+          "details": {
+            "contentType": "application/json",
+            "data": "eyJzYXZlZCI6N30="
+          }
+        }
+      },
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "eyJzYXZlZCI6N30="
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "name": "cancel pending sleep",
+  "workflow": "sleeping",
+  "description": "A cancellation request rejects sleep with CancelledFailure; an uncaught cancellation emits CancelRun.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "sleeping",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_TIMER_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "timerStarted": {
+        "seq": "1",
+        "fireAfter": "1s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_RUN_CANCEL_REQUESTED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "runCancelRequested": {
+        "reason": "stop",
+        "identity": "owner"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskStarted": {
+        "scheduledEventId": "7",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "cancelRun": {}
+      }
+    ]
+  }
+}
