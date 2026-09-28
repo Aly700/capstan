@@ -4,10 +4,13 @@ import (
 	"connectrpc.com/connect"
 	"context"
 	v1 "github.com/Aly700/capstan/gen/capstan/v1"
+	"github.com/Aly700/capstan/internal/store"
 )
 
 func (s *Server) PollWorkflowTask(ctx context.Context, req *connect.Request[v1.PollWorkflowTaskRequest]) (*connect.Response[v1.PollWorkflowTaskResponse], error) {
-	resp, _, err := s.api.PollWorkflowTask(ctx, req.Msg)
+	resp, err := pollTask(ctx, s, store.TaskWorkflow, req.Msg.TaskQueue, func(ctx context.Context) (*v1.PollWorkflowTaskResponse, bool, error) {
+		return s.api.PollWorkflowTask(ctx, req.Msg)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +40,9 @@ func (s *Server) FailWorkflowTask(ctx context.Context, req *connect.Request[v1.F
 	return connect.NewResponse(resp), nil
 }
 func (s *Server) PollActivityTask(ctx context.Context, req *connect.Request[v1.PollActivityTaskRequest]) (*connect.Response[v1.PollActivityTaskResponse], error) {
-	resp, _, err := s.api.PollActivityTask(ctx, req.Msg)
+	resp, err := pollTask(ctx, s, store.TaskActivity, req.Msg.TaskQueue, func(ctx context.Context) (*v1.PollActivityTaskResponse, bool, error) {
+		return s.api.PollActivityTask(ctx, req.Msg)
+	})
 	if err != nil {
 		return nil, err
 	}
