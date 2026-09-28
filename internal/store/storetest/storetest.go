@@ -52,6 +52,7 @@ func Run(t *testing.T, open func(t *testing.T) store.Store) {
 		{"Ledger/LockBudgetSerialises", ledgerLock},
 		{"Tx/RollbackDiscardsEverything", txRollback},
 		{"Tx/ErrorIsReturnedUnchanged", txErrors},
+		{"Tx/HandledSentinelsPermitCommit", txHandled},
 		{"Notify/DeliveredOnCommitOnly", notifyCommit},
 		{"Notify/CoalescedNonBlocking", notifyCoalesced},
 		{"Notify/CancelStopsDelivery", notifyCancel},

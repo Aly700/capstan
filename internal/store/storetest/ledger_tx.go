@@ -42,6 +42,11 @@ func ledgerSpent(t *testing.T, s store.Store) {
 			return err
 		}
 		equal(t, v, float64(0))
+		v, err = tx.SpentSince(time.Time{})
+		if err != nil {
+			return err
+		}
+		equal(t, v, 5.125)
 		return nil
 	})
 }
@@ -258,4 +263,36 @@ func txErrors(t *testing.T, s store.Store) {
 			isError(t, got, sentinel)
 		}
 	}
+}
+
+func txHandled(t *testing.T, s store.Store) {
+	seed(t, s, "r")
+	timer := &store.Timer{RunID: "r", Seq: 1, DueAt: epoch}
+	a := sampleApproval("r", "a")
+	mustTx(t, s, func(tx store.Tx) error {
+		if err := tx.InsertTimer(timer); err != nil {
+			return err
+		}
+		if err := tx.InsertApproval(a); err != nil {
+			return err
+		}
+		if err := tx.RecordSignalRequest("r", "request"); err != nil {
+			return err
+		}
+		return tx.AppendEvents("r", []*capstanv1.HistoryEvent{event(1)})
+	})
+	mustTx(t, s, func(tx store.Tx) error {
+		for _, f := range []func() error{func() error { return tx.InsertRun(sampleRun("r")) }, func() error { return tx.InsertTimer(timer) }, func() error { return tx.InsertApproval(a) }, func() error { return tx.RecordSignalRequest("r", "request") }} {
+			isError(t, f(), store.ErrAlreadyExists)
+		}
+		isError(t, tx.AppendEvents("r", []*capstanv1.HistoryEvent{event(2), event(4)}), store.ErrConflict)
+		_, err := tx.GetRun("missing", false)
+		isError(t, err, store.ErrNotFound)
+		// The engine handles duplicate signals and starts as successful requests.
+		if err := tx.AppendEvents("r", []*capstanv1.HistoryEvent{event(2)}); err != nil {
+			return err
+		}
+		return tx.InsertRun(sampleRun("after-errors"))
+	})
+	mustTx(t, s, func(tx store.Tx) error { _, err := tx.GetRun("after-errors", false); return err })
 }

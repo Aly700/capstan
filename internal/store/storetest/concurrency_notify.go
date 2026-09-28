@@ -187,9 +187,10 @@ func notifyCoalesced(t *testing.T, s store.Store) {
 		}))
 		awaitWake(t, fast)
 	}
-	// Fast receipt is a barrier: a slow subscriber cannot stall later notifications.
+	// Earlier fanouts have filled the slow subscriber's slot. The latest fast
+	// receipt need not mean that its fanout has finished visiting every subscriber.
+	equal(t, len(slow), 1)
 	awaitWake(t, slow)
-	noWake(t, slow)
 }
 
 func notifyCancel(t *testing.T, s store.Store) {
