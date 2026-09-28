@@ -72,7 +72,10 @@ func TestActivityRoundTrip(t *testing.T) {
 	}
 	mustFinishActivity(t, e, a.TaskToken)
 	h := history(t, e, "activity")
-	wantTypes(t, h[len(h)-2:], v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 	w := mustPoll(t, e)
 	completed := w.History[len(w.History)-3].GetActivityCompleted()
 	if completed == nil || completed.Attempt != 1 || completed.Seq != 1 || string(completed.Result.Data) != "done" {
@@ -104,7 +107,13 @@ func TestExternalEventsDuringInFlightTaskFlushAfterCommands(t *testing.T) {
 	}
 	mustComplete(t, e, w.TaskToken, activityCmd(3))
 	h := history(t, e, "mixed")
-	wantTypes(t, h[len(h)-6:], v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED, v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED, v1.EventType_EVENT_TYPE_TIMER_FIRED, v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED, v1.EventType_EVENT_TYPE_TIMER_STARTED,
+		v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED, v1.EventType_EVENT_TYPE_TIMER_FIRED, v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED,
+		v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 	mustPoll(t, e)
 }
 
@@ -130,15 +139,10 @@ func TestLateActivityCompletionIsStale(t *testing.T) {
 		t.Fatal("late result changed history")
 	}
 	mustFinishActivity(t, e, b.TaskToken)
-	n := 0
-	for _, kind := range history(t, e, "late") {
-		if kind == v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED {
-			n++
-		}
-	}
-	if n != 1 {
-		t.Fatalf("completed events=%d", n)
-	}
+	wantTypes(t, history(t, e, "late"),
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 }
 
 func TestCompletionAfterRunClosedIsDropped(t *testing.T) {
@@ -226,7 +230,12 @@ func TestActivityCancelUnstartedIsImmediate(t *testing.T) {
 	w := mustPoll(t, e)
 	mustComplete(t, e, w.TaskToken, &v1.Command{Attributes: &v1.Command_RequestActivityCancel{RequestActivityCancel: &v1.RequestActivityCancelCommand{Seq: 1}}})
 	h := history(t, e, "cancel-idle")
-	wantTypes(t, h[len(h)-4:], v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_CANCEL_REQUESTED, v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_CANCEL_REQUESTED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 	if _, found, err := e.PollActivityTask(context.Background(), &v1.PollActivityTaskRequest{TaskQueue: "q"}); found || err != nil {
 		t.Fatalf("cancelled task found=%v err=%v", found, err)
 	}
@@ -249,7 +258,12 @@ func TestActivityCancelStartedViaHeartbeat(t *testing.T) {
 		t.Fatal(err)
 	}
 	h := history(t, e, "cancel-active")
-	wantTypes(t, h[len(h)-2:], v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_CANCEL_REQUESTED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 }
 
 func TestHeartbeatExtendsDeadline(t *testing.T) {

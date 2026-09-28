@@ -37,7 +37,10 @@ func TestActivityRetryPolicy(t *testing.T) {
 				t.Fatal(err)
 			}
 			h := history(t, e, "no-retry")
-			wantTypes(t, h[len(h)-2:], v1.EventType_EVENT_TYPE_ACTIVITY_FAILED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+			wantTypes(t, h,
+				v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+				v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+				v1.EventType_EVENT_TYPE_ACTIVITY_FAILED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 		})
 	}
 	t.Run("backoff-and-cap", func(t *testing.T) {
@@ -83,7 +86,10 @@ func TestConfiguredDefaultActivityRetry(t *testing.T) {
 		t.Fatal(err)
 	}
 	h := history(t, e, "configured-retry")
-	wantTypes(t, h[len(h)-2:], v1.EventType_EVENT_TYPE_ACTIVITY_FAILED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_FAILED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 }
 
 func TestRetryDelayArithmetic(t *testing.T) {

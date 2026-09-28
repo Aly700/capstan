@@ -18,7 +18,9 @@ func TestWorkflowTaskLeaseExpiry(t *testing.T) {
 		t.Fatalf("due: %d %v", n, err)
 	}
 	h := history(t, e, "wf-expiry")
-	wantTypes(t, h[len(h)-2:], v1.EventType_EVENT_TYPE_TASK_TIMED_OUT, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
+	wantTypes(t, h,
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_TIMED_OUT, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 	if _, found, err := e.PollWorkflowTask(context.Background(), &v1.PollWorkflowTaskRequest{TaskQueue: "q"}); err != nil || found {
 		t.Fatalf("backoff found=%v err=%v", found, err)
 	}
@@ -42,11 +44,9 @@ func TestActivityStartToCloseRetries(t *testing.T) {
 	if n, err := e.ProcessDueTasks(context.Background(), 10); n != 1 || err != nil {
 		t.Fatalf("due: %d %v", n, err)
 	}
-	for _, k := range history(t, e, "stc-retry") {
-		if k == v1.EventType_EVENT_TYPE_ACTIVITY_TIMED_OUT {
-			t.Fatal("retry leaked into history")
-		}
-	}
+	wantTypes(t, history(t, e, "stc-retry"),
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED)
 	clock.Advance(time.Second)
 	b := mustActivity(t, e)
 	if b.Attempt != 2 || b.IdempotencyKey != a.IdempotencyKey {
@@ -56,6 +56,10 @@ func TestActivityStartToCloseRetries(t *testing.T) {
 
 func assertActivityTimeout(t *testing.T, e *Engine, id string, want v1.TimeoutType) {
 	t.Helper()
+	wantTypes(t, history(t, e, id),
+		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
+		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED,
+		v1.EventType_EVENT_TYPE_ACTIVITY_TIMED_OUT, v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
 	h, err := e.GetHistory(context.Background(), &v1.GetHistoryRequest{RunId: id})
 	if err != nil {
 		t.Fatal(err)
