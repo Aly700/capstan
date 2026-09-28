@@ -2,7 +2,6 @@
 package engine
 
 import (
-	"context"
 	"errors"
 	"maps"
 	"math"
@@ -45,21 +44,3 @@ func New(deps Deps, cfg Config) (*Engine, error) {
 }
 
 var _ API = (*Engine)(nil)
-
-var errNotImplemented = errors.New("engine: not implemented yet (engine lane)")
-
-func (e *Engine) ReserveAICall(ctx context.Context, req *capstanv1.ReserveAICallRequest) (*capstanv1.ReserveAICallResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) FinishAICall(ctx context.Context, req *capstanv1.FinishAICallRequest) (*capstanv1.FinishAICallResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) TimeoutRuns(ctx context.Context, limit int) (int, error) {
-	return 0, errNotImplemented
-}
-
-func (e *Engine) NextWakeup(ctx context.Context) (at time.Time, ok bool, err error) {
-	return time.Time{}, false, errNotImplemented
-}
