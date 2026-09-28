@@ -14,6 +14,16 @@ import (
 // Coroutines exist only during this call: none survives a returned command batch,
 // a failed replay, or a worker restart. The caller owns history and persists commands.
 func Replay(runID string, history []*v1.HistoryEvent, workflow Workflow) ([]*v1.Command, error) {
+	return ReplayWithOptions(runID, history, workflow, ReplayOptions{})
+}
+
+// ReplayOptions lets the fault scheduler interrupt new commands before they are
+// handed to the engine. Historical replay is never interrupted by this hook.
+type ReplayOptions struct {
+	BeforeCommand func(index int, command *v1.Command) error
+}
+
+func ReplayWithOptions(runID string, history []*v1.HistoryEvent, workflow Workflow, options ReplayOptions) ([]*v1.Command, error) {
 	if len(history) == 0 || history[0].GetRunStarted() == nil {
 		return nil, errors.New("history must begin with RunStarted")
 	}
@@ -29,6 +39,7 @@ func Replay(runID string, history []*v1.HistoryEvent, workflow Workflow) ([]*v1.
 		return nil, err
 	}
 	r := &runtime{runID: runID, stop: make(chan struct{}), yield: make(chan struct{}), pending: map[int64]*future{}, cancelledTimers: map[int64]bool{}, signals: map[string][]any{}, handlers: map[string]func(any){}, signalWaiters: map[string][]*future{}, patches: map[string]bool{}}
+	r.beforeCommand = options.BeforeCommand
 	defer r.shutdown()
 	var main *future
 	for _, a := range acts {
@@ -110,6 +121,7 @@ type runtime struct {
 	ready                                   []*fiber
 	fibers                                  []*fiber
 	stop, yield                             chan struct{}
+	beforeCommand                           func(int, *v1.Command) error
 }
 
 type stopped struct{}
@@ -246,6 +258,12 @@ func (r *runtime) emit(command *v1.Command) {
 		return
 	}
 	position := len(r.commands)
+	if r.activation.completed == nil && r.beforeCommand != nil {
+		if err := r.beforeCommand(position, command); err != nil {
+			r.fatal = err
+			return
+		}
+	}
 	r.commands = append(r.commands, command)
 	if r.activation.completed != nil {
 		var expected []*v1.HistoryEvent

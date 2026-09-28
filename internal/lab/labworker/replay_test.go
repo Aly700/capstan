@@ -263,3 +263,26 @@ func TestReplaySerializesDisposalDefers(t *testing.T) {
 		}
 	}
 }
+
+func TestReplayCanBeKilledBetweenCommandsAndRestarted(t *testing.T) {
+	killed := errors.New("worker killed")
+	workflow := func(wf *Context, _ any) (any, error) {
+		return wf.All(
+			func(child *Context) (any, error) { return child.Activity("one", 1) },
+			func(child *Context) (any, error) { return child.Activity("two", 2) },
+		)
+	}
+	_, err := ReplayWithOptions("kill", initial(t), workflow, ReplayOptions{BeforeCommand: func(index int, _ *v1.Command) error {
+		if index == 1 {
+			return killed
+		}
+		return nil
+	}})
+	if !errors.Is(err, killed) {
+		t.Fatalf("kill error=%v", err)
+	}
+	commands, err := Replay("kill", initial(t), workflow)
+	if err != nil || len(commands) != 2 {
+		t.Fatalf("restart: %v %v", commands, err)
+	}
+}
