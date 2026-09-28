@@ -222,7 +222,7 @@ func TestAwaitRunWaitsForClosureAndTimeoutKeepsLastRun(t *testing.T) {
 			synctest.Test(t, func(t *testing.T) {
 				calls := 0
 				cfg := testConfig()
-				cfg.PollTimeout = 600 * time.Millisecond
+				cfg.PollTimeout = 11 * time.Second
 				f := &fakeAPI{call: func(_ context.Context, name, _ string, req proto.Message) (proto.Message, bool, error) {
 					calls++
 					if name != "DescribeRun" || req.(*v1.DescribeRunRequest).RunId != "r" {
@@ -240,7 +240,7 @@ func TestAwaitRunWaitsForClosureAndTimeoutKeepsLastRun(t *testing.T) {
 					t.Fatal(err)
 				}
 				blocked := status == v1.RunStatus_RUN_STATUS_BLOCKED
-				wantWait := 250 * time.Millisecond
+				wantWait := 5 * time.Second
 				wantCalls := 2
 				if blocked {
 					wantWait = cfg.PollTimeout

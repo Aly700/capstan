@@ -21,6 +21,7 @@ import (
 // for polling-only backends; the periodic re-check still discovers tasks.
 type Notifier interface {
 	Subscribe(kind store.TaskKind, queue string) (<-chan struct{}, func())
+	SubscribeRun(runID string) (<-chan struct{}, func())
 }
 
 var _ Notifier = (store.Store)(nil)

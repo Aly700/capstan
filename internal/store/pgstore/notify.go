@@ -11,15 +11,31 @@ import (
 func topic(kind store.TaskKind, queue string) string { return kind.String() + ":" + queue }
 
 func (t *transaction) Notify(kind store.TaskKind, queue string) {
+	t.notify(topic(kind, queue))
+}
+
+func (t *transaction) NotifyRunClosed(runID string) {
+	// Run topics share the existing LISTEN connection and fanout path with task topics.
+	t.notify("run:" + runID)
+}
+
+func (t *transaction) notify(key string) {
 	if t.notifyErr != nil {
 		return
 	}
-	_, err := t.tx.Exec(t.ctx, `select pg_notify('capstan_tasks',$1)`, topic(kind, queue))
+	_, err := t.tx.Exec(t.ctx, `select pg_notify('capstan_tasks',$1)`, key)
 	t.notifyErr = dbError(err)
 }
 
 func (s *pgStore) Subscribe(kind store.TaskKind, queue string) (<-chan struct{}, func()) {
-	key := topic(kind, queue)
+	return s.subscribe(topic(kind, queue))
+}
+
+func (s *pgStore) SubscribeRun(runID string) (<-chan struct{}, func()) {
+	return s.subscribe("run:" + runID)
+}
+
+func (s *pgStore) subscribe(key string) (<-chan struct{}, func()) {
 	ch := make(chan struct{}, 1)
 	s.mu.Lock()
 	if s.closed {

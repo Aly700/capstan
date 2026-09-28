@@ -205,3 +205,19 @@ arguments recomputed by the current code. When the current code proposes differe
 arguments for a step the Gate has already decided, the workflow task fails as a history
 mismatch and the run blocks, naming the step. An approval therefore can never authorise
 arguments nobody saw. (Agent lane issue 4.)
+
+## D30 — 2026-09-28 — AwaitRun subscribes to committed run closure
+
+The lead authorises two additive store methods: `Store.SubscribeRun(runID string)
+(<-chan struct{}, func())` and `Tx.NotifyRunClosed(runID string)`. The engine's common
+close path schedules the notification in the closing transaction. Only commit delivers
+it; rollback is silent. Run notifications wake all subscribers for that run, coalesce
+without blocking the transaction, and cancellation is idempotent. Notifications are
+hints to re-read durable state, never a substitute for that state.
+
+AwaitRun subscribes before its first DescribeRun, then rechecks on notification or a
+five-second fallback, within the existing request/poll deadline. PostgreSQL multiplexes
+run and task topics over the store's single LISTEN connection; it never allocates a
+connection per waiter. Reconnection wakes subscribers to cover the notification gap.
+This replaces the 250 ms per-open-run observation poll; it changes neither run closure
+semantics nor the RPC contract. Wording is subject to the lead's review.
