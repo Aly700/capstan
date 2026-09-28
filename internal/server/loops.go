@@ -55,7 +55,7 @@ func (s *Server) runLoop(ctx context.Context, name string, work func(context.Con
 			return
 		}
 		if err != nil {
-			s.logger.ErrorContext(ctx, "background work failed", "loop", name, "error", err)
+			s.logger.ErrorContext(ctx, "background work failed", "loop", name, "error", s.cfg.Redact(err.Error()))
 			delay = jitter(backoff)
 			backoff = min(backoff*2, 5*time.Second)
 		} else {

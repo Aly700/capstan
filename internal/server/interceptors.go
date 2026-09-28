@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"connectrpc.com/connect"
@@ -52,7 +53,8 @@ func (s *Server) errors() connect.Interceptor {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
-			return resp, s.rpcError(ctx, req.Spec().Procedure, err)
+			_, key, _ := strings.Cut(req.Header().Get("Authorization"), " ")
+			return resp, s.rpcError(ctx, req.Spec().Procedure, err, key)
 		}
 	})
 }
