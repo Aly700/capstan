@@ -75,7 +75,9 @@ describe("capstan launcher commands", () => {
   it("replay exits 3 and names the first mismatch", async () => {
     const events = await history(); if (events[4]!.attributes.case === "activityScheduled") events[4]!.attributes.value.activityType = "changed";
     const result = await invoke(["replay", "r", "--workflows", workflows], { getHistory: () => ({ events }) });
-    expect(result.code).toBe(3); expect(result.stderr).toContain("event 5"); expect(result.stderr).toContain("changed");
+    expect(result.code).toBe(3);
+    expect(result.stderr).toContain("history mismatch at event 5: history has ActivityScheduled(seq=1, type=changed), code emitted ScheduleActivity(seq=1, type=double)");
+    expect(result.stderr).not.toMatch(/\$typeName|Buffer|\"data\"/);
   });
   it.each([[], ["unknown"], ["start", "wf", "r"], ["signal", "r", "go", "--input", "{"], ["list", "--status", "nonsense"], ["cancel", "r", "--wat"]])("invalid usage exits 1: %j", async (...args) => {
     const result = await invoke(args as string[]);

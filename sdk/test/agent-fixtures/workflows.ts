@@ -17,18 +17,30 @@ export async function plainModel() {
 export function toolStep() {
   return tool("fs.write", { path: "report.txt" }, { riskTier: "HIGH", approvalTimeout: "1h", startToCloseTimeout: "2m" });
 }
+export function changedToolArgs() {
+  return tool("fs.write", { path: "revised.txt" }, { riskTier: "HIGH", approvalTimeout: "1h", startToCloseTimeout: "2m" });
+}
+export function changedToolName() {
+  return tool("fs.delete", { path: "report.txt" }, { riskTier: "HIGH", approvalTimeout: "1h", startToCloseTimeout: "2m" });
+}
+export async function caughtChangedToolArgs() {
+  try { return await changedToolArgs(); } catch { return "caught"; }
+}
+export function reorderedToolArgs() {
+  return tool("fs.write", { path: "report.txt", config: { a: 1, z: ["é", { x: true, y: null }] } });
+}
 export async function plainTool() {
-  const decision = await activity<{ effect: string; decisionId: string; approvalId: string | null }>(
+  const decision = await activity<{ effect: string; decisionId: string; approvalId: string | null; arguments: unknown }>(
     "capstan.gate.decide", { toolName: "fs.write", arguments: { path: "report.txt" }, riskTier: "HIGH" }, { startToCloseTimeout: "30s" },
   );
   if (decision.effect === "DENY") return { allowed: false, reason: "denied", decisionId: decision.decisionId };
   let approvedBy: string | undefined;
   if (decision.effect === "REQUIRE_APPROVAL") {
-    const resolution = await approval({ source: "gate", approvalId: decision.approvalId!, gateDecisionId: decision.decisionId, tool: "fs.write", arguments: { path: "report.txt" }, timeout: "1h" });
+    const resolution = await approval({ source: "gate", approvalId: decision.approvalId!, gateDecisionId: decision.decisionId, tool: "fs.write", arguments: decision.arguments, timeout: "1h" });
     if (resolution.outcome !== "approved") return { allowed: false, reason: resolution.outcome === "denied" ? "rejected" : "expired", decisionId: decision.decisionId, resolver: resolution.resolver };
     approvedBy = resolution.resolver;
   }
-  const value = await activity("fs.write", { path: "report.txt" }, { startToCloseTimeout: "2m" });
+  const value = await activity("fs.write", decision.arguments, { startToCloseTimeout: "2m" });
   return { allowed: true, value, decisionId: decision.decisionId, ...(approvedBy === undefined ? {} : { approvedBy }) };
 }
 export function humanStep() { return human("Ship?", { options: ["ship", "hold"], timeout: "1h" }); }

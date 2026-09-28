@@ -7,7 +7,7 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const failure = (type: string, nonRetryable = true) => new ApplicationFailure(type, { type, nonRetryable });
 
 export function createGateActivity(options: GateOptions) {
-  return async (input: Proposal): Promise<{ effect: "ALLOW" | "DENY" | "REQUIRE_APPROVAL"; decisionId: string; approvalId: string | null }> => {
+  return async (input: Proposal): Promise<{ effect: "ALLOW" | "DENY" | "REQUIRE_APPROVAL"; decisionId: string; approvalId: string | null; arguments: unknown }> => {
     const { signal, idempotencyKey } = activityContext();
     let url: URL;
     try {
@@ -16,11 +16,16 @@ export function createGateActivity(options: GateOptions) {
       if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) throw new Error();
     } catch { throw failure("GateConfigurationInvalid"); }
     let response: Response;
+    let proposedArguments: unknown;
     try {
+      const body = JSON.stringify({ policyId: options.gatePolicyId, agentId: options.gateAgentId, toolName: input.toolName, arguments: input.arguments, riskTier: input.riskTier });
+      // Preserve the submitted JSON value, including its key order. Never trust
+      // an arguments field echoed by the Gate or reread a mutable input later.
+      proposedArguments = (JSON.parse(body) as { arguments?: unknown }).arguments;
       response = await fetch(url, {
         method: "POST", redirect: "error", signal,
         headers: { "Content-Type": "application/json", "X-API-Key": options.gateApiKey!, "Idempotency-Key": idempotencyKey },
-        body: JSON.stringify({ policyId: options.gatePolicyId, agentId: options.gateAgentId, toolName: input.toolName, arguments: input.arguments, riskTier: input.riskTier }),
+        body,
       });
     } catch { throw failure("GateUnavailable", false); }
     if (!response.ok) {
@@ -40,6 +45,6 @@ export function createGateActivity(options: GateOptions) {
         (value.approvalId != null && (typeof value.approvalId !== "string" || !uuid.test(value.approvalId))) ||
         (typeof value.approvalId === "string" && value.approvalId.includes(options.gateApiKey!)) ||
         (value.effect === "REQUIRE_APPROVAL" && !value.approvalId)) throw failure("GateResponseInvalid");
-    return { effect: value.effect as "ALLOW" | "DENY" | "REQUIRE_APPROVAL", decisionId: value.id, approvalId: (value.approvalId as string | null | undefined) ?? null };
+    return { effect: value.effect as "ALLOW" | "DENY" | "REQUIRE_APPROVAL", decisionId: value.id, approvalId: (value.approvalId as string | null | undefined) ?? null, arguments: proposedArguments };
   };
 }

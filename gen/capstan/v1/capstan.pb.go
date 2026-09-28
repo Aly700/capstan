@@ -4918,8 +4918,11 @@ type FinishAICallRequest struct {
 	CacheReadTokens  int64                  `protobuf:"varint,5,opt,name=cache_read_tokens,json=cacheReadTokens,proto3" json:"cache_read_tokens,omitempty"`
 	CacheWriteTokens int64                  `protobuf:"varint,6,opt,name=cache_write_tokens,json=cacheWriteTokens,proto3" json:"cache_write_tokens,omitempty"`
 	ErrorCode        string                 `protobuf:"bytes,7,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"` // fixed codes only, never raw provider text
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// A provider request was sent without usage returned. Failed calls charge at
+	// least their reservation estimate, even when all reported token counts are zero.
+	UsageUnknown  bool `protobuf:"varint,8,opt,name=usage_unknown,json=usageUnknown,proto3" json:"usage_unknown,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FinishAICallRequest) Reset() {
@@ -4999,6 +5002,13 @@ func (x *FinishAICallRequest) GetErrorCode() string {
 		return x.ErrorCode
 	}
 	return ""
+}
+
+func (x *FinishAICallRequest) GetUsageUnknown() bool {
+	if x != nil {
+		return x.UsageUnknown
+	}
+	return false
 }
 
 type FinishAICallResponse struct {
@@ -6573,7 +6583,7 @@ const file_capstan_v1_capstan_proto_rawDesc = "" +
 	"\x15ReserveAICallResponse\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\x12&\n" +
 	"\x0fspent_today_usd\x18\x02 \x01(\x01R\rspentTodayUsd\x12\x17\n" +
-	"\acap_usd\x18\x03 \x01(\x01R\x06capUsd\"\x8d\x02\n" +
+	"\acap_usd\x18\x03 \x01(\x01R\x06capUsd\"\xb2\x02\n" +
 	"\x13FinishAICallRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\x12\x0e\n" +
 	"\x02ok\x18\x02 \x01(\bR\x02ok\x12!\n" +
@@ -6582,7 +6592,8 @@ const file_capstan_v1_capstan_proto_rawDesc = "" +
 	"\x11cache_read_tokens\x18\x05 \x01(\x03R\x0fcacheReadTokens\x12,\n" +
 	"\x12cache_write_tokens\x18\x06 \x01(\x03R\x10cacheWriteTokens\x12\x1d\n" +
 	"\n" +
-	"error_code\x18\a \x01(\tR\terrorCode\"1\n" +
+	"error_code\x18\a \x01(\tR\terrorCode\x12#\n" +
+	"\rusage_unknown\x18\b \x01(\bR\fusageUnknown\"1\n" +
 	"\x14FinishAICallResponse\x12\x19\n" +
 	"\bcost_usd\x18\x01 \x01(\x01R\acostUsd\"\x91\x02\n" +
 	"\x0fStartRunRequest\x12\x15\n" +

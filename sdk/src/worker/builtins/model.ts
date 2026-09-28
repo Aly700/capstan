@@ -67,6 +67,8 @@ export function createModelActivity(options: {
       throw failure("ModelReservationFailed");
     }
     let usage = usageOf(undefined);
+    let providerRequestSent = false;
+    let usageReceived = false;
     let value: Omit<ModelResult, "costUsd"> | undefined;
     let failed: ApplicationFailure | undefined;
     let errorCode = "";
@@ -74,7 +76,10 @@ export function createModelActivity(options: {
       context.signal.throwIfAborted();
       // create + output_config retains usage even if parsing/validation fails.
       // messages.parse throws before returning that usage on malformed JSON.
-      const message = await (options.anthropic ?? providerClient()).messages.create(params, { signal: context.signal, maxRetries: 0 });
+      const provider = options.anthropic ?? providerClient();
+      providerRequestSent = true;
+      const message = await provider.messages.create(params, { signal: context.signal, maxRetries: 0 });
+      usageReceived = message.usage != null;
       usage = usageOf(message.usage);
       const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("");
       let json: unknown;
@@ -87,14 +92,14 @@ export function createModelActivity(options: {
       value = { text, ...(schema ? { json } : {}), model: message.model, ...usage, stopReason: message.stop_reason ?? "" };
     } catch (error) {
       const fields = error && typeof error === "object" ? error as { usage?: unknown; name?: unknown; type?: unknown; status?: unknown } : {};
-      if (fields.usage) usage = usageOf(fields.usage);
+      if (fields.usage != null) { usage = usageOf(fields.usage); usageReceived = true; }
       if (error instanceof ApplicationFailure) failed = error;
       else if (error instanceof Anthropic.APIConnectionTimeoutError || fields.name === "APIConnectionTimeoutError" || (context.signal.aborted && context.signal.reason?.type === "TimeoutFailure")) failed = failure("ModelTimeout");
       else if (context.signal.aborted) failed = failure("ModelCancelled", true);
       else failed = failure("ModelProviderError", typeof fields.status === "number" && fields.status >= 400 && fields.status < 500 && ![408, 409, 429].includes(fields.status));
-      errorCode = failed.type === "ModelTimeout" && Object.values(usage).every((n) => n === 0) ? "ModelTimeoutUsageUnknown" : failed.type;
+      errorCode = failed.type === "ModelTimeout" && providerRequestSent && !usageReceived ? "ModelTimeoutUsageUnknown" : failed.type;
     }
-    const finish = { reservationId, ok: failed === undefined, inputTokens: BigInt(usage.inputTokens), outputTokens: BigInt(usage.outputTokens), cacheReadTokens: BigInt(usage.cacheReadTokens), cacheWriteTokens: BigInt(usage.cacheWriteTokens), errorCode };
+    const finish = { reservationId, ok: failed === undefined, inputTokens: BigInt(usage.inputTokens), outputTokens: BigInt(usage.outputTokens), cacheReadTokens: BigInt(usage.cacheReadTokens), cacheWriteTokens: BigInt(usage.cacheWriteTokens), errorCode, usageUnknown: providerRequestSent && !usageReceived };
     let costUsd: number | undefined;
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
