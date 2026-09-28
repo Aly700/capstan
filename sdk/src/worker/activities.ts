@@ -4,6 +4,7 @@ import { Code, ConnectError } from "@connectrpc/connect";
 import type { PollActivityTaskResponse, WorkerService } from "../gen/capstan/v1/capstan_pb.ts";
 import { encode, decode } from "../internal/payload.ts";
 import { failureToProto } from "../internal/failure.ts";
+import type { Redactor } from "../internal/privacy.ts";
 import { ApplicationFailure, CancelledFailure, TimeoutFailure } from "../types.ts";
 import type { ActivityContext, WorkerOptions } from "./index.ts";
 import { report, untilAborted, type Logger } from "./pollers.ts";
@@ -20,6 +21,7 @@ export async function executeActivity(options: {
   identity: string;
   shutdown: AbortSignal;
   logger: Logger;
+  redact?: Redactor;
   /** Built-in model work honours abort itself, then finishes its reserved ledger row. */
   settleOnAbort?: boolean;
 }): Promise<void> {
@@ -102,6 +104,6 @@ export async function executeActivity(options: {
     shutdown.removeEventListener("abort", onShutdown);
   }
   if (shutdown.aborted) return;
-  if (failed) await report(() => client.failActivityTask({ taskToken: task.taskToken, failure: failureToProto(failure), identity: options.identity }, { signal: shutdown }), logger, "activity");
+  if (failed) await report(() => client.failActivityTask({ taskToken: task.taskToken, failure: failureToProto(failure, options.redact), identity: options.identity }, { signal: shutdown }), logger, "activity");
   else await report(() => client.completeActivityTask({ taskToken: task.taskToken, ...(result === undefined ? {} : { result: result as NonNullable<ReturnType<typeof encode>> }), identity: options.identity }, { signal: shutdown }), logger, "activity");
 }
