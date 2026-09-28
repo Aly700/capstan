@@ -60,6 +60,36 @@ describe.skipIf(!enabled)("independent audit on real server processes", () => {
     });
   }, 60000);
 
+  it("rolls back a workflow completion when the server dies inside its transaction", async () => {
+    await managed(new Evidence("audit_atomic", 7605, { databasePrefix: "capstan_audit" }), async (env) => {
+      await env.rpc("StartRun", { runId: "atomic", workflowType: "manual", taskQueue: env.queue, taskTimeout: "1s" });
+      const task = await poll(env);
+      const before = await env.history("atomic");
+      // This blocks InsertTask, after the command events were appended in the
+      // uncommitted completion transaction. It does not block history reads.
+      const lock = env.child("psql", [env.dsn, "-X", "-qc", "begin;lock table task in share mode;select pg_sleep(10);commit"], "atomic-lock");
+      await until("task table lock", () => Number(env.sql("select count(*) from pg_stat_activity where datname=current_database() and wait_event='PgSleep'", ["-Atq"]).trim()) === 1);
+      const command = { scheduleActivity: { seq: "1", activityType: "effect", startToCloseTimeout: "10s" } };
+      const request = complete(env, task, [command]).then(() => "committed", () => "disconnected");
+      await until("completion blocked inside InsertTask", () => Number(env.sql("select count(*) from pg_stat_activity where datname=current_database() and wait_event='relation' and query like 'insert into task%'", ["-Atq"]).trim()) === 1);
+      await env.stop(env.server, "SIGKILL");
+      expect(await request).toBe("disconnected");
+      expect(Number(env.sql("select count(*) from event where run_id='atomic'", ["-Atq"]).trim())).toBe(before.length);
+      expect(env.sql("select count(*) from task where run_id='atomic' and kind=2", ["-Atq"]).trim()).toBe("0");
+      await env.stop(lock);
+      await env.startServer();
+      await complete(env, await poll(env), [command]);
+      const activity = await pollActivity(env);
+      await worker(env, "CompleteActivityTask", { taskToken: activity.taskToken, result: payload("once") });
+      await complete(env, await poll(env), [finish]);
+      const after = await env.history("atomic");
+      expect(after.slice(0, before.length)).toEqual(before);
+      expect(after.filter((event) => event.activityScheduled)).toHaveLength(1);
+      expect(after.filter((event) => event.activityCompleted)).toHaveLength(1);
+      console.log("AUDIT atomic crash: SIGKILL during InsertTask rolled back uncommitted events; restart retained prefix and scheduled/completed activity once");
+    });
+  }, 60000);
+
   it("fires every timer once with two server processes and keeps terminal races atomic", async () => {
     await managed(new Evidence("audit_timers", 7602, { databasePrefix: "capstan_audit" }), async (env) => {
       const primary = env.address;
