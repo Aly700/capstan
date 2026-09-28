@@ -140,3 +140,30 @@ A continuation appends `~<k>` to its base id, and the schema caps run_id at 200 
 StartRun therefore accepts caller ids of 1–180 characters, leaving room for up to 19
 characters of suffix. (Server lane issue 1.) The engine's contract comment on `Deps` now
 states that GATE approvals resolve only through the Gate or by timeout (server issue 2).
+
+## D22 — 2026-09-28 — Money is rounded to the micro-dollar by the engine
+
+The schema stores USD as numeric(12,6), but the price formula can produce smaller amounts (one
+claude-sonnet-5 cache-read token costs $0.0000002). The engine rounds every USD amount it
+computes (reservation estimates, finished costs) to 6 decimal places, half away from zero,
+before it writes the amount or returns it. Both stores then hold the same value, and a repeated
+FinishAICall returns exactly what the first one returned. (Engine lane issue 4.)
+
+## D23 — 2026-09-28 — Store precision and updates
+
+PostgreSQL keeps timestamps to the microsecond and run timeouts in milliseconds. The engine
+truncates every time it computes (each clock reading and every deadline derived from one) to
+the whole microsecond before it reaches a store or a response. StartRun rejects a
+task_timeout or run_timeout that is not a whole number of milliseconds. Activity options travel
+inside serialized protobufs and are kept exactly.
+
+`Tx.Update*` replaces every field of the record except its key, as pgstore does. The engine
+never changes a record's creation fields, so no caller depends on which fields are
+"mutable". (Engine lane issue 5.)
+
+## D24 — 2026-09-28 — Due-query limits must be positive
+
+`DueTasks`, `DueTimers`, `DueApprovals` and `RunsPastDeadline` return at most `limit` rows, and
+a limit of zero or less returns none (pgstore's behaviour). `ReadHistory` and `ListRuns` keep
+their documented rule that a limit of zero or less means no limit. The engine's background
+methods reject `limit <= 0` with ErrInvalidArgument.
