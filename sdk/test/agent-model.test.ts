@@ -67,6 +67,13 @@ describe("capstan.model accounting and provider boundary", () => {
     const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
     expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 11 + 20 * 53) / 1e6);
   });
+  it("merges price overrides with built-in families like the server", async () => {
+    vi.stubEnv("CAPSTAN_MODEL_PRICES", JSON.stringify({ claude: { input: 0.001, output: 0.001 } }));
+    const s = setup();
+    await s.invoke({ model: "claude-sonnet-5", prompt: "Hi", maxTokens: 20 });
+    const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
+    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 2 + 20 * 10) / 1e6);
+  });
   it("fails closed for an unknown model without an explicit estimate", async () => {
     const s = setup();
     await expect(s.invoke({ model: "unknown", prompt: "Hi" })).rejects.toMatchObject({ type: "ModelEstimateRequired", nonRetryable: true });
