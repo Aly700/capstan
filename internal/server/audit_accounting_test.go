@@ -191,6 +191,7 @@ func TestAuditPostgresAIPricingAndRounding(t *testing.T) {
 		{"claude-sonnet-5", 1, 0, 1, true, false, 0},
 		{"claude-sonnet-5", 1, 0, 3, true, false, .000001},
 		{"claude-fable-5-1", 1, 0, 2, true, false, .000001},
+		{"claude-fable-5-1", 1, 0, 1_000_000, true, false, .25},
 		{"claude-haiku-4-5-20251001", 1, 1_000_000, 0, true, false, 1},
 		{"claude-opus-50", .2, 1_000_000, 0, true, false, .2},
 		{"claude-sonnet-5", .7000005, 0, 0, false, true, .700001},
