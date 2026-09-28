@@ -1,4 +1,5 @@
 import type { Command, HistoryEvent } from "../gen/capstan/v1/capstan_pb.ts";
+import { ApprovalSource } from "../gen/capstan/v1/capstan_pb.ts";
 import { HistoryMismatchError } from "../types.ts";
 
 /** Only these fields identify a step; payloads and execution options may change. */
@@ -17,7 +18,15 @@ const rules: Record<string, { event: string; fields: string[] }> = {
 export const commandEventKinds = new Set(Object.values(rules).map((rule) => rule.event));
 
 function describe(kind: string | undefined, value: unknown): string {
-  return `${kind ?? "<none>"} ${JSON.stringify(value, (_key, v: unknown) => typeof v === "bigint" ? v.toString() : v) ?? ""}`;
+  if (!kind) return "<none>";
+  const rule = rules[kind] ?? Object.values(rules).find((candidate) => candidate.event === kind);
+  const fields = value as Record<string, unknown> | undefined;
+  const identity = (rule?.fields ?? []).filter((field) => field !== "markerId" || fields?.[field] !== "").map((field) => {
+    const label = field === "activityType" ? "type" : field;
+    const scalar = fields?.[field];
+    return `${label}=${field === "source" ? ApprovalSource[Number(scalar)] ?? String(scalar) : String(scalar)}`;
+  });
+  return `${kind[0]!.toUpperCase()}${kind.slice(1)}${identity.length ? `(${identity.join(", ")})` : ""}`;
 }
 
 export function matchCommands(commands: Command[], events: HistoryEvent[], taskCompletedEventId: number): void {
