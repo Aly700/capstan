@@ -311,6 +311,54 @@ func TestFinishFailureChargesOnlyUsage(t *testing.T) {
 	}
 }
 
+func TestFinishUnknownUsageChargesAtLeastEstimate(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		model    string
+		estimate float64
+		input    int64
+		ok       bool
+		want     float64
+	}{
+		{"missing rounded usage", "claude-sonnet-5", .7000005, 0, false, .700001},
+		{"reported usage below estimate", "claude-sonnet-5", .7, 100_000, false, .7},
+		{"reported usage above estimate", "claude-sonnet-5", .7, 1_000_000, false, 2},
+		{"unknown model", "unpriced", .7, 0, false, .7},
+		{"successful call ignores flag", "claude-sonnet-5", .7, 100_000, true, .2},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			e, _, s := newTestEngine(t)
+			r := reserveAI(t, e, ledgerActivity(t, e), tc.model, tc.estimate)
+			request := &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: tc.ok, InputTokens: tc.input, UsageUnknown: true, ErrorCode: "ModelTimeoutUsageUnknown"}
+			first, err := e.FinishAICall(t.Context(), request)
+			if err != nil || first.GetCostUsd() != tc.want {
+				t.Fatalf("unknown usage cost: %v %v want %v", first, err, tc.want)
+			}
+			// Even a repeat reporting different usage returns the stored rounded charge.
+			second, err := e.FinishAICall(t.Context(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: false})
+			if err != nil || second.GetCostUsd() != tc.want {
+				t.Fatalf("repeat cost: %v %v want %v", second, err, tc.want)
+			}
+			if err := s.InTx(t.Context(), func(tx store.Tx) error {
+				row, err := tx.GetAICall(r.ReservationId, false)
+				if err != nil {
+					return err
+				}
+				status := store.AICallFailed
+				if tc.ok {
+					status = store.AICallFinished
+				}
+				if row.Status != status || row.CostUSD != tc.want || row.InputTokens != tc.input {
+					t.Errorf("stored call changed after repeat: %+v", row)
+				}
+				return nil
+			}); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
 func TestFinishIsIdempotent(t *testing.T) {
 	e, _, _ := newTestEngine(t)
 	r := reserveAI(t, e, ledgerActivity(t, e), "claude-sonnet-5", .7)
