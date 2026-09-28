@@ -17,7 +17,7 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
 	response := &v1.PollActivityTaskResponse{}
 	found := false
 	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-		now := e.deps.Clock.Now()
+		now := e.now()
 		task, err := tx.ClaimTask(store.TaskActivity, req.TaskQueue, now, e.cfg.DefaultTaskTimeout, req.Identity)
 		if err != nil || task == nil {
 			return err
@@ -39,7 +39,7 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
 			task.StartedAt = time.Time{}
 			return e.processDueActivityTask(tx, run, task, now)
 		}
-		task.LeasedUntil = now.Add(task.Activity.GetStartToCloseTimeout().AsDuration())
+		task.LeasedUntil = addDeadline(now, task.Activity.GetStartToCloseTimeout().AsDuration())
 		task.LastHeartbeatAt = now
 		task.CheckAt = activityCheckAt(task, now)
 		if err := tx.UpdateTask(task); err != nil {
@@ -74,7 +74,7 @@ func (e *Engine) activityToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 	if err != nil {
 		return nil, nil, err
 	}
-	now := e.deps.Clock.Now()
+	now := e.now()
 	if token.Kind != v1.TaskKind_TASK_KIND_ACTIVITY || task.Kind != store.TaskActivity || task.Activity == nil ||
 		token.RunId != task.RunID || token.Attempt != task.Attempt || token.ScheduledEventId != task.ScheduledEventID ||
 		token.StartedEventId != 0 || token.Seq != task.Activity.Seq || task.LeasedUntil.IsZero() ||
@@ -134,7 +134,7 @@ func (e *Engine) FailActivityTask(ctx context.Context, req *v1.FailActivityTaskR
 		var event *v1.HistoryEvent
 		if task.CancelRequested && req.Failure.Type == "CancelledFailure" {
 			event = &v1.HistoryEvent{Type: v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, Attributes: &v1.HistoryEvent_ActivityCancelled{ActivityCancelled: &v1.ActivityCancelledAttributes{ScheduledEventId: task.ScheduledEventID, Seq: task.Activity.Seq, Details: req.Failure.Details}}}
-		} else if e.retryActivity(task, req.Failure, e.deps.Clock.Now()) {
+		} else if e.retryActivity(task, req.Failure, e.now()) {
 			return tx.UpdateTask(task)
 		} else {
 			event = &v1.HistoryEvent{Type: v1.EventType_EVENT_TYPE_ACTIVITY_FAILED, Attributes: &v1.HistoryEvent_ActivityFailed{ActivityFailed: &v1.ActivityFailedAttributes{ScheduledEventId: task.ScheduledEventID, Seq: task.Activity.Seq, Failure: req.Failure, Attempt: task.Attempt, Identity: req.Identity}}}
@@ -163,7 +163,7 @@ func (e *Engine) HeartbeatActivityTask(ctx context.Context, req *v1.HeartbeatAct
 		if err != nil {
 			return err
 		}
-		now := e.deps.Clock.Now()
+		now := e.now()
 		task.LastHeartbeatAt = now
 		task.HeartbeatDetails = req.Details
 		task.CheckAt = activityCheckAt(task, now)

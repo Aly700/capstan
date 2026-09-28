@@ -128,8 +128,9 @@ func TestRetryDelayArithmetic(t *testing.T) {
 			if !e.retryActivity(task, &v1.Failure{Type: "Error"}, now) {
 				t.Fatal("retry unexpectedly disallowed")
 			}
-			if got := task.VisibleAt.Sub(now); got != tc.want {
-				t.Errorf("delay=%v want=%v", got, tc.want)
+			want := now.Add(tc.want).Truncate(time.Microsecond)
+			if !task.VisibleAt.Equal(want) {
+				t.Errorf("visibility=%v want=%v", task.VisibleAt, want)
 			}
 		})
 	}

@@ -76,7 +76,7 @@ func (e *Engine) ResumeRun(ctx context.Context, identity string, req *v1.ResumeR
 		}
 		r.Status = v1.RunStatus_RUN_STATUS_RUNNING
 		r.Failure = nil
-		if err := e.scheduleWorkflow(tx, r, 1, e.deps.Clock.Now()); err != nil {
+		if err := e.scheduleWorkflow(tx, r, 1, e.now()); err != nil {
 			return err
 		}
 		return tx.UpdateRun(r)

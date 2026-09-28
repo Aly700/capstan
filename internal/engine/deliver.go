@@ -13,14 +13,14 @@ func (e *Engine) deliver(tx store.Tx, r *store.Run, ev *v1.HistoryEvent) error {
 		return nil
 	}
 	if r.InFlight {
-		ev.Time = timestamppb.New(e.deps.Clock.Now())
+		ev.Time = timestamppb.New(e.now())
 		return tx.PushInbox(r.RunID, ev)
 	}
 	if err := e.appendEvents(tx, r, ev); err != nil {
 		return err
 	}
 	if r.Status == v1.RunStatus_RUN_STATUS_RUNNING && r.WorkflowTaskID == 0 {
-		return e.scheduleWorkflow(tx, r, 1, e.deps.Clock.Now())
+		return e.scheduleWorkflow(tx, r, 1, e.now())
 	}
 	return nil
 }

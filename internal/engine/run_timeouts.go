@@ -9,11 +9,14 @@ import (
 )
 
 func (e *Engine) TimeoutRuns(ctx context.Context, limit int) (int, error) {
+	if limit <= 0 {
+		return 0, Invalid("limit must be positive")
+	}
 	processed := 0
 	for processed < limit {
 		found := false
 		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-			now := e.deps.Clock.Now()
+			now := e.now()
 			due, err := tx.RunsPastDeadline(now, 1)
 			if err != nil || len(due) == 0 {
 				return err

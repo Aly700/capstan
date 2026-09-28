@@ -49,6 +49,20 @@ func (e *Engine) validateCommands(tx store.Tx, r *store.Run, cmds []*v1.Command)
 		if a := ev.GetApprovalRequested(); a != nil {
 			approvals[a.ApprovalId] = true
 		}
+		switch ev.Type {
+		case v1.EventType_EVENT_TYPE_TIMER_FIRED:
+			delete(timers, ev.GetTimerFired().GetSeq())
+		case v1.EventType_EVENT_TYPE_TIMER_CANCELLED:
+			delete(timers, ev.GetTimerCancelled().GetSeq())
+		case v1.EventType_EVENT_TYPE_ACTIVITY_COMPLETED:
+			delete(activities, ev.GetActivityCompleted().GetSeq())
+		case v1.EventType_EVENT_TYPE_ACTIVITY_FAILED:
+			delete(activities, ev.GetActivityFailed().GetSeq())
+		case v1.EventType_EVENT_TYPE_ACTIVITY_TIMED_OUT:
+			delete(activities, ev.GetActivityTimedOut().GetSeq())
+		case v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED:
+			delete(activities, ev.GetActivityCancelled().GetSeq())
+		}
 	}
 	for i, cmd := range cmds {
 		seq := int64(0)
@@ -87,11 +101,12 @@ func (e *Engine) validateCommands(tx store.Tx, r *store.Run, cmds []*v1.Command)
 			approvals[c.ApprovalId] = true
 		case *v1.Command_CancelTimer:
 			if a.CancelTimer == nil || !timers[a.CancelTimer.Seq] {
-				return Invalid("unknown timer cancellation target")
+				return Invalid("unknown or settled timer cancellation target")
 			}
+			delete(timers, a.CancelTimer.Seq)
 		case *v1.Command_RequestActivityCancel:
 			if a.RequestActivityCancel == nil || !activities[a.RequestActivityCancel.Seq] {
-				return Invalid("unknown activity cancellation target")
+				return Invalid("unknown or settled activity cancellation target")
 			}
 		case *v1.Command_CompleteRun:
 			if a.CompleteRun == nil {
@@ -131,7 +146,7 @@ func (e *Engine) validateCommands(tx store.Tx, r *store.Run, cmds []*v1.Command)
 }
 
 func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v1.Command) error {
-	now := e.deps.Clock.Now()
+	now := e.now()
 	switch a := cmd.Attributes.(type) {
 	case *v1.Command_ScheduleActivity:
 		c := a.ScheduleActivity
@@ -156,7 +171,7 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
 		if err := e.appendEvents(tx, r, ev); err != nil {
 			return err
 		}
-		return tx.InsertTimer(&store.Timer{RunID: r.RunID, Seq: c.Seq, StartedEventID: ev.EventId, DueAt: now.Add(c.FireAfter.AsDuration())})
+		return tx.InsertTimer(&store.Timer{RunID: r.RunID, Seq: c.Seq, StartedEventID: ev.EventId, DueAt: addDeadline(now, c.FireAfter.AsDuration())})
 	case *v1.Command_CancelTimer:
 		seq := a.CancelTimer.Seq
 		id, err := referencedEvent(tx, r.RunID, seq, v1.EventType_EVENT_TYPE_TIMER_STARTED)
@@ -204,11 +219,11 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
 		}
 		row := &store.Approval{RunID: r.RunID, ApprovalID: c.ApprovalId, Seq: c.Seq, RequestedEventID: ev.EventId, Source: c.Source, GateDecisionID: c.GateDecisionId, Status: store.ApprovalPending, RequestedAt: now}
 		if c.Timeout.AsDuration() > 0 {
-			row.DueAt = now.Add(c.Timeout.AsDuration())
+			row.DueAt = addDeadline(now, c.Timeout.AsDuration())
 			row.CheckAt = row.DueAt
 		}
 		if c.Source == v1.ApprovalSource_APPROVAL_SOURCE_GATE {
-			row.CheckAt = earliestActivityTime(row.CheckAt, now.Add(e.cfg.GatePollInitial))
+			row.CheckAt = earliestActivityTime(row.CheckAt, addDeadline(now, e.cfg.GatePollInitial))
 		}
 		return tx.InsertApproval(row)
 	case *v1.Command_CompleteRun:
@@ -250,7 +265,7 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
 		}
 		next := &store.Run{RunID: id, WorkflowType: typ, TaskQueue: queue, Status: v1.RunStatus_RUN_STATUS_RUNNING, Input: c.Input, TaskTimeout: r.TaskTimeout, RunTimeout: r.RunTimeout, StartedAt: now, ContinuedFromRunID: r.RunID, Identity: r.Identity}
 		if next.RunTimeout > 0 {
-			next.RunDeadline = now.Add(next.RunTimeout)
+			next.RunDeadline = addDeadline(now, next.RunTimeout)
 		}
 		if err := tx.InsertRun(next); err != nil {
 			return err

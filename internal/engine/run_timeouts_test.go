@@ -129,7 +129,10 @@ func TestRunTimeoutHonorsLimit(t *testing.T) {
 		}
 	}
 	clock.Advance(time.Second)
-	for _, limit := range []int{0, 1, 1} {
+	if n, err := e.TimeoutRuns(context.Background(), 0); n != 0 || !errors.Is(err, ErrInvalidArgument) {
+		t.Fatalf("zero limit: %d %v", n, err)
+	}
+	for _, limit := range []int{1, 1} {
 		if n, err := e.TimeoutRuns(context.Background(), limit); n != limit || err != nil {
 			t.Fatalf("limit %d: %d %v", limit, n, err)
 		}

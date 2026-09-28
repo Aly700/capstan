@@ -12,7 +12,7 @@ func (e *Engine) PollWorkflowTask(ctx context.Context, req *v1.PollWorkflowTaskR
 	resp := &v1.PollWorkflowTaskResponse{}
 	found := false
 	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-		now := e.deps.Clock.Now()
+		now := e.now()
 		task, err := tx.ClaimTask(store.TaskWorkflow, req.GetTaskQueue(), now, e.cfg.DefaultTaskTimeout, req.GetIdentity())
 		if err != nil || task == nil {
 			return err
@@ -30,7 +30,7 @@ func (e *Engine) PollWorkflowTask(ctx context.Context, req *v1.PollWorkflowTaskR
 		}
 		r.InFlight = true
 		task.StartedEventID = ev.EventId
-		task.LeasedUntil = now.Add(r.TaskTimeout)
+		task.LeasedUntil = addDeadline(now, r.TaskTimeout)
 		task.CheckAt = task.LeasedUntil
 		if err := tx.UpdateTask(task); err != nil {
 			return err
@@ -64,7 +64,7 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 	if err != nil {
 		return nil, nil, err
 	}
-	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.deps.Clock.Now().Before(task.LeasedUntil) {
+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
 		return nil, nil, ErrStaleTask
 	}
 	r, err := tx.GetRun(task.RunID, true)
@@ -105,7 +105,7 @@ func (e *Engine) CompleteWorkflowTask(ctx context.Context, req *v1.CompleteWorkf
 			}
 			r.WorkflowTaskID = 0
 			if flushed {
-				if err := e.scheduleWorkflow(tx, r, 1, e.deps.Clock.Now()); err != nil {
+				if err := e.scheduleWorkflow(tx, r, 1, e.now()); err != nil {
 					return err
 				}
 			}
@@ -163,7 +163,7 @@ func (e *Engine) FailWorkflowTask(ctx context.Context, req *v1.FailWorkflowTaskR
 			if attempt < math.MaxInt32 {
 				attempt++
 			}
-			if err := e.scheduleWorkflow(tx, r, attempt, e.deps.Clock.Now().Add(e.workflowRetryDelay(attempt))); err != nil {
+			if err := e.scheduleWorkflow(tx, r, attempt, addDeadline(e.now(), e.workflowRetryDelay(attempt))); err != nil {
 				return err
 			}
 		}
@@ -177,7 +177,7 @@ func (e *Engine) FailWorkflowTask(ctx context.Context, req *v1.FailWorkflowTaskR
 
 func (e *Engine) closeRun(tx store.Tx, r *store.Run, status v1.RunStatus) error {
 	r.Status = status
-	r.ClosedAt = e.deps.Clock.Now()
+	r.ClosedAt = e.now()
 	r.InFlight = false
 	r.WorkflowTaskID = 0
 	tasks, err := tx.RunTasks(r.RunID)

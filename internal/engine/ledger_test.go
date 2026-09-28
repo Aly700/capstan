@@ -41,7 +41,7 @@ func TestReserveFailsClosedAtCap(t *testing.T) {
 	if r.ReservationId <= 0 || r.SpentTodayUsd != .6 || r.CapUsd != 1 {
 		t.Fatalf("reservation: %v", r)
 	}
-	for _, estimate := range []float64{.5, -.1, math.NaN(), math.Inf(1), math.Inf(-1)} {
+	for _, estimate := range []float64{.5, -.1, -.0000001, math.NaN(), math.Inf(1), math.Inf(-1)} {
 		if _, err := e.ReserveAICall(context.Background(), &v1.ReserveAICallRequest{TaskToken: token, Model: "claude-sonnet-5", EstimateUsd: estimate}); !errors.Is(err, ErrBudgetExceeded) {
 			t.Fatalf("estimate %v: %v", estimate, err)
 		}
@@ -104,6 +104,160 @@ func TestFinishPricesFromTable(t *testing.T) {
 				t.Fatal(err)
 			}
 		})
+	}
+}
+
+func TestFinishRoundsUSDToMicroDollars(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		model  string
+		tokens int64
+		want   float64
+	}{
+		{"one_cache_read_token", "claude-sonnet-5", 1, 0},
+		{"three_cache_read_tokens", "claude-sonnet-5", 3, .000001},
+		{"half_micro_dollar", "claude-fable-5-1", 2, .000001},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			e, _, s := newTestEngine(t)
+			r := reserveAI(t, e, ledgerActivity(t, e), tc.model, 1)
+			request := &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, CacheReadTokens: tc.tokens}
+			first, err := e.FinishAICall(context.Background(), request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if first.CostUsd != tc.want {
+				t.Errorf("first finish cost = %.18g, want %.18g", first.CostUsd, tc.want)
+			}
+			if err := s.InTx(context.Background(), func(tx store.Tx) error {
+				row, err := tx.GetAICall(r.ReservationId, false)
+				if err == nil && row.CostUSD != tc.want {
+					t.Errorf("stored cost = %.18g, want %.18g", row.CostUSD, tc.want)
+				}
+				return err
+			}); err != nil {
+				t.Fatal(err)
+			}
+			second, err := e.FinishAICall(context.Background(), request)
+			if err != nil || second.GetCostUsd() != first.CostUsd {
+				t.Fatalf("repeated finish = %v, err = %v; first = %v", second, err, first)
+			}
+		})
+	}
+}
+
+func TestReserveRoundsUSDToMicroDollars(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		estimate float64
+		want     float64
+	}{
+		{"below_half", .0000004, 0},
+		{"half_micro_dollar", .0000005, .000001},
+		{"above_half", .1234567, .123457},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			e, _, s := newTestEngine(t)
+			r := reserveAI(t, e, ledgerActivity(t, e), "unpriced", tc.estimate)
+			if r.SpentTodayUsd != tc.want {
+				t.Errorf("spent = %.18g, want %.18g", r.SpentTodayUsd, tc.want)
+			}
+			if err := s.InTx(context.Background(), func(tx store.Tx) error {
+				row, err := tx.GetAICall(r.ReservationId, false)
+				if err == nil && row.EstimateUSD != tc.want {
+					t.Errorf("stored estimate = %.18g, want %.18g", row.EstimateUSD, tc.want)
+				}
+				return err
+			}); err != nil {
+				t.Fatal(err)
+			}
+			finished, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true})
+			if err != nil || finished.GetCostUsd() != tc.want {
+				t.Fatalf("unpriced finish = %v, err = %v; want %.18g", finished, err, tc.want)
+			}
+		})
+	}
+}
+
+func TestReserveComparesRoundedUSDAtCap(t *testing.T) {
+	e, _, _ := newTestEngine(t)
+	e.cfg.DailyCapUSD = .3
+	token := ledgerActivity(t, e)
+	reserveAI(t, e, token, "unpriced", .1)
+	r := reserveAI(t, e, token, "unpriced", .2000004)
+	if r.SpentTodayUsd != .3 {
+		t.Fatalf("spent at cap = %.18g, want .3", r.SpentTodayUsd)
+	}
+	if _, err := e.ReserveAICall(context.Background(), &v1.ReserveAICallRequest{TaskToken: token, EstimateUsd: .0000005}); !errors.Is(err, ErrBudgetExceeded) {
+		t.Fatalf("rounded estimate past cap: %v", err)
+	}
+}
+
+func TestReserveReturnsRoundedUSDSum(t *testing.T) {
+	e, _, _ := newTestEngine(t)
+	token := ledgerActivity(t, e)
+	reserveAI(t, e, token, "unpriced", .1)
+	r := reserveAI(t, e, token, "unpriced", .2)
+	if r.SpentTodayUsd != .3 {
+		t.Fatalf("spent = %.18g, want .3", r.SpentTodayUsd)
+	}
+}
+
+func TestFinishRejectsInvalidCostBeforeRounding(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		price  float64
+		tokens int64
+	}{
+		{"negative_sub_micro_dollar", -.1, 1},
+		{"nan", math.NaN(), 1},
+		{"positive_infinity", math.Inf(1), 1},
+		{"negative_infinity", math.Inf(-1), 1},
+		{"finite_price_overflow", math.MaxFloat64, 2},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			e, _, s := newTestEngine(t)
+			e.cfg.ModelPrices = map[string]ModelPrice{"invalid": {Input: tc.price}}
+			r := reserveAI(t, e, ledgerActivity(t, e), "invalid", .1)
+			response, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, InputTokens: tc.tokens})
+			if response != nil || !errors.Is(err, ErrInvalidArgument) {
+				t.Fatalf("invalid cost: response = %v, err = %v", response, err)
+			}
+			if err := s.InTx(context.Background(), func(tx store.Tx) error {
+				row, err := tx.GetAICall(r.ReservationId, false)
+				if err == nil && (row.Status != store.AICallReserved || row.CostUSD != 0 || !row.FinishedAt.IsZero()) {
+					t.Errorf("invalid cost changed reservation: %+v", row)
+				}
+				return err
+			}); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestLedgerTimestampsUseMicroseconds(t *testing.T) {
+	e, clock, s := newTestEngine(t)
+	token := ledgerActivity(t, e)
+	clock.Advance(1234 * time.Nanosecond)
+	r := reserveAI(t, e, token, "claude-sonnet-5", .1)
+	wantAt := clock.Now().Truncate(time.Microsecond)
+	clock.Advance(2789 * time.Nanosecond)
+	if _, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, CacheReadTokens: 1}); err != nil {
+		t.Fatal(err)
+	}
+	wantFinishedAt := clock.Now().Truncate(time.Microsecond)
+	if err := s.InTx(context.Background(), func(tx store.Tx) error {
+		row, err := tx.GetAICall(r.ReservationId, false)
+		if err != nil {
+			return err
+		}
+		if !row.At.Equal(wantAt) || !row.FinishedAt.Equal(wantFinishedAt) {
+			t.Errorf("ledger times: at = %v, finished = %v; want %v and %v", row.At, row.FinishedAt, wantAt, wantFinishedAt)
+		}
+		return nil
+	}); err != nil {
+		t.Fatal(err)
 	}
 }
 

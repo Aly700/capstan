@@ -7,11 +7,14 @@ import (
 )
 
 func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
+	if limit <= 0 {
+		return 0, Invalid("limit must be positive")
+	}
 	count := 0
 	for count < limit {
 		handled := false
 		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-			timers, err := tx.DueTimers(e.deps.Clock.Now(), 1)
+			timers, err := tx.DueTimers(e.now(), 1)
 			if err != nil || len(timers) == 0 {
 				return err
 			}

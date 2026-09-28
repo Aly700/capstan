@@ -8,7 +8,7 @@ import (
 )
 
 func (e *Engine) NextWakeup(ctx context.Context) (at time.Time, ok bool, err error) {
-	latest := time.Date(9999, time.December, 31, 23, 59, 59, 999999999, time.UTC)
+	latest := time.Date(9999, time.December, 31, 23, 59, 59, 999999000, time.UTC)
 	consider := func(candidate time.Time) {
 		if !candidate.IsZero() && (!ok || candidate.Before(at)) {
 			at, ok = candidate, true
