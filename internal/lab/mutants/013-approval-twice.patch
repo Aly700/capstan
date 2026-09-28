@@ -1,0 +1,14 @@
+diff --git a/internal/engine/approvals.go b/internal/engine/approvals.go
+index 2f5b3cb..02fd320 100644
+--- a/internal/engine/approvals.go
++++ b/internal/engine/approvals.go
+@@ -34,9 +34,6 @@ func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *v1.R
+ 		if a.Source != v1.ApprovalSource_APPROVAL_SOURCE_HUMAN {
+ 			return fmt.Errorf("%w: decide it in AgentOps Gate", ErrFailedPrecondition)
+ 		}
+-		if a.Status != store.ApprovalPending {
+-			return fmt.Errorf("%w: approval is no longer pending", ErrFailedPrecondition)
+-		}
+ 		if !a.DueAt.IsZero() && !a.DueAt.After(e.now()) {
+ 			return fmt.Errorf("%w: approval deadline has passed", ErrFailedPrecondition)
+ 		}

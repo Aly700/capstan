@@ -1,0 +1,14 @@
+diff --git a/internal/engine/commands.go b/internal/engine/commands.go
+index 10d6a66..15426f7 100644
+--- a/internal/engine/commands.go
++++ b/internal/engine/commands.go
+@@ -199,9 +199,6 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
+ 		for _, task := range tasks {
+ 			if task.Kind == store.TaskActivity && task.Activity.GetSeq() == seq {
+ 				if task.LeasedUntil.IsZero() {
+-					if err := tx.DeleteTask(task.ID); err != nil {
+-						return err
+-					}
+ 					return e.deliver(tx, r, &v1.HistoryEvent{Type: v1.EventType_EVENT_TYPE_ACTIVITY_CANCELLED, Attributes: &v1.HistoryEvent_ActivityCancelled{ActivityCancelled: &v1.ActivityCancelledAttributes{Seq: seq, ScheduledEventId: id}}})
+ 				}
+ 				task.CancelRequested = true

@@ -1,0 +1,12 @@
+diff --git a/internal/engine/retry.go b/internal/engine/retry.go
+index a578ab8..19ae2a4 100644
+--- a/internal/engine/retry.go
++++ b/internal/engine/retry.go
+@@ -52,7 +52,6 @@ func (e *Engine) retryActivity(task *store.Task, failure *v1.Failure, now time.T
+ 	if !deadline.IsZero() && visible.After(deadline) {
+ 		return false
+ 	}
+-	task.Attempt++
+ 	task.VisibleAt = visible
+ 	task.LeasedUntil = time.Time{}
+ 	task.StartedAt = time.Time{}

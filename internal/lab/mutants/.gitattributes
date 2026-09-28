@@ -1,0 +1,2 @@
+# Unified diffs prefix unchanged Go indentation with a required context space.
+*.patch -whitespace

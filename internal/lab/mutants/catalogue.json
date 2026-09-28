@@ -1,0 +1,185 @@
+[
+  {
+    "id": "M001",
+    "name": "Timer delivery retains timer row",
+    "patch": "001-timer-retained.patch",
+    "description": "A timer delivery refactor omits deleting the consumed timer, allowing repeated delivery.",
+    "expected_check": "P3 timer uniqueness and consumed-row check"
+  },
+  {
+    "id": "M002",
+    "name": "Inbox flush precedes command events",
+    "patch": "002-inbox-before-commands.patch",
+    "description": "Workflow completion flushes buffered external events before recording its commands.",
+    "expected_check": "activation ordering and replay history matching"
+  },
+  {
+    "id": "M003",
+    "name": "Workflow token omits started event comparison",
+    "patch": "003-started-token-check.patch",
+    "description": "The workflow token validator drops its direct comparison with the task started event.",
+    "expected_check": "workflow stale token rejection",
+    "equivalent_reason": "The remaining run.LastEventID != tok.StartedEventId guard rejects every differing started ID on engine-reachable states: PollWorkflowTask writes TaskStarted last and stores that same ID in task.StartedEventID; while InFlight, external events only enter the inbox; complete, fail, and timeout clear or replace the task. This mutant removes a redundant guard only, assuming state was produced through the engine."
+  },
+  {
+    "id": "M004",
+    "name": "Activity retry does not increment attempt",
+    "patch": "004-retry-attempt.patch",
+    "description": "An activity retry resets visibility and lease but forgets to increment the attempt fence.",
+    "expected_check": "retry attempt progression or bounded scenario completion"
+  },
+  {
+    "id": "M005",
+    "name": "Close retains buffered events",
+    "patch": "005-closed-inbox.patch",
+    "description": "Run cleanup omits draining the unreachable inbox after a closing command.",
+    "expected_check": "closed-run inbox emptiness"
+  },
+  {
+    "id": "M006",
+    "name": "In-flight signal is acknowledged and dropped",
+    "patch": "006-drop-inflight-signal.patch",
+    "description": "An optimization mistakenly discards signals arriving while workflow work is leased.",
+    "expected_check": "accepted-signal exactly-once delivery or scenario completion"
+  },
+  {
+    "id": "M007",
+    "name": "Workflow task failure retains InFlight",
+    "patch": "007-failed-inflight.patch",
+    "description": "SDK-error workflow task failure schedules a retry but leaves the old in-flight projection set.",
+    "expected_check": "workflow task projection check after failure"
+  },
+  {
+    "id": "M008",
+    "name": "Last event projection increments one too far",
+    "patch": "008-last-event-off-by-one.patch",
+    "description": "An inclusive-count mistake increments the run history projection one past the appended batch.",
+    "expected_check": "P4 contiguous history and last_event_id projection"
+  },
+  {
+    "id": "M009",
+    "name": "Heartbeat does not extend deadline",
+    "patch": "009-heartbeat-deadline.patch",
+    "description": "Heartbeat details are persisted but the heartbeat timestamp is not refreshed, causing premature expiry.",
+    "expected_check": "heartbeat lease-extension check"
+  },
+  {
+    "id": "M010",
+    "name": "Retry is queued past schedule-to-close",
+    "patch": "010-retry-past-deadline.patch",
+    "description": "Retry eligibility ignores that the next visibility time is after the activity schedule-to-close deadline.",
+    "expected_check": "activity retry deadline projection and final timeout semantics"
+  },
+  {
+    "id": "M011",
+    "name": "Cancel-before-start retains deliverable activity",
+    "patch": "011-cancel-unstarted-task.patch",
+    "description": "Cancelling an unleased activity emits ActivityCancelled but forgets to remove its queue task.",
+    "expected_check": "cancelled activity has no deliverable task"
+  },
+  {
+    "id": "M012",
+    "name": "Continuation uses predecessor input",
+    "patch": "012-continuation-input.patch",
+    "description": "A copied run initializer uses the old input instead of the ContinueAsNew command input.",
+    "expected_check": "continuation expected result or bounded scenario completion"
+  },
+  {
+    "id": "M013",
+    "name": "Human approval may resolve twice",
+    "patch": "013-approval-twice.patch",
+    "description": "The human approval endpoint omits its pending-state fence and accepts repeated decisions.",
+    "expected_check": "duplicate approval rejection and one resolution event"
+  },
+  {
+    "id": "M014",
+    "name": "Timer deletion commits before delivery",
+    "patch": "014-split-timer-transaction.patch",
+    "description": "A transaction-scope refactor commits DeleteTimer separately before its event delivery; failure or a competing actor can observe the gap.",
+    "expected_check": "P3 pending timer row or buffered delivery consistency"
+  },
+  {
+    "id": "M015",
+    "name": "ClaimTask ignores an active lease",
+    "patch": "015-claim-active-lease.patch",
+    "description": "Queue selection drops the unleased filter and can hand the same live task to another worker.",
+    "expected_check": "exclusive task claim and workflow token fencing"
+  },
+  {
+    "id": "M016",
+    "name": "Expired workflow completion is accepted",
+    "patch": "016-expired-workflow-completion.patch",
+    "description": "Workflow token validation relies only on the asynchronous reaper and accepts an expired token before it runs.",
+    "expected_check": "late workflow acknowledgement rejection"
+  },
+  {
+    "id": "M017",
+    "name": "Expired activity completion is accepted",
+    "patch": "017-expired-activity-completion.patch",
+    "description": "Activity token validation omits the start-to-close lease check and accepts a stale completion before the reaper.",
+    "expected_check": "late activity acknowledgement rejection"
+  },
+  {
+    "id": "M018",
+    "name": "Transaction snapshot aliases mutable tasks",
+    "patch": "018-rollback-task-alias.patch",
+    "description": "A snapshot optimization shares the task map across transactions, so rollback leaks task mutations.",
+    "expected_check": "transaction rollback snapshot equality and task/history consistency"
+  },
+  {
+    "id": "M019",
+    "name": "Inbox push prepends instead of appending",
+    "patch": "019-inbox-reversed.patch",
+    "description": "Buffered external events use stack insertion instead of FIFO order.",
+    "expected_check": "accepted signal order and workflow result"
+  },
+  {
+    "id": "M020",
+    "name": "Timer selection includes a future millisecond",
+    "patch": "020-timer-early.patch",
+    "description": "A boundary adjustment widens the due-timer predicate by one millisecond.",
+    "expected_check": "P3 no early timer delivery and early sweep count"
+  },
+  {
+    "id": "M021",
+    "name": "Timer row references the completing task event",
+    "patch": "021-timer-reference.patch",
+    "description": "Timer insertion stores the workflow completion event ID where the timer-start event ID belongs.",
+    "expected_check": "P3 timer started-event reference"
+  },
+  {
+    "id": "M022",
+    "name": "Effect idempotency key omits run identity",
+    "patch": "022-idempotency-run-collision.patch",
+    "description": "An idempotency-key refactor uses one shared prefix, causing unrelated runs with the same sequence to share effects.",
+    "expected_check": "P1 effect keys and concurrent run expected results"
+  },
+  {
+    "id": "M023",
+    "name": "Gate decision arriving after deadline wins",
+    "patch": "023-gate-late-decision.patch",
+    "description": "Gate response handling does not recheck the deadline after external I/O.",
+    "expected_check": "approval deadline expected outcome"
+  },
+  {
+    "id": "M024",
+    "name": "Gate pending status is treated as approval",
+    "patch": "024-gate-pending-approved.patch",
+    "description": "An external-status mapping mistakenly treats PENDING as a successful approval.",
+    "expected_check": "Gate pending must not resolve approval"
+  },
+  {
+    "id": "M025",
+    "name": "Gate error becomes a final denial",
+    "patch": "025-gate-error-denied.patch",
+    "description": "Transient Gate failures are converted to permanent denial instead of remaining pending for retry.",
+    "expected_check": "Gate error retry and expected outcome"
+  },
+  {
+    "id": "M026",
+    "name": "RunTasks leaks other runs task rows",
+    "patch": "026-cross-run-tasks.patch",
+    "description": "A missing run predicate returns every task; closing one run deletes work belonging to concurrent runs.",
+    "expected_check": "per-run task ownership and concurrent completion"
+  }
+]

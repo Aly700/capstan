@@ -48,6 +48,9 @@ type campaignSummary struct {
 }
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "mutate" {
+		os.Exit(runMutationCLI(os.Args[2:], os.Stdout))
+	}
 	os.Exit(runCLI(os.Args[1:], os.Stdout, lab.Run))
 }
 

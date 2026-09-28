@@ -1,0 +1,13 @@
+diff --git a/internal/store/memstore/memstore.go b/internal/store/memstore/memstore.go
+index de7bd3f..41fc75a 100644
+--- a/internal/store/memstore/memstore.go
++++ b/internal/store/memstore/memstore.go
+@@ -366,7 +366,7 @@ func (tx *transaction) PushInbox(id string, e *capstanv1.HistoryEvent) error {
+ 	}
+ 	c := cloneMessage(e)
+ 	c.EventId = 0
+-	tx.data.inbox[id] = append(tx.data.inbox[id], c)
++	tx.data.inbox[id] = append([]*capstanv1.HistoryEvent{c}, tx.data.inbox[id]...)
+ 	return nil
+ }
+ func (tx *transaction) DrainInbox(id string) ([]*capstanv1.HistoryEvent, error) {

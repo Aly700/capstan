@@ -1,0 +1,13 @@
+diff --git a/internal/store/memstore/memstore.go b/internal/store/memstore/memstore.go
+index de7bd3f..c43b2b7 100644
+--- a/internal/store/memstore/memstore.go
++++ b/internal/store/memstore/memstore.go
+@@ -400,7 +400,7 @@ func (tx *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Tim
+ 	}
+ 	var oldest *store.Task
+ 	for _, t := range tx.data.tasks {
+-		if t.Kind != kind || t.TaskQueue != queue || t.VisibleAt.After(now) || !t.LeasedUntil.IsZero() {
++		if t.Kind != kind || t.TaskQueue != queue || t.VisibleAt.After(now) {
+ 			continue
+ 		}
+ 		if oldest == nil || t.VisibleAt.Before(oldest.VisibleAt) || (t.VisibleAt.Equal(oldest.VisibleAt) && t.ID < oldest.ID) {
