@@ -1,0 +1,13 @@
+diff --git a/internal/engine/commands.go b/internal/engine/commands.go
+index 10d6a66..a50dc47 100644
+--- a/internal/engine/commands.go
++++ b/internal/engine/commands.go
+@@ -171,7 +171,7 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
+ 		if err := e.appendEvents(tx, r, ev); err != nil {
+ 			return err
+ 		}
+-		return tx.InsertTimer(&store.Timer{RunID: r.RunID, Seq: c.Seq, StartedEventID: ev.EventId, DueAt: addDeadline(now, c.FireAfter.AsDuration())})
++		return tx.InsertTimer(&store.Timer{RunID: r.RunID, Seq: c.Seq, StartedEventID: completed, DueAt: addDeadline(now, c.FireAfter.AsDuration())})
+ 	case *v1.Command_CancelTimer:
+ 		seq := a.CancelTimer.Seq
+ 		id, err := referencedEvent(tx, r.RunID, seq, v1.EventType_EVENT_TYPE_TIMER_STARTED)

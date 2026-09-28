@@ -1,0 +1,13 @@
+diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
+index cac1230..90dd008 100644
+--- a/internal/engine/workflow_task.go
++++ b/internal/engine/workflow_task.go
+@@ -65,7 +65,7 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
+ 	if err != nil {
+ 		return nil, nil, err
+ 	}
+-	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
++	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
+ 		return nil, nil, ErrStaleTask
+ 	}
+ 	r, err := tx.GetRun(task.RunID, true)

@@ -1,0 +1,12 @@
+diff --git a/internal/engine/activity_task.go b/internal/engine/activity_task.go
+index 1f13742..9fda3e3 100644
+--- a/internal/engine/activity_task.go
++++ b/internal/engine/activity_task.go
+@@ -166,7 +166,6 @@ func (e *Engine) HeartbeatActivityTask(ctx context.Context, req *v1.HeartbeatAct
+ 			return err
+ 		}
+ 		now := e.now()
+-		task.LastHeartbeatAt = now
+ 		task.HeartbeatDetails = req.Details
+ 		task.CheckAt = activityCheckAt(task, now)
+ 		response.CancelRequested = task.CancelRequested
