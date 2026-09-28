@@ -1,0 +1,106 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["node", "/Users/affan/Projects/capstan--final/.lane/final-scripts/demo-crash.mjs"]
+Capstan crash demo · 2026-09-28T20:53:50.982Z
+Real Go binary + SDK worker + PostgreSQL. Wall-clock playback; no simulated crash or clock jump.
+Source: 8094a86 + this demo's working-tree files
+$ GOTOOLCHAIN=go1.26.4 go build -o .lane/bin/capstan-server ./cmd/capstan-server
+$ CAPSTAN_ADDR=127.0.0.1:7702 .lane/bin/capstan-server serve  # database capstan_final_crash_11157_1790628830998
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # workflows: crash.ts
+PID  PGID UCOMM
+11180 11180 capstan-server  
+11184 11184 node
+$ capstan start crashSurvivor evidence-crash --queue evidence-crash
+{
+  "run": {
+    "runId": "evidence-crash",
+    "workflowType": "crashSurvivor",
+    "taskQueue": "evidence-crash",
+    "status": "running",
+    "startedAt": "2026-09-28T20:53:51.573Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ capstan describe evidence-crash
+{
+  "runId": "evidence-crash",
+  "workflowType": "crashSurvivor",
+  "taskQueue": "evidence-crash",
+  "status": "running",
+  "startedAt": "2026-09-28T20:53:51.573Z",
+  "lastEventId": 10,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ kill -9 11180  # the SERVER, while the run is waiting on its first timer
+Server is unreachable. Worker stays alive. Waiting 4 real seconds, past the timer's deadline.
+$ CAPSTAN_ADDR=127.0.0.1:7702 .lane/bin/capstan-server serve  # restart on the SAME database
+Restarted server PID 11240; worker PID 11184 is unchanged.
+$ capstan describe evidence-crash
+{
+  "runId": "evidence-crash",
+  "workflowType": "crashSurvivor",
+  "taskQueue": "evidence-crash",
+  "status": "completed",
+  "startedAt": "2026-09-28T20:53:51.573Z",
+  "closedAt": "2026-09-28T20:54:03.959Z",
+  "lastEventId": 40,
+  "result": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ capstan history evidence-crash
+1	2026-09-28T20:53:51.574Z	RUN_STARTED	workflowType=crashSurvivor
+2	2026-09-28T20:53:51.577Z	TASK_SCHEDULED
+3	2026-09-28T20:53:51.588Z	TASK_STARTED
+4	2026-09-28T20:53:51.598Z	TASK_COMPLETED
+5	2026-09-28T20:53:51.599Z	ACTIVITY_SCHEDULED	seq=1 activityType=step
+6	2026-09-28T20:53:51.610Z	ACTIVITY_COMPLETED	seq=1
+7	2026-09-28T20:53:51.612Z	TASK_SCHEDULED
+8	2026-09-28T20:53:51.617Z	TASK_STARTED
+9	2026-09-28T20:53:51.623Z	TASK_COMPLETED
+10	2026-09-28T20:53:51.624Z	TIMER_STARTED	seq=2
+11	2026-09-28T20:53:56.937Z	TIMER_FIRED	seq=2
+12	2026-09-28T20:53:56.940Z	TASK_SCHEDULED
+13	2026-09-28T20:53:57.571Z	TASK_STARTED
+14	2026-09-28T20:53:57.582Z	TASK_COMPLETED
+15	2026-09-28T20:53:57.583Z	ACTIVITY_SCHEDULED	seq=3 activityType=step
+16	2026-09-28T20:53:57.595Z	ACTIVITY_COMPLETED	seq=3
+17	2026-09-28T20:53:57.596Z	TASK_SCHEDULED
+18	2026-09-28T20:53:57.601Z	TASK_STARTED
+19	2026-09-28T20:53:57.607Z	TASK_COMPLETED
+20	2026-09-28T20:53:57.608Z	TIMER_STARTED	seq=4
+21	2026-09-28T20:54:00.870Z	TIMER_FIRED	seq=4
+22	2026-09-28T20:54:00.872Z	TASK_SCHEDULED
+23	2026-09-28T20:54:00.879Z	TASK_STARTED
+24	2026-09-28T20:54:00.888Z	TASK_COMPLETED
+25	2026-09-28T20:54:00.889Z	ACTIVITY_SCHEDULED	seq=5 activityType=step
+26	2026-09-28T20:54:00.897Z	ACTIVITY_COMPLETED	seq=5
+27	2026-09-28T20:54:00.898Z	TASK_SCHEDULED
+28	2026-09-28T20:54:00.902Z	TASK_STARTED
+29	2026-09-28T20:54:00.908Z	TASK_COMPLETED
+30	2026-09-28T20:54:00.909Z	TIMER_STARTED	seq=6
+31	2026-09-28T20:54:03.912Z	TIMER_FIRED	seq=6
+32	2026-09-28T20:54:03.915Z	TASK_SCHEDULED
+33	2026-09-28T20:54:03.924Z	TASK_STARTED
+34	2026-09-28T20:54:03.933Z	TASK_COMPLETED
+35	2026-09-28T20:54:03.935Z	ACTIVITY_SCHEDULED	seq=7 activityType=step
+36	2026-09-28T20:54:03.944Z	ACTIVITY_COMPLETED	seq=7
+37	2026-09-28T20:54:03.946Z	TASK_SCHEDULED
+38	2026-09-28T20:54:03.951Z	TASK_STARTED
+39	2026-09-28T20:54:03.956Z	TASK_COMPLETED
+40	2026-09-28T20:54:03.958Z	RUN_COMPLETED
+PASS: result [1,2,3,4]; 10 pre-crash events preserved as an exact prefix; 4 activity completions; 3 distinct timer firings.
+Cleanup: stopping this demo's processes and dropping its database.
+Exit: 0

@@ -1,0 +1,13 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["psql", "-h", "127.0.0.1", "-p", "55432", "-U", "capstan", "-d", "postgres", "-X", "-A", "-t", "-c", "select count(*) from pg_database where datname like 'capstan_final_%'"]
+Remaining final-lane databases: 0
+Command: ["lsof", "-nP", "-iTCP:7700-7799", "-sTCP:LISTEN"]
+Listening processes on final-lane ports: 0
+Command: ["ps", "-axo", "pid=,command="]; filter executable/worker paths belonging to this worktree
+Owned measurement server/worker processes: 0
+Command: ["git", "worktree", "list", "--porcelain"]; inspect only mutation paths beneath this worktree
+Remaining registered mutation worktrees beneath this worktree: 0
+Quickstart browser: explicitly closed in quickstart-ui.log.
+Shared PostgreSQL remains available. No stop/reset/restart command was used.
+Exit: 0

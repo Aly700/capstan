@@ -1,0 +1,559 @@
+#!/usr/bin/env python3
+"""Recompute evidence from committed observations; fail closed on missing data.
+
+--historical verifies the recovered archive alone. --write also renders final
+sections; the normal gate only checks and never modifies documentation.
+Only the Python standard library is needed.
+"""
+import argparse
+from collections import Counter
+import datetime as dt
+from decimal import Decimal, ROUND_DOWN
+import gzip
+import hashlib
+import importlib.util
+import json
+import math
+from pathlib import Path
+import re
+import struct
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[3]
+EVIDENCE = ROOT / "docs/evidence"
+RAW = Path(__file__).resolve().parent
+SHA = "904cb6c41da4f57ac0399d1524989288e3ededb1"
+FINAL = RAW / SHA[:7]
+ORDER = [(50,1000,4),(200,1000,4),(800,1600,4),(50,1000,1),
+         (50,1000,8),(25,1000,4),(10,500,4),(100,1000,4),
+         (50,1000,4),(200,1000,4),(800,1600,4)]
+
+
+def read(path):
+    path = Path(path)
+    if not path.exists() and Path(str(path) + ".gz").exists():
+        path = Path(str(path) + ".gz")
+    data = path.read_bytes()
+    return (gzip.decompress(data) if path.suffix == ".gz" else data).decode()
+
+
+def obj(path):
+    return json.loads(read(path))
+
+
+def jsonl(path):
+    return [json.loads(line) for line in read(path).splitlines() if line]
+
+
+def same(actual, expected, label="value"):
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys(), (label, actual.keys(), expected.keys())
+        for key, value in expected.items():
+            same(actual[key], value, f"{label}.{key}")
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected), label
+        for index, value in enumerate(expected):
+            same(actual[index], value, f"{label}[{index}]")
+    else:
+        assert actual == expected, (label, actual, expected)
+
+
+def trunc(value):
+    return format(Decimal(str(value)).quantize(Decimal("0.0001"), rounding=ROUND_DOWN), ".4f")
+
+
+def cells(line):
+    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+
+def duration_seconds(value):
+    units = {"h": 3600, "m": 60, "s": 1, "ms": .001, "µs": .000001, "ns": .000000001}
+    parts = re.findall(r"([\d.]+)(ms|µs|ns|h|m|s)", value)
+    assert "".join(a + b for a, b in parts) == value, value
+    return sum(Decimal(a) * Decimal(str(units[b])) for a, b in parts)
+
+
+def verify_load(folder):
+    folder = Path(folder)
+    meta, emitted, audit = [obj(folder / name) for name in ("metadata.json", "result.json", "audit.json")]
+    rows, samples = jsonl(folder / "runs.jsonl"), jsonl(folder / "system.jsonl")
+    assert len({r["run_id"] for r in rows}) == len(rows), "duplicate run sample"
+    success = [r for r in rows if not r.get("error")]
+    latencies = sorted(r["latency_ms"] for r in success)
+    completed = len(success)
+    assert completed > 0 and emitted["elapsed_seconds"] > 0
+    derived = dict(runs=len(rows), concurrency=int(meta["command"].split()[-3]),
+                   completed=completed, errors=len(rows)-completed,
+                   activities=sum(r["activities"] for r in rows),
+                   elapsed_seconds=emitted["elapsed_seconds"],
+                   runs_per_second=completed/emitted["elapsed_seconds"],
+                   activities_per_second=sum(r["activities"] for r in rows)/emitted["elapsed_seconds"],
+                   p50_ms=latencies[math.ceil(completed*.5)-1],
+                   p99_ms=latencies[math.ceil(completed*.99)-1])
+    same(derived, emitted, str(folder))
+    same(audit, {"runs": len(rows), "completed": completed, "other": len(rows)-completed,
+                 "activity_completions": derived["activities"], "task_failures": 0, "remaining_tasks": 0}, "SQL")
+    assert derived["activities"] == 5*completed and derived["errors"] == 0
+    assert len(samples) >= 2
+    for sample in samples:
+        assert all(not (isinstance(sample[k], dict) and "error" in sample[k])
+                   for k in ("processes", "postgres_cpu", "postgres")), sample
+    elapsed = (dt.datetime.fromisoformat(samples[-1]["at"]) - dt.datetime.fromisoformat(samples[0]["at"])).total_seconds()
+    assert elapsed > 0
+    def cpu(row):
+        return int(re.search(r"^usage_usec (\d+)$", row["postgres_cpu"], re.M)[1])
+    def times(row):
+        return {int(s.split()[0]): sum(float(p)*60**i for i,p in enumerate(reversed(s.split()[2].split(":"))))
+                for s in row["processes"].splitlines()}
+    before, after = times(samples[0]), times(samples[-1])
+    cpu_percent = [(after[p]-before[p])/elapsed*100 for p in [meta["serverPID"], *meta["workerPIDs"]]]
+    waits, other, occupancy = Counter(), set(), []
+    for sample in samples:
+        active = 0
+        for a in sample["postgres"]["activity"]:
+            if a["datname"] == meta["database"]:
+                waits[f'{a["state"]} / {a["wait_event_type"]} / {a["wait_event"]}'] += a["n"]
+                if a["state"] in ("active", "idle in transaction"):
+                    active += a["n"]
+            elif a["state"] in ("active", "idle in transaction"):
+                other.add(a["datname"])
+        occupancy.append(active)
+    sampler = {
+        "samples": len(samples), "window_seconds": elapsed,
+        "postgres_cpu_percent": (cpu(samples[-1])-cpu(samples[0]))/elapsed/10000,
+        "server_cpu_percent": cpu_percent[0], "worker_cpu_percent": cpu_percent[1:],
+        "max_waiting_locks": max(s["postgres"]["waiting_locks"] for s in samples),
+        "max_ready_tasks": max(s["postgres"]["tasks"]["ready"] for s in samples),
+        "max_leased_tasks": max(s["postgres"]["tasks"]["leased"] for s in samples),
+        "max_active_or_in_transaction": max(occupancy),
+        "backend_observations": dict(waits), "other_active_databases": sorted(other),
+        "deadlocks_delta": samples[-1]["postgres"]["database"]["deadlocks"]-samples[0]["postgres"]["database"]["deadlocks"],
+        "transactions_delta": samples[-1]["postgres"]["database"]["xact_commit"]-samples[0]["postgres"]["database"]["xact_commit"],
+    }
+    return {"command": meta["command"], "date": meta["date"],
+            "raw_directory": str(folder.relative_to(ROOT)) if folder.is_relative_to(ROOT) else str(folder),
+            "result": derived, "audit": audit, "sampler": sampler}
+
+
+def historical_load_tables(data):
+    lines = read(EVIDENCE / "load.md").split("## Final code", 1)[0].splitlines()
+    original = data[:11]
+    after = [r for r in data if r.get("phase") in ("after", "after-repeat")]
+    def result(r):
+        d = r["result"]
+        return [str(d["concurrency"]),str(d["runs"]),r["command"].split()[-1],
+                *[trunc(d[k]) for k in ("runs_per_second","activities_per_second","p50_ms","p99_ms")],str(d["errors"])]
+    def cpu(r):
+        s = r["sampler"]
+        return [str(s["samples"]),trunc(s["postgres_cpu_percent"]),trunc(s["server_cpu_percent"]),trunc(sum(s["worker_cpu_percent"]))]
+    got = [cells(l) for l in lines if re.match(r"^\| (10|25|50|100|200|800) \| \d+ \| [148] \|", l)]
+    same(got, [result(d) for d in original], "historical result table")
+    got = [cells(l) for l in lines if re.match(r"^\| (10|25|50|100|200|800) / [148] \| \d+ \|", l)]
+    same(got, [[f'{d["result"]["concurrency"]} / {d["command"].split()[-1]}', *cpu(d),
+                str(d["sampler"]["max_ready_tasks"]),str(d["sampler"]["max_waiting_locks"])] for d in original])
+    got = [cells(l) for l in lines if re.match(r"^\| after(?:-repeat)? / \d+ \| \d+ \|", l)]
+    same(got, [[f'{d["phase"]} / {i%11+1}',*result(d),"yes" if d["sampler"]["other_active_databases"] else "no"]
+               for i,d in enumerate(after)])
+    got = [cells(l) for l in lines if re.match(r"^\| after(?:-repeat)? / \d+ \| \d+ / \d+ \|", l)]
+    same(got, [[f'{d["phase"]} / {i%11+1}',f'{d["result"]["concurrency"]} / {d["command"].split()[-1]}',*cpu(d),
+                *[str(d["sampler"][k]) for k in ("max_active_or_in_transaction","max_ready_tasks","max_waiting_locks","deadlocks_delta")]]
+               for i,d in enumerate(after)])
+    got = [cells(l)[1:] for l in lines if re.match(r"^\| (Original,|D30,|Targeted queue|Run/child)", l)]
+    expected = []
+    for ix, iy in [(11,12),(18,19),(20,21),(33,34),(36,37)]:
+        x,y = data[ix],data[iy]
+        expected.append([trunc(x["result"]["runs_per_second"]),trunc(y["result"]["runs_per_second"]),
+                         trunc(x["result"]["p99_ms"]),trunc(y["result"]["p99_ms"]),
+                         f'{x["sampler"]["transactions_delta"]:,} / {y["sampler"]["transactions_delta"]:,}'])
+    same(got, expected)
+    got = [cells(l) for l in lines if re.match(r"^\| (10|20|40|60) \| [\d.]+",l) and len(cells(l))==3]
+    same(got, [[str(pool),trunc(data[x]["result"]["runs_per_second"])+(" *" if data[x]["sampler"]["other_active_databases"] else ""),
+                trunc(data[y]["result"]["runs_per_second"])] for pool,x,y in [(10,24,25),(20,18,19),(40,20,21),(60,22,23)]])
+    def span(values):
+        low, high = min(values), max(values)
+        return trunc(low) if low == high else f"{trunc(low)}–{trunc(high)}"
+    got = [cells(l) for l in lines if re.match(r"^\| (10|25|50|100|200|800) / [148] \|", l) and len(cells(l))==5]
+    expected = []
+    for c,w in [(10,4),(25,4),(50,4),(100,4),(200,4),(800,4),(50,1),(50,8)]:
+        groups = [[d for d in group if d["result"]["concurrency"]==c and int(d["command"].split()[-1])==w] for group in [original,after]]
+        expected.append([f"{c} / {w}",*[span([d["result"][k] for d in group]) for k in ("runs_per_second","p99_ms") for group in groups]])
+    same(got, expected)
+    same([len(original),sum(d["result"]["runs"] for d in original),sum(d["result"]["activities"] for d in original)], [11,11700,58500])
+    same([len(after),sum(d["result"]["runs"] for d in after),sum(d["result"]["activities"] for d in after)], [22,23400,117000])
+    samples = [s for d in after for s in jsonl(ROOT / d["raw_directory"] / "system.jsonl")]
+    locks = Counter(w["wait_event"] for s in samples for w in s["postgres"]["lock_waits"])
+    same([len(samples),sum(s["postgres"]["waiting_locks"]>0 for s in samples),locks["transactionid"],locks["object"]], [331,17,17,6])
+    assert sum(bool(d["sampler"]["other_active_databases"]) for d in after)==22
+    assert all(d["sampler"]["deadlocks_delta"]==0 for d in after)
+    original_samples = [s for d in original for s in jsonl(ROOT / d["raw_directory"] / "system.jsonl")]
+    lwlocks = Counter()
+    for sample in original_samples:
+        for a in sample["postgres"]["activity"]:
+            if a["wait_event_type"]=="LWLock":
+                lwlocks[a["wait_event"]] += a["n"]
+    same(dict(lwlocks), {"LockManager":1,"SubtransSLRU":1,"BufferContent":2})
+    print("PASS historical load: every table cell, range, percentile, CPU delta and lock observation")
+
+
+def fields(text):
+    return dict(re.findall(r"^- ([^:]+): (.+)$", text, re.M))
+
+
+def table_counts(text):
+    return {m[0]:int(m[1]) for m in re.findall(r"^\| ([a-z][a-z0-9-]+) \| (\d+) \|$", text, re.M)}
+
+
+def verify_mutations(folder, require_current=False):
+    report = obj(folder / "results.json")
+    results = report["results"]
+    assert len(results)==26 and report["seeds"]==2000
+    statuses = Counter()
+    baseline = jsonl(folder / "baseline.jsonl")
+    assert any(e.get("Action")=="pass" and e.get("Test")=="TestLab" for e in baseline)
+    traces = [int(n) for e in baseline for n in re.findall(r"mutation seed (\d+)",e.get("Output",""))]
+    same(traces,list(range(report["seeds"])))
+    for row in results:
+        name = row["mutant"]["id"]
+        events = jsonl(folder / f"{name}.jsonl")
+        text = "".join(e.get("Output","") for e in events)
+        seeds = [int(n) for n in re.findall(r"mutation seed (\d+)",text)]
+        assert seeds == list(range(len(seeds))), (name,"noncontiguous seed trace")
+        if row["status"]=="caught":
+            assert any(e.get("Action")=="fail" and e.get("Test")=="TestLab" for e in events)
+            failures = re.findall(r"lab_test.go:\d+: seed (\d+):? (.+)", text)
+            assert failures, name
+            same(row["seed"],int(failures[0][0]),name)
+            same(row["check"],failures[0][1].strip(),name)
+            assert seeds[-1]==row["seed"]
+        elif row["status"]=="equivalent":
+            assert name=="M003" and row["mutant"]["equivalent_reason"]
+            assert any(e.get("Action")=="pass" and e.get("Test")=="TestLab" for e in events)
+            assert len(seeds)==report["seeds"]
+        else:
+            raise AssertionError((name,row["status"]))
+        if require_current:
+            patch = ROOT / "internal/lab/mutants" / Path(row["mutant"]["patch"]).name
+            same(hashlib.sha256(patch.read_bytes()).hexdigest(),row["patch_sha256"],name)
+        statuses[row["status"]] += 1
+    same(dict(statuses), {"caught":25,"equivalent":1})
+    return report
+
+
+def historical():
+    manifest = obj(RAW / "historical/manifest.json")
+    for file in manifest:
+        data = (ROOT / file["path"]).read_bytes()
+        same(len(data),file["bytes"],file["path"])
+        same(hashlib.sha256(data).hexdigest(),file["sha256"],file["path"])
+        original = gzip.decompress(data) if file["path"].endswith(".gz") else data
+        same(len(original),file["source_bytes"],file["path"])
+        same(hashlib.sha256(original).hexdigest(),file["source_sha256"],file["path"])
+    data = obj(EVIDENCE / "load-results.json")
+    assert len(data)==61 and len({r["raw_directory"] for r in data})==61
+    for row in data:
+        assert row["original_raw_directory"] != row["raw_directory"]
+        derived = verify_load(ROOT / row["raw_directory"])
+        for key,value in derived.items():
+            same(row[key],value,f'{row["raw_directory"]}.{key}')
+    historical_load_tables(data)
+    for report_name,log_name in [("lab-2026-09-28.md","l2-campaign-200000.log"),("lab-delta1-2026-09-28.md","delta-campaign.log")]:
+        original = read(RAW / "historical/lab" / report_name)
+        current = read(EVIDENCE / report_name).split("## Final code",1)[0]
+        same(fields(current),fields(original),report_name)
+        same(table_counts(current),table_counts(original),report_name)
+        f = fields(original)
+        log = read(RAW / "historical/lab" / log_name)
+        assert f'Runs: {f["Runs"]}; passed: {f["Passed"]}; failing seeds: {f["Failing seeds"]}' in log
+        assert f'elapsed: {f["Elapsed"]}' in log
+    delta = fields(read(RAW / "historical/lab/lab-delta1-2026-09-28.md"))
+    assert int(delta["Root runs"])==2*int(delta["Runs"])
+    mutation = verify_mutations(RAW / "historical/lab/mutations")
+    doc = read(EVIDENCE / "lab-mutation.md").split("## Final code",1)[0]
+    table = {cells(l)[0]:cells(l) for l in doc.splitlines() if re.match(r"^\| M\d{3} \|",l)}
+    for row in mutation["results"]:
+        c = table[row["mutant"]["id"]]
+        same(c[2],row["status"]); same(-1 if c[3]=="—" else int(c[3]),row["seed"])
+    caught = sum(r["status"]=="caught" for r in mutation["results"])
+    equivalents = sum(r["status"]=="equivalent" for r in mutation["results"])
+    assert f"Caught **{caught}/{len(mutation['results'])} valid mutants ({caught/len(mutation['results'])*100:.2f}%)**; equivalent survivors: **{equivalents}**." in doc
+    assert f"**{caught}/{len(mutation['results'])-equivalents} (100.00%)**" in doc
+    checks = {
+        "historical/evidence/verify.log": ["295 passed", "13 passed"],
+        "historical/lab/gate-make-verify-l2-final.log": ["293 passed"],
+        "historical/lab/l2-2000-final.log": ["validated 2000 seeds", "(16.87s)"],
+        "historical/lab/delta-make-verify-final.log": ["52.109s", "369 passed", "5 skipped"],
+        "historical/perf/merged-verify-reviewed.log": ["369 passed", "18 passed", "2 skipped", "5 skipped"],
+        "historical/perf/targeted-before.log": ["claim_attempts=40 claimed=1", "control_before=8 control_after=9 control_delta=1", "xact_commit_before=9 xact_commit_after=50 xact_commit_delta=41"],
+        "historical/perf/targeted-after-reviewed.log": ["claim_attempts=1 claimed=1", "control_delta=1", "xact_commit_before=9 xact_commit_after=11 xact_commit_delta=2", "residual_commits=0"],
+        "historical/perf/lock-red-race.log": ["deadlock retries = 1"],
+        "historical/lab/delta-pg-unscaled-probe.log": ["1000 steps", "elapsed=3.771993333s"],
+        "historical/lab/delta-pg-green.log": ["steps=975 duplicate_acks=149 database_errors=5 server_crashes=5 elapsed=6.313"],
+        "historical/lab/delta-pg-500.log": ["steps=53835 duplicate_acks=7589 database_errors=250 server_crashes=250 elapsed=9m12.646540041s"],
+        "historical/lab/delta-pg-500-final.log": ["seed 377", "context deadline exceeded", "600.208"],
+        "historical/lab/delta-pg-500-uncontended.log": ["steps=53835 duplicate_acks=7589 database_errors=250 server_crashes=250 elapsed=5m22.944687959s", "(323.05s)", "323.388s"],
+    }
+    for path, snippets in checks.items():
+        text = read(RAW / path)
+        for snippet in snippets:
+            assert snippet in text, (path,snippet)
+    # Check historical timing prose against its actual log, including rounding.
+    pg_doc = read(EVIDENCE / "lab-pg.md").split("## Final code",1)[0]
+    for filename, phrase in [
+        ("delta-pg-unscaled-probe.log","3.772 seconds"),
+        ("delta-pg-green.log","6.313 seconds"),
+        ("delta-pg-500.log","9 minutes 12.647 seconds"),
+        ("delta-pg-500-uncontended.log","5 minutes 22.945 seconds"),
+    ]:
+        elapsed = re.search(r"elapsed[=:](\S+)",read(RAW/"historical/lab"/filename))[1]
+        seconds = duration_seconds(elapsed)
+        if "minutes" in phrase:
+            actual = f"{int(seconds//60)} minutes {seconds%60:.3f} seconds"
+        else:
+            actual = f"{seconds:.3f} seconds"
+        same(actual,phrase)
+        assert phrase in pg_doc
+    for snippet in ("975 actor steps","149 duplicate acknowledgements","53,835 actor steps",
+                    "7,589 duplicate acknowledgements","250 database errors","250 server crashes",
+                    "600.208 seconds","seed 377","2,000 completed run executions"):
+        assert snippet in pg_doc,snippet
+    l2 = read(EVIDENCE/"lab-l2.md").split("## Final code",1)[0]
+    for snippet in ("16.87 seconds","52.109 seconds","46,179,964","148,554","9,870,634","293 SDK tests"):
+        assert snippet in l2,snippet
+    old_races = subprocess.check_output(["git","show","df11bda:internal/engine/pg_poll_lock_test.go"],cwd=ROOT,text=True)
+    kinds = re.search(r'for _, kind := range \[\]string\{([^}]+)\}',old_races.split("func TestPostgresTerminateAgainstTaskOperations",1)[1])[1]
+    orders = re.search(r'for _, first := range \[\]string\{([^}]+)\}',old_races)[1]
+    assert len(re.findall(r'"[^"]+"',kinds))*len(re.findall(r'"[^"]+"',orders))==16
+    assert "16 ordered termination races" in read(EVIDENCE/"load.md")
+    print(f"PASS historical archive: {len(manifest)} hashes; lab aggregates, mutation seeds, gates and timing/control logs")
+    print("LIMIT historical lab fault/step totals have emitted aggregate reports, not per-seed records")
+    return data
+
+
+def final_load():
+    rows = []
+    for i,point in enumerate(ORDER,1):
+        log = read(FINAL / f"load-{i:02}.log")
+        assert f"Measured source SHA: {SHA}" in log and "Exit: 0" in log
+        folder = re.search(r"^Raw logs: .lane/(.+)$",log,re.M)[1]
+        row = verify_load(FINAL / "load" / folder)
+        meta = obj(FINAL / "load" / folder / "metadata.json")
+        same(tuple(map(int,meta["command"].split()[-3:])),point)
+        same(meta["phase"],"final"); same(meta["port"],7701)
+        assert meta["database"].startswith("capstan_final_")
+        assert meta["dbMaxConns"]=="default"
+        row["source_sha"] = SHA
+        row["measurement"] = i
+        rows.append(row)
+    return rows
+
+
+def final_lab():
+    records = jsonl(FINAL / "lab-seeds.jsonl")
+    assert sorted(r["seed"] for r in records)==list(range(200000))
+    failures = [r for r in records if r["error"]]
+    assert not failures, failures[:3]
+    assert len({r["scenario"] for r in records})==12
+    assert all(len(r["faults"])<=6 and len(set(r["faults"]))==len(r["faults"]) for r in records)
+    faults = Counter(f for r in records for f in r["faults"])
+    responses = Counter(g for r in records for g in (r["gate_responses"] or []))
+    report = read(FINAL / "lab-report.md")
+    f = fields(report)
+    counts = {"Runs":len(records),"Passed":len(records)-len(failures),"Failing seeds":len(failures),
+              "Recognized known failures":0,"Unrecognized failures":0,
+              "Total steps":sum(r["steps"] for r in records),
+              "Root runs":sum(r["root_runs"] for r in records),
+              "Store transaction steps":sum(r["transaction_steps"] for r in records)}
+    for key,value in counts.items():
+        same(int(f[key]),value,key)
+    same(table_counts(report),dict(faults|responses))
+    assert len(faults)==9 and len(responses)==5
+    assert f["Seed range"]=="0..199999" and f["Fault selection"]=="all"
+    assert f["Parallelism"]=="8" and f["Workers per seed"]=="3" and f["Maximum steps per seed"]=="1000"
+    assert f["Scheduling stopped"]=="seed limit reached" and f["Time budget"]=="unlimited"
+    log = read(FINAL / "lab.log")
+    assert f"elapsed: {f['Elapsed']}" in log and "Exit: 0" in log and SHA in log
+    return dict(counts, elapsed=f["Elapsed"], faults=dict(faults), gate_responses=dict(responses))
+
+
+def final_pg():
+    text = read(FINAL / "pg.log")
+    rows = [json.loads(s) for s in re.findall(r'(\{"seed":\d+,[^\n]+\})', text)]
+    assert [r["seed"] for r in rows]==list(range(500))
+    total = {k:sum(r[k] for r in rows) for k in ("steps","duplicate_acks","database_errors","server_crashes")}
+    m = re.search(r"validated (\d+) PostgreSQL seeds; two shared-queue runs/seed; steps=(\d+) duplicate_acks=(\d+) database_errors=(\d+) server_crashes=(\d+) elapsed=(\S+)",text)
+    assert m and int(m[1])==len(rows)
+    same(list(total.values()),list(map(int,m.group(2,3,4,5))))
+    assert "--- PASS: TestPostgresCampaign" in text and "Exit: 0" in text and SHA in text
+    return dict(total,seeds=len(rows),executions=4*len(rows),elapsed=m[6])
+
+
+def artifacts():
+    inspection = obj(EVIDENCE/"audit-2026-09-28/evidence/artifact-inspection.json")
+    for name,info in inspection["images"].items():
+        data = (EVIDENCE/name).read_bytes()
+        if name.endswith(".png"):
+            assert data[:8]==b"\x89PNG\r\n\x1a\n"
+            same(list(struct.unpack(">II",data[16:24])),[info["width"],info["height"]],name)
+        elif name.endswith(".gif"):
+            assert data[:6] in (b"GIF87a",b"GIF89a")
+            same(list(struct.unpack("<HH",data[6:10])),[info["width"],info["height"]],name)
+            pos = 13 + (3*(2**((data[10]&7)+1)) if data[10]&128 else 0)
+            frames,centiseconds,delay = 0,0,0
+            def subblocks(pos):
+                while data[pos]:
+                    pos += 1+data[pos]
+                return pos+1
+            while data[pos]!=0x3b:
+                block = data[pos]; pos += 1
+                if block==0x21:
+                    kind = data[pos]; pos += 1
+                    if kind==0xf9:
+                        assert data[pos]==4
+                        delay = struct.unpack("<H",data[pos+2:pos+4])[0]
+                    pos = subblocks(pos)
+                elif block==0x2c:
+                    packed = data[pos+8]; pos += 9
+                    if packed&128:
+                        pos += 3*2**((packed&7)+1)
+                    pos += 1
+                    pos = subblocks(pos)
+                    frames += 1; centiseconds += delay; delay = 0
+                else:
+                    raise AssertionError((name,pos,block))
+            same(frames,info["frames"])
+            same(str(Decimal(centiseconds)/100),info["duration_seconds"])
+    for path in EVIDENCE.glob("*.cast"):
+        events = [json.loads(line,parse_float=Decimal) for line in read(path).splitlines()]
+        assert events[0]["version"]==2 and set(events[0]["env"])=={"TERM"}
+        assert all(a[0]<=b[0] for a,b in zip(events[1:],events[2:]))
+        reported = inspection["recordings"][path.name]
+        same(len(events)-1,reported["events"])
+        same(str(events[-1][0]),reported["duration_seconds"])
+        for pause in reported["announced_pauses"]:
+            index = next(i for i,e in enumerate(events[1:],1)
+                         if pause["marker"] in e[2] and str(e[0])==pause["at_seconds"])
+            same(str(events[index+1][0]-events[index][0]),pause["gap_seconds"])
+        text = "".join(e[2] for e in events[1:] if e[1]=="o")
+        assert "PASS:" in text
+        if path.stem=="demo-cost":
+            assert "|     0.010000 | 0.000034 |           14 |             4 |" in text
+            assert Decimal(14)/1000000+Decimal(4)*5/1000000==Decimal("0.000034")
+    fixtures = [obj(p) for p in (ROOT / "conformance/fixtures").glob("*.json")]
+    shared = [f for f in fixtures if f.get("only")!=["ts"]]
+    same([len(fixtures),len(shared),sum("commands" in f["expect"] for f in shared),sum("mismatch" in f["expect"] for f in shared)],[54,53,39,14])
+    exports = set(re.findall(r"^export (?:async )?function (\w+)",read(ROOT / "conformance/workflows.ts"),re.M))
+    registry = read(ROOT/"internal/lab/scenarios/conformance.go").split("return map[string]labworker.Workflow{",1)[1].split("\n\t}",1)[0]
+    assert len(exports)==29 and exports==set(re.findall(r'"(\w+)":',registry))
+    tx = read(ROOT / "internal/store/store.go").split("type Tx interface {",1)[1].split("\n}",1)[0]
+    methods = set(re.findall(r"^\s*([A-Z]\w*)\(",tx,re.M))
+    wrappers = set()
+    for path in (ROOT / "internal/lab").glob("*.go"):
+        if not path.name.endswith("_test.go"):
+            wrappers.update(re.findall(r"^func \(\w+ \*faultTx\) (\w+)\(",read(path),re.M))
+    assert len(methods)==35 and not methods-wrappers
+    audit = read(EVIDENCE / "audit-2026-09-28.md").split("## Post-audit resolution",1)[0]
+    counts = Counter(re.findall(r"^\| [SDECR]\d+ \| \*\*(VERIFIED|FAILED|NOT CHECKED)\*\*",audit,re.M))
+    same(dict(counts),{"VERIFIED":114,"FAILED":16,"NOT CHECKED":16})
+    for c in (50,200):
+        verify_load(EVIDENCE/f"audit-2026-09-28/evidence/load-c{c}")
+    verify_mutations(EVIDENCE/"audit-2026-09-28/evidence/mutations-fixed")
+    print("PASS image geometry/timing, recordings/cost arithmetic, source inventories and preserved audit measurements")
+
+
+def final_demos():
+    for name in ("crash","blocked","idle-wait"):
+        text = read(FINAL / f"demo-{name}.log")
+        assert SHA in text and "Exit: 0" in text and "PASS:" in text
+    before = obj(FINAL / "demo-crash/history-before.json")
+    after = obj(FINAL / "demo-crash/history-after.json")
+    same(after[:len(before)],before)
+    same(sum("activityCompleted" in e for e in after),4)
+    timers = [e["timerFired"]["startedEventId"] for e in after if "timerFired" in e]
+    assert len(timers)==len(set(timers))==3
+    decoder = json.JSONDecoder()
+    def cli_objects(text):
+        return [decoder.raw_decode(text[m.start():])[0] for m in re.finditer(r"^\{\n",text,re.M)]
+    blocked = read(FINAL/"demo-blocked.log")
+    descriptions = cli_objects(blocked)
+    old = [r for r in descriptions if r.get("runId")=="evidence-patch-old"]
+    new = [r for r in descriptions if r.get("runId")=="evidence-patch-new"]
+    assert any(r.get("status")=="blocked" and "event 5" in r["failure"]["message"] for r in old)
+    assert any(r.get("status")=="completed" and r.get("result")=={"value":1} for r in old)
+    assert any(r.get("status")=="completed" and r.get("result")=={"value":10} for r in new)
+    assert "value 1, one activity completion" in blocked
+    idle = read(FINAL/"demo-idle-wait.log")
+    assert idle.count("Worker processes: 0")==2
+    assert len(re.findall(r"^\s*0\s*\|\s*0\s*$",idle,re.M))==2
+    assert "Waiting 5 real seconds" in idle
+    assert any(r.get("status")=="completed" and r.get("result")=={"approved":True} for r in cli_objects(idle))
+    return len(before)
+
+
+def operational_proofs():
+    gate = read(FINAL/"verify.log")
+    assert SHA in gate and "Exit: 0" in gate
+    assert all(command in gate for command in ("buf generate","buf lint","go vet","go test -race","-tags pgengine","tsc --noEmit","vitest run"))
+    assert re.search(r"Tests\s+\d+ passed",gate)
+    human = read(FINAL/"human-seven-days.log")
+    assert "PASS: TestAuditPostgresHumanWaitSevenDays" in human and "Exit: 0" in human and SHA in human
+    controls = read(FINAL/"controls.log")
+    assert "claim_attempts=1 claimed=1" in controls and "Exit: 0" in controls and SHA in controls
+    assert len(re.findall(r"--- PASS: TestPostgresTerminateAgainstTaskOperations/[^ ]+ \(",controls))==16
+    quickstart = read(FINAL/"quickstart.log")
+    assert SHA in quickstart and "Clean shell: env -i" in quickstart
+    assert '"status": "completed"' in quickstart and '"result": 5' in quickstart and "/ui/ HTTP 200" in quickstart
+    assert "owned database dropped; shared PostgreSQL left running" in quickstart
+    browser = read(FINAL/"quickstart-ui.log")
+    assert "quickstart-1" in browser and "Run completed" in browser and '\\"value\\": 5' in browser
+    assert "final-quickstart' closed" in browser
+    readme = read(ROOT/"README.md")
+    setup = re.search(r"<!-- quickstart:start -->\n```bash\n(.*?)```",readme,re.S)[1]
+    cleanup = re.search(r"<!-- quickstart:cleanup -->\n```bash\n(.*?)```",readme,re.S)[1]
+    same(read(FINAL/"quickstart-commands.sh"),setup+"\n"+cleanup,"tested README commands")
+    original = subprocess.check_output(["git","show",f"{SHA}:docs/evidence/audit-2026-09-28.md"],cwd=ROOT,text=True)
+    current = read(EVIDENCE/"audit-2026-09-28.md")
+    assert current.startswith(original), "auditor's original report changed"
+    failed = set(re.findall(r"^\| ([A-Z]\d+) \| \*\*FAILED\*\*",original,re.M))
+    resolution = current.split("## Post-audit resolution",1)[1]
+    assert failed==set(re.findall(r"^\| ([A-Z]\d+) \|",resolution,re.M))
+    print("PASS final gate, human wait, 16 ordered races, quickstart/browser and all FAILED-row resolutions")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--historical",action="store_true")
+    parser.add_argument("--write",action="store_true")
+    args = parser.parse_args()
+    subprocess.run(["git", "diff", "--exit-code", SHA, "--", "cmd", "internal",
+                    "sdk", "gen", "proto", "examples", "scripts", "Makefile",
+                    "go.mod", "go.sum", "compose.yaml", "conformance"],
+                   cwd=ROOT, check=True)
+    historical()
+    artifacts()
+    if args.historical:
+        print("PASS historical numeric verification")
+        return
+    loads,lab,pg = final_load(),final_lab(),final_pg()
+    mutations = verify_mutations(FINAL / "mutations",True)
+    prefix = final_demos()
+    operational_proofs()
+    output = {"source_sha":SHA,"load":loads,"lab":lab,"pg":pg,"crash_prefix":prefix,
+              "mutation_statuses":dict(Counter(r["status"] for r in mutations["results"]))}
+    destination = FINAL / "numbers.json"
+    if args.write:
+        destination.write_text(json.dumps(output,indent=2)+"\n")
+    else:
+        same(obj(destination),output,"final numbers")
+    spec = importlib.util.spec_from_file_location("render_final",RAW / "render-final.py")
+    render = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(render)
+    render.check_documents(output,mutations,write=args.write)
+    print(f"PASS final load: {len(loads)} measurements, {sum(r['result']['completed'] for r in loads)} completed, {sum(r['result']['activities'] for r in loads)} activities, 0 errors")
+    print(f"PASS final lab: {lab['Passed']} seeds, {lab['Total steps']} steps, {lab['Store transaction steps']} transaction steps, 0 failures")
+    print(f"PASS mutation catalogue: {len(mutations['results'])} valid, 25 caught, 1 equivalent; every first failing seed checked")
+    print(f"PASS PostgreSQL: {pg['seeds']} seeds, {pg['steps']} steps, {pg['duplicate_acks']} duplicate acknowledgements")
+    print("PASS every generated final numeric section matches committed observations")
+
+
+if __name__ == "__main__":
+    main()

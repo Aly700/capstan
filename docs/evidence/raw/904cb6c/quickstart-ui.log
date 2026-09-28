@@ -1,0 +1,718 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Browser: Chrome through Playwright CLI 0.1.21 (in-app connection unavailable).
+Ephemeral authentication key redacted from fill-command output.
+### Ran Playwright code
+```js
+await page.getByRole('textbox', { name: 'API key' }).fill('[REDACTED_EPHEMERAL_KEY]');
+```
+
+Exit: 0
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Connect' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:7773/ui/
+- Page Title: Capstan · Runs
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-09-28T20-38-25-029Z.yml)
+
+Exit: 0
+### Ran Playwright code
+```js
+await page.getByRole('link', { name: 'quickstart-' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:7773/ui/#run=quickstart-1
+- Page Title: Capstan · Run history
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-09-28T20-39-02-077Z.yml)
+### Page
+- Page URL: http://127.0.0.1:7773/ui/#run=quickstart-1
+- Page Title: Capstan · Run history
+### Snapshot
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "CAPSTAN" [ref=e3] [cursor=pointer]:
+      - /url: /ui/
+    - generic [ref=e4]: Run viewer
+    - generic [ref=e5]: Read only
+  - main [ref=e6]:
+    - region "Connection" [ref=e7]:
+      - generic [ref=e45]:
+        - generic [ref=e46]: Authenticated session
+        - button "Disconnect & clear key" [ref=e47] [cursor=pointer]
+    - status [ref=e13]: History refreshed 20:39:01 UTC.
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - link "← All runs" [ref=e58] [cursor=pointer]:
+          - /url: "#"
+        - button "Refresh history" [ref=e59] [cursor=pointer]
+      - heading "quickstart-1" [level=1] [ref=e60]
+      - generic [ref=e61]:
+        - generic [ref=e62]: Completed
+        - generic [ref=e63]: "Type: loadFive"
+        - generic [ref=e64]: "Queue: quickstart"
+        - generic [ref=e65]: "Started: 2026-09-28 20:32:55.417424 UTC"
+      - generic [ref=e66]:
+        - heading "Event timeline" [level=2] [ref=e67]
+        - generic [ref=e68]: 30 events loaded
+      - list [ref=e69]:
+        - listitem [ref=e70]:
+          - generic [ref=e71]:
+            - link "#1" [ref=e72] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e73]: 2026-09-28 20:32:55.419244
+          - generic [ref=e74]:
+            - generic [ref=e75]: Run started
+            - paragraph [ref=e76]: "workflow: loadFive · queue: quickstart · worker / caller: local"
+            - group [ref=e77]:
+              - generic "Attributes & payloads" [ref=e78] [cursor=pointer]
+        - listitem [ref=e79]:
+          - generic [ref=e80]:
+            - link "#2" [ref=e81] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e82]: 2026-09-28 20:32:55.423037
+          - generic [ref=e83]:
+            - generic [ref=e84]: Task scheduled
+            - paragraph [ref=e85]: "attempt: 1 · queue: quickstart"
+            - group [ref=e86]:
+              - generic "Attributes & payloads" [ref=e87] [cursor=pointer]
+        - listitem [ref=e88]:
+          - generic [ref=e89]:
+            - link "#3" [ref=e90] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e91]: 2026-09-28 20:32:55.439889
+          - generic [ref=e92]:
+            - generic [ref=e93]: Task started
+            - paragraph [ref=e94]: "worker / caller: quickstart-worker"
+            - group [ref=e95]:
+              - generic "Attributes & payloads" [ref=e96] [cursor=pointer]
+        - listitem [ref=e97]:
+          - generic [ref=e98]:
+            - link "#4" [ref=e99] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e100]: 2026-09-28 20:32:55.455231
+          - generic [ref=e101]:
+            - generic [ref=e102]: Task completed
+            - paragraph [ref=e103]: "worker / caller: quickstart-worker"
+            - group [ref=e104]:
+              - generic "Attributes & payloads" [ref=e105] [cursor=pointer]
+        - listitem [ref=e106]:
+          - generic [ref=e107]:
+            - link "#5" [ref=e108] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e109]: 2026-09-28 20:32:55.457333
+          - generic [ref=e110]:
+            - generic [ref=e111]: Activity scheduled
+            - paragraph [ref=e112]: "activity: step · step: 1 · queue: quickstart"
+            - group [ref=e113]:
+              - generic "Attributes & payloads" [ref=e114] [cursor=pointer]
+        - listitem [ref=e115]:
+          - generic [ref=e116]:
+            - link "#6" [ref=e117] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e118]: 2026-09-28 20:32:55.473809
+          - generic [ref=e119]:
+            - generic [ref=e120]: Activity completed
+            - paragraph [ref=e121]: "activity: step · attempt: 1 · step: 1 · worker / caller: quickstart-worker"
+            - group [ref=e122]:
+              - generic "Attributes & payloads" [ref=e123] [cursor=pointer]
+        - listitem [ref=e124]:
+          - generic [ref=e125]:
+            - link "#7" [ref=e126] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e127]: 2026-09-28 20:32:55.476097
+          - generic [ref=e128]:
+            - generic [ref=e129]: Task scheduled
+            - paragraph [ref=e130]: "attempt: 1 · queue: quickstart"
+            - group [ref=e131]:
+              - generic "Attributes & payloads" [ref=e132] [cursor=pointer]
+        - listitem [ref=e133]:
+          - generic [ref=e134]:
+            - link "#8" [ref=e135] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e136]: 2026-09-28 20:32:55.487735
+          - generic [ref=e137]:
+            - generic [ref=e138]: Task started
+            - paragraph [ref=e139]: "worker / caller: quickstart-worker"
+            - group [ref=e140]:
+              - generic "Attributes & payloads" [ref=e141] [cursor=pointer]
+        - listitem [ref=e142]:
+          - generic [ref=e143]:
+            - link "#9" [ref=e144] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e145]: 2026-09-28 20:32:55.502586
+          - generic [ref=e146]:
+            - generic [ref=e147]: Task completed
+            - paragraph [ref=e148]: "worker / caller: quickstart-worker"
+            - group [ref=e149]:
+              - generic "Attributes & payloads" [ref=e150] [cursor=pointer]
+        - listitem [ref=e151]:
+          - generic [ref=e152]:
+            - link "#10" [ref=e153] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e154]: 2026-09-28 20:32:55.505304
+          - generic [ref=e155]:
+            - generic [ref=e156]: Activity scheduled
+            - paragraph [ref=e157]: "activity: step · step: 2 · queue: quickstart"
+            - group [ref=e158]:
+              - generic "Attributes & payloads" [ref=e159] [cursor=pointer]
+        - listitem [ref=e160]:
+          - generic [ref=e161]:
+            - link "#11" [ref=e162] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e163]: 2026-09-28 20:32:55.524881
+          - generic [ref=e164]:
+            - generic [ref=e165]: Activity completed
+            - paragraph [ref=e166]: "activity: step · attempt: 1 · step: 2 · worker / caller: quickstart-worker"
+            - group [ref=e167]:
+              - generic "Attributes & payloads" [ref=e168] [cursor=pointer]
+        - listitem [ref=e169]:
+          - generic [ref=e170]:
+            - link "#12" [ref=e171] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e172]: 2026-09-28 20:32:55.527058
+          - generic [ref=e173]:
+            - generic [ref=e174]: Task scheduled
+            - paragraph [ref=e175]: "attempt: 1 · queue: quickstart"
+            - group [ref=e176]:
+              - generic "Attributes & payloads" [ref=e177] [cursor=pointer]
+        - listitem [ref=e178]:
+          - generic [ref=e179]:
+            - link "#13" [ref=e180] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e181]: 2026-09-28 20:32:55.538325
+          - generic [ref=e182]:
+            - generic [ref=e183]: Task started
+            - paragraph [ref=e184]: "worker / caller: quickstart-worker"
+            - group [ref=e185]:
+              - generic "Attributes & payloads" [ref=e186] [cursor=pointer]
+        - listitem [ref=e187]:
+          - generic [ref=e188]:
+            - link "#14" [ref=e189] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e190]: 2026-09-28 20:32:55.549346
+          - generic [ref=e191]:
+            - generic [ref=e192]: Task completed
+            - paragraph [ref=e193]: "worker / caller: quickstart-worker"
+            - group [ref=e194]:
+              - generic "Attributes & payloads" [ref=e195] [cursor=pointer]
+        - listitem [ref=e196]:
+          - generic [ref=e197]:
+            - link "#15" [ref=e198] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e199]: 2026-09-28 20:32:55.551693
+          - generic [ref=e200]:
+            - generic [ref=e201]: Activity scheduled
+            - paragraph [ref=e202]: "activity: step · step: 3 · queue: quickstart"
+            - group [ref=e203]:
+              - generic "Attributes & payloads" [ref=e204] [cursor=pointer]
+        - listitem [ref=e205]:
+          - generic [ref=e206]:
+            - link "#16" [ref=e207] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e208]: 2026-09-28 20:32:55.568020
+          - generic [ref=e209]:
+            - generic [ref=e210]: Activity completed
+            - paragraph [ref=e211]: "activity: step · attempt: 1 · step: 3 · worker / caller: quickstart-worker"
+            - group [ref=e212]:
+              - generic "Attributes & payloads" [ref=e213] [cursor=pointer]
+        - listitem [ref=e214]:
+          - generic [ref=e215]:
+            - link "#17" [ref=e216] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e217]: 2026-09-28 20:32:55.570302
+          - generic [ref=e218]:
+            - generic [ref=e219]: Task scheduled
+            - paragraph [ref=e220]: "attempt: 1 · queue: quickstart"
+            - group [ref=e221]:
+              - generic "Attributes & payloads" [ref=e222] [cursor=pointer]
+        - listitem [ref=e223]:
+          - generic [ref=e224]:
+            - link "#18" [ref=e225] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e226]: 2026-09-28 20:32:55.579709
+          - generic [ref=e227]:
+            - generic [ref=e228]: Task started
+            - paragraph [ref=e229]: "worker / caller: quickstart-worker"
+            - group [ref=e230]:
+              - generic "Attributes & payloads" [ref=e231] [cursor=pointer]
+        - listitem [ref=e232]:
+          - generic [ref=e233]:
+            - link "#19" [ref=e234] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e235]: 2026-09-28 20:32:55.591874
+          - generic [ref=e236]:
+            - generic [ref=e237]: Task completed
+            - paragraph [ref=e238]: "worker / caller: quickstart-worker"
+            - group [ref=e239]:
+              - generic "Attributes & payloads" [ref=e240] [cursor=pointer]
+        - listitem [ref=e241]:
+          - generic [ref=e242]:
+            - link "#20" [ref=e243] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e244]: 2026-09-28 20:32:55.595179
+          - generic [ref=e245]:
+            - generic [ref=e246]: Activity scheduled
+            - paragraph [ref=e247]: "activity: step · step: 4 · queue: quickstart"
+            - group [ref=e248]:
+              - generic "Attributes & payloads" [ref=e249] [cursor=pointer]
+        - listitem [ref=e250]:
+          - generic [ref=e251]:
+            - link "#21" [ref=e252] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e253]: 2026-09-28 20:32:55.611553
+          - generic [ref=e254]:
+            - generic [ref=e255]: Activity completed
+            - paragraph [ref=e256]: "activity: step · attempt: 1 · step: 4 · worker / caller: quickstart-worker"
+            - group [ref=e257]:
+              - generic "Attributes & payloads" [ref=e258] [cursor=pointer]
+        - listitem [ref=e259]:
+          - generic [ref=e260]:
+            - link "#22" [ref=e261] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e262]: 2026-09-28 20:32:55.613869
+          - generic [ref=e263]:
+            - generic [ref=e264]: Task scheduled
+            - paragraph [ref=e265]: "attempt: 1 · queue: quickstart"
+            - group [ref=e266]:
+              - generic "Attributes & payloads" [ref=e267] [cursor=pointer]
+        - listitem [ref=e268]:
+          - generic [ref=e269]:
+            - link "#23" [ref=e270] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e271]: 2026-09-28 20:32:55.623478
+          - generic [ref=e272]:
+            - generic [ref=e273]: Task started
+            - paragraph [ref=e274]: "worker / caller: quickstart-worker"
+            - group [ref=e275]:
+              - generic "Attributes & payloads" [ref=e276] [cursor=pointer]
+        - listitem [ref=e277]:
+          - generic [ref=e278]:
+            - link "#24" [ref=e279] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e280]: 2026-09-28 20:32:55.634205
+          - generic [ref=e281]:
+            - generic [ref=e282]: Task completed
+            - paragraph [ref=e283]: "worker / caller: quickstart-worker"
+            - group [ref=e284]:
+              - generic "Attributes & payloads" [ref=e285] [cursor=pointer]
+        - listitem [ref=e286]:
+          - generic [ref=e287]:
+            - link "#25" [ref=e288] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e289]: 2026-09-28 20:32:55.636749
+          - generic [ref=e290]:
+            - generic [ref=e291]: Activity scheduled
+            - paragraph [ref=e292]: "activity: step · step: 5 · queue: quickstart"
+            - group [ref=e293]:
+              - generic "Attributes & payloads" [ref=e294] [cursor=pointer]
+        - listitem [ref=e295]:
+          - generic [ref=e296]:
+            - link "#26" [ref=e297] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e298]: 2026-09-28 20:32:55.652072
+          - generic [ref=e299]:
+            - generic [ref=e300]: Activity completed
+            - paragraph [ref=e301]: "activity: step · attempt: 1 · step: 5 · worker / caller: quickstart-worker"
+            - group [ref=e302]:
+              - generic "Attributes & payloads" [ref=e303] [cursor=pointer]
+        - listitem [ref=e304]:
+          - generic [ref=e305]:
+            - link "#27" [ref=e306] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e307]: 2026-09-28 20:32:55.654018
+          - generic [ref=e308]:
+            - generic [ref=e309]: Task scheduled
+            - paragraph [ref=e310]: "attempt: 1 · queue: quickstart"
+            - group [ref=e311]:
+              - generic "Attributes & payloads" [ref=e312] [cursor=pointer]
+        - listitem [ref=e313]:
+          - generic [ref=e314]:
+            - link "#28" [ref=e315] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e316]: 2026-09-28 20:32:55.662266
+          - generic [ref=e317]:
+            - generic [ref=e318]: Task started
+            - paragraph [ref=e319]: "worker / caller: quickstart-worker"
+            - group [ref=e320]:
+              - generic "Attributes & payloads" [ref=e321] [cursor=pointer]
+        - listitem [ref=e322]:
+          - generic [ref=e323]:
+            - link "#29" [ref=e324] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e325]: 2026-09-28 20:32:55.672058
+          - generic [ref=e326]:
+            - generic [ref=e327]: Task completed
+            - paragraph [ref=e328]: "worker / caller: quickstart-worker"
+            - group [ref=e329]:
+              - generic "Attributes & payloads" [ref=e330] [cursor=pointer]
+        - listitem [ref=e331]:
+          - generic [ref=e332]:
+            - link "#30" [ref=e333] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e334]: 2026-09-28 20:32:55.674290
+          - generic [ref=e335]:
+            - generic [ref=e336]: Run completed
+            - group [ref=e337]:
+              - generic "Attributes & payloads" [ref=e338] [cursor=pointer]
+    - generic [ref=e44]: Capstan · History is append-only. All times shown in UTC.
+```
+### Ran Playwright code
+```js
+await page.locator('#event-30 > .event-body > details > summary').click();
+```
+### Page
+- Page URL: http://127.0.0.1:7773/ui/#run=quickstart-1
+- Page Title: Capstan · Run history
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-09-28T20-40-11-125Z.yml)
+### Page
+- Page URL: http://127.0.0.1:7773/ui/#run=quickstart-1
+- Page Title: Capstan · Run history
+### Snapshot
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - link "CAPSTAN" [ref=e3] [cursor=pointer]:
+      - /url: /ui/
+    - generic [ref=e4]: Run viewer
+    - generic [ref=e5]: Read only
+  - main [ref=e6]:
+    - region "Connection" [ref=e7]:
+      - generic [ref=e45]:
+        - generic [ref=e46]: Authenticated session
+        - button "Disconnect & clear key" [ref=e47] [cursor=pointer]
+    - status [ref=e13]: History refreshed 20:39:01 UTC.
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - link "← All runs" [ref=e58] [cursor=pointer]:
+          - /url: "#"
+        - button "Refresh history" [ref=e59] [cursor=pointer]
+      - heading "quickstart-1" [level=1] [ref=e60]
+      - generic [ref=e61]:
+        - generic [ref=e62]: Completed
+        - generic [ref=e63]: "Type: loadFive"
+        - generic [ref=e64]: "Queue: quickstart"
+        - generic [ref=e65]: "Started: 2026-09-28 20:32:55.417424 UTC"
+      - generic [ref=e66]:
+        - heading "Event timeline" [level=2] [ref=e67]
+        - generic [ref=e68]: 30 events loaded
+      - list [ref=e69]:
+        - listitem [ref=e70]:
+          - generic [ref=e71]:
+            - link "#1" [ref=e72] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e73]: 2026-09-28 20:32:55.419244
+          - generic [ref=e74]:
+            - generic [ref=e75]: Run started
+            - paragraph [ref=e76]: "workflow: loadFive · queue: quickstart · worker / caller: local"
+            - group [ref=e77]:
+              - generic "Attributes & payloads" [ref=e78] [cursor=pointer]
+        - listitem [ref=e79]:
+          - generic [ref=e80]:
+            - link "#2" [ref=e81] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e82]: 2026-09-28 20:32:55.423037
+          - generic [ref=e83]:
+            - generic [ref=e84]: Task scheduled
+            - paragraph [ref=e85]: "attempt: 1 · queue: quickstart"
+            - group [ref=e86]:
+              - generic "Attributes & payloads" [ref=e87] [cursor=pointer]
+        - listitem [ref=e88]:
+          - generic [ref=e89]:
+            - link "#3" [ref=e90] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e91]: 2026-09-28 20:32:55.439889
+          - generic [ref=e92]:
+            - generic [ref=e93]: Task started
+            - paragraph [ref=e94]: "worker / caller: quickstart-worker"
+            - group [ref=e95]:
+              - generic "Attributes & payloads" [ref=e96] [cursor=pointer]
+        - listitem [ref=e97]:
+          - generic [ref=e98]:
+            - link "#4" [ref=e99] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e100]: 2026-09-28 20:32:55.455231
+          - generic [ref=e101]:
+            - generic [ref=e102]: Task completed
+            - paragraph [ref=e103]: "worker / caller: quickstart-worker"
+            - group [ref=e104]:
+              - generic "Attributes & payloads" [ref=e105] [cursor=pointer]
+        - listitem [ref=e106]:
+          - generic [ref=e107]:
+            - link "#5" [ref=e108] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e109]: 2026-09-28 20:32:55.457333
+          - generic [ref=e110]:
+            - generic [ref=e111]: Activity scheduled
+            - paragraph [ref=e112]: "activity: step · step: 1 · queue: quickstart"
+            - group [ref=e113]:
+              - generic "Attributes & payloads" [ref=e114] [cursor=pointer]
+        - listitem [ref=e115]:
+          - generic [ref=e116]:
+            - link "#6" [ref=e117] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e118]: 2026-09-28 20:32:55.473809
+          - generic [ref=e119]:
+            - generic [ref=e120]: Activity completed
+            - paragraph [ref=e121]: "activity: step · attempt: 1 · step: 1 · worker / caller: quickstart-worker"
+            - group [ref=e122]:
+              - generic "Attributes & payloads" [ref=e123] [cursor=pointer]
+        - listitem [ref=e124]:
+          - generic [ref=e125]:
+            - link "#7" [ref=e126] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e127]: 2026-09-28 20:32:55.476097
+          - generic [ref=e128]:
+            - generic [ref=e129]: Task scheduled
+            - paragraph [ref=e130]: "attempt: 1 · queue: quickstart"
+            - group [ref=e131]:
+              - generic "Attributes & payloads" [ref=e132] [cursor=pointer]
+        - listitem [ref=e133]:
+          - generic [ref=e134]:
+            - link "#8" [ref=e135] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e136]: 2026-09-28 20:32:55.487735
+          - generic [ref=e137]:
+            - generic [ref=e138]: Task started
+            - paragraph [ref=e139]: "worker / caller: quickstart-worker"
+            - group [ref=e140]:
+              - generic "Attributes & payloads" [ref=e141] [cursor=pointer]
+        - listitem [ref=e142]:
+          - generic [ref=e143]:
+            - link "#9" [ref=e144] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e145]: 2026-09-28 20:32:55.502586
+          - generic [ref=e146]:
+            - generic [ref=e147]: Task completed
+            - paragraph [ref=e148]: "worker / caller: quickstart-worker"
+            - group [ref=e149]:
+              - generic "Attributes & payloads" [ref=e150] [cursor=pointer]
+        - listitem [ref=e151]:
+          - generic [ref=e152]:
+            - link "#10" [ref=e153] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e154]: 2026-09-28 20:32:55.505304
+          - generic [ref=e155]:
+            - generic [ref=e156]: Activity scheduled
+            - paragraph [ref=e157]: "activity: step · step: 2 · queue: quickstart"
+            - group [ref=e158]:
+              - generic "Attributes & payloads" [ref=e159] [cursor=pointer]
+        - listitem [ref=e160]:
+          - generic [ref=e161]:
+            - link "#11" [ref=e162] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e163]: 2026-09-28 20:32:55.524881
+          - generic [ref=e164]:
+            - generic [ref=e165]: Activity completed
+            - paragraph [ref=e166]: "activity: step · attempt: 1 · step: 2 · worker / caller: quickstart-worker"
+            - group [ref=e167]:
+              - generic "Attributes & payloads" [ref=e168] [cursor=pointer]
+        - listitem [ref=e169]:
+          - generic [ref=e170]:
+            - link "#12" [ref=e171] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e172]: 2026-09-28 20:32:55.527058
+          - generic [ref=e173]:
+            - generic [ref=e174]: Task scheduled
+            - paragraph [ref=e175]: "attempt: 1 · queue: quickstart"
+            - group [ref=e176]:
+              - generic "Attributes & payloads" [ref=e177] [cursor=pointer]
+        - listitem [ref=e178]:
+          - generic [ref=e179]:
+            - link "#13" [ref=e180] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e181]: 2026-09-28 20:32:55.538325
+          - generic [ref=e182]:
+            - generic [ref=e183]: Task started
+            - paragraph [ref=e184]: "worker / caller: quickstart-worker"
+            - group [ref=e185]:
+              - generic "Attributes & payloads" [ref=e186] [cursor=pointer]
+        - listitem [ref=e187]:
+          - generic [ref=e188]:
+            - link "#14" [ref=e189] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e190]: 2026-09-28 20:32:55.549346
+          - generic [ref=e191]:
+            - generic [ref=e192]: Task completed
+            - paragraph [ref=e193]: "worker / caller: quickstart-worker"
+            - group [ref=e194]:
+              - generic "Attributes & payloads" [ref=e195] [cursor=pointer]
+        - listitem [ref=e196]:
+          - generic [ref=e197]:
+            - link "#15" [ref=e198] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e199]: 2026-09-28 20:32:55.551693
+          - generic [ref=e200]:
+            - generic [ref=e201]: Activity scheduled
+            - paragraph [ref=e202]: "activity: step · step: 3 · queue: quickstart"
+            - group [ref=e203]:
+              - generic "Attributes & payloads" [ref=e204] [cursor=pointer]
+        - listitem [ref=e205]:
+          - generic [ref=e206]:
+            - link "#16" [ref=e207] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e208]: 2026-09-28 20:32:55.568020
+          - generic [ref=e209]:
+            - generic [ref=e210]: Activity completed
+            - paragraph [ref=e211]: "activity: step · attempt: 1 · step: 3 · worker / caller: quickstart-worker"
+            - group [ref=e212]:
+              - generic "Attributes & payloads" [ref=e213] [cursor=pointer]
+        - listitem [ref=e214]:
+          - generic [ref=e215]:
+            - link "#17" [ref=e216] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e217]: 2026-09-28 20:32:55.570302
+          - generic [ref=e218]:
+            - generic [ref=e219]: Task scheduled
+            - paragraph [ref=e220]: "attempt: 1 · queue: quickstart"
+            - group [ref=e221]:
+              - generic "Attributes & payloads" [ref=e222] [cursor=pointer]
+        - listitem [ref=e223]:
+          - generic [ref=e224]:
+            - link "#18" [ref=e225] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e226]: 2026-09-28 20:32:55.579709
+          - generic [ref=e227]:
+            - generic [ref=e228]: Task started
+            - paragraph [ref=e229]: "worker / caller: quickstart-worker"
+            - group [ref=e230]:
+              - generic "Attributes & payloads" [ref=e231] [cursor=pointer]
+        - listitem [ref=e232]:
+          - generic [ref=e233]:
+            - link "#19" [ref=e234] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e235]: 2026-09-28 20:32:55.591874
+          - generic [ref=e236]:
+            - generic [ref=e237]: Task completed
+            - paragraph [ref=e238]: "worker / caller: quickstart-worker"
+            - group [ref=e239]:
+              - generic "Attributes & payloads" [ref=e240] [cursor=pointer]
+        - listitem [ref=e241]:
+          - generic [ref=e242]:
+            - link "#20" [ref=e243] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e244]: 2026-09-28 20:32:55.595179
+          - generic [ref=e245]:
+            - generic [ref=e246]: Activity scheduled
+            - paragraph [ref=e247]: "activity: step · step: 4 · queue: quickstart"
+            - group [ref=e248]:
+              - generic "Attributes & payloads" [ref=e249] [cursor=pointer]
+        - listitem [ref=e250]:
+          - generic [ref=e251]:
+            - link "#21" [ref=e252] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e253]: 2026-09-28 20:32:55.611553
+          - generic [ref=e254]:
+            - generic [ref=e255]: Activity completed
+            - paragraph [ref=e256]: "activity: step · attempt: 1 · step: 4 · worker / caller: quickstart-worker"
+            - group [ref=e257]:
+              - generic "Attributes & payloads" [ref=e258] [cursor=pointer]
+        - listitem [ref=e259]:
+          - generic [ref=e260]:
+            - link "#22" [ref=e261] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e262]: 2026-09-28 20:32:55.613869
+          - generic [ref=e263]:
+            - generic [ref=e264]: Task scheduled
+            - paragraph [ref=e265]: "attempt: 1 · queue: quickstart"
+            - group [ref=e266]:
+              - generic "Attributes & payloads" [ref=e267] [cursor=pointer]
+        - listitem [ref=e268]:
+          - generic [ref=e269]:
+            - link "#23" [ref=e270] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e271]: 2026-09-28 20:32:55.623478
+          - generic [ref=e272]:
+            - generic [ref=e273]: Task started
+            - paragraph [ref=e274]: "worker / caller: quickstart-worker"
+            - group [ref=e275]:
+              - generic "Attributes & payloads" [ref=e276] [cursor=pointer]
+        - listitem [ref=e277]:
+          - generic [ref=e278]:
+            - link "#24" [ref=e279] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e280]: 2026-09-28 20:32:55.634205
+          - generic [ref=e281]:
+            - generic [ref=e282]: Task completed
+            - paragraph [ref=e283]: "worker / caller: quickstart-worker"
+            - group [ref=e284]:
+              - generic "Attributes & payloads" [ref=e285] [cursor=pointer]
+        - listitem [ref=e286]:
+          - generic [ref=e287]:
+            - link "#25" [ref=e288] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e289]: 2026-09-28 20:32:55.636749
+          - generic [ref=e290]:
+            - generic [ref=e291]: Activity scheduled
+            - paragraph [ref=e292]: "activity: step · step: 5 · queue: quickstart"
+            - group [ref=e293]:
+              - generic "Attributes & payloads" [ref=e294] [cursor=pointer]
+        - listitem [ref=e295]:
+          - generic [ref=e296]:
+            - link "#26" [ref=e297] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e298]: 2026-09-28 20:32:55.652072
+          - generic [ref=e299]:
+            - generic [ref=e300]: Activity completed
+            - paragraph [ref=e301]: "activity: step · attempt: 1 · step: 5 · worker / caller: quickstart-worker"
+            - group [ref=e302]:
+              - generic "Attributes & payloads" [ref=e303] [cursor=pointer]
+        - listitem [ref=e304]:
+          - generic [ref=e305]:
+            - link "#27" [ref=e306] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e307]: 2026-09-28 20:32:55.654018
+          - generic [ref=e308]:
+            - generic [ref=e309]: Task scheduled
+            - paragraph [ref=e310]: "attempt: 1 · queue: quickstart"
+            - group [ref=e311]:
+              - generic "Attributes & payloads" [ref=e312] [cursor=pointer]
+        - listitem [ref=e313]:
+          - generic [ref=e314]:
+            - link "#28" [ref=e315] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e316]: 2026-09-28 20:32:55.662266
+          - generic [ref=e317]:
+            - generic [ref=e318]: Task started
+            - paragraph [ref=e319]: "worker / caller: quickstart-worker"
+            - group [ref=e320]:
+              - generic "Attributes & payloads" [ref=e321] [cursor=pointer]
+        - listitem [ref=e322]:
+          - generic [ref=e323]:
+            - link "#29" [ref=e324] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e325]: 2026-09-28 20:32:55.672058
+          - generic [ref=e326]:
+            - generic [ref=e327]: Task completed
+            - paragraph [ref=e328]: "worker / caller: quickstart-worker"
+            - group [ref=e329]:
+              - generic "Attributes & payloads" [ref=e330] [cursor=pointer]
+        - listitem [ref=e331]:
+          - generic [ref=e332]:
+            - link "#30" [ref=e333] [cursor=pointer]:
+              - /url: "#run=quickstart-1"
+            - time [ref=e334]: 2026-09-28 20:32:55.674290
+          - generic [ref=e335]:
+            - generic [ref=e336]: Run completed
+            - group [ref=e337]:
+              - generic "Attributes & payloads" [active] [ref=e338] [cursor=pointer]
+              - generic [ref=e339]: "{ \"result\": { \"contentType\": \"application/json\", \"value\": 5 }, \"taskCompletedEventId\": \"29\" }"
+    - generic [ref=e44]: Capstan · History is append-only. All times shown in UTC.
+```
+### Result
+- [Screenshot of viewport](docs/evidence/raw/904cb6c/quickstart-ui.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as docs/evidence/raw/904cb6c/quickstart-ui.png
+await page.screenshot({
+  path: 'docs/evidence/raw/904cb6c/quickstart-ui.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+Browser 'final-quickstart' closed
+

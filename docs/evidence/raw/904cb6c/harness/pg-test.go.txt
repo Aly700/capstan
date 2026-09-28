@@ -1,0 +1,56 @@
+package lab
+
+import (
+	"context"
+	"flag"
+	"testing"
+	"time"
+
+	"github.com/Aly700/capstan/internal/store"
+	"github.com/Aly700/capstan/internal/store/pgstore"
+	"github.com/Aly700/capstan/internal/testpg"
+)
+
+var pgSeedsFlag = flag.Int("lab.pg-seeds", 0, "opt-in real-clock PostgreSQL lab seeds (outside synctest)")
+
+// This campaign is explicitly selected, separate from the mandatory store tests.
+// When selected, an unavailable PostgreSQL is a failure, never a skip.
+func TestPostgresCampaign(t *testing.T) {
+	if *pgSeedsFlag == 0 {
+		t.Log("opt-in real-clock campaign: pass -lab.pg-seeds 500")
+		return
+	}
+	if *pgSeedsFlag < 1 {
+		t.Fatal("lab.pg-seeds must be positive")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	open := func() store.Store {
+		t.Helper()
+		s, err := pgstore.Open(ctx, testpg.New(t))
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { _ = s.Close() })
+		return s
+	}
+	baseline, faulted := open(), open()
+	started := time.Now()
+	var steps, duplicateAcks, databaseErrors, serverCrashes int
+	for seed := int64(0); seed < int64(*pgSeedsFlag); seed++ {
+		result, err := runPostgresSeed(ctx, seed, baseline, faulted)
+		if err != nil {
+			t.Fatalf("pg seed %d: %v", seed, err)
+		}
+        t.Logf(`{"seed":%d,"steps":%d,"duplicate_acks":%d,"database_errors":%d,"server_crashes":%d}`,
+            seed, result.steps, result.duplicateAcks, result.databaseErrors, result.serverCrashes)
+        steps += result.steps
+		duplicateAcks += result.duplicateAcks
+		databaseErrors += result.databaseErrors
+		serverCrashes += result.serverCrashes
+	}
+	if duplicateAcks == 0 || databaseErrors+serverCrashes != *pgSeedsFlag {
+		t.Fatalf("campaign missed required faults: duplicates=%d database=%d crash=%d", duplicateAcks, databaseErrors, serverCrashes)
+	}
+	t.Logf("validated %d PostgreSQL seeds; two shared-queue runs/seed; steps=%d duplicate_acks=%d database_errors=%d server_crashes=%d elapsed=%s", *pgSeedsFlag, steps, duplicateAcks, databaseErrors, serverCrashes, time.Since(started))
+}

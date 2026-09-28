@@ -1,0 +1,61 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Clean shell: env -i, Bash --noprofile --norc
+docker compose up -d --wait postgres
+ Container capstan-postgres-1 Running 
+ Container capstan-postgres-1 Waiting 
+ Container capstan-postgres-1 Healthy 
+
+added 60 packages, and audited 61 packages in 1s
+
+13 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+curl: (7) Failed to connect to 127.0.0.1 port 7773 after 0 ms: Couldn't connect to server
+ok
+{
+  "run": {
+    "runId": "quickstart-1",
+    "workflowType": "loadFive",
+    "taskQueue": "quickstart",
+    "status": "running",
+    "startedAt": "2026-09-28T20:32:55.417Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+{
+  "runId": "quickstart-1",
+  "workflowType": "loadFive",
+  "taskQueue": "quickstart",
+  "status": "running",
+  "startedAt": "2026-09-28T20:32:55.417Z",
+  "lastEventId": 12,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+{
+  "runId": "quickstart-1",
+  "workflowType": "loadFive",
+  "taskQueue": "quickstart",
+  "status": "completed",
+  "startedAt": "2026-09-28T20:32:55.417Z",
+  "closedAt": "2026-09-28T20:32:55.676Z",
+  "lastEventId": 30,
+  "result": 5,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+/ui/ HTTP 200
+READY FOR BROWSER
+Cleanup: owned server and worker stopped; owned database dropped; shared PostgreSQL left running.

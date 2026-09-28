@@ -1,0 +1,1 @@
+{"runs":1000,"concurrency":25,"completed":1000,"errors":0,"activities":5000,"elapsed_seconds":13.558860166,"runs_per_second":73.75251221393856,"activities_per_second":368.76256106969277,"p50_ms":331.333334,"p99_ms":426.468667}

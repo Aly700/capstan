@@ -1,0 +1,151 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["node", "/Users/affan/Projects/capstan--final/.lane/final-scripts/demo-blocked.mjs"]
+Capstan code-change demo · 2026-09-28T20:54:04.413Z
+Real server and versioned SDK workers; wall-clock recording, no altered history.
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # blocked-v1.ts: activity('step')
+$ capstan start changedWorkflow evidence-patch-old --queue evidence-blocked
+{
+  "run": {
+    "runId": "evidence-patch-old",
+    "workflowType": "changedWorkflow",
+    "taskQueue": "evidence-blocked",
+    "status": "running",
+    "startedAt": "2026-09-28T20:54:04.844Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ kill -TERM 11357  # stop v1 after its first activity
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # blocked-v2.ts: activity('revisedStep')
+$ capstan signal evidence-patch-old continue --input true
+OK
+$ capstan describe evidence-patch-old
+{
+  "runId": "evidence-patch-old",
+  "workflowType": "changedWorkflow",
+  "taskQueue": "evidence-blocked",
+  "status": "blocked",
+  "startedAt": "2026-09-28T20:54:04.844Z",
+  "lastEventId": 14,
+  "failure": {
+    "message": "history mismatch at event 5: history has ActivityScheduled(seq=1, type=step), code emitted ScheduleActivity(seq=1, type=revisedStep)",
+    "type": "HistoryMismatchError"
+  },
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+Viewing the mismatch for 3 real seconds.
+$ capstan history evidence-patch-old
+1	2026-09-28T20:54:04.845Z	RUN_STARTED	workflowType=changedWorkflow
+2	2026-09-28T20:54:04.848Z	TASK_SCHEDULED
+3	2026-09-28T20:54:04.918Z	TASK_STARTED
+4	2026-09-28T20:54:04.930Z	TASK_COMPLETED
+5	2026-09-28T20:54:04.932Z	ACTIVITY_SCHEDULED	seq=1 activityType=step
+6	2026-09-28T20:54:04.942Z	ACTIVITY_COMPLETED	seq=1
+7	2026-09-28T20:54:04.943Z	TASK_SCHEDULED
+8	2026-09-28T20:54:04.948Z	TASK_STARTED
+9	2026-09-28T20:54:04.954Z	TASK_COMPLETED
+10	2026-09-28T20:54:05.186Z	SIGNAL_RECEIVED	name=continue
+11	2026-09-28T20:54:05.187Z	TASK_SCHEDULED
+12	2026-09-28T20:54:05.253Z	TASK_STARTED
+13	2026-09-28T20:54:05.264Z	TASK_FAILED
+14	2026-09-28T20:54:05.267Z	RUN_BLOCKED
+$ kill -TERM 11368  # replace incompatible v2
+Patched code: activity(patched("revised-step-v2") ? "revisedStep" : "step", ...)
+Old histories take step; new histories record the marker and take revisedStep.
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # blocked-patched.ts
+$ capstan resume evidence-patch-old --reason 'deployed replay-safe patched branch'
+OK
+$ capstan describe evidence-patch-old
+{
+  "runId": "evidence-patch-old",
+  "workflowType": "changedWorkflow",
+  "taskQueue": "evidence-blocked",
+  "status": "completed",
+  "startedAt": "2026-09-28T20:54:04.844Z",
+  "closedAt": "2026-09-28T20:54:08.806Z",
+  "lastEventId": 19,
+  "result": {
+    "value": 1
+  },
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+Viewing the completed old run for 2 real seconds.
+$ capstan history evidence-patch-old
+1	2026-09-28T20:54:04.845Z	RUN_STARTED	workflowType=changedWorkflow
+2	2026-09-28T20:54:04.848Z	TASK_SCHEDULED
+3	2026-09-28T20:54:04.918Z	TASK_STARTED
+4	2026-09-28T20:54:04.930Z	TASK_COMPLETED
+5	2026-09-28T20:54:04.932Z	ACTIVITY_SCHEDULED	seq=1 activityType=step
+6	2026-09-28T20:54:04.942Z	ACTIVITY_COMPLETED	seq=1
+7	2026-09-28T20:54:04.943Z	TASK_SCHEDULED
+8	2026-09-28T20:54:04.948Z	TASK_STARTED
+9	2026-09-28T20:54:04.954Z	TASK_COMPLETED
+10	2026-09-28T20:54:05.186Z	SIGNAL_RECEIVED	name=continue
+11	2026-09-28T20:54:05.187Z	TASK_SCHEDULED
+12	2026-09-28T20:54:05.253Z	TASK_STARTED
+13	2026-09-28T20:54:05.264Z	TASK_FAILED
+14	2026-09-28T20:54:05.267Z	RUN_BLOCKED
+15	2026-09-28T20:54:08.724Z	RUN_RESUMED	reason=deployed replay-safe patched branch
+16	2026-09-28T20:54:08.726Z	TASK_SCHEDULED
+17	2026-09-28T20:54:08.792Z	TASK_STARTED
+18	2026-09-28T20:54:08.804Z	TASK_COMPLETED
+19	2026-09-28T20:54:08.805Z	RUN_COMPLETED
+$ capstan start changedWorkflow evidence-patch-new --queue evidence-blocked
+{
+  "run": {
+    "runId": "evidence-patch-new",
+    "workflowType": "changedWorkflow",
+    "taskQueue": "evidence-blocked",
+    "status": "running",
+    "startedAt": "2026-09-28T20:54:11.139Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ capstan describe evidence-patch-new
+{
+  "runId": "evidence-patch-new",
+  "workflowType": "changedWorkflow",
+  "taskQueue": "evidence-blocked",
+  "status": "completed",
+  "startedAt": "2026-09-28T20:54:11.139Z",
+  "closedAt": "2026-09-28T20:54:11.199Z",
+  "lastEventId": 15,
+  "result": {
+    "value": 10
+  },
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+Viewing the completed new run for 2 real seconds.
+$ capstan history evidence-patch-new
+1	2026-09-28T20:54:11.140Z	RUN_STARTED	workflowType=changedWorkflow
+2	2026-09-28T20:54:11.143Z	TASK_SCHEDULED
+3	2026-09-28T20:54:11.152Z	TASK_STARTED
+4	2026-09-28T20:54:11.161Z	TASK_COMPLETED
+5	2026-09-28T20:54:11.163Z	MARKER_RECORDED	seq=1 name=patch markerId=revised-step-v2
+6	2026-09-28T20:54:11.164Z	ACTIVITY_SCHEDULED	seq=2 activityType=revisedStep
+7	2026-09-28T20:54:11.167Z	SIGNAL_RECEIVED	name=continue
+8	2026-09-28T20:54:11.169Z	TASK_SCHEDULED
+9	2026-09-28T20:54:11.176Z	TASK_STARTED
+10	2026-09-28T20:54:11.184Z	TASK_COMPLETED
+11	2026-09-28T20:54:11.186Z	ACTIVITY_COMPLETED	seq=2
+12	2026-09-28T20:54:11.187Z	TASK_SCHEDULED
+13	2026-09-28T20:54:11.192Z	TASK_STARTED
+14	2026-09-28T20:54:11.197Z	TASK_COMPLETED
+15	2026-09-28T20:54:11.198Z	RUN_COMPLETED
+PASS: old run BLOCKED → explicit resume → COMPLETED (value 1, one activity completion); new run records patch marker and returns value 10.
+Cleanup: stopping this demo's processes and dropping its database.
+Exit: 0

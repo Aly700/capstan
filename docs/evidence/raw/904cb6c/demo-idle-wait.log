@@ -1,0 +1,93 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["node", "/Users/affan/Projects/capstan--final/.lane/final-scripts/demo-idle-wait.mjs"]
+Capstan idle-wait demo · 2026-09-28T20:54:13.632Z
+This retained demo exercises nextSignal('decision'); human() is implemented and tested separately.
+This is a real wall-clock wait with no workers. It does not demonstrate a multi-day clock jump or an approval API.
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # idle-signal.ts
+$ capstan start idleWait evidence-idle --queue evidence-idle
+{
+  "run": {
+    "runId": "evidence-idle",
+    "workflowType": "idleWait",
+    "taskQueue": "evidence-idle",
+    "status": "running",
+    "startedAt": "2026-09-28T20:54:14.068Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ kill -TERM 11490  # stop every worker belonging to this isolated demo
+$ ps -p 11490 -o pid,pgid,ucomm
+PID  PGID UCOMM
+Worker processes: 0 (all demo worker PIDs exited; other lanes are untouched).
+$ psql <this demo database> -c 'select count(*) as tasks, count(*) filter (where leased_until is not null) as leased_tasks from task'
+ tasks | leased_tasks 
+-------+--------------
+     0 |            0
+(1 row)
+
+$ capstan describe evidence-idle
+{
+  "runId": "evidence-idle",
+  "workflowType": "idleWait",
+  "taskQueue": "evidence-idle",
+  "status": "running",
+  "startedAt": "2026-09-28T20:54:14.068Z",
+  "lastEventId": 4,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+Waiting 5 real seconds with zero workers and zero task leases…
+$ ps -p 11490 -o pid,pgid,ucomm
+PID  PGID UCOMM
+Worker processes: 0 (all demo worker PIDs exited; other lanes are untouched).
+$ psql <this demo database> -c 'select count(*) as tasks, count(*) filter (where leased_until is not null) as leased_tasks from task'
+ tasks | leased_tasks 
+-------+--------------
+     0 |            0
+(1 row)
+
+Resolve the signal gate through the real CLI while no worker is running:
+$ capstan signal evidence-idle decision --input '{"approved":true}' --request-id evidence-decision
+OK
+$ psql <this demo database> -c 'select kind, worker_id, leased_until from task'
+ kind | worker_id | leased_until 
+------+-----------+--------------
+    1 |           | 
+(1 row)
+
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # start a replacement worker
+$ capstan describe evidence-idle
+{
+  "runId": "evidence-idle",
+  "workflowType": "idleWait",
+  "taskQueue": "evidence-idle",
+  "status": "completed",
+  "startedAt": "2026-09-28T20:54:14.068Z",
+  "closedAt": "2026-09-28T20:54:19.803Z",
+  "lastEventId": 9,
+  "result": {
+    "approved": true
+  },
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ capstan history evidence-idle
+1	2026-09-28T20:54:14.069Z	RUN_STARTED	workflowType=idleWait
+2	2026-09-28T20:54:14.071Z	TASK_SCHEDULED
+3	2026-09-28T20:54:14.142Z	TASK_STARTED
+4	2026-09-28T20:54:14.155Z	TASK_COMPLETED
+5	2026-09-28T20:54:19.592Z	SIGNAL_RECEIVED	name=decision
+6	2026-09-28T20:54:19.594Z	TASK_SCHEDULED
+7	2026-09-28T20:54:19.792Z	TASK_STARTED
+8	2026-09-28T20:54:19.801Z	TASK_COMPLETED
+9	2026-09-28T20:54:19.802Z	RUN_COMPLETED
+PASS: zero demo workers and zero leased tasks during the idle interval; signal persisted before replacement worker; result {approved:true}.
+Cleanup: stopping this demo's processes and dropping its database.
+Exit: 0

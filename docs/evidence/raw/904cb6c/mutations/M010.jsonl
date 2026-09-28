@@ -1,0 +1,12 @@
+{"Time":"2026-09-28T16:48:02.968948-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T16:48:03.203039-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T16:48:03.203087-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T16:48:03.203231-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T16:48:03.231136-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 1\n"}
+{"Time":"2026-09-28T16:48:03.254801-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 1: protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2\n"}
+{"Time":"2026-09-28T16:48:03.254817-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 1 -lab.known=false\n"}
+{"Time":"2026-09-28T16:48:03.254831-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.05s)\n"}
+{"Time":"2026-09-28T16:48:03.254839-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0.05}
+{"Time":"2026-09-28T16:48:03.254855-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T16:48:03.255613-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.286s\n"}
+{"Time":"2026-09-28T16:48:03.255625-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.287}

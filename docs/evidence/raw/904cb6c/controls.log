@@ -1,0 +1,45 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["bash", "-c", "set -euo pipefail\ngo test -race -count=1 -tags pgengine ./internal/engine -run '^TestPostgresTerminateAgainstTaskOperations$' -v\ngo test -race -count=1 ./internal/store/pgstore -run '^TestQueueNotificationClaimTransactions$' -v"]
+=== RUN   TestPostgresTerminateAgainstTaskOperations
+=== RUN   TestPostgresTerminateAgainstTaskOperations/workflow_poll/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/workflow_poll/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_poll/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_poll/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_completion/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_completion/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_failure/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_failure/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_heartbeat/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_heartbeat/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_reservation/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/activity_reservation/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/task_timeout/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/task_timeout/work_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/approval_timeout/terminate_first
+=== RUN   TestPostgresTerminateAgainstTaskOperations/approval_timeout/work_first
+--- PASS: TestPostgresTerminateAgainstTaskOperations (2.03s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/workflow_poll/terminate_first (0.14s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/workflow_poll/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_poll/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_poll/work_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_completion/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_completion/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_failure/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_failure/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_heartbeat/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_heartbeat/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_reservation/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/activity_reservation/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/task_timeout/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/task_timeout/work_first (0.13s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/approval_timeout/terminate_first (0.12s)
+    --- PASS: TestPostgresTerminateAgainstTaskOperations/approval_timeout/work_first (0.13s)
+PASS
+ok  	github.com/Aly700/capstan/internal/engine	3.293s
+=== RUN   TestQueueNotificationClaimTransactions
+    targeted_notify_test.go:133: waiters=40 pool_connections=1 claim_attempts=1 claimed=1 control_before=8 control_after=9 control_delta=1 control_residual=0 xact_commit_before=9 xact_commit_after=11 xact_commit_delta=2 flush_before=1 flush_control=1 flush_after=1 setup_before_measurement=true commits_less_control=1 residual_commits=0
+--- PASS: TestQueueNotificationClaimTransactions (3.11s)
+PASS
+ok  	github.com/Aly700/capstan/internal/store/pgstore	4.385s
+Exit: 0

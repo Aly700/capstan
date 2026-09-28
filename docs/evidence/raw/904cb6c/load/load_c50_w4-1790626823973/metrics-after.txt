@@ -1,0 +1,61 @@
+# HELP capstan_rpc_total Completed RPCs by procedure and code.
+# TYPE capstan_rpc_total counter
+capstan_rpc_total{procedure="/capstan.v1.ClientService/AwaitRun",code="ok"} 1000
+capstan_rpc_total{procedure="/capstan.v1.ClientService/DescribeRun",code="ok"} 3
+capstan_rpc_total{procedure="/capstan.v1.ClientService/ListRuns",code="ok"} 1
+capstan_rpc_total{procedure="/capstan.v1.ClientService/StartRun",code="ok"} 1001
+capstan_rpc_total{procedure="/capstan.v1.WorkerService/CompleteActivityTask",code="ok"} 5005
+capstan_rpc_total{procedure="/capstan.v1.WorkerService/CompleteWorkflowTask",code="ok"} 6006
+capstan_rpc_total{procedure="/capstan.v1.WorkerService/PollActivityTask",code="ok"} 5005
+capstan_rpc_total{procedure="/capstan.v1.WorkerService/PollWorkflowTask",code="ok"} 6006
+# HELP capstan_rpc_seconds RPC elapsed seconds.
+# TYPE capstan_rpc_seconds summary
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/AwaitRun"} 489.94780349899986
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/AwaitRun"} 1000
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/CancelRun"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/CancelRun"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/DescribeRun"} 0.00988125
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/DescribeRun"} 3
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/GetHistory"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/GetHistory"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/ListRuns"} 0.00145475
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/ListRuns"} 1
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/ResolveApproval"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/ResolveApproval"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/ResumeRun"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/ResumeRun"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/SignalRun"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/SignalRun"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/StartRun"} 25.01740871499999
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/StartRun"} 1001
+capstan_rpc_seconds_sum{procedure="/capstan.v1.ClientService/TerminateRun"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.ClientService/TerminateRun"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/CompleteActivityTask"} 112.26992951699977
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/CompleteActivityTask"} 5005
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/CompleteWorkflowTask"} 145.9189835690003
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/CompleteWorkflowTask"} 6006
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/FailActivityTask"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/FailActivityTask"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/FailWorkflowTask"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/FailWorkflowTask"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/FinishAICall"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/FinishAICall"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/HeartbeatActivityTask"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/HeartbeatActivityTask"} 0
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/PollActivityTask"} 313.3765902859994
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/PollActivityTask"} 5005
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/PollWorkflowTask"} 270.115149418
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/PollWorkflowTask"} 6006
+capstan_rpc_seconds_sum{procedure="/capstan.v1.WorkerService/ReserveAICall"} 0
+capstan_rpc_seconds_count{procedure="/capstan.v1.WorkerService/ReserveAICall"} 0
+# HELP capstan_loop_items_total Items processed by maintenance loops.
+# TYPE capstan_loop_items_total counter
+capstan_loop_items_total{loop="timers"} 0
+capstan_loop_items_total{loop="tasks"} 0
+capstan_loop_items_total{loop="approvals"} 0
+capstan_loop_items_total{loop="run_timeouts"} 0
+# HELP capstan_long_poll_waiting Long polls currently waiting for work or closure.
+# TYPE capstan_long_poll_waiting gauge
+capstan_long_poll_waiting{kind="workflow"} 40
+capstan_long_poll_waiting{kind="activity"} 40
+capstan_long_poll_waiting{kind="run"} 0

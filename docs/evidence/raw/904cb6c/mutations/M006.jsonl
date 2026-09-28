@@ -1,0 +1,11 @@
+{"Time":"2026-09-28T16:47:59.922687-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T16:48:00.182584-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T16:48:00.182635-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T16:48:00.182669-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T16:48:00.204641-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 0 scenario pipeline: signal peer/inflight-40: got 0 deliveries, want one\n"}
+{"Time":"2026-09-28T16:48:00.20467-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\n"}
+{"Time":"2026-09-28T16:48:00.204685-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.02s)\n"}
+{"Time":"2026-09-28T16:48:00.20469-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0.02}
+{"Time":"2026-09-28T16:48:00.204706-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T16:48:00.205422-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.283s\n"}
+{"Time":"2026-09-28T16:48:00.205432-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.283}
