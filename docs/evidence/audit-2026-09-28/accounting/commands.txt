@@ -19,7 +19,7 @@ sdk-final.txt: npx vitest run test/agent-model.test.ts
 Typecheck: npx tsc --noEmit
   Exit 0; no stdout/stderr. Final independent execution after sandbox test repair.
 rpc.txt: go test -race -count=1 ./internal/server -run '^TestAuditPostgres' -v
-  Exit 0; this execution predates adding TestAuditPostgresHumanWaitSevenDays.
+  Exit 0; this execution predates adding the HumanWaitSevenDays and FourWayTerminalRace tests.
 engine-postgres.txt: go test -race -count=1 -tags pgengine ./internal/engine -run 'Test(Reserve|Reserved|Finish|Cap|ConcurrentReservations|LedgerTimestamps)' -v
   Exit 0.
 human-seven-days.txt: go test -race -count=1 ./internal/server -run TestAuditPostgresHumanWaitSevenDays -v
@@ -28,3 +28,10 @@ polling-review-before.txt: go test -count=1 ./internal/store/pgstore -run TestAu
   Exit 1 at 04acd8f; 2048 tasks of one busy run consumed 5s deadline.
 polling-review-after.txt: go test -race -count=1 ./internal/store/pgstore -run 'TestAuditReviewClaimBusyBacklog|TestClaimedRunLockDoesNotWaitAndRollsBackLease|TestClaimTaskConcurrentWorkersClaimOnce' -v
   Exit 0 after 719685e; 2048 busy children bypassed in 5.715042ms.
+four-way-race.txt: go test -race -count=1 ./internal/server -run TestAuditPostgresFourWayTerminalRace -v
+  Exit 0, 2.606s. 20 iterations each observe three lifecycle RPC database lock
+  waits and one proven-due timer before invoking FireDueTimers. First timer sweep
+  skips the held run lock; second races its release with the lifecycle RPCs.
+  Observed outcomes: 10 completed, 10 terminated, 0 TimerFired events, 20 timers
+  removed by terminal cleanup. All have one terminal event, gap-free unchanged
+  history prefixes, matching last_event_id, zero tasks/timers/inbox/pending approvals.
