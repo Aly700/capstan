@@ -113,7 +113,7 @@ func tasksClaimNone(t *testing.T, s store.Store) {
 func tasksUpdate(t *testing.T, s store.Store) {
 	seed(t, s, "r", "other")
 	v := sampleTask("r")
-	v.Activity = &capstanv1.ActivityScheduledAttributes{ActivityType: "act", Input: payload(), StartToCloseTimeout: durationpb.New(3 * time.Second)}
+	v.Activity = &capstanv1.ActivityScheduledAttributes{ActivityType: "act", Input: payload(), StartToCloseTimeout: durationpb.New(3*time.Second + time.Nanosecond)}
 	mustTx(t, s, func(tx store.Tx) error { return tx.InsertTask(v) })
 	mustTx(t, s, func(tx store.Tx) error {
 		got, err := tx.GetTask(v.ID, true)
@@ -134,7 +134,18 @@ func tasksUpdate(t *testing.T, s store.Store) {
 	v.StartedAt = epoch.Add(time.Second)
 	v.ScheduledAt = epoch.Add(-time.Hour)
 	v.CheckAt = epoch.Add(30 * time.Second)
-	v.Activity = &capstanv1.ActivityScheduledAttributes{ActivityType: "new", Input: &capstanv1.Payload{}, RetryPolicy: &capstanv1.RetryPolicy{MaximumAttempts: 9, NonRetryableErrorTypes: []string{"stop"}}}
+	v.Activity = &capstanv1.ActivityScheduledAttributes{
+		ActivityType: "new", Input: &capstanv1.Payload{},
+		ScheduleToStartTimeout: durationpb.New(time.Second + time.Nanosecond),
+		StartToCloseTimeout:    durationpb.New(2*time.Second + 123*time.Nanosecond),
+		ScheduleToCloseTimeout: durationpb.New(3*time.Second + 456*time.Nanosecond),
+		HeartbeatTimeout:       durationpb.New(time.Millisecond + 789*time.Nanosecond),
+		RetryPolicy: &capstanv1.RetryPolicy{
+			InitialInterval: durationpb.New(time.Second + time.Nanosecond),
+			MaximumInterval: durationpb.New(time.Minute + 123*time.Nanosecond),
+			MaximumAttempts: 9, NonRetryableErrorTypes: []string{"stop"},
+		},
+	}
 	v.LastHeartbeatAt = epoch.Add(5 * time.Second)
 	v.HeartbeatDetails = payload()
 	v.LastFailure = &capstanv1.Failure{Type: "retry", Cause: &capstanv1.Failure{Details: payload()}}
@@ -149,16 +160,10 @@ func tasksUpdate(t *testing.T, s store.Store) {
 		equalTask(t, got, v)
 		return nil
 	})
-	// Clearing optional fields must write NULL rather than retaining the old data.
-	v.LeasedUntil = time.Time{}
-	v.StartedAt = time.Time{}
-	v.CheckAt = time.Time{}
-	v.LastHeartbeatAt = time.Time{}
-	v.Activity = nil
-	v.LastFailure = nil
-	v.HeartbeatDetails = nil
-	v.WorkerID = ""
-	v.CancelRequested = false
+	// D23: replace every non-key field, including clearing optional values.
+	id := v.ID
+	v = sampleTask("r")
+	v.ID = id
 	mustTx(t, s, func(tx store.Tx) error { return tx.UpdateTask(v) })
 	mustTx(t, s, func(tx store.Tx) error {
 		got, err := tx.GetTask(v.ID, true)
@@ -187,7 +192,7 @@ func tasksDue(t *testing.T, s store.Store) {
 		}
 		return tx.InsertTask(sampleTask("r"))
 	})
-	for _, limit := range []int{2, 10} {
+	for _, limit := range []int{-1, 0, 2, 10} {
 		mustTx(t, s, func(tx store.Tx) error {
 			vs, err := tx.DueTasks(epoch, limit)
 			if err != nil {
@@ -198,9 +203,7 @@ func tasksDue(t *testing.T, s store.Store) {
 				ids = append(ids, v.ID)
 			}
 			want := expected
-			if limit == 2 {
-				want = want[:2]
-			}
+			want = want[:min(max(limit, 0), len(want))]
 			equal(t, ids, want)
 			return nil
 		})

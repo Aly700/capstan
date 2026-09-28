@@ -8,7 +8,7 @@ import (
 )
 
 func (e *Engine) SignalRun(ctx context.Context, identity string, req *v1.SignalRunRequest) (*v1.SignalRunResponse, error) {
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		r, err := tx.GetRun(req.GetRunId(), true)
 		if err != nil {
 			return runError(err)
@@ -40,7 +40,7 @@ func (e *Engine) SignalRun(ctx context.Context, identity string, req *v1.SignalR
 	return &v1.SignalRunResponse{}, nil
 }
 func (e *Engine) CancelRun(ctx context.Context, identity string, req *v1.CancelRunRequest) (*v1.CancelRunResponse, error) {
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		r, err := tx.GetRun(req.GetRunId(), true)
 		if err != nil {
 			return runError(err)
@@ -63,7 +63,7 @@ func (e *Engine) CancelRun(ctx context.Context, identity string, req *v1.CancelR
 	return &v1.CancelRunResponse{}, nil
 }
 func (e *Engine) ResumeRun(ctx context.Context, identity string, req *v1.ResumeRunRequest) (*v1.ResumeRunResponse, error) {
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		r, err := tx.GetRun(req.GetRunId(), true)
 		if err != nil {
 			return runError(err)

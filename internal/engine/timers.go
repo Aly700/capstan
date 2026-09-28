@@ -13,7 +13,8 @@ func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
 	count := 0
 	for count < limit {
 		handled := false
-		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+		err := e.inTx(ctx, func(tx store.Tx) error {
+			handled = false
 			timers, err := tx.DueTimers(e.now(), 1)
 			if err != nil || len(timers) == 0 {
 				return err

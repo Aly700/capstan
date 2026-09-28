@@ -151,6 +151,8 @@ enum EventType {
 // External events never appear between TaskStarted and the end of that task's command
 // events: while a workflow task is in flight they wait in the run's inbox and are flushed
 // after the task's command events, in arrival order.
+// A server-side timeout or termination aborts an in-flight task by flushing its inbox
+// before the terminal event, without a TaskCompleted.
 message HistoryEvent {
   int64 event_id = 1;
   EventType type = 2;
@@ -210,7 +212,7 @@ message RunCompletedAttributes {
 
 message RunFailedAttributes {
   Failure failure = 1;
-  int64 task_completed_event_id = 2;
+  int64 task_completed_event_id = 2; // 0 for a server-originated failure, including termination
 }
 
 message RunCancelRequestedAttributes {
@@ -625,6 +627,8 @@ service ClientService {
   rpc StartRun(StartRunRequest) returns (StartRunResponse);
   rpc SignalRun(SignalRunRequest) returns (SignalRunResponse);
   rpc CancelRun(CancelRunRequest) returns (CancelRunResponse);
+  // Flushes the inbox and fails a RUNNING or BLOCKED run immediately (D18).
+  rpc TerminateRun(TerminateRunRequest) returns (TerminateRunResponse);
   // Moves a BLOCKED run back to RUNNING and schedules a workflow task.
   rpc ResumeRun(ResumeRunRequest) returns (ResumeRunResponse);
   rpc DescribeRun(DescribeRunRequest) returns (DescribeRunResponse);
@@ -664,6 +668,13 @@ message CancelRunRequest {
 }
 
 message CancelRunResponse {}
+
+message TerminateRunRequest {
+  string run_id = 1;
+  string reason = 2; // empty means "terminated"
+}
+
+message TerminateRunResponse {}
 
 message ResumeRunRequest {
   string run_id = 1;

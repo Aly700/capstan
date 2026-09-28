@@ -41,6 +41,11 @@ type API interface {
 	StartRun(ctx context.Context, identity string, req *capstanv1.StartRunRequest) (*capstanv1.StartRunResponse, error)
 	SignalRun(ctx context.Context, identity string, req *capstanv1.SignalRunRequest) (*capstanv1.SignalRunResponse, error)
 	CancelRun(ctx context.Context, identity string, req *capstanv1.CancelRunRequest) (*capstanv1.CancelRunResponse, error)
+	// TerminateRun atomically flushes a RUNNING or BLOCKED run's inbox, appends
+	// RunFailed(Terminated) without a task completion, and closes it as FAILED.
+	// An empty reason becomes "terminated". Missing/closed runs return ErrNotFound/
+	// ErrRunClosed; later worker completions are stale and cannot change history.
+	TerminateRun(ctx context.Context, identity string, req *capstanv1.TerminateRunRequest) (*capstanv1.TerminateRunResponse, error)
 	ResumeRun(ctx context.Context, identity string, req *capstanv1.ResumeRunRequest) (*capstanv1.ResumeRunResponse, error)
 	DescribeRun(ctx context.Context, req *capstanv1.DescribeRunRequest) (*capstanv1.DescribeRunResponse, error)
 	ListRuns(ctx context.Context, req *capstanv1.ListRunsRequest) (*capstanv1.ListRunsResponse, error)

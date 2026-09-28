@@ -41,7 +41,8 @@ func (e *Engine) StartRun(ctx context.Context, identity string, req *v1.StartRun
 		return nil, Invalid("invalid run id, workflow type, queue or timeout")
 	}
 	resp := &v1.StartRunResponse{}
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		resp = &v1.StartRunResponse{}
 		r, err := tx.GetRun(req.RunId, true)
 		if errors.Is(err, store.ErrNotFound) {
 			now := e.now()

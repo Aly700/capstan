@@ -27,17 +27,18 @@ func timersDue(t *testing.T, s store.Store) {
 		}
 		return nil
 	})
-	for _, limit := range []int{2, 10} {
+	for _, limit := range []int{-1, 0, 2, 10} {
 		mustTx(t, s, func(tx store.Tx) error {
 			got, err := tx.DueTimers(epoch, limit)
 			if err != nil {
 				return err
 			}
 			w := want
-			if limit == 2 {
-				w = w[:2]
+			w = w[:min(max(limit, 0), len(w))]
+			equal(t, len(got), len(w))
+			for i := range got {
+				equal(t, got[i], w[i])
 			}
-			equal(t, got, w)
 			return nil
 		})
 	}
@@ -116,6 +117,16 @@ func approvalsUpdate(t *testing.T, s store.Store) {
 		equal(t, all, []*store.Approval{a})
 		return nil
 	})
+	a = sampleApproval("r", "a")
+	mustTx(t, s, func(tx store.Tx) error { return tx.UpdateApproval(a) })
+	mustTx(t, s, func(tx store.Tx) error {
+		got, err := tx.GetApproval("r", "a", false)
+		if err != nil {
+			return err
+		}
+		equal(t, got, a)
+		return nil
+	})
 	isError(t, s.InTx(t.Context(), func(tx store.Tx) error { _, err := tx.GetApproval("r", "missing", true); return err }), store.ErrNotFound)
 }
 
@@ -141,7 +152,7 @@ func approvalsDue(t *testing.T, s store.Store) {
 		}
 		return nil
 	})
-	for _, limit := range []int{1, 10} {
+	for _, limit := range []int{-1, 0, 1, 10} {
 		mustTx(t, s, func(tx store.Tx) error {
 			as, err := tx.DueApprovals(epoch, limit)
 			if err != nil {
@@ -152,9 +163,7 @@ func approvalsDue(t *testing.T, s store.Store) {
 				ids = append(ids, a.ApprovalID)
 			}
 			want := []string{"early", "boundary"}
-			if limit == 1 {
-				want = want[:1]
-			}
+			want = want[:min(max(limit, 0), len(want))]
 			equal(t, ids, want)
 			return nil
 		})
