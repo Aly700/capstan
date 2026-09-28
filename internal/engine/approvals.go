@@ -158,6 +158,10 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 		if leased != nil {
 			decision, gateErr := e.deps.Gate.ApprovalStatus(ctx, leased.ApprovalID)
 			err = e.inTx(ctx, func(tx store.Tx) error {
+				r, err := tx.GetRun(leased.RunID, true)
+				if err != nil {
+					return err
+				}
 				a, err := tx.GetApproval(leased.RunID, leased.ApprovalID, true)
 				if errors.Is(err, store.ErrNotFound) {
 					return nil
@@ -167,10 +171,6 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 				}
 				if a.Status != store.ApprovalPending || a.GatePolls != leased.GatePolls {
 					return nil
-				}
-				r, err := tx.GetRun(a.RunID, true)
-				if err != nil {
-					return err
 				}
 				now := e.now()
 				if !a.DueAt.IsZero() && !a.DueAt.After(now) {
