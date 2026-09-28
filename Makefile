@@ -1,6 +1,8 @@
 # Capstan build gate. `make verify` is what every lane must pass before merge.
 SHELL := /bin/bash
 export PATH := $(HOME)/go/bin:$(PATH)
+# Gates run on the toolchain go.mod names, as CI does (D26); override with GOTOOLCHAIN=local.
+export GOTOOLCHAIN ?= go1.26.4
 export CAPSTAN_TEST_DATABASE_URL ?= postgres://capstan:capstan@127.0.0.1:55432/postgres?sslmode=disable
 
 .PHONY: gen gen-check lint test test-go test-sdk pg-up pg-down build verify
