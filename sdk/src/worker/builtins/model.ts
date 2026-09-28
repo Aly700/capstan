@@ -5,7 +5,7 @@ import type { Message, MessageCreateParamsNonStreaming } from "@anthropic-ai/sdk
 import type { WorkerService } from "../../gen/capstan/v1/capstan_pb.ts";
 import type { ModelRequest, ModelResult } from "../../workflow/agent.ts";
 import { ApplicationFailure } from "../../types.ts";
-import { estimateCost } from "../../agent/estimate.ts";
+import { estimateCost, inputTokensUpperBound } from "../../agent/estimate.ts";
 import { prepareSchema } from "../../agent/schema.ts";
 import { activityContext } from "../index.ts";
 
@@ -55,17 +55,18 @@ export function createModelActivity(options: {
       try { schema = prepareSchema(request.jsonSchema); }
       catch { throw failure("ModelSchemaInvalid", true); }
     }
-    const params: MessageCreateParamsNonStreaming = {
+    const params = {
       model, messages, max_tokens: maxTokens,
       ...(request.system === undefined ? {} : { system: request.system }),
       ...(schema === undefined ? {} : { output_config: { format: schema.format } }),
-    };
+    } satisfies MessageCreateParamsNonStreaming;
     const estimateUsd = estimateCost(params, request.estimateUsd);
+    const inputBound = inputTokensUpperBound(params);
     let reservationId: bigint;
     try {
       // Do not retry a reservation with an ambiguous acknowledgement: the frozen
       // RPC does not accept an idempotency key for reservations.
-      const reservation = await options.client.reserveAICall({ taskToken: options.taskToken, model, estimateUsd }, { signal: context.signal, timeoutMs: 10_000 });
+      const reservation = await options.client.reserveAICall({ taskToken: options.taskToken, model, estimateUsd, maxOutputTokens: BigInt(maxTokens), inputTokensUpperBound: BigInt(inputBound) }, { signal: context.signal, timeoutMs: 10_000 });
       reservationId = reservation.reservationId;
       if (reservationId <= 0n) throw failure("ModelReservationInvalid", true);
     } catch (error) {

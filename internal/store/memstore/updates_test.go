@@ -195,7 +195,7 @@ func TestUpdateAICallReplacesEveryNonKeyField(t *testing.T) {
 	})
 	want := &store.AICall{
 		ID: original.ID, RunID: "other", ActivitySeq: 4, Model: "replacement", Status: store.AICallFinished,
-		EstimateUSD: 0.1, CostUSD: 0.2, InputTokens: 10, OutputTokens: 20, CacheReadTokens: 30, CacheWriteTokens: 40,
+		Bounded: true, EstimateUSD: 0.1, CostUSD: 0.2, InputTokens: 10, OutputTokens: 20, CacheReadTokens: 30, CacheWriteTokens: 40,
 		ErrorCode: "replacement", At: epoch, FinishedAt: epoch.Add(time.Second),
 	}
 	tx(t, s, func(tx store.Tx) error { return tx.UpdateAICall(want) })
