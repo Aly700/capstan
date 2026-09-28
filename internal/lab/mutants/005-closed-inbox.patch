@@ -1,12 +1,12 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
-index cac1230..daec257 100644
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -215,6 +215,5 @@ func (e *Engine) closeRun(tx store.Tx, r *store.Run, status v1.RunStatus) error
+@@ -218,7 +218,7 @@
  		}
  	}
  	// A closing command wins over buffered external work; release the unreachable inbox.
 -	_, err = tx.DrainInbox(r.RunID)
--	return err
-+	return nil
- }
++	err = nil
+ 	if err == nil {
+ 		tx.NotifyRunClosed(r.RunID)
+ 	}
