@@ -1,0 +1,164 @@
+{
+  "name": "blocked resumed patch",
+  "workflow": "patchBranch",
+  "description": "The mismatching activation is discarded; explicit resume replays the old branch and resolves buffered work.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "patchBranch",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "activityScheduled": {
+        "seq": "1",
+        "activityType": "double",
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "input": {
+          "contentType": "application/json",
+          "data": "MjE="
+        },
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "activityCompleted": {
+        "seq": "1",
+        "scheduledEventId": "5",
+        "result": {
+          "contentType": "application/json",
+          "data": "NDI="
+        },
+        "attempt": 1,
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskStarted": {
+        "scheduledEventId": "7",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "9",
+      "type": "EVENT_TYPE_TASK_FAILED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskFailed": {
+        "scheduledEventId": "7",
+        "startedEventId": "8",
+        "cause": "TASK_FAILED_CAUSE_HISTORY_MISMATCH",
+        "failure": {
+          "type": "Error",
+          "message": "discarded"
+        },
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "10",
+      "type": "EVENT_TYPE_RUN_BLOCKED",
+      "time": "2026-09-28T12:00:04.000Z",
+      "runBlocked": {
+        "taskFailedEventId": "9",
+        "failure": {
+          "type": "HistoryMismatch",
+          "message": "old deploy"
+        }
+      }
+    },
+    {
+      "eventId": "11",
+      "type": "EVENT_TYPE_RUN_RESUMED",
+      "time": "2026-09-28T12:00:05.000Z",
+      "runResumed": {
+        "identity": "owner",
+        "reason": "patched"
+      }
+    },
+    {
+      "eventId": "12",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:06.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "13",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:06.000Z",
+      "taskStarted": {
+        "scheduledEventId": "12",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "NDI="
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "name": "side effect recorded",
+  "workflow": "recordedSideEffect",
+  "description": "Replay returns the marker details without invoking the now-throwing callback.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "recordedSideEffect",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_MARKER_RECORDED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "markerRecorded": {
+        "seq": "1",
+        "name": "side_effect",
+        "markerId": "",
+        "details": {
+          "contentType": "application/json",
+          "data": "eyJvcmlnaW5hbCI6N30="
+        },
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "activityScheduled": {
+        "seq": "2",
+        "activityType": "double",
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "input": {
+          "contentType": "application/json",
+          "data": "MQ=="
+        },
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "activityCompleted": {
+        "seq": "2",
+        "scheduledEventId": "6",
+        "result": {
+          "contentType": "application/json",
+          "data": "Mg=="
+        },
+        "attempt": 1,
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "9",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskStarted": {
+        "scheduledEventId": "8",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "eyJvcmlnaW5hbCI6N30="
+          }
+        }
+      }
+    ]
+  }
+}

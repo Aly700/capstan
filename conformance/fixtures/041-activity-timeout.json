@@ -1,0 +1,105 @@
+{
+  "name": "activity timeout",
+  "workflow": "observeActivityFailure",
+  "description": "An activity timeout reaches workflow code as TimeoutFailure with the wire timeout type.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "observeActivityFailure",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "activityScheduled": {
+        "seq": "1",
+        "activityType": "double",
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "input": {
+          "contentType": "application/json",
+          "data": "MQ=="
+        },
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_ACTIVITY_TIMED_OUT",
+      "time": "2026-09-28T12:00:02.000Z",
+      "activityTimedOut": {
+        "seq": "1",
+        "scheduledEventId": "5",
+        "timeoutType": "TIMEOUT_TYPE_HEARTBEAT",
+        "attempt": 3
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskStarted": {
+        "scheduledEventId": "7",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "eyJ0eXBlIjoiVGltZW91dEZhaWx1cmUiLCJ0aW1lb3V0VHlwZSI6IkhFQVJUQkVBVCJ9"
+          }
+        }
+      }
+    ]
+  }
+}
