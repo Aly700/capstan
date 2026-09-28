@@ -65,15 +65,57 @@ export const bootstrapSource = String.raw`
     requestApproval: (request) => asyncCall("requestApproval", [request]),
   });
   define(globalThis, Symbol.for("capstan.workflow.runtime"), { value: runtime, configurable: false });
+  const nativeDateParse = NativeDate.parse;
+  function parseDate(value) {
+    const text = String(value);
+    // Offset-free ISO values have a fixed UTC meaning inside a workflow. Other
+    // date spellings must include an explicit offset; native parsing otherwise
+    // consults the worker's local timezone.
+    if (/^[+-]?\d{4,6}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/.test(text)) return nativeDateParse(text + "Z");
+    if (/^[+-]?\d{4,6}(?:-\d{2}(?:-\d{2})?)?$/.test(text) || /(?:Z|[+-]\d{2}:?\d{2}|(?:GMT|UTC)(?:[+-]\d{4})?)$/i.test(text)) return nativeDateParse(text);
+    throw new SandboxViolationError("Date strings without an ISO format or explicit timezone");
+  }
+  for (const [local, utc] of Object.entries({
+    getFullYear: "getUTCFullYear", getMonth: "getUTCMonth", getDate: "getUTCDate", getDay: "getUTCDay",
+    getHours: "getUTCHours", getMinutes: "getUTCMinutes", getSeconds: "getUTCSeconds", getMilliseconds: "getUTCMilliseconds",
+    setFullYear: "setUTCFullYear", setMonth: "setUTCMonth", setDate: "setUTCDate", setHours: "setUTCHours",
+    setMinutes: "setUTCMinutes", setSeconds: "setUTCSeconds", setMilliseconds: "setUTCMilliseconds",
+  })) define(NativeDate.prototype, local, { value: NativeDate.prototype[utc], writable: true, configurable: true });
+  define(NativeDate.prototype, "getYear", { value() { return this.getUTCFullYear() - 1900; }, configurable: true });
+  define(NativeDate.prototype, "setYear", { value(year) { const n = Number(year); return this.setUTCFullYear(n >= 0 && n <= 99 ? n + 1900 : n); }, configurable: true });
+  define(NativeDate.prototype, "getTimezoneOffset", { value() { return Number.isNaN(this.getTime()) ? NaN : 0; }, configurable: true });
+  const dateString = NativeDate.prototype.toUTCString;
+  define(NativeDate.prototype, "toString", { value: dateString, configurable: true });
+  define(NativeDate.prototype, "toDateString", { value() { const text = dateString.call(this); return text === "Invalid Date" ? text : text.slice(0, -13); }, configurable: true });
+  define(NativeDate.prototype, "toTimeString", { value() { const text = dateString.call(this); return text === "Invalid Date" ? text : text.slice(-12); }, configurable: true });
+  for (const name of ["toLocaleString", "toLocaleDateString", "toLocaleTimeString"]) define(NativeDate.prototype, name, { value() { throw new SandboxViolationError("Date." + name); }, configurable: true });
+  function dateValue(value) {
+    if (value instanceof NativeDate) return NativeDate.prototype.getTime.call(value);
+    const primitive = (item) => item === null || (typeof item !== "object" && typeof item !== "function");
+    if (!primitive(value)) {
+      const convert = value[Symbol.toPrimitive];
+      if (convert !== undefined) value = convert.call(value, "default");
+      else {
+        const original = value;
+        for (const name of ["valueOf", "toString"]) {
+          if (typeof original[name] === "function") value = original[name]();
+          if (primitive(value)) break;
+        }
+      }
+      if (!primitive(value)) throw new TypeError("Cannot convert object to primitive value");
+    }
+    return typeof value === "string" ? parseDate(value) : value;
+  }
   function WorkflowDate(...args) {
     if (!new.target) return new NativeDate(runtime.now()).toString();
-    return Reflect.construct(NativeDate, args.length ? args : [runtime.now()], new.target);
+    const value = args.length === 0 ? runtime.now() : args.length > 1 ? NativeDate.UTC(...args) : dateValue(args[0]);
+    return Reflect.construct(NativeDate, [value], new.target);
   }
   WorkflowDate.prototype = NativeDate.prototype;
   define(WorkflowDate.prototype, "constructor", { value: WorkflowDate, writable: true, configurable: true });
   define(WorkflowDate, "name", { value: "Date" });
   define(WorkflowDate, "now", { value: () => runtime.now() });
-  define(WorkflowDate, "parse", { value: NativeDate.parse });
+  define(WorkflowDate, "parse", { value: parseDate });
   define(WorkflowDate, "UTC", { value: NativeDate.UTC });
   globalThis.Date = WorkflowDate;
   Math.random = () => runtime.random();
