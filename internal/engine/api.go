@@ -160,8 +160,8 @@ func (c Config) WithDefaults() Config {
 	return c
 }
 
-// Deps are the engine's collaborators. Gate may be nil; GATE approvals then only resolve
-// by timeout or ResolveApproval.
+// Deps are the engine's collaborators. Gate may be nil; GATE approvals then resolve only by
+// timeout (ResolveApproval accepts HUMAN approvals only).
 type Deps struct {
 	Store store.Store
 	Clock Clock

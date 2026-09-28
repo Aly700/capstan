@@ -5045,7 +5045,7 @@ func (x *FinishAICallResponse) GetCostUsd() float64 {
 
 type StartRunRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RunId         string                 `protobuf:"bytes,1,opt,name=run_id,json=runId,proto3" json:"run_id,omitempty"` // required, caller-chosen, 1-200 chars of [A-Za-z0-9._:-]
+	RunId         string                 `protobuf:"bytes,1,opt,name=run_id,json=runId,proto3" json:"run_id,omitempty"` // required, caller-chosen, 1-180 chars of [A-Za-z0-9._:-]; "~" is reserved (D19, D21)
 	WorkflowType  string                 `protobuf:"bytes,2,opt,name=workflow_type,json=workflowType,proto3" json:"workflow_type,omitempty"`
 	TaskQueue     string                 `protobuf:"bytes,3,opt,name=task_queue,json=taskQueue,proto3" json:"task_queue,omitempty"`
 	Input         *Payload               `protobuf:"bytes,4,opt,name=input,proto3" json:"input,omitempty"`
