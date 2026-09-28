@@ -30,12 +30,20 @@ describe("independent replay contract regressions", () => {
     await expect(review(body, history)).rejects.toMatchObject({ message: expect.any(String) });
   });
 
-  it("pins README delivery-before-clock order for synchronous signal handlers", async () => {
+  it("sets the current TaskStarted time before a synchronous signal handler runs", async () => {
     const history = run("run").task("2026-09-28T12:00:01Z").signal("go", true).task("2026-09-28T13:00:00Z").expectCommands();
     const body = "let observed;rt.setHandler({name:'go'},()=>{observed=rt.now();});await rt.condition(()=>observed!==undefined);return [observed,rt.now()];";
     const result = await review(body, history);
     expect(result[0]?.attributes.case).toBe("completeRun");
-    if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([1790596801000, 1790600400000]);
+    if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([1790600400000, 1790600400000]);
+  });
+
+  it("sets the current clock before evaluating a condition after a signal", async () => {
+    const history = run("run").task("2026-09-28T12:00:01Z").signal("go", true).task("2026-09-28T13:00:00Z").expectCommands();
+    const body = "let ready=false,observed;rt.setHandler({name:'go'},()=>{ready=true;});await rt.condition(()=>{if(!ready)return false;observed=rt.now();return true;});return [observed,rt.now()];";
+    const result = await review(body, history);
+    expect(result[0]?.attributes.case).toBe("completeRun");
+    if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([1790600400000, 1790600400000]);
   });
 
   it("memoizes an old-run false patch decision across later activations", async () => {

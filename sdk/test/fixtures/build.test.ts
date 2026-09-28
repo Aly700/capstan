@@ -36,10 +36,15 @@ describe("conformance corpus structure", () => {
   it("contains at least 24 additional fixtures", () => expect(files.length).toBeGreaterThanOrEqual(25));
   it("shares the reviewed signal clock, patch memoization, and batched race edges", () => {
     expect(files).toEqual(expect.arrayContaining([
-      "052-signal-handler-prior-clock.json",
+      "052-signal-handler-current-clock.json",
       "053-patch-false-memoized.json",
       "054-race-batched-native-order.json",
     ]));
+  });
+  it("marks only the batched race fixture as TypeScript-specific", () => {
+    const restricted = files.filter((file) => JSON.parse(readFileSync(`${fixtureDir}/${file}`, "utf8")).only !== undefined);
+    expect(restricted).toEqual(["054-race-batched-native-order.json"]);
+    expect(JSON.parse(readFileSync(`${fixtureDir}/${restricted[0]}`, "utf8")).only).toEqual(["ts"]);
   });
   for (const file of files) {
     it(`${file} is valid protojson with gap-free history and a current activation`, () => {

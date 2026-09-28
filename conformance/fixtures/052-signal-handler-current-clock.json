@@ -1,7 +1,7 @@
 {
-  "name": "signal handler prior clock",
+  "name": "signal handler current clock",
   "workflow": "signalHandlerClock",
-  "description": "The README delivers external events before setting the new TaskStarted clock. A synchronous signal handler sees the previous activation time; its awaited continuation sees the new time.",
+  "description": "D15 sets the TaskStarted clock before delivering external events. A synchronous signal handler and its awaited continuation both observe the current activation time.",
   "history": [
     {
       "eventId": "1",
@@ -82,7 +82,7 @@
         "completeRun": {
           "result": {
             "contentType": "application/json",
-            "data": "WzE3OTA1OTY4MDEwMDAsMTc5MDYwMDQwMDAwMF0="
+            "data": "WzE3OTA2MDA0MDAwMDAsMTc5MDYwMDQwMDAwMF0="
           }
         }
       }
