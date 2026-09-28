@@ -76,10 +76,6 @@ func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
 	return 0, errNotImplemented
 }
 
-func (e *Engine) ProcessDueTasks(ctx context.Context, limit int) (int, error) {
-	return 0, errNotImplemented
-}
-
 func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error) {
 	return 0, errNotImplemented
 }
