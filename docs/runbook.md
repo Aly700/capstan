@@ -80,7 +80,14 @@ add `-c existingGithubProvider=true`; that imports it and leaves it owner-manage
 this choice for later foundation operations. Review the IAM diff before approving.
 
 The GitHub role accepts only audience `sts.amazonaws.com` and subject
-`repo:Aly700/capstan:ref:refs/heads/main`. It can push/read image metadata in
+`repo:Aly700@112176329/capstan@1392801248:ref:refs/heads/main`. GitHub uses an
+immutable subject for this repository; the older name-only subject fails OIDC
+authentication. Before provisioning, check the exact prefix with
+`gh api repos/Aly700/capstan/actions/oidc/customization/sub --jq .sub_claim_prefix`
+and compare it, followed by `:ref:refs/heads/main`, with `infra/lib/oidc.ts`.
+Keep the exact main-only match when updating it. See GitHub's
+[immutable subject claims](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims).
+The role can push/read image metadata in
 `capstan-server`, deploy the three workload stacks and pass only `capstan-cloudformation`
 to CloudFormation. It cannot change its own foundation stack, read secrets directly,
 destroy stacks or assume other roles. The execution role names its resource families
