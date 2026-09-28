@@ -88,18 +88,18 @@ func Load(getenv func(string) string) (Config, error) {
 		}
 	}
 	if v := getenv("CAPSTAN_MODEL_PRICES"); v != "" {
-		var prices map[string]engine.ModelPrice
+		var prices map[string]*engine.ModelPrice
 		d := json.NewDecoder(strings.NewReader(v))
 		d.DisallowUnknownFields()
 		if err := d.Decode(&prices); err != nil || prices == nil || d.Decode(new(any)) != io.EOF {
 			invalid("CAPSTAN_MODEL_PRICES", "must be a JSON object of model prices")
 		} else {
 			for name, price := range prices {
-				if strings.TrimSpace(name) == "" || !finiteNonnegative(price.Input) || !finiteNonnegative(price.Output) || !finiteNonnegative(price.CacheRead) || !finiteNonnegative(price.CacheWrite) {
+				if strings.TrimSpace(name) == "" || price == nil || !finiteNonnegative(price.Input) || !finiteNonnegative(price.Output) || !finiteNonnegative(price.CacheRead) || !finiteNonnegative(price.CacheWrite) {
 					invalid("CAPSTAN_MODEL_PRICES", "model names must be nonempty and prices finite and nonnegative")
 					break
 				}
-				c.ModelPrices[name] = price
+				c.ModelPrices[name] = *price
 			}
 		}
 	}

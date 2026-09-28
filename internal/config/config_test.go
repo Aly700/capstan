@@ -58,7 +58,7 @@ func TestLoadRejectsInvalidValuesWithoutLeakingThem(t *testing.T) {
 		"CAPSTAN_DAILY_CAP_USD":     {"0", "-1", "NaN", "+Inf", "oops"},
 		"CAPSTAN_MIGRATE":           {"maybe"}, "CAPSTAN_LOG_LEVEL": {"secret-value"},
 		"CAPSTAN_ADDR":           {"bad", "host:bad", "host:65536"},
-		"CAPSTAN_MODEL_PRICES":   {`null`, `[]`, `{"custom":{"input":-1}}`, `{"custom":{"inpt":1}}`, `{"":{}}`, `{} {}`},
+		"CAPSTAN_MODEL_PRICES":   {`null`, `[]`, `{"custom":null}`, `{"custom":{"input":-1}}`, `{"custom":{"inpt":1}}`, `{"":{}}`, `{} {}`},
 		"CAPSTAN_API_KEY_HASHES": {"secret-value"},
 	} {
 		for _, value := range values {

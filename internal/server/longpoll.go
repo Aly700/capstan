@@ -13,7 +13,7 @@ func pollTask[T any](ctx context.Context, s *Server, kind store.TaskKind, queue 
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	pollCtx, cancel := context.WithTimeout(ctx, s.cfg.PollTimeout)
+	pollCtx, cancel := s.pollContext(ctx)
 	defer cancel()
 	var notifications <-chan struct{}
 	if s.notifier != nil {
@@ -45,6 +45,7 @@ func pollTask[T any](ctx context.Context, s *Server, kind store.TaskKind, queue 
 		if err != nil {
 			return nil, err
 		}
+		s.metrics.pollWaiting(kind.String(), 1)
 		waiting := true
 		for waiting {
 			select {
@@ -60,11 +61,12 @@ func pollTask[T any](ctx context.Context, s *Server, kind store.TaskKind, queue 
 				waiting = false
 			}
 		}
+		s.metrics.pollWaiting(kind.String(), -1)
 	}
 }
 
 func (s *Server) AwaitRun(ctx context.Context, req *connect.Request[v1.AwaitRunRequest]) (*connect.Response[v1.AwaitRunResponse], error) {
-	pollCtx, cancel := context.WithTimeout(ctx, s.cfg.PollTimeout)
+	pollCtx, cancel := s.pollContext(ctx)
 	defer cancel()
 	ticker := time.NewTicker(250 * time.Millisecond)
 	defer ticker.Stop()
@@ -93,9 +95,21 @@ func (s *Server) AwaitRun(ctx context.Context, req *connect.Request[v1.AwaitRunR
 		if err != nil {
 			return nil, err
 		}
+		s.metrics.pollWaiting("run", 1)
 		select {
 		case <-pollCtx.Done():
 		case <-ticker.C:
 		}
+		s.metrics.pollWaiting("run", -1)
 	}
+}
+
+// Shutdown cancels only long polls; ordinary RPCs retain their drain budget.
+func (s *Server) pollContext(parent context.Context) (context.Context, context.CancelFunc) {
+	ctx, cancel := context.WithTimeout(parent, s.cfg.PollTimeout)
+	stop := context.AfterFunc(s.pollStop, cancel)
+	if s.pollStop.Err() != nil {
+		cancel()
+	}
+	return ctx, func() { stop(); cancel() }
 }

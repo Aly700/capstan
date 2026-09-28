@@ -44,8 +44,8 @@ func (c *Client) ApprovalStatus(ctx context.Context, id string) (engine.GateAppr
 	if c.configErr != nil {
 		return engine.GateApproval{}, c.configErr
 	}
-	if id == "" {
-		return engine.GateApproval{}, errors.New("gate: empty approval id")
+	if id == "" || id == "." || id == ".." {
+		return engine.GateApproval{}, errors.New("gate: invalid approval id")
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()

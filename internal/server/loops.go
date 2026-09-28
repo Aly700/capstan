@@ -27,6 +27,7 @@ func (s *Server) runLoop(ctx context.Context, name string, work func(context.Con
 	backoff := 250 * time.Millisecond
 	for ctx.Err() == nil {
 		count, err := work(ctx, 100)
+		s.metrics.loopItems(name, count)
 		if ctx.Err() != nil {
 			return
 		}
