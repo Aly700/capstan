@@ -4,6 +4,7 @@ package pgstore
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 
@@ -28,11 +29,21 @@ var _ store.Store = (*pgStore)(nil)
 
 // Open connects to PostgreSQL and returns a Store. It does not apply migrations.
 func Open(ctx context.Context, dsn string) (store.Store, error) {
+	// Forty led the 10/20/40/60 pool comparison on the documented load machine.
+	// See docs/evidence/load.md; servers may override it for a different database.
+	return OpenWithMaxConns(ctx, dsn, 40)
+}
+
+// OpenWithMaxConns uses an explicit pool limit; the listener has one separate connection.
+func OpenWithMaxConns(ctx context.Context, dsn string, maxConns int32) (store.Store, error) {
+	if maxConns <= 0 {
+		return nil, errors.New("pgstore: max connections must be positive")
+	}
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		return nil, err
 	}
-	cfg.MaxConns = 20
+	cfg.MaxConns = maxConns
 	if cfg.ConnConfig.ConnectTimeout == 0 {
 		cfg.ConnConfig.ConnectTimeout = 5 * time.Second
 	}
