@@ -220,4 +220,4 @@ five-second fallback, within the existing request/poll deadline. PostgreSQL mult
 run and task topics over the store's single LISTEN connection; it never allocates a
 connection per waiter. Reconnection wakes subscribers to cover the notification gap.
 This replaces the 250 ms per-open-run observation poll; it changes neither run closure
-semantics nor the RPC contract. Wording is subject to the lead's review.
+semantics nor the RPC contract.
