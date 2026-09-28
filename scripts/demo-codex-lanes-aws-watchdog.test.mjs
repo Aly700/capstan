@@ -10,7 +10,7 @@ const initial = { account: '280517746513', startedAt, hardDeadline: '2026-09-28T
 function fixture(script) {
   const root = mkdtempSync(join(tmpdir(), 'capstan-watchdog-test-'));
   for (const path of ['scripts', '.lane', 'docs/evidence']) mkdirSync(join(root, path), { recursive: true });
-  for (const name of [script, 'demo-codex-lanes-aws-local.mjs']) copyFileSync(new URL(name, import.meta.url), join(root, 'scripts', name));
+  for (const name of [script, 'demo-codex-lanes-aws-local.mjs', 'demo-codex-lanes-aws-taskdefs.mjs']) copyFileSync(new URL(name, import.meta.url), join(root, 'scripts', name));
   writeFileSync(join(root, 'scripts/evidence-lib.mjs'), `export const root = ${JSON.stringify(root)};\n`);
   const sessionPath = join(root, '.lane/aws-session-2026-09-28.json');
   writeFileSync(sessionPath, JSON.stringify(initial));
@@ -62,7 +62,7 @@ test('cleanup divides the remaining window between CDK groups and reserves verif
       Date.now = () => now;
       cp.spawnSync = (binary, args, options) => {
         let value = [];
-        if (binary === 'aws') value = args.includes('get-caller-identity')
+        if (binary === 'aws') value = args.includes('list-task-definitions') ? { taskDefinitionArns: [] } : args.includes('get-caller-identity')
           ? { Account: '280517746513' }
           : { Name: args[args.indexOf('--stack-name') + 1], Created: ${JSON.stringify(startedAt)}, Status: 'CREATE_COMPLETE' };
         else if (args[0]?.endsWith('demo-codex-lanes-aws-inventory.mjs')) {

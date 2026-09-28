@@ -23,6 +23,7 @@ const queries = {
   ecsClusters: ['ecs', 'list-clusters', '--query', "clusterArns[?contains(@, '/capstan')]"],
   ecsActiveTaskDefinitions: ['ecs', 'list-task-definitions', '--family-prefix', 'capstan', '--status', 'ACTIVE', '--query', 'taskDefinitionArns'],
   ecsInactiveTaskDefinitions: ['ecs', 'list-task-definitions', '--family-prefix', 'capstan', '--status', 'INACTIVE', '--query', 'taskDefinitionArns'],
+  ecsDeletingTaskDefinitions: ['ecs', 'list-task-definitions', '--family-prefix', 'capstan', '--status', 'DELETE_IN_PROGRESS', '--query', 'taskDefinitionArns'],
   databases: ['rds', 'describe-db-instances', '--query', "DBInstances[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBInstanceIdentifier,Arn:DBInstanceArn,Status:DBInstanceStatus}"],
   databaseSubnetGroups: ['rds', 'describe-db-subnet-groups', '--query', "DBSubnetGroups[?contains(DBSubnetGroupName, 'capstan')].{Name:DBSubnetGroupName,Vpc:VpcId}"],
   databaseSnapshots: ['rds', 'describe-db-snapshots', '--query', "DBSnapshots[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBSnapshotIdentifier,Status:Status,Type:SnapshotType}"],

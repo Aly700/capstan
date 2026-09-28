@@ -5,6 +5,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { root } from './evidence-lib.mjs';
 import { localProofDirectory, requestLocalShutdown } from './demo-codex-lanes-aws-local.mjs';
+import { deleteOwnedInactiveDefinitions } from './demo-codex-lanes-aws-taskdefs.mjs';
 const sessionPath = process.argv[2] ?? join(root, '.lane/aws-session-2026-09-28.json');
 const session = JSON.parse(readFileSync(sessionPath, 'utf8'));
 const baseline = JSON.parse(readFileSync(join(root, session.baselineFile ?? '.lane/aws-baseline-2026-09-28.json'), 'utf8'));
@@ -56,6 +57,16 @@ for (const [index, names] of groups.entries()) {
 }
 session.destroyCommandsFinishedAt ??= new Date().toISOString();
 writeFileSync(sessionPath, JSON.stringify(session, null, 2) + '\n');
+const deletedDefinitions = deleteOwnedInactiveDefinitions({ baseline, startedAt: session.startedAt, aws: args => {
+  console.log(`$ AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ${args.join(' ')}`);
+  const result = aws(args); assert.equal(result.status, 0, result.stderr); return JSON.parse(result.stdout);
+} });
+if (deletedDefinitions.length) {
+  const path = join(root, `docs/evidence/${evidencePrefix}-task-definition-deletions.json`);
+  const previous = existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : [];
+  writeFileSync(path, JSON.stringify([...previous, { requestedAt: new Date().toISOString(), responses: deletedDefinitions }], null, 2) + '\n');
+  console.log('Requested deletion of owned inactive task definitions; the final inventory also checks DELETE_IN_PROGRESS.');
+}
 const variables = spawnSync('gh', ['variable', 'list', '--repo', 'Aly700/capstan', '--json', 'name,value'], { env, encoding: 'utf8', timeout: 60_000 });
 assert.equal(variables.status, 0, variables.stderr);
 const ownedVariables = ['CAPSTAN_AWS_ACCOUNT_ID', 'CAPSTAN_DEPLOY_ROLE_ARN', 'CAPSTAN_BUDGET_EMAIL'];
