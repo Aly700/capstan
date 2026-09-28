@@ -1,9 +1,8 @@
 diff --git a/internal/engine/approvals.go b/internal/engine/approvals.go
-index 2f5b3cb..7ae052f 100644
 --- a/internal/engine/approvals.go
 +++ b/internal/engine/approvals.go
-@@ -173,9 +173,6 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
- 					return err
+@@ -173,9 +173,6 @@
+ 					return nil
  				}
  				now := e.now()
 -				if !a.DueAt.IsZero() && !a.DueAt.After(now) {

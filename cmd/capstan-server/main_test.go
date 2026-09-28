@@ -179,7 +179,14 @@ func TestBootHTTP1AndHTTP2AndGracefulDrain(t *testing.T) {
 				t.Fatalf("describe=%v err=%v", response, err)
 			}
 			for _, path := range []string{"/healthz", "/readyz", "/metrics"} {
-				r, err := hc.Get(url + path)
+				req, err := http.NewRequest(http.MethodGet, url+path, nil)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if path == "/metrics" {
+					req.Header.Set("Authorization", "Bearer secret")
+				}
+				r, err := hc.Do(req)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -359,7 +366,7 @@ func TestReadinessQueriesPostgres(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer admin.Close(context.Background())
-	name := fmt.Sprintf("capstan_server_test_%x", sha256.Sum256([]byte(auth.NewKey())))[:48]
+	name := fmt.Sprintf("capstan_audit_server_test_%x", sha256.Sum256([]byte(auth.NewKey())))[:48]
 	ident := pgx.Identifier{name}.Sanitize()
 	if _, err := admin.Exec(ctx, "create database "+ident); err != nil {
 		t.Fatal(err)
