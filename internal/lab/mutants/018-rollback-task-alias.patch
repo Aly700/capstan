@@ -1,0 +1,13 @@
+diff --git a/internal/store/memstore/memstore.go b/internal/store/memstore/memstore.go
+index de7bd3f..04fd1e8 100644
+--- a/internal/store/memstore/memstore.go
++++ b/internal/store/memstore/memstore.go
+@@ -249,7 +249,7 @@ func (s *snapshot) clone() *snapshot {
+ 		runs:      cloneMap(s.runs, cloneRun),
+ 		history:   cloneMap(s.history, cloneEvents),
+ 		inbox:     cloneMap(s.inbox, cloneEvents),
+-		tasks:     cloneMap(s.tasks, cloneTask),
++		tasks:     s.tasks,
+ 		timers:    cloneMap(s.timers, cloneTimer),
+ 		approvals: cloneMap(s.approvals, cloneApproval),
+ 		signals:   cloneMap(s.signals, func(v struct{}) struct{} { return v }),

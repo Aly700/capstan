@@ -1,0 +1,15 @@
+diff --git a/internal/engine/retry.go b/internal/engine/retry.go
+index a578ab8..9eafdba 100644
+--- a/internal/engine/retry.go
++++ b/internal/engine/retry.go
+@@ -48,10 +48,6 @@ func (e *Engine) retryActivity(task *store.Task, failure *v1.Failure, now time.T
+ 	}
+ 	delay := cappedBackoff(initial, coefficient, max(int64(task.Attempt)-1, 0), maximum)
+ 	visible := addDeadline(now, delay)
+-	deadline := activityScheduleClose(task)
+-	if !deadline.IsZero() && visible.After(deadline) {
+-		return false
+-	}
+ 	task.Attempt++
+ 	task.VisibleAt = visible
+ 	task.LeasedUntil = time.Time{}

@@ -19,8 +19,8 @@ import (
 )
 
 // raceWithRunClosure holds the first transaction's run lock until the other reaches
-// GetRun. Closure first forces a deadlock with the competing operation's child lock;
-// work first checks the opposite serialization. Channels control both lock orderings.
+// GetRun, or the competing scan skips the locked run. Channels control both
+// serialization orders; neither path may need PostgreSQL deadlock recovery.
 func raceWithRunClosure(t *testing.T, e *Engine, first, second func(context.Context, *Engine) error) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
@@ -53,15 +53,19 @@ func raceWithRunClosure(t *testing.T, e *Engine, first, second func(context.Cont
 		t.Fatal(ctx.Err())
 	}
 	go func() { secondResult <- second(ctx, &secondEngine) }()
+	results := []<-chan error{firstResult}
 	select {
 	case <-reached:
+		results = append(results, secondResult)
 	case err := <-secondResult:
-		t.Fatalf("competitor did not reach the run: %v", err)
+		if err != nil {
+			t.Fatalf("competing operation: %v", err)
+		}
 	case <-ctx.Done():
 		t.Fatal(ctx.Err())
 	}
 	unlock.Do(func() { close(release) })
-	for _, result := range []<-chan error{firstResult, secondResult} {
+	for _, result := range results {
 		select {
 		case err := <-result:
 			if err != nil {
@@ -71,7 +75,9 @@ func raceWithRunClosure(t *testing.T, e *Engine, first, second func(context.Cont
 			t.Fatal(ctx.Err())
 		}
 	}
-	t.Logf("PostgreSQL deadlocks encountered: %d", deadlocks.Load())
+	if n := deadlocks.Load(); n != 0 {
+		t.Fatalf("PostgreSQL deadlock retries = %d, want zero", n)
+	}
 }
 
 func TestPostgresTerminateRunRaces(t *testing.T) {
@@ -210,8 +216,8 @@ func TestPostgresRunTimeoutRaces(t *testing.T) {
 				}
 				return err
 			})
-			// A deadlock victim's retry may SKIP LOCKED past the winning operation.
-			// The next sweep must close it once both racing transactions have ended.
+			// A sweep can SKIP LOCKED past the winning operation. The next sweep
+			// must close it once both racing transactions have ended.
 			if _, err := e.TimeoutRuns(t.Context(), 1); err != nil {
 				t.Fatal(err)
 			}

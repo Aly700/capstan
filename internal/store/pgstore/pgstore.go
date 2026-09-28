@@ -4,10 +4,12 @@ package pgstore
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 
 	"github.com/Aly700/capstan/internal/store"
+	"github.com/Aly700/capstan/internal/store/subscriptions"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -19,7 +21,7 @@ type pgStore struct {
 	stop           context.CancelFunc
 	done           chan struct{}
 	mu             sync.Mutex
-	subs           map[string]map[chan struct{}]struct{}
+	subs           map[string]*subscriptions.Group
 	closed         bool
 	closeOnce      sync.Once
 }
@@ -28,11 +30,21 @@ var _ store.Store = (*pgStore)(nil)
 
 // Open connects to PostgreSQL and returns a Store. It does not apply migrations.
 func Open(ctx context.Context, dsn string) (store.Store, error) {
+	// Forty led the 10/20/40/60 pool comparison on the documented load machine.
+	// See docs/evidence/load.md; servers may override it for a different database.
+	return OpenWithMaxConns(ctx, dsn, 40)
+}
+
+// OpenWithMaxConns uses an explicit pool limit; the listener has one separate connection.
+func OpenWithMaxConns(ctx context.Context, dsn string, maxConns int32) (store.Store, error) {
+	if maxConns <= 0 {
+		return nil, errors.New("pgstore: max connections must be positive")
+	}
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		return nil, err
 	}
-	cfg.MaxConns = 20
+	cfg.MaxConns = maxConns
 	if cfg.ConnConfig.ConnectTimeout == 0 {
 		cfg.ConnConfig.ConnectTimeout = 5 * time.Second
 	}
@@ -45,7 +57,7 @@ func Open(ctx context.Context, dsn string) (store.Store, error) {
 		return nil, err
 	}
 	listenCtx, stop := context.WithCancel(context.Background())
-	s := &pgStore{pool: pool, listenerConfig: cfg.ConnConfig.Copy(), listenCtx: listenCtx, stop: stop, done: make(chan struct{}), subs: make(map[string]map[chan struct{}]struct{})}
+	s := &pgStore{pool: pool, listenerConfig: cfg.ConnConfig.Copy(), listenCtx: listenCtx, stop: stop, done: make(chan struct{}), subs: make(map[string]*subscriptions.Group)}
 	s.listenerConfig.RuntimeParams["application_name"] = "capstan-listener"
 	conn, err := s.connectListener(ctx)
 	if err != nil {
@@ -62,9 +74,7 @@ func (s *pgStore) Close() error {
 		s.mu.Lock()
 		s.closed = true
 		for _, subscribers := range s.subs {
-			for ch := range subscribers {
-				closeSubscription(ch)
-			}
+			subscribers.Close()
 		}
 		s.subs = nil
 		s.mu.Unlock()

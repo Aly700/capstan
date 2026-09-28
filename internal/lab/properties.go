@@ -155,6 +155,18 @@ type timerState struct {
 // absent rows can represent buffered TimerFired events: the store only exposes an
 // inbox count, so those timers are checked again after the inbox reaches history.
 func CheckTimers(snapshot Snapshot) error {
+	return checkTimers(snapshot, nil, false)
+}
+
+// CheckTimersWithDeadlines checks P3 against independently observed and validated
+// timer deadlines. It is for real-clock drivers, where the clock can advance
+// between assigning an event's timestamp and computing its timer's deadline.
+// Every TimerStarted must have an entry; history timestamps are never rewritten.
+func CheckTimersWithDeadlines(snapshot Snapshot, deadlines map[string]map[int64]time.Time) error {
+	return checkTimers(snapshot, deadlines, true)
+}
+
+func checkTimers(snapshot Snapshot, deadlines map[string]map[int64]time.Time, observed bool) error {
 	runs, err := snapshotRuns(snapshot)
 	if err != nil {
 		return fmt.Errorf("P3: %w", err)
@@ -165,14 +177,14 @@ func CheckTimers(snapshot Snapshot) error {
 		}
 	}
 	for _, run := range snapshot.Runs {
-		if err := checkRunTimers(snapshot, run); err != nil {
+		if err := checkRunTimers(snapshot, run, deadlines[run.RunID], observed); err != nil {
 			return fmt.Errorf("P3: run %q: %w", run.RunID, err)
 		}
 	}
 	return nil
 }
 
-func checkRunTimers(snapshot Snapshot, run *store.Run) error {
+func checkRunTimers(snapshot Snapshot, run *store.Run, deadlines map[int64]time.Time, observed bool) error {
 	states := make(map[int64]*timerState)
 	for _, event := range snapshot.Histories[run.RunID] {
 		if event == nil {
@@ -187,7 +199,15 @@ func checkRunTimers(snapshot Snapshot, run *store.Run) error {
 			if states[a.Seq] != nil {
 				return fmt.Errorf("timer %d started twice", a.Seq)
 			}
-			states[a.Seq] = &timerState{start: event, due: event.Time.AsTime().Add(a.FireAfter.AsDuration()).Truncate(time.Microsecond)}
+			due := event.Time.AsTime().Add(a.FireAfter.AsDuration()).Truncate(time.Microsecond)
+			if observed {
+				var ok bool
+				due, ok = deadlines[a.Seq]
+				if !ok || due.IsZero() {
+					return fmt.Errorf("timer %d has no validated observed deadline", a.Seq)
+				}
+			}
+			states[a.Seq] = &timerState{start: event, due: due}
 		case v1.EventType_EVENT_TYPE_TIMER_FIRED:
 			a := event.GetTimerFired()
 			if a == nil || states[a.Seq] == nil || states[a.Seq].start.EventId != a.StartedEventId {

@@ -85,6 +85,10 @@ func (t *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Time
 	if err != nil {
 		return nil, dbError(err)
 	}
+	if t.claimedRuns == nil {
+		t.claimedRuns = make(map[string]struct{})
+	}
+	t.claimedRuns[v.RunID] = struct{}{}
 	return v, nil
 }
 
@@ -93,6 +97,6 @@ func (t *transaction) RunTasks(runID string) ([]*store.Task, error) {
 	return collect(rows, err, scanTask)
 }
 func (t *transaction) DueTasks(now time.Time, limit int) ([]*store.Task, error) {
-	rows, err := t.tx.Query(t.ctx, "select "+taskColumns+` from task where check_at<=$1 order by check_at,id limit $2 for update skip locked`, nullTime(now), max(limit, 0))
+	rows, err := t.tx.Query(t.ctx, "select "+qualifiedColumns("t", taskColumns)+` from task t join run r on r.run_id=t.run_id where t.check_at<=$1 order by t.check_at,t.id limit $2 for update of r,t skip locked`, nullTime(now), max(limit, 0))
 	return collect(rows, err, scanTask)
 }

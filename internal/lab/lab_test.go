@@ -16,6 +16,7 @@ import (
 
 var seedFlag = flag.Int64("seed", -1, "replay exactly one fault-lab seed")
 var seedsFlag = flag.Int("seeds", 2000, "number of seeded scenarios")
+var traceSeedsFlag = flag.Bool("lab.trace-seeds", false, "log each seed before running it for mutation triage")
 var knownFlag = flag.Bool("lab.known", true, "recognize only the documented known defect list")
 
 func TestLab(t *testing.T) {
@@ -30,6 +31,9 @@ func TestLab(t *testing.T) {
 		}
 		for offset := 0; offset < count; offset++ {
 			seed := first + int64(offset)
+			if *traceSeedsFlag {
+				t.Logf("mutation seed %d", seed)
+			}
 			result, err := Run(context.Background(), seed, Options{Clock: engine.SystemClock{}, Advance: time.Sleep})
 			if err != nil {
 				if *knownFlag && KnownFailure(seed, err) {

@@ -1,0 +1,13 @@
+diff --git a/internal/engine/activity_task.go b/internal/engine/activity_task.go
+index 1f13742..a046956 100644
+--- a/internal/engine/activity_task.go
++++ b/internal/engine/activity_task.go
+@@ -51,7 +51,7 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
+ 			RunId:     task.RunID, WorkflowType: run.WorkflowType, Seq: task.Activity.Seq, ActivityType: task.Activity.ActivityType, Input: task.Activity.Input,
+ 			Attempt: task.Attempt, ScheduledTime: timestamppb.New(task.ScheduledAt), StartedTime: timestamppb.New(task.StartedAt),
+ 			StartToCloseTimeout: task.Activity.StartToCloseTimeout, HeartbeatTimeout: task.Activity.HeartbeatTimeout, HeartbeatDetails: task.HeartbeatDetails,
+-			IdempotencyKey: IdempotencyKey(task.RunID, task.Activity.Seq),
++			IdempotencyKey: IdempotencyKey("workflow", task.Activity.Seq),
+ 		}
+ 		found = true
+ 		return nil

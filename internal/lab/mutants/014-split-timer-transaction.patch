@@ -1,0 +1,48 @@
+diff --git a/internal/engine/timers.go b/internal/engine/timers.go
+index 69c945e..eb87ba8 100644
+--- a/internal/engine/timers.go
++++ b/internal/engine/timers.go
+@@ -13,6 +13,7 @@ func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
+ 	count := 0
+ 	for count < limit {
+ 		handled := false
++		var selected *store.Timer
+ 		err := e.inTx(ctx, func(tx store.Tx) error {
+ 			handled = false
+ 			timers, err := tx.DueTimers(e.now(), 1)
+@@ -20,20 +21,27 @@ func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
+ 				return err
+ 			}
+ 			timer := timers[0]
+-			r, err := tx.GetRun(timer.RunID, true)
+-			if err != nil {
+-				return err
+-			}
+ 			deleted, err := tx.DeleteTimer(timer.RunID, timer.Seq)
+ 			if err != nil || !deleted {
+ 				return err
+ 			}
++			selected = timer
+ 			handled = true
+-			if err := e.deliver(tx, r, &v1.HistoryEvent{Type: v1.EventType_EVENT_TYPE_TIMER_FIRED, Attributes: &v1.HistoryEvent_TimerFired{TimerFired: &v1.TimerFiredAttributes{StartedEventId: timer.StartedEventID, Seq: timer.Seq}}}); err != nil {
+-				return err
+-			}
+-			return tx.UpdateRun(r)
++			return nil
+ 		})
++		if err == nil && selected != nil {
++			err = e.inTx(ctx, func(tx store.Tx) error {
++				timer := selected
++				r, err := tx.GetRun(timer.RunID, true)
++				if err != nil {
++					return err
++				}
++				if err := e.deliver(tx, r, &v1.HistoryEvent{Type: v1.EventType_EVENT_TYPE_TIMER_FIRED, Attributes: &v1.HistoryEvent_TimerFired{TimerFired: &v1.TimerFiredAttributes{StartedEventId: timer.StartedEventID, Seq: timer.Seq}}}); err != nil {
++					return err
++				}
++				return tx.UpdateRun(r)
++			})
++		}
+ 		if err != nil {
+ 			return count, err
+ 		}

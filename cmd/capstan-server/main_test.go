@@ -31,6 +31,8 @@ import (
 
 func testEnv(key string) string {
 	switch key {
+	case "CAPSTAN_DB_MAX_CONNS":
+		return "7"
 	case "CAPSTAN_DATABASE_URL":
 		return "postgres://not-used"
 	case "CAPSTAN_API_KEY_HASHES":
@@ -103,9 +105,9 @@ func fakeDeps(t *testing.T, l net.Listener, f *bootAPI) (dependencies, *bootStor
 			}
 			return nil
 		},
-		open: func(ctx context.Context, dsn string) (store.Store, error) {
-			if dsn != testEnv("CAPSTAN_DATABASE_URL") {
-				t.Error("wrong open DSN")
+		open: func(ctx context.Context, dsn string, maxConns int32) (store.Store, error) {
+			if dsn != testEnv("CAPSTAN_DATABASE_URL") || maxConns != 7 {
+				t.Error("wrong open DSN or pool limit")
 			}
 			return st, nil
 		},
@@ -315,7 +317,7 @@ func TestStartupFailureClosesResources(t *testing.T) {
 			case "migrate":
 				d.migrate = func(context.Context, string) error { return failure }
 			case "open":
-				d.open = func(context.Context, string) (store.Store, error) { return nil, failure }
+				d.open = func(context.Context, string, int32) (store.Store, error) { return nil, failure }
 			case "engine":
 				d.newEngine = func(engine.Deps, engine.Config) (engine.API, error) { return nil, failure }
 			case "readiness":

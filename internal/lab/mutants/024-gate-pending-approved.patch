@@ -1,0 +1,13 @@
+diff --git a/internal/engine/approvals.go b/internal/engine/approvals.go
+index 2f5b3cb..1887661 100644
+--- a/internal/engine/approvals.go
++++ b/internal/engine/approvals.go
+@@ -179,7 +179,7 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
+ 				if gateErr == nil {
+ 					var outcome v1.ApprovalOutcome
+ 					switch decision.Status {
+-					case "APPROVED":
++					case "APPROVED", "PENDING":
+ 						outcome = v1.ApprovalOutcome_APPROVAL_OUTCOME_APPROVED
+ 					case "DENIED":
+ 						outcome = v1.ApprovalOutcome_APPROVAL_OUTCOME_DENIED

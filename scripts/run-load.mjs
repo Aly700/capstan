@@ -8,7 +8,8 @@ import { Evidence, managed, root, delay, until } from "./evidence-lib.mjs";
 const exec = promisify(execFile);
 const [concurrency = 50, n = 1000, workerCount = 4] = process.argv.slice(2).map(Number);
 for (const value of [concurrency, n, workerCount]) assert(Number.isInteger(value) && value > 0);
-const env = new Evidence(`load_c${concurrency}_w${workerCount}`, 7301);
+const phase = process.env.CAPSTAN_LOAD_PHASE || "evidence";
+const env = new Evidence(`load_c${concurrency}_w${workerCount}`, Number(process.env.CAPSTAN_LOAD_PORT || 7301), { databasePrefix: process.env.CAPSTAN_LOAD_DB_PREFIX || "capstan_evidence" });
 const container = process.env.EVIDENCE_PG_CONTAINER || "capstan-postgres-1";
 const sql = `select json_build_object(
  'at',clock_timestamp(),
@@ -29,7 +30,7 @@ await managed(env, async () => {
   await env.start("loadFive", "warmup");
   await env.status("warmup", "RUN_STATUS_COMPLETED");
   writeFileSync(join(env.logdir, "sampling.sql"), sql);
-  writeFileSync(join(env.logdir, "metadata.json"), JSON.stringify({ date: new Date().toISOString(), database: env.database, command: `scripts/run-load.sh ${concurrency} ${n} ${workerCount}`, serverPID: env.server.pid, workerPIDs: env.workers.map((w) => w.pid), workflowConcurrencyPerWorker: 10, activityConcurrencyPerWorker: 10, container }, null, 2));
+  writeFileSync(join(env.logdir, "metadata.json"), JSON.stringify({ date: new Date().toISOString(), database: env.database, command: `scripts/run-load.sh ${concurrency} ${n} ${workerCount}`, serverPID: env.server.pid, workerPIDs: env.workers.map((w) => w.pid), workflowConcurrencyPerWorker: 10, activityConcurrencyPerWorker: 10, container, phase, dbMaxConns: process.env.CAPSTAN_DB_MAX_CONNS || "default", port: env.port }, null, 2));
   const sampleFile = join(env.logdir, "system.jsonl");
   const pids = [env.server.pid, ...env.workers.map((w) => w.pid)];
   async function sample() {

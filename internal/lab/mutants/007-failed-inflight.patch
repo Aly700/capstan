@@ -1,0 +1,12 @@
+diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
+index cac1230..9f62f40 100644
+--- a/internal/engine/workflow_task.go
++++ b/internal/engine/workflow_task.go
+@@ -148,7 +148,6 @@ func (e *Engine) FailWorkflowTask(ctx context.Context, req *v1.FailWorkflowTaskR
+ 		if err := tx.DeleteTask(task.ID); err != nil {
+ 			return err
+ 		}
+-		r.InFlight = false
+ 		r.WorkflowTaskID = 0
+ 		if _, err := e.flush(tx, r); err != nil {
+ 			return err

@@ -1,0 +1,25 @@
+diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
+index cac1230..09de8c1 100644
+--- a/internal/engine/workflow_task.go
++++ b/internal/engine/workflow_task.go
+@@ -94,16 +94,16 @@ func (e *Engine) CompleteWorkflowTask(ctx context.Context, req *v1.CompleteWorkf
+ 		if err := e.appendEvents(tx, r, ev); err != nil {
+ 			return err
+ 		}
++		flushed, err := e.flush(tx, r)
++		if err != nil {
++			return err
++		}
+ 		for _, cmd := range req.GetCommands() {
+ 			if err := e.applyCommand(tx, r, ev.EventId, cmd); err != nil {
+ 				return err
+ 			}
+ 		}
+ 		if r.Open() {
+-			flushed, err := e.flush(tx, r)
+-			if err != nil {
+-				return err
+-			}
+ 			r.WorkflowTaskID = 0
+ 			if flushed {
+ 				if err := e.scheduleWorkflow(tx, r, 1, e.now()); err != nil {
