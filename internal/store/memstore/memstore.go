@@ -16,9 +16,10 @@ import (
 
 var errClosed = errors.New("memstore: closed")
 
-type queueKey struct {
-	kind  store.TaskKind
-	queue string
+type subscriptionKey struct {
+	kind store.TaskKind
+	name string
+	run  bool
 }
 type timerKey struct {
 	runID string
@@ -32,7 +33,7 @@ type memory struct {
 	closed                 bool
 	data                   *snapshot
 	nextTaskID, nextCallID int64
-	subs                   map[queueKey]map[chan struct{}]struct{}
+	subs                   map[subscriptionKey]map[chan struct{}]struct{}
 }
 type snapshot struct {
 	runs      map[string]*store.Run
@@ -48,7 +49,7 @@ type transaction struct {
 	ctx           context.Context
 	owner         *memory
 	data          *snapshot
-	notifications map[queueKey]struct{}
+	notifications map[subscriptionKey]struct{}
 }
 
 var _ store.Store = (*memory)(nil)
@@ -68,7 +69,7 @@ func New() store.Store {
 			signals:   make(map[stringKey]struct{}),
 			calls:     make(map[int64]*store.AICall),
 		},
-		subs: make(map[queueKey]map[chan struct{}]struct{}),
+		subs: make(map[subscriptionKey]map[chan struct{}]struct{}),
 	}
 }
 
@@ -114,7 +115,7 @@ func (s *memory) InTx(ctx context.Context, fn func(store.Tx) error) error {
 		s.wakeLocked()
 		s.mu.Unlock()
 	}()
-	tx := &transaction{ctx: ctx, owner: s, data: data, notifications: make(map[queueKey]struct{})}
+	tx := &transaction{ctx: ctx, owner: s, data: data, notifications: make(map[subscriptionKey]struct{})}
 	if err := fn(tx); err != nil {
 		return err
 	}
@@ -138,7 +139,12 @@ func (s *memory) InTx(ctx context.Context, fn func(store.Tx) error) error {
 	return nil
 }
 func (s *memory) Subscribe(kind store.TaskKind, queue string) (<-chan struct{}, func()) {
-	key := queueKey{kind, queue}
+	return s.subscribe(subscriptionKey{kind: kind, name: queue})
+}
+func (s *memory) SubscribeRun(runID string) (<-chan struct{}, func()) {
+	return s.subscribe(subscriptionKey{name: runID, run: true})
+}
+func (s *memory) subscribe(key subscriptionKey) (<-chan struct{}, func()) {
 	ch := make(chan struct{}, 1)
 	s.mu.Lock()
 	if s.closed {
@@ -674,7 +680,10 @@ func (tx *transaction) RunCost(id string) (float64, error) {
 	return tx.callSum(func(c *store.AICall) bool { return c.RunID == id })
 }
 func (tx *transaction) Notify(kind store.TaskKind, queue string) {
-	tx.notifications[queueKey{kind, queue}] = struct{}{}
+	tx.notifications[subscriptionKey{kind: kind, name: queue}] = struct{}{}
+}
+func (tx *transaction) NotifyRunClosed(runID string) {
+	tx.notifications[subscriptionKey{name: runID, run: true}] = struct{}{}
 }
 func compare[T ~string | ~int64](a, b T) int {
 	if a < b {

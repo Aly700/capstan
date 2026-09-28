@@ -216,5 +216,8 @@ func (e *Engine) closeRun(tx store.Tx, r *store.Run, status v1.RunStatus) error 
 	}
 	// A closing command wins over buffered external work; release the unreachable inbox.
 	_, err = tx.DrainInbox(r.RunID)
+	if err == nil {
+		tx.NotifyRunClosed(r.RunID)
+	}
 	return err
 }

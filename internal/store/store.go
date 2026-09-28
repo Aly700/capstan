@@ -42,6 +42,12 @@ type Store interface {
 	// committed transaction called Notify for this kind and queue. cancel releases it.
 	Subscribe(kind TaskKind, queue string) (ch <-chan struct{}, cancel func())
 
+	// SubscribeRun returns a channel that receives a value (non-blocking, coalesced) when
+	// a committed transaction called NotifyRunClosed for runID. Every subscriber for the
+	// run is woken. Notifications are hints: callers must re-read durable run state and
+	// retain a fallback check. cancel releases the subscription and is idempotent.
+	SubscribeRun(runID string) (ch <-chan struct{}, cancel func())
+
 	Close() error
 }
 
@@ -156,6 +162,9 @@ type Tx interface {
 
 	// Notify schedules a wake-up for Subscribe(kind, queue), delivered on commit.
 	Notify(kind TaskKind, queue string)
+	// NotifyRunClosed schedules a wake-up for every SubscribeRun(runID) subscriber,
+	// delivered only on commit. It does not change the run's state.
+	NotifyRunClosed(runID string)
 }
 
 // ---- records ----
