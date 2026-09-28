@@ -1,13 +1,15 @@
 import assert from 'node:assert/strict';
 import { spawn, execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, openSync, closeSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, openSync, closeSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { root, until, delay, decode, payload } from './evidence-lib.mjs';
-import { claimLocalProof, localProofDirectory, recordLocalProof } from './demo-codex-lanes-aws-local.mjs';
+import { claimLocalProof, cleanupOwnedProof, localProofDirectory, recordLocalProof } from './demo-codex-lanes-aws-local.mjs';
 
 const sessionPath = join(root, '.lane/aws-session-2026-09-28.json');
 const session = JSON.parse(readFileSync(sessionPath, 'utf8'));
+const evidencePrefix = session.evidencePrefix ?? 'aws-2026-09-28';
+assert(/^aws-[a-z0-9-]+$/.test(evidencePrefix));
 assert.equal(session.account, '280517746513');
 assert(/^https:\/\/[a-z0-9]+\.execute-api\.us-east-1\.amazonaws\.com$/.test(session.address));
 assert(/^[a-f0-9]{40}$/.test(session.deployedSha));
@@ -17,10 +19,10 @@ const queue = runId;
 const repo = join(root, '.lane/demo-repo-aws');
 const logdir = join(root, '.lane', runId);
 const localDirectory = localProofDirectory(root, session.startedAt);
-const localState = { startedAt: session.startedAt, runId, pid: process.pid };
+const localState = { ownershipVersion: 1, startedAt: session.startedAt, runId, pid: process.pid, repo, workers: [] };
 let proofClaimed = false; let cleanupPromise; let shutdownTimer;
 const address = session.address;
-const keyPath = join(root, '.lane/aws-worker-2026-09-28.key');
+const keyPath = join(root, session.keyFile ?? '.lane/aws-worker-2026-09-28.key');
 assert.equal(statSync(keyPath).mode & 0o777, 0o600);
 const key = readFileSync(keyPath, 'utf8').trim();
 const children = []; let repoCreated = false; let closing = false;
@@ -39,9 +41,15 @@ function aws(...args) {
 }
 function child(binary, args, name, extraEnv) {
   assert(!closing, 'cleanup has started');
+  assert.match(name, /^worker-[0-9]+$/);
+  const ownership = { marker: `--capstan-proof-worker=${runId}-${name}` };
+  localState.workers.push(ownership);
+  recordLocalProof(localDirectory, localState); // Publish the unique command marker before spawning.
   const fd = openSync(join(logdir, `${name}.log`), 'a', 0o600);
-  const processChild = spawn(binary, args, { cwd: root, env: { ...process.env, ...extraEnv }, detached: true, stdio: ['ignore', fd, fd] });
+  const processChild = spawn(binary, [...args, ownership.marker], { cwd: root, env: { ...process.env, ...extraEnv }, detached: true, stdio: ['ignore', fd, fd] });
   closeSync(fd); children.push(processChild);
+  ownership.pid = processChild.pid;
+  recordLocalProof(localDirectory, localState);
   processChild.on('error', error => { processChild.spawnError = error; });
   return processChild;
 }
@@ -100,46 +108,11 @@ async function cleanup() {
 async function cleanupOnce() {
   closing = true;
   await Promise.all(children.map(c => stop(c)));
-  discoverOwnedLanes();
-  for (const [name, request] of ownedLanes) {
-    const dir = join(homedir(), '.codex/lanes', name);
-    if (existsSync(join(dir, 'cwd'))) {
-      const cwd = readFileSync(join(dir, 'cwd'), 'utf8').trim();
-      assert(!cwd || cwd === request.worktree);
-    }
-    if (existsSync(dir) && laneStatus(name).pid) {
-      execFileSync('codex-lane', ['stop', name], { stdio: 'inherit' });
-    }
-    // The detached launcher's process group also contains the lane's descendants.
-    // Check its command identity before signalling; never match arbitrary codex PIDs.
-    const owner = join(request.launchDir, 'claimed/owner.json');
-    if (existsSync(owner)) {
-      const { pid } = JSON.parse(readFileSync(owner, 'utf8'));
-      const members = () => execFileSync('ps', ['-axo', 'pid=,pgid=,command='], { encoding: 'utf8' }).split('\n')
-        .map(l => l.trim().match(/^(\d+)\s+(\d+)\s+(.+)$/)).filter(m => m && Number(m[2]) === pid);
-      if (members().some(m => m[3].includes(name) || m[3].includes(request.worktree) || m[3].includes(request.launchDir))) {
-        try { process.kill(-pid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
-        try { await until('lane process group exit', () => members().length === 0, 5000); }
-        catch { process.kill(-pid, 'SIGKILL'); await until('lane process group killed', () => members().length === 0, 5000); }
-      }
-    }
-    // Only remove the exact per-run lane directories whose cwd we verified above.
-    rmSync(dir, { recursive: true, force: true });
-  }
-  if (repoCreated) {
-    assert.equal(readFileSync(join(repo, '.git/workload-demo-owner'), 'utf8'), runId);
-    const worktrees = git('worktree', 'list', '--porcelain').split('\n').filter(l => l.startsWith('worktree ')).map(l => l.slice(9));
-    for (const worktree of worktrees.filter(p => p !== repo)) {
-      assert(worktree.startsWith(`${repo}/.git/capstan-codex-lanes/`));
-      git('worktree', 'remove', '--force', worktree);
-    }
-    assert.equal(git('worktree', 'list', '--porcelain').split('\n').filter(l => l.startsWith('worktree ')).length, 1);
-    rmSync(repo, { recursive: true }); repoCreated = false;
-  }
+  const laneCount = await cleanupOwnedProof(localState);
+  repoCreated = false;
   assert(children.every(c => c.exitCode !== null || c.signalCode !== null));
   assert(!existsSync(repo));
-  for (const name of ownedLanes.keys()) assert(!existsSync(join(homedir(), '.codex/lanes', name)));
-  note(`Local cleanup verified: ${children.length} child processes exited; ${ownedLanes.size} demo lane directories removed; demo worktrees/repo removed. AWS resources must now be destroyed in runbook order.`);
+  note(`Local cleanup verified: ${children.length} child processes exited; ${laneCount} demo lane directories removed; demo worktrees/repo removed. AWS resources must now be destroyed in runbook order.`);
   recordLocalProof(localDirectory, { ...localState, cleanedAt: new Date().toISOString() });
   clearInterval(shutdownTimer);
 }
@@ -267,11 +240,11 @@ try {
   for (const line of reconnectLog) console.log(line);
   note(`PASS: ${before.length} history events preserved byte-for-byte as a prefix of ${after.length}; server task replaced; worker survived and resumed; only greet merged; both lane tests passed.`);
   proof = { runId, deployedSha: session.deployedSha, address, source: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(), startedAt: startedAt.toISOString(), killedAt: killedAt.toISOString(), replacementAt: replacementAt.toISOString(), reachableAt: reachableAt.toISOString(), completedAt: new Date().toISOString(), workerPid: first.pid, taskBefore, taskAfter, running, before, after, result, reports, reconnectLog };
-  writeFileSync(join(root, 'docs/evidence/aws-2026-09-28-history.json'), JSON.stringify(proof, null, 2) + '\n');
+  writeFileSync(join(root, `docs/evidence/${evidencePrefix}-history.json`), JSON.stringify(proof, null, 2) + '\n');
 } finally {
   await cleanup(); process.removeListener('SIGINT', interrupt); process.removeListener('SIGTERM', interrupt);
   if (proof) {
     proof.cleanedAt = new Date().toISOString(); proof.cleanup = events.at(-1);
-    writeFileSync(join(root, 'docs/evidence/aws-2026-09-28-history.json'), JSON.stringify(proof, null, 2) + '\n');
+    writeFileSync(join(root, `docs/evidence/${evidencePrefix}-history.json`), JSON.stringify(proof, null, 2) + '\n');
   }
 }

@@ -1,0 +1,86 @@
+[
+    {
+        "Time": "2026-09-28T18:33:54.580000+00:00",
+        "Resource": "CapstanService",
+        "Type": "AWS::CloudFormation::Stack",
+        "Status": "ROLLBACK_IN_PROGRESS",
+        "Reason": "The following resource(s) failed to create: [ProbeRole49737B5E, Namespace9B63B8C8, ClusterEB0386A7, HttpApi, ProbeLogsBF6C3D77, AccessLogs8B620ECA, Alerts91F83244, ExecutionRole605A040B, ServerLogsD9948953, VpcLink, TaskRole30FC0FBB]. Rollback requested by user."
+    },
+    {
+        "Time": "2026-09-28T18:33:54.170000+00:00",
+        "Resource": "HttpApi",
+        "Type": "AWS::ApiGatewayV2::Api",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.764000+00:00",
+        "Resource": "AccessLogs8B620ECA",
+        "Type": "AWS::Logs::LogGroup",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.754000+00:00",
+        "Resource": "ServerLogsD9948953",
+        "Type": "AWS::Logs::LogGroup",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.748000+00:00",
+        "Resource": "Alerts91F83244",
+        "Type": "AWS::SNS::Topic",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.741000+00:00",
+        "Resource": "ClusterEB0386A7",
+        "Type": "AWS::ECS::Cluster",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.736000+00:00",
+        "Resource": "TaskRole30FC0FBB",
+        "Type": "AWS::IAM::Role",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.732000+00:00",
+        "Resource": "ProbeRole49737B5E",
+        "Type": "AWS::IAM::Role",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.731000+00:00",
+        "Resource": "ExecutionRole605A040B",
+        "Type": "AWS::IAM::Role",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.628000+00:00",
+        "Resource": "ProbeLogsBF6C3D77",
+        "Type": "AWS::Logs::LogGroup",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource creation cancelled"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.625000+00:00",
+        "Resource": "Namespace9B63B8C8",
+        "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource handler returned message: \"User: arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform: servicediscovery:TagResource on resource: arn:aws:servicediscovery:us-east-1:280517746513:*/* because no identity-based policy allows the servicediscovery:TagResource action (Service: ServiceDiscovery, Status Code: 400, Request ID: 4c3f2d20-c5d4-4fbd-93af-a13d9b40fbc7) (SDK Attempt Count: 1)\" (RequestToken: e7db6d23-5649-0186-a01d-7ac861ff4550, HandlerErrorCode: AccessDenied)"
+    },
+    {
+        "Time": "2026-09-28T18:33:53.472000+00:00",
+        "Resource": "VpcLink",
+        "Type": "AWS::ApiGatewayV2::VpcLink",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource handler returned message: \"User: arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform: apigateway:TagResource on resource: arn:aws:apigateway:us-east-1::/vpclinks because no identity-based policy allows the apigateway:TagResource action (Service: AmazonApiGatewayV2; Status Code: 403; Error Code: AccessDeniedException; Request ID: 58286c09-6519-40f9-85e3-0e220777b6bc; Proxy: null)\" (RequestToken: 63297267-50a6-129f-1e57-9bd97c68a64e, HandlerErrorCode: AccessDenied)"
+    }
+]
