@@ -17,12 +17,13 @@ import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import type { Construct } from 'constructs';
 import type { CapstanData } from './data.ts';
-import type { CapstanNetwork } from './network.ts';
+import { importNetwork } from './network.ts';
 
 export class CapstanService extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps & { network: CapstanNetwork; data: CapstanData; imageTag: string; email: string; gateUrl: string }) {
+  constructor(scope: Construct, id: string, props: StackProps & { data: CapstanData; imageTag: string; email: string; gateUrl: string }) {
     super(scope, id, props);
-    const { network, data } = props;
+    const { data } = props;
+    const network = importNetwork(this);
     const cluster = new ecs.Cluster(this, 'Cluster', { clusterName: 'capstan', vpc: network.vpc, containerInsightsV2: ecs.ContainerInsights.DISABLED });
     const permissionsBoundary = ManagedPolicy.fromManagedPolicyName(this, 'Boundary', 'capstan-workload-boundary');
     const taskRole = new Role(this, 'TaskRole', { roleName: 'capstan-task', assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'), permissionsBoundary });

@@ -4,15 +4,16 @@ import { InstanceClass, InstanceSize, InstanceType, SubnetType } from 'aws-cdk-l
 import { Credentials, DatabaseInstance, DatabaseInstanceEngine, PostgresEngineVersion, StorageType } from 'aws-cdk-lib/aws-rds';
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
-import type { CapstanNetwork } from './network.ts';
+import { importNetwork } from './network.ts';
 
 export class CapstanData extends Stack {
   readonly databaseUrl: Secret;
   readonly apiKeyHashes: Secret;
   readonly gateKey: Secret;
 
-  constructor(scope: Construct, id: string, props: StackProps & { network: CapstanNetwork }) {
+  constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
+    const network = importNetwork(this);
     const credentials = new Secret(this, 'Credentials', {
       secretName: 'capstan/database-credentials',
       generateSecretString: { secretStringTemplate: '{"username":"capstan"}', generateStringKey: 'password', passwordLength: 40, excludePunctuation: true },
@@ -24,10 +25,10 @@ export class CapstanData extends Stack {
       instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.MICRO),
       credentials: Credentials.fromSecret(credentials),
       databaseName: 'capstan',
-      vpc: props.network.vpc,
+      vpc: network.vpc,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
-      securityGroups: [props.network.databaseGroup],
-      availabilityZone: props.network.vpc.publicSubnets[0].availabilityZone,
+      securityGroups: [network.databaseGroup],
+      availabilityZone: network.vpc.publicSubnets[0].availabilityZone,
       multiAz: false,
       publiclyAccessible: false,
       allocatedStorage: 20,
