@@ -107,6 +107,11 @@ See the [Cloud Map authorization reference](https://docs.aws.amazon.com/service-
 After an execution-role policy fix lands on main, the owner must redeploy
 `CapstanGithubOidc` with the same imported-provider context before retrying Deploy;
 the GitHub workflow cannot update that foundation policy itself.
+The API Gateway VPC-link CloudFormation handler also requires explicit
+`apigateway:TagResource`/`apigateway:UntagResource` actions, scoped to the region's
+HTTP APIs and VPC links. Its live create failed with HTTP-method permissions alone.
+The schema returned by CloudFormation `DescribeType` for `AWS::ApiGatewayV2::VpcLink`
+records these create/update permissions.
 
 `CapstanNetwork` is also owner-managed. Workload synthesis imports its named subnet,
 AZ and security-group exports; the GitHub execution role has no EC2 mutation actions.
