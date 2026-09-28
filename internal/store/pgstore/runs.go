@@ -57,7 +57,14 @@ func (t *transaction) InsertRun(r *store.Run) error {
 	return t.insertUnique(runInsert, args...)
 }
 func (t *transaction) GetRun(id string, forUpdate bool) (*store.Run, error) {
-	return scanRun(t.tx.QueryRow(t.ctx, "select "+runColumns+" from run where run_id=$1"+lockClause(forUpdate), id))
+	clause := lockClause(forUpdate)
+	if _, claimed := t.claimedRuns[id]; forUpdate && claimed {
+		// Claims hold a task first. Waiting here would invert closeRun's run-then-
+		// children order. A busy run aborts this transaction, undoing the claim;
+		// the engine reports an empty poll after rollback.
+		clause += " nowait"
+	}
+	return scanRun(t.tx.QueryRow(t.ctx, "select "+runColumns+" from run where run_id=$1"+clause, id))
 }
 func (t *transaction) UpdateRun(r *store.Run) error {
 	args, err := runArgs(r)
