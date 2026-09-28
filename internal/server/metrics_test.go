@@ -20,7 +20,9 @@ import (
 func scrape(t *testing.T, s *Server) string {
 	t.Helper()
 	r := httptest.NewRecorder()
-	s.ServeHTTP(r, httptest.NewRequest("GET", "/metrics", nil))
+	req := httptest.NewRequest("GET", "/metrics", nil)
+	req.Header.Set("Authorization", "Bearer secret")
+	s.ServeHTTP(r, req)
 	if r.Code != 200 || r.Header().Get("Content-Type") != "text/plain; version=0.0.4; charset=utf-8" {
 		t.Fatalf("metrics status=%d content-type=%q", r.Code, r.Header().Get("Content-Type"))
 	}
@@ -69,7 +71,9 @@ func TestRPCMetricsIncludeErrorsAndKeepLabelsBounded(t *testing.T) {
 	for range 10 {
 		go func() {
 			defer func() { done <- struct{}{} }()
-			r, err := hc.Get(url + "/metrics")
+			req, _ := http.NewRequest(http.MethodGet, url+"/metrics", nil)
+			req.Header.Set("Authorization", "Bearer secret")
+			r, err := hc.Do(req)
 			if err == nil {
 				r.Body.Close()
 			}

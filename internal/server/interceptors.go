@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"net/http"
 	"time"
 
 	"connectrpc.com/connect"
@@ -10,6 +11,19 @@ import (
 )
 
 type identityKey struct{}
+
+func (s *Server) authenticateHTTP(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		headers := r.Header.Values("Authorization")
+		if len(headers) == 1 {
+			if name, ok := auth.Identify(headers[0], s.cfg.APIKeyHashes); ok {
+				next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), identityKey{}, name)))
+				return
+			}
+		}
+		http.Error(w, "invalid API key", http.StatusUnauthorized)
+	})
+}
 
 // Identity is the authenticated API-key name, independent of a worker's own
 // request identity (for example hostname:pid).

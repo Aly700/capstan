@@ -68,7 +68,7 @@ func New(cfg config.Config, api engine.API, notifier Notifier, opts Options) *Se
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", s.health)
 	mux.HandleFunc("/readyz", s.readiness)
-	mux.Handle("/metrics", s.metrics)
+	mux.Handle("/metrics", s.authenticateHTTP(s.metrics))
 	mux.Handle("/ui/", ui.NewHandler())
 	options := []connect.HandlerOption{connect.WithReadMaxBytes(cfg.MaxMessageBytes), connect.WithInterceptors(s.measure(), s.authenticate(), s.errors())}
 	mux.Handle(rpc.NewWorkerServiceHandler(s, options...))
