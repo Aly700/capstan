@@ -148,6 +148,19 @@ test('first deployment can create the API Gateway service-linked role under its 
   assert.deepEqual(create.Condition.StringEquals['iam:AWSServiceName'], ['ecs.amazonaws.com', 'rds.amazonaws.com', 'ops.apigateway.amazonaws.com']);
 });
 
+test('Cloud Map tagging APIs use the required regional wildcard resource', async () => {
+  const { oidc } = await synth();
+  const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);
+  // Live namespace creation authorizes TagResource before a namespace ARN exists;
+  // AWS also lists no resource-level support for UntagResource/ListTagsForResource.
+  for (const action of ['servicediscovery:TagResource', 'servicediscovery:UntagResource', 'servicediscovery:ListTagsForResource']) {
+    const grants = statements.filter(s => [s.Action].flat().includes(action));
+    assert.equal(grants.length, 1, action);
+    assert.equal(grants[0].Resource, '*', `${action} cannot be scoped to a namespace/service ARN`);
+    assert.deepEqual(grants[0].Condition, { StringEquals: { 'aws:RequestedRegion': 'us-east-1' } });
+  }
+});
+
 test('GitHub can apply and remove the workload stack tags required by CloudFormation changesets', async () => {
   const { oidc } = await synth();
   const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);
