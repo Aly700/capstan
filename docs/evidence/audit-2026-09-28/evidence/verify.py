@@ -116,3 +116,20 @@ for path in subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', rev,
     h.update(data)
 assert h.hexdigest() == '908de63ea5cbcf56b204ad507b00605d099a198487b2e9c38ef3324dfe8e6079'
 print('PASS historical mutation snapshot SHA256 independently recomputed from the recorded commit')
+expected = {}
+for line in Path('docs/evidence/lab-mutation.md').read_text().splitlines():
+    if re.match(r'^\| M\d{3} \|', line):
+        row = cells(line)
+        expected[row[0]] = (row[2], -1 if row[3] == '—' else int(row[3]))
+assert len(expected) == 26
+for result in report['results']:
+    assert expected[result['mutant']['id']] == (result['status'], result['seed'])
+print('PASS all26 mutation result/status and first-seed cells reproduce the historical table')
+store_interface = Path('internal/store/store.go').read_text().split('type Tx interface {', 1)[1].split('\n}', 1)[0]
+methods = set(re.findall(r'^\s*([A-Z]\w*)\(', store_interface, re.M))
+wrappers = set()
+for path in Path('internal/lab').glob('*.go'):
+    if not path.name.endswith('_test.go'):
+        wrappers.update(re.findall(r'^func \(\w+ \*faultTx\) (\w+)\(', path.read_text(), re.M))
+assert len(methods) == 35 and not methods - wrappers
+print('PASS fault wrapper covers all35 Tx methods; historical lab-l2 count34 is stale after D30')

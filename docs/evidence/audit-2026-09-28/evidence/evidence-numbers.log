@@ -27,3 +27,5 @@ PASS fresh audit load raw samples 200 runs=1000 activities=5000 percentile neare
 PASS fresh mutation raw data: baseline and M003 2000 seeds each; 25 caught, 1 equivalent
 PASS fresh PostgreSQL campaign reproduces all500 seed/count metrics
 PASS historical mutation snapshot SHA256 independently recomputed from the recorded commit
+PASS all26 mutation result/status and first-seed cells reproduce the historical table
+PASS fault wrapper covers all35 Tx methods; historical lab-l2 count34 is stale after D30

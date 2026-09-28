@@ -39,6 +39,7 @@ locations/counts without printing candidate values.
 
 | Artifact | What it records |
 | --- | --- |
+| `versions.log` | Current host, PostgreSQL, toolchain and package versions |
 | `evidence-numbers.log` | Table/cast/fixture/credential and new raw-data checks |
 | `mutants-red.log`, `mutants-green.log`, `mutants-race.log` | Catalogue regression fails before patch refresh, passes after |
 | `mutations/`, `mutations.log` | First full attempt: 22 caught, four invalid stale patches |
