@@ -22,8 +22,8 @@ export async function until(what, probe, timeout = 60000) {
 }
 export class Evidence {
   constructor(name, port, { databasePrefix = "capstan_evidence" } = {}) {
-    if (!/^[a-z0-9_]+$/.test(name) || port < 7300 || port > 7499) throw new Error("Invalid evidence name or port");
-    if (!["capstan_evidence", "capstan_perf"].includes(databasePrefix)) throw new Error("Invalid database prefix");
+    if (!/^[a-z0-9_]+$/.test(name) || !((port >= 7300 && port <= 7499) || (port >= 7600 && port <= 7699))) throw new Error("Invalid evidence name or port");
+    if (!["capstan_evidence", "capstan_perf", "capstan_audit"].includes(databasePrefix)) throw new Error("Invalid database prefix");
     this.name = name;
     this.port = port;
     this.address = `http://127.0.0.1:${port}`;
