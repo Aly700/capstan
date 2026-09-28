@@ -161,6 +161,25 @@ test('Cloud Map tagging APIs use the required regional wildcard resource', async
   }
 });
 
+test('API Gateway handlers can tag APIs and VPC links without a wildcard resource', async () => {
+  const { oidc } = await synth();
+  const executionId = Object.entries(oidc.findResources('AWS::IAM::Role')).find(([, role]) => role.Properties.RoleName === 'capstan-cloudformation')![0];
+  const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[])
+    .filter(policy => JSON.stringify(policy.Properties.Roles).includes(executionId))
+    .flatMap(policy => policy.Properties.PolicyDocument.Statement);
+  // The live VpcLink create denial and registry handler schema require these
+  // named actions in addition to the existing HTTP method permissions.
+  for (const action of ['apigateway:TagResource', 'apigateway:UntagResource']) {
+    const grants = statements.filter(s => [s.Action].flat().includes(action));
+    assert.equal(grants.length, 1, `${action} must be granted explicitly`);
+    assert.equal(grants[0].Resource.length, 2);
+    const resources = JSON.stringify(grants[0].Resource);
+    assert.match(resources, /:apigateway:us-east-1::\/apis\*/);
+    assert.match(resources, /:apigateway:us-east-1::\/vpclinks\*/);
+    assert.doesNotMatch(resources, /restapis|"Resource":"\*"/);
+  }
+});
+
 test('GitHub can apply and remove the workload stack tags required by CloudFormation changesets', async () => {
   const { oidc } = await synth();
   const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);

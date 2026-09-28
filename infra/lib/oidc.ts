@@ -44,6 +44,9 @@ export class CapstanGithubOidc extends Stack {
     allow(['servicediscovery:CreatePrivateDnsNamespace', 'servicediscovery:GetOperation', 'servicediscovery:ListNamespaces', 'servicediscovery:ListServices'], ['*'], { StringEquals: { 'aws:RequestedRegion': this.region } });
     allow(['route53:CreateHostedZone', 'route53:GetHostedZone', 'route53:DeleteHostedZone', 'route53:ChangeResourceRecordSets', 'route53:ListResourceRecordSets', 'route53:GetChange', 'route53:ListHostedZonesByName'], ['*']);
     allow(['apigateway:GET', 'apigateway:POST', 'apigateway:PUT', 'apigateway:PATCH', 'apigateway:DELETE'], [arn('apigateway', '/apis*', this.region, ''), arn('apigateway', '/vpclinks*', this.region, ''), arn('apigateway', '/tags/*', this.region, '')]);
+    // The VpcLink registry handler requires named tagging actions on create/update,
+    // in addition to HTTP methods (confirmed by the live attempt-2 denial/schema).
+    allow(['apigateway:TagResource', 'apigateway:UntagResource'], [arn('apigateway', '/apis*', this.region, ''), arn('apigateway', '/vpclinks*', this.region, '')]);
     allow(['logs:CreateLogGroup', 'logs:DeleteLogGroup', 'logs:PutRetentionPolicy', 'logs:DeleteRetentionPolicy', 'logs:TagResource', 'logs:UntagResource', 'logs:ListTagsForResource'], [arn('logs', 'log-group:/capstan/*'), arn('logs', 'log-group:/aws/lambda/capstan-task-count*')]);
     allow(['logs:CreateLogDelivery', 'logs:GetLogDelivery', 'logs:UpdateLogDelivery', 'logs:DeleteLogDelivery', 'logs:ListLogDeliveries', 'logs:PutResourcePolicy', 'logs:DescribeResourcePolicies', 'logs:DescribeLogGroups'], ['*']);
     allow(['cloudwatch:PutMetricAlarm', 'cloudwatch:DeleteAlarms', 'cloudwatch:DescribeAlarms', 'cloudwatch:TagResource', 'cloudwatch:UntagResource'], [arn('cloudwatch', 'alarm:capstan-*')]);
