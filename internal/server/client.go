@@ -56,13 +56,7 @@ func (s *Server) DescribeRun(ctx context.Context, req *connect.Request[v1.Descri
 	}
 	return connect.NewResponse(resp), nil
 }
-func (s *Server) AwaitRun(ctx context.Context, req *connect.Request[v1.AwaitRunRequest]) (*connect.Response[v1.AwaitRunResponse], error) {
-	resp, err := s.api.DescribeRun(ctx, &v1.DescribeRunRequest{RunId: req.Msg.RunId})
-	if err != nil {
-		return nil, err
-	}
-	return connect.NewResponse(&v1.AwaitRunResponse{Run: resp.Run, Closed: runClosed(resp.GetRun().GetStatus())}), nil
-}
+
 func (s *Server) ListRuns(ctx context.Context, req *connect.Request[v1.ListRunsRequest]) (*connect.Response[v1.ListRunsResponse], error) {
 	resp, err := s.api.ListRuns(ctx, req.Msg)
 	if err != nil {
