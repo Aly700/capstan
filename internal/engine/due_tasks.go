@@ -11,11 +11,14 @@ import (
 )
 
 func (e *Engine) ProcessDueTasks(ctx context.Context, limit int) (int, error) {
+	if limit <= 0 {
+		return 0, Invalid("limit must be positive")
+	}
 	count := 0
 	for count < limit {
 		handled := false
 		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-			now := e.deps.Clock.Now()
+			now := e.now()
 			tasks, err := tx.DueTasks(now, 1)
 			if err != nil || len(tasks) == 0 {
 				return err
@@ -87,7 +90,7 @@ func (e *Engine) processDueWorkflowTask(tx store.Tx, run *store.Run, task *store
 	if attempt < math.MaxInt32 {
 		attempt++
 	}
-	if err := e.scheduleWorkflow(tx, run, attempt, now.Add(e.workflowRetryDelay(attempt))); err != nil {
+	if err := e.scheduleWorkflow(tx, run, attempt, addDeadline(now, e.workflowRetryDelay(attempt))); err != nil {
 		return err
 	}
 	return tx.UpdateRun(run)

@@ -47,7 +47,7 @@ func (e *Engine) retryActivity(task *store.Task, failure *v1.Failure, now time.T
 		}
 	}
 	delay := cappedBackoff(initial, coefficient, max(int64(task.Attempt)-1, 0), maximum)
-	visible := now.Add(delay)
+	visible := addDeadline(now, delay)
 	deadline := activityScheduleClose(task)
 	if !deadline.IsZero() && visible.After(deadline) {
 		return false
@@ -59,7 +59,7 @@ func (e *Engine) retryActivity(task *store.Task, failure *v1.Failure, now time.T
 	task.LastHeartbeatAt = time.Time{}
 	task.WorkerID = ""
 	task.LastFailure = failure
-	task.CheckAt = activityCheckAt(task, now)
+	task.CheckAt = earliestActivityTime(activityCheckAt(task, now), visible)
 	return true
 }
 
@@ -72,14 +72,14 @@ func earliestActivityTime(a, b time.Time) time.Time {
 
 func activityScheduleClose(task *store.Task) time.Time {
 	if d := task.Activity.GetScheduleToCloseTimeout().AsDuration(); d > 0 {
-		return task.ScheduledAt.Add(d)
+		return addDeadline(task.ScheduledAt, d)
 	}
 	return time.Time{}
 }
 
 func activityScheduleStart(task *store.Task) time.Time {
 	if d := task.Activity.GetScheduleToStartTimeout().AsDuration(); d > 0 {
-		return task.ScheduledAt.Add(d)
+		return addDeadline(task.ScheduledAt, d)
 	}
 	return time.Time{}
 }
@@ -90,7 +90,7 @@ func activityHeartbeatDeadline(task *store.Task) time.Time {
 		if last.IsZero() {
 			last = task.StartedAt
 		}
-		return last.Add(d)
+		return addDeadline(last, d)
 	}
 	return time.Time{}
 }

@@ -271,18 +271,7 @@ func (tx *transaction) UpdateRun(r *store.Run) error {
 	if err := tx.requireRun(r.RunID); err != nil {
 		return err
 	}
-	old := tx.data.runs[r.RunID]
-	c := cloneRun(r)
-	c.WorkflowType = old.WorkflowType
-	c.TaskQueue = old.TaskQueue
-	c.Input = old.Input
-	c.TaskTimeout = old.TaskTimeout
-	c.RunTimeout = old.RunTimeout
-	c.RunDeadline = old.RunDeadline
-	c.StartedAt = old.StartedAt
-	c.ContinuedFromRunID = old.ContinuedFromRunID
-	c.Identity = old.Identity
-	tx.data.runs[r.RunID] = c
+	tx.data.runs[r.RunID] = cloneRun(r)
 	return nil
 }
 func (tx *transaction) ListRuns(f store.RunFilter) ([]*store.Run, error) {
@@ -301,6 +290,9 @@ func (tx *transaction) ListRuns(f store.RunFilter) ([]*store.Run, error) {
 func (tx *transaction) RunsPastDeadline(now time.Time, limit int) ([]*store.Run, error) {
 	if err := tx.check(); err != nil {
 		return nil, err
+	}
+	if limit <= 0 {
+		return nil, nil
 	}
 	var rows []*store.Run
 	for _, r := range tx.data.runs {
@@ -416,18 +408,10 @@ func (tx *transaction) UpdateTask(t *store.Task) error {
 	if err := tx.check(); err != nil {
 		return err
 	}
-	old := tx.data.tasks[t.ID]
-	if old == nil {
+	if tx.data.tasks[t.ID] == nil {
 		return store.ErrNotFound
 	}
-	c := cloneTask(t)
-	c.Kind = old.Kind
-	c.RunID = old.RunID
-	c.TaskQueue = old.TaskQueue
-	c.ScheduledEventID = old.ScheduledEventID
-	c.ScheduledAt = old.ScheduledAt
-	c.Activity = old.Activity
-	tx.data.tasks[t.ID] = c
+	tx.data.tasks[t.ID] = cloneTask(t)
 	return nil
 }
 func (tx *transaction) DeleteTask(id int64) error {
@@ -453,6 +437,9 @@ func (tx *transaction) RunTasks(id string) ([]*store.Task, error) {
 func (tx *transaction) DueTasks(now time.Time, limit int) ([]*store.Task, error) {
 	if err := tx.check(); err != nil {
 		return nil, err
+	}
+	if limit <= 0 {
+		return nil, nil
 	}
 	var rows []*store.Task
 	for _, t := range tx.data.tasks {
@@ -491,6 +478,9 @@ func (tx *transaction) DeleteTimer(id string, seq int64) (bool, error) {
 func (tx *transaction) DueTimers(now time.Time, limit int) ([]*store.Timer, error) {
 	if err := tx.check(); err != nil {
 		return nil, err
+	}
+	if limit <= 0 {
+		return nil, nil
 	}
 	var rows []*store.Timer
 	for _, t := range tx.data.timers {
@@ -548,18 +538,10 @@ func (tx *transaction) UpdateApproval(a *store.Approval) error {
 		return err
 	}
 	key := stringKey{a.RunID, a.ApprovalID}
-	old := tx.data.approvals[key]
-	if old == nil {
+	if tx.data.approvals[key] == nil {
 		return store.ErrNotFound
 	}
-	c := cloneValue(a)
-	c.Seq = old.Seq
-	c.RequestedEventID = old.RequestedEventID
-	c.Source = old.Source
-	c.GateDecisionID = old.GateDecisionID
-	c.DueAt = old.DueAt
-	c.RequestedAt = old.RequestedAt
-	tx.data.approvals[key] = c
+	tx.data.approvals[key] = cloneValue(a)
 	return nil
 }
 func (tx *transaction) RunApprovals(id string) ([]*store.Approval, error) {
@@ -578,6 +560,9 @@ func (tx *transaction) RunApprovals(id string) ([]*store.Approval, error) {
 func (tx *transaction) DueApprovals(now time.Time, limit int) ([]*store.Approval, error) {
 	if err := tx.check(); err != nil {
 		return nil, err
+	}
+	if limit <= 0 {
+		return nil, nil
 	}
 	var rows []*store.Approval
 	for _, a := range tx.data.approvals {
@@ -633,17 +618,10 @@ func (tx *transaction) UpdateAICall(c *store.AICall) error {
 	if err := tx.check(); err != nil {
 		return err
 	}
-	old := tx.data.calls[c.ID]
-	if old == nil {
+	if tx.data.calls[c.ID] == nil {
 		return store.ErrNotFound
 	}
-	v := cloneValue(c)
-	v.RunID = old.RunID
-	v.ActivitySeq = old.ActivitySeq
-	v.Model = old.Model
-	v.EstimateUSD = old.EstimateUSD
-	v.At = old.At
-	tx.data.calls[c.ID] = v
+	tx.data.calls[c.ID] = cloneValue(c)
 	return nil
 }
 func (tx *transaction) callSum(include func(*store.AICall) bool) (float64, error) {

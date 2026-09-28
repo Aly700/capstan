@@ -37,7 +37,7 @@ func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *v1.R
 		if a.Status != store.ApprovalPending {
 			return fmt.Errorf("%w: approval is no longer pending", ErrFailedPrecondition)
 		}
-		if !a.DueAt.IsZero() && !a.DueAt.After(e.deps.Clock.Now()) {
+		if !a.DueAt.IsZero() && !a.DueAt.After(e.now()) {
 			return fmt.Errorf("%w: approval deadline has passed", ErrFailedPrecondition)
 		}
 		if req.Outcome != v1.ApprovalOutcome_APPROVAL_OUTCOME_APPROVED && req.Outcome != v1.ApprovalOutcome_APPROVAL_OUTCOME_DENIED {
@@ -80,7 +80,7 @@ func (e *Engine) resolveApproval(tx store.Tx, r *store.Run, a *store.Approval, o
 	default:
 		return Invalid("invalid approval outcome")
 	}
-	a.ResolvedAt = e.deps.Clock.Now()
+	a.ResolvedAt = e.now()
 	a.CheckAt = time.Time{}
 	a.Choice, a.Resolver, a.Note = choice, resolver, note
 	if err := tx.UpdateApproval(a); err != nil {
@@ -102,12 +102,15 @@ func (e *Engine) resolveApproval(tx store.Tx, r *store.Run, a *store.Approval, o
 }
 
 func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error) {
+	if limit <= 0 {
+		return 0, Invalid("limit must be positive")
+	}
 	processed := 0
 	for processed < limit {
 		var leased *store.Approval
 		found := false
 		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
-			now := e.deps.Clock.Now()
+			now := e.now()
 			due, err := tx.DueApprovals(now, 1)
 			if err != nil || len(due) == 0 {
 				return err
@@ -135,7 +138,7 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 				a.CheckAt = a.DueAt
 				return tx.UpdateApproval(a)
 			}
-			a.CheckAt = now.Add(time.Minute)
+			a.CheckAt = addDeadline(now, time.Minute)
 			if a.GatePolls < math.MaxInt32 {
 				a.GatePolls++
 			}
@@ -168,7 +171,7 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 				if err != nil {
 					return err
 				}
-				now := e.deps.Clock.Now()
+				now := e.now()
 				if !a.DueAt.IsZero() && !a.DueAt.After(now) {
 					return e.resolveApproval(tx, r, a, v1.ApprovalOutcome_APPROVAL_OUTCOME_EXPIRED, "", "timeout", "")
 				}
@@ -186,7 +189,7 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 						return e.resolveApproval(tx, r, a, outcome, "", decision.DecidedBy, "")
 					}
 				}
-				a.CheckAt = now.Add(e.approvalPollBackoff(a.GatePolls))
+				a.CheckAt = addDeadline(now, e.approvalPollBackoff(a.GatePolls))
 				if !a.DueAt.IsZero() && a.DueAt.Before(a.CheckAt) {
 					a.CheckAt = a.DueAt
 				}

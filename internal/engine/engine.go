@@ -26,7 +26,7 @@ func New(deps Deps, cfg Config) (*Engine, error) {
 		deps.Clock = SystemClock{}
 	}
 	cfg = cfg.WithDefaults()
-	if cfg.DefaultTaskTimeout <= 0 || cfg.DefaultTaskTimeout > 10*time.Minute || cfg.TaskRetryInitial <= 0 || cfg.TaskRetryMax <= 0 || cfg.MaxHistoryEvents <= 0 || cfg.GatePollInitial <= 0 || cfg.GatePollMax <= 0 || cfg.DailyCapUSD <= 0 || math.IsNaN(cfg.DailyCapUSD) || math.IsInf(cfg.DailyCapUSD, 0) || !validRetry(cfg.DefaultRetry) {
+	if cfg.DefaultTaskTimeout%time.Millisecond != 0 || cfg.DefaultTaskTimeout <= 0 || cfg.DefaultTaskTimeout > 10*time.Minute || cfg.TaskRetryInitial <= 0 || cfg.TaskRetryMax <= 0 || cfg.MaxHistoryEvents <= 0 || cfg.GatePollInitial <= 0 || cfg.GatePollMax <= 0 || cfg.DailyCapUSD <= 0 || math.IsNaN(cfg.DailyCapUSD) || math.IsInf(cfg.DailyCapUSD, 0) || !validRetry(cfg.DefaultRetry) {
 		return nil, Invalid("invalid engine configuration")
 	}
 	for _, p := range cfg.ModelPrices {
