@@ -23,6 +23,13 @@ function providerClient(): ModelClient {
   if (!apiKey) throw failure("ModelConfigurationInvalid", true);
   return new Anthropic({ apiKey, authToken: null, maxRetries: 0, logLevel: "off", logger: { debug() {}, info() {}, warn() {}, error() {} } });
 }
+function usageIsKnown(value: unknown): boolean {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const usage = value as Record<string, unknown>;
+  const validCount = (count: unknown) => typeof count === "number" && Number.isSafeInteger(count) && count >= 0;
+  return validCount(usage.input_tokens) && validCount(usage.output_tokens) &&
+    [usage.cache_read_input_tokens, usage.cache_creation_input_tokens].every((count) => count == null || validCount(count));
+}
 function usageOf(value: unknown) {
   const usage = value && typeof value === "object" ? value as Record<string, unknown> : {};
   const count = (key: string) => typeof usage[key] === "number" && Number.isSafeInteger(usage[key]) && usage[key] >= 0 ? usage[key] : 0;
@@ -79,8 +86,9 @@ export function createModelActivity(options: {
       const provider = options.anthropic ?? providerClient();
       providerRequestSent = true;
       const message = await provider.messages.create(params, { signal: context.signal, maxRetries: 0 });
-      usageReceived = message.usage != null;
+      usageReceived = usageIsKnown(message.usage);
       usage = usageOf(message.usage);
+      if (!usageReceived) throw failure("ModelUsageInvalid", true);
       const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("");
       let json: unknown;
       if (schema) {
@@ -92,7 +100,7 @@ export function createModelActivity(options: {
       value = { text, ...(schema ? { json } : {}), model: message.model, ...usage, stopReason: message.stop_reason ?? "" };
     } catch (error) {
       const fields = error && typeof error === "object" ? error as { usage?: unknown; name?: unknown; type?: unknown; status?: unknown } : {};
-      if (fields.usage != null) { usage = usageOf(fields.usage); usageReceived = true; }
+      if (fields.usage != null) { usage = usageOf(fields.usage); usageReceived = usageIsKnown(fields.usage); }
       if (error instanceof ApplicationFailure) failed = error;
       else if (error instanceof Anthropic.APIConnectionTimeoutError || fields.name === "APIConnectionTimeoutError" || (context.signal.aborted && context.signal.reason?.type === "TimeoutFailure")) failed = failure("ModelTimeout");
       else if (context.signal.aborted) failed = failure("ModelCancelled", true);

@@ -339,8 +339,8 @@ func TestErrorMappingAndInternalPrivacy(t *testing.T) {
 				if !errors.As(err, &ce) || ce.Message() != "internal error" {
 					t.Fatalf("leaked internal error: %v", err)
 				}
-				if !strings.Contains(logs.String(), "database-password-secret") || !strings.Contains(logs.String(), rpc.ClientServiceDescribeRunProcedure) {
-					t.Fatalf("missing original error/procedure: %s", logs.String())
+				if strings.Contains(logs.String(), "secret") || !strings.Contains(logs.String(), "database-password-[REDACTED]") || !strings.Contains(logs.String(), rpc.ClientServiceDescribeRunProcedure) {
+					t.Fatalf("missing redacted error/procedure: %s", logs.String())
 				}
 			}
 		})

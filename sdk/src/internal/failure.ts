@@ -3,11 +3,12 @@ import { FailureSchema } from "../gen/capstan/v1/capstan_pb.ts";
 import type { Failure } from "../gen/capstan/v1/capstan_pb.ts";
 import { ActivityFailure, ApplicationFailure, CancelledFailure, CapstanFailure, TimeoutFailure } from "../types.ts";
 import { decode, encode } from "./payload.ts";
+import { redactDiagnosticValue, type Redactor } from "./privacy.ts";
 
 type ErrorFields = { message?: unknown; name?: unknown; type?: unknown; nonRetryable?: unknown; details?: unknown; cause?: unknown; stack?: unknown; activityType?: unknown; seq?: unknown; timeoutType?: unknown };
 
 /** Special SDK fields live in an envelope because Failure has only one opaque details field. */
-export function failureToProto(error: unknown): Failure {
+export function failureToProto(error: unknown, redact: Redactor = (text) => text): Failure {
   function visit(value: unknown, depth: number): Failure {
     const fields: ErrorFields = value !== null && typeof value === "object" ? value : {};
     const type = typeof fields.type === "string" ? fields.type : typeof fields.name === "string" ? fields.name : "Error";
@@ -15,11 +16,11 @@ export function failureToProto(error: unknown): Failure {
     if (type === "ActivityFailure") details = { $capstan: { kind: type, activityType: fields.activityType, seq: fields.seq }, details };
     if (type === "TimeoutFailure") details = { $capstan: { kind: type, timeoutType: fields.timeoutType }, details };
     return create(FailureSchema, {
-      message: typeof fields.message === "string" ? fields.message : String(value),
-      type,
+      message: redact(typeof fields.message === "string" ? fields.message : String(value)),
+      type: redact(type),
       nonRetryable: fields.nonRetryable === true,
-      stack: process.env.CAPSTAN_KEEP_STACKS === "1" && typeof fields.stack === "string" ? fields.stack : "",
-      ...(details === undefined ? {} : { details: encode(details)! }),
+      stack: process.env.CAPSTAN_KEEP_STACKS === "1" && typeof fields.stack === "string" ? redact(fields.stack) : "",
+      ...(details === undefined ? {} : { details: encode(redactDiagnosticValue(details, redact))! }),
       ...(fields.cause === undefined || depth >= 10 ? {} : { cause: visit(fields.cause, depth + 1) }),
     });
   }

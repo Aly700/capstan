@@ -33,7 +33,7 @@ func New(t testing.TB) string {
 	if _, err := rand.Read(suffix[:]); err != nil {
 		t.Fatal(err)
 	}
-	name := "capstan_t_" + hex.EncodeToString(suffix[:])
+	name := "capstan_audit_" + hex.EncodeToString(suffix[:])
 	quoted := pgx.Identifier{name}.Sanitize()
 	if _, err := admin.Exec(ctx, "create database "+quoted); err != nil {
 		t.Fatalf("testpg: create database: %v", err)
