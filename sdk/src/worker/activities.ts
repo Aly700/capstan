@@ -20,6 +20,8 @@ export async function executeActivity(options: {
   identity: string;
   shutdown: AbortSignal;
   logger: Logger;
+  /** Built-in model work honours abort itself, then finishes its reserved ledger row. */
+  settleOnAbort?: boolean;
 }): Promise<void> {
   const { task, client, shutdown, logger } = options;
   const abort = new AbortController();
@@ -87,7 +89,8 @@ export async function executeActivity(options: {
     };
     const fn = Object.hasOwn(options.activities, task.activityType) ? options.activities[task.activityType] : undefined;
     if (!fn) throw new ApplicationFailure(`activity type ${task.activityType} is not registered`, { type: "ActivityNotRegistered", nonRetryable: true });
-    result = await untilAborted(Promise.resolve().then(() => { abort.signal.throwIfAborted(); return activityStorage.run(context, () => fn(decode(task.input))); }), abort.signal);
+    const work = Promise.resolve().then(() => { abort.signal.throwIfAborted(); return activityStorage.run(context, () => fn(decode(task.input))); });
+    result = options.settleOnAbort ? await work : await untilAborted(work, abort.signal);
     // Serialization is part of the attempt, and a serialization error is reportable.
     result = encode(result);
   } catch (error) { failed = true; failure = error; }

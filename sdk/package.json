@@ -18,6 +18,7 @@
     "gen": "cd .. && buf generate"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.128.0",
     "@bufbuild/protobuf": "2.15.0",
     "@connectrpc/connect": "2.2.0",
     "@connectrpc/connect-node": "2.2.0",
