@@ -1,0 +1,30 @@
+Accounting audit command provenance (local, 2026-09-28)
+Environment: GOTOOLCHAIN=go1.26.4, PATH=$HOME/.local/bin:$PATH.
+All Go commands ran from /Users/affan/Projects/capstan--audit.
+All npx commands ran from its sdk/ directory.
+New real HTTP accounting/human tests bind 127.0.0.1:7640, run server.Serve
+with engine.New on pgstore, and create/drop capstan_audit_* databases.
+The engine clock is controlled by each test; no fault-lab store is used.
+
+model-usage-before.txt: npx vitest run test/agent-model.test.ts
+  Exit 1 before 66ef31a; 8 new malformed/missing-usage assertions fail.
+model-usage-after.txt: same command after 66ef31a implementation
+  Exit 0; 37 tests pass.
+prices-before.txt: npx vitest run test/agent-model.test.ts
+  Exit 1 before 6a55e0b; estimate 0.000002, expected 0.002466.
+prices-after.txt: same command after 6a55e0b implementation
+  Exit 0; 38 tests pass.
+sdk-final.txt: npx vitest run test/agent-model.test.ts
+  Exit 0; 39 tests pass including lost Reserve acknowledgement.
+Typecheck: npx tsc --noEmit
+  Exit 0; no stdout/stderr. Final independent execution after sandbox test repair.
+rpc.txt: go test -race -count=1 ./internal/server -run '^TestAuditPostgres' -v
+  Exit 0; this execution predates adding TestAuditPostgresHumanWaitSevenDays.
+engine-postgres.txt: go test -race -count=1 -tags pgengine ./internal/engine -run 'Test(Reserve|Reserved|Finish|Cap|ConcurrentReservations|LedgerTimestamps)' -v
+  Exit 0.
+human-seven-days.txt: go test -race -count=1 ./internal/server -run TestAuditPostgresHumanWaitSevenDays -v
+  Exit 0; seven engine-clock days, not seven elapsed wall-clock days.
+polling-review-before.txt: go test -count=1 ./internal/store/pgstore -run TestAuditReviewClaimBusyBacklog -v
+  Exit 1 at 04acd8f; 2048 tasks of one busy run consumed 5s deadline.
+polling-review-after.txt: go test -race -count=1 ./internal/store/pgstore -run 'TestAuditReviewClaimBusyBacklog|TestClaimedRunLockDoesNotWaitAndRollsBackLease|TestClaimTaskConcurrentWorkersClaimOnce' -v
+  Exit 0 after 719685e; 2048 busy children bypassed in 5.715042ms.
