@@ -1,0 +1,25 @@
+{
+  "ownershipVersion": 1,
+  "startedAt": "2026-09-28T18:23:13.721981+00:00",
+  "runId": "workload-aws-1790624087007",
+  "pid": 50446,
+  "repo": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws",
+  "workers": [
+    {
+      "marker": "--capstan-proof-worker=workload-aws-1790624087007-worker-1",
+      "pid": 50527
+    }
+  ],
+  "cleanedAt": "2026-09-28T19:36:42.854Z",
+  "verifiedProcessesAbsent": [
+    50446,
+    50527,
+    50868,
+    50869
+  ],
+  "verifiedLaneDirectoriesAbsent": [
+    "cw-greet-142e8ab06f23b1e7ded60b9d687db377",
+    "cw-count-eed5ac03bf778b870ab4284f61cc7011"
+  ],
+  "verifiedDemoRepoAbsent": true
+}

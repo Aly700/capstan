@@ -1,0 +1,887 @@
+{
+  "runId": "workload-aws-1790624087007",
+  "deployedSha": "b49c41363288e9585493c35def019053c06b03ea",
+  "address": "https://qsd4aga0cg.execute-api.us-east-1.amazonaws.com",
+  "source": "c806b1cb9bfcaff148501aada5aebcfa67c15393",
+  "startedAt": "2026-09-28T19:34:47.007Z",
+  "killedAt": "2026-09-28T19:34:53.465Z",
+  "replacementAt": "2026-09-28T19:36:27.797Z",
+  "reachableAt": "2026-09-28T19:36:28.174Z",
+  "completedAt": "2026-09-28T19:36:42.414Z",
+  "workerPid": 50527,
+  "taskBefore": "arn:aws:ecs:us-east-1:280517746513:task/capstan/e336e3c6ed924eb68de521757d1e2c41",
+  "taskAfter": "arn:aws:ecs:us-east-1:280517746513:task/capstan/baee95253a054a0aa968cda4addcf56d",
+  "running": [
+    {
+      "name": "cw-greet-142e8ab06f23b1e7ded60b9d687db377",
+      "pid": 50868,
+      "summary": "lane cw-greet-142e8ab06f23b1e7ded60b9d687db377: running (pid 50868)\ncwd: /Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/1321fd7ae1d92ec1b22f6eaca972d3d21de3a0b0d00601e9ecdca415f28666d1/worktree   session: -",
+      "finished": false
+    },
+    {
+      "name": "cw-count-eed5ac03bf778b870ab4284f61cc7011",
+      "pid": 50869,
+      "summary": "lane cw-count-eed5ac03bf778b870ab4284f61cc7011: running (pid 50869)\ncwd: /Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/97b59cba8e9dd68cc03c17e2c80bafba8814ba83fed8dc57e169b345536520e5/worktree   session: -",
+      "finished": false
+    }
+  ],
+  "before": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T19:34:49.305982Z",
+      "runStarted": {
+        "workflowType": "codexLanes",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lcyI6W3sibmFtZSI6ImdyZWV0IiwiYnJhbmNoIjoiZGVtby9ncmVldCIsImVmZm9ydCI6InhoaWdoIiwiYnJpZWYiOiJDcmVhdGUgZXhlY3V0YWJsZSBncmVldC5zaCB1c2luZyBQT1NJWCBzaC4gUHJpbnQgSGVsbG8sIE5BTUUhIGZvbGxvd2VkIGJ5IG9uZSBuZXdsaW5lOyBOQU1FIGlzIHRoZSBmaXJzdCBhcmd1bWVudCwgZGVmYXVsdCB3b3JsZC4gQ3JlYXRlIGV4ZWN1dGFibGUgdGVzdC1ncmVldC5zaCB1c2luZyBzaCBhc3NlcnRpb25zIGZvciBkZWZhdWx0IGFuZCBBZGEuIFJ1biAuL3Rlc3QtZ3JlZXQuc2gsIGdpdCBhZGQgb25seSB0aGVzZSB0d28gc2NyaXB0cywgY29tbWl0IHdpdGggbWVzc2FnZSBBZGQgZ3JlZXRpbmcgc2NyaXB0IGFuZCB0ZXN0cy4gRmluYWwgcmVwb3J0OiBjb21taXQsIGZpbGVzLCB0ZXN0IG91dHB1dC4ifSx7Im5hbWUiOiJjb3VudCIsImJyYW5jaCI6ImRlbW8vY291bnQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgY291bnQuc2ggdXNpbmcgUE9TSVggc2guIFRha2Ugb25lIGZpbGVuYW1lIGFuZCBwcmludCBpdHMgbnVtYmVyIG9mIG5ld2xpbmUgY2hhcmFjdGVycyBhcyBhIGJhcmUgaW50ZWdlciBwbHVzIG5ld2xpbmUsIHVzaW5nIHdjIC1sIHdpdGggd2hpdGVzcGFjZSByZW1vdmVkLiBDcmVhdGUgZXhlY3V0YWJsZSB0ZXN0LWNvdW50LnNoIHVzaW5nIG1rdGVtcCBhbmQgdHJhcCBjbGVhbnVwLCB0ZXN0IGFuIGVtcHR5IGZpbGUgYW5kIGEgdGhyZWUtbGluZSBmaWxlLiBSdW4gLi90ZXN0LWNvdW50LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGxpbmUgY291bnRlciBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn1dfQ=="
+        },
+        "runTimeout": "3600s",
+        "taskTimeout": "10s",
+        "identity": "workload-aws-2"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:49.309972Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:49.326084Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:49.482900Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:49.484651Z",
+      "activityScheduled": {
+        "seq": "1",
+        "activityType": "createLaneWorktree",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lIjp7Im5hbWUiOiJncmVldCIsImJyYW5jaCI6ImRlbW8vZ3JlZXQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgZ3JlZXQuc2ggdXNpbmcgUE9TSVggc2guIFByaW50IEhlbGxvLCBOQU1FISBmb2xsb3dlZCBieSBvbmUgbmV3bGluZTsgTkFNRSBpcyB0aGUgZmlyc3QgYXJndW1lbnQsIGRlZmF1bHQgd29ybGQuIENyZWF0ZSBleGVjdXRhYmxlIHRlc3QtZ3JlZXQuc2ggdXNpbmcgc2ggYXNzZXJ0aW9ucyBmb3IgZGVmYXVsdCBhbmQgQWRhLiBSdW4gLi90ZXN0LWdyZWV0LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGdyZWV0aW5nIHNjcmlwdCBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn0sInJ1bklkIjoid29ya2xvYWQtYXdzLTE3OTA2MjQwODcwMDcifQ=="
+        },
+        "scheduleToCloseTimeout": "300s",
+        "startToCloseTimeout": "120s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:49.487204Z",
+      "activityScheduled": {
+        "seq": "2",
+        "activityType": "createLaneWorktree",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lIjp7Im5hbWUiOiJjb3VudCIsImJyYW5jaCI6ImRlbW8vY291bnQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgY291bnQuc2ggdXNpbmcgUE9TSVggc2guIFRha2Ugb25lIGZpbGVuYW1lIGFuZCBwcmludCBpdHMgbnVtYmVyIG9mIG5ld2xpbmUgY2hhcmFjdGVycyBhcyBhIGJhcmUgaW50ZWdlciBwbHVzIG5ld2xpbmUsIHVzaW5nIHdjIC1sIHdpdGggd2hpdGVzcGFjZSByZW1vdmVkLiBDcmVhdGUgZXhlY3V0YWJsZSB0ZXN0LWNvdW50LnNoIHVzaW5nIG1rdGVtcCBhbmQgdHJhcCBjbGVhbnVwLCB0ZXN0IGFuIGVtcHR5IGZpbGUgYW5kIGEgdGhyZWUtbGluZSBmaWxlLiBSdW4gLi90ZXN0LWNvdW50LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGxpbmUgY291bnRlciBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn0sInJ1bklkIjoid29ya2xvYWQtYXdzLTE3OTA2MjQwODcwMDcifQ=="
+        },
+        "scheduleToCloseTimeout": "300s",
+        "startToCloseTimeout": "120s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:34:49.839978Z",
+      "activityCompleted": {
+        "scheduledEventId": "5",
+        "seq": "1",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "attempt": 1,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:49.842876Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "9",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:49.852596Z",
+      "taskStarted": {
+        "scheduledEventId": "8",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "10",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:50.002264Z",
+      "taskCompleted": {
+        "scheduledEventId": "8",
+        "startedEventId": "9",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "11",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:34:50.011488Z",
+      "activityCompleted": {
+        "scheduledEventId": "6",
+        "seq": "2",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "attempt": 1,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "12",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:50.013030Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "13",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:50.167328Z",
+      "taskStarted": {
+        "scheduledEventId": "12",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "14",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:50.274667Z",
+      "taskCompleted": {
+        "scheduledEventId": "12",
+        "startedEventId": "13",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "15",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:50.276495Z",
+      "activityScheduled": {
+        "seq": "3",
+        "activityType": "runCodexLane",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "scheduleToCloseTimeout": "7200s",
+        "startToCloseTimeout": "3600s",
+        "heartbeatTimeout": "30s",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "maximumInterval": "30s"
+        },
+        "taskCompletedEventId": "14"
+      }
+    },
+    {
+      "eventId": "16",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:50.279107Z",
+      "activityScheduled": {
+        "seq": "4",
+        "activityType": "runCodexLane",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "scheduleToCloseTimeout": "7200s",
+        "startToCloseTimeout": "3600s",
+        "heartbeatTimeout": "30s",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "maximumInterval": "30s"
+        },
+        "taskCompletedEventId": "14"
+      }
+    }
+  ],
+  "after": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T19:34:49.305982Z",
+      "runStarted": {
+        "workflowType": "codexLanes",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lcyI6W3sibmFtZSI6ImdyZWV0IiwiYnJhbmNoIjoiZGVtby9ncmVldCIsImVmZm9ydCI6InhoaWdoIiwiYnJpZWYiOiJDcmVhdGUgZXhlY3V0YWJsZSBncmVldC5zaCB1c2luZyBQT1NJWCBzaC4gUHJpbnQgSGVsbG8sIE5BTUUhIGZvbGxvd2VkIGJ5IG9uZSBuZXdsaW5lOyBOQU1FIGlzIHRoZSBmaXJzdCBhcmd1bWVudCwgZGVmYXVsdCB3b3JsZC4gQ3JlYXRlIGV4ZWN1dGFibGUgdGVzdC1ncmVldC5zaCB1c2luZyBzaCBhc3NlcnRpb25zIGZvciBkZWZhdWx0IGFuZCBBZGEuIFJ1biAuL3Rlc3QtZ3JlZXQuc2gsIGdpdCBhZGQgb25seSB0aGVzZSB0d28gc2NyaXB0cywgY29tbWl0IHdpdGggbWVzc2FnZSBBZGQgZ3JlZXRpbmcgc2NyaXB0IGFuZCB0ZXN0cy4gRmluYWwgcmVwb3J0OiBjb21taXQsIGZpbGVzLCB0ZXN0IG91dHB1dC4ifSx7Im5hbWUiOiJjb3VudCIsImJyYW5jaCI6ImRlbW8vY291bnQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgY291bnQuc2ggdXNpbmcgUE9TSVggc2guIFRha2Ugb25lIGZpbGVuYW1lIGFuZCBwcmludCBpdHMgbnVtYmVyIG9mIG5ld2xpbmUgY2hhcmFjdGVycyBhcyBhIGJhcmUgaW50ZWdlciBwbHVzIG5ld2xpbmUsIHVzaW5nIHdjIC1sIHdpdGggd2hpdGVzcGFjZSByZW1vdmVkLiBDcmVhdGUgZXhlY3V0YWJsZSB0ZXN0LWNvdW50LnNoIHVzaW5nIG1rdGVtcCBhbmQgdHJhcCBjbGVhbnVwLCB0ZXN0IGFuIGVtcHR5IGZpbGUgYW5kIGEgdGhyZWUtbGluZSBmaWxlLiBSdW4gLi90ZXN0LWNvdW50LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGxpbmUgY291bnRlciBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn1dfQ=="
+        },
+        "runTimeout": "3600s",
+        "taskTimeout": "10s",
+        "identity": "workload-aws-2"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:49.309972Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:49.326084Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:49.482900Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:49.484651Z",
+      "activityScheduled": {
+        "seq": "1",
+        "activityType": "createLaneWorktree",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lIjp7Im5hbWUiOiJncmVldCIsImJyYW5jaCI6ImRlbW8vZ3JlZXQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgZ3JlZXQuc2ggdXNpbmcgUE9TSVggc2guIFByaW50IEhlbGxvLCBOQU1FISBmb2xsb3dlZCBieSBvbmUgbmV3bGluZTsgTkFNRSBpcyB0aGUgZmlyc3QgYXJndW1lbnQsIGRlZmF1bHQgd29ybGQuIENyZWF0ZSBleGVjdXRhYmxlIHRlc3QtZ3JlZXQuc2ggdXNpbmcgc2ggYXNzZXJ0aW9ucyBmb3IgZGVmYXVsdCBhbmQgQWRhLiBSdW4gLi90ZXN0LWdyZWV0LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGdyZWV0aW5nIHNjcmlwdCBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn0sInJ1bklkIjoid29ya2xvYWQtYXdzLTE3OTA2MjQwODcwMDcifQ=="
+        },
+        "scheduleToCloseTimeout": "300s",
+        "startToCloseTimeout": "120s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:49.487204Z",
+      "activityScheduled": {
+        "seq": "2",
+        "activityType": "createLaneWorktree",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJicmllZiI6IkltcGxlbWVudCB0aGUgZm9sbG93aW5nIGFscmVhZHktYXBwcm92ZWQgdGlueSBzaGVsbCB0YXNrLiBLZWVwIGl0IG1pbmltYWwsIHJ1biB0aGUgdGVzdCwgYW5kIGNvbW1pdCB5b3VyIGZpbGVzLiBPdGhlciB0YXNrcyBydW4gaW4gaW5kZXBlbmRlbnQgd29ya3RyZWVzLiBEbyBub3QgcGF1c2UgZm9yIGRlc2lnbiBhcHByb3ZhbC4iLCJsYW5lIjp7Im5hbWUiOiJjb3VudCIsImJyYW5jaCI6ImRlbW8vY291bnQiLCJlZmZvcnQiOiJ4aGlnaCIsImJyaWVmIjoiQ3JlYXRlIGV4ZWN1dGFibGUgY291bnQuc2ggdXNpbmcgUE9TSVggc2guIFRha2Ugb25lIGZpbGVuYW1lIGFuZCBwcmludCBpdHMgbnVtYmVyIG9mIG5ld2xpbmUgY2hhcmFjdGVycyBhcyBhIGJhcmUgaW50ZWdlciBwbHVzIG5ld2xpbmUsIHVzaW5nIHdjIC1sIHdpdGggd2hpdGVzcGFjZSByZW1vdmVkLiBDcmVhdGUgZXhlY3V0YWJsZSB0ZXN0LWNvdW50LnNoIHVzaW5nIG1rdGVtcCBhbmQgdHJhcCBjbGVhbnVwLCB0ZXN0IGFuIGVtcHR5IGZpbGUgYW5kIGEgdGhyZWUtbGluZSBmaWxlLiBSdW4gLi90ZXN0LWNvdW50LnNoLCBnaXQgYWRkIG9ubHkgdGhlc2UgdHdvIHNjcmlwdHMsIGNvbW1pdCB3aXRoIG1lc3NhZ2UgQWRkIGxpbmUgY291bnRlciBhbmQgdGVzdHMuIEZpbmFsIHJlcG9ydDogY29tbWl0LCBmaWxlcywgdGVzdCBvdXRwdXQuIn0sInJ1bklkIjoid29ya2xvYWQtYXdzLTE3OTA2MjQwODcwMDcifQ=="
+        },
+        "scheduleToCloseTimeout": "300s",
+        "startToCloseTimeout": "120s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:34:49.839978Z",
+      "activityCompleted": {
+        "scheduledEventId": "5",
+        "seq": "1",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "attempt": 1,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:49.842876Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "9",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:49.852596Z",
+      "taskStarted": {
+        "scheduledEventId": "8",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "10",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:50.002264Z",
+      "taskCompleted": {
+        "scheduledEventId": "8",
+        "startedEventId": "9",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "11",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:34:50.011488Z",
+      "activityCompleted": {
+        "scheduledEventId": "6",
+        "seq": "2",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "attempt": 1,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "12",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:34:50.013030Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "13",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:34:50.167328Z",
+      "taskStarted": {
+        "scheduledEventId": "12",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "14",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:34:50.274667Z",
+      "taskCompleted": {
+        "scheduledEventId": "12",
+        "startedEventId": "13",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "15",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:50.276495Z",
+      "activityScheduled": {
+        "seq": "3",
+        "activityType": "runCodexLane",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "scheduleToCloseTimeout": "7200s",
+        "startToCloseTimeout": "3600s",
+        "heartbeatTimeout": "30s",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "maximumInterval": "30s"
+        },
+        "taskCompletedEventId": "14"
+      }
+    },
+    {
+      "eventId": "16",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:34:50.279107Z",
+      "activityScheduled": {
+        "seq": "4",
+        "activityType": "runCodexLane",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIn0="
+        },
+        "scheduleToCloseTimeout": "7200s",
+        "startToCloseTimeout": "3600s",
+        "heartbeatTimeout": "30s",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "maximumInterval": "30s"
+        },
+        "taskCompletedEventId": "14"
+      }
+    },
+    {
+      "eventId": "17",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:36:03.086687Z",
+      "activityCompleted": {
+        "scheduledEventId": "16",
+        "seq": "4",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIiwibGFuZU5hbWUiOiJjdy1jb3VudC1lZWQ1YWMwM2JmNzc4Yjg3MGFiNDI4NGY2MWNjNzAxMSIsInJlcG9ydFBhdGgiOiIvVXNlcnMvYWZmYW4vLmNvZGV4L2xhbmVzL2N3LWNvdW50LWVlZDVhYzAzYmY3NzhiODcwYWI0Mjg0ZjYxY2M3MDExL2xhc3QtbWVzc2FnZS0xLm1kIiwiaGVhZCI6Ijg5NjIyYTc1NDY0NmE2OTI2YzdmOWJmYzMxMzY5YjIzMTg5MmVmMzUifQ=="
+        },
+        "attempt": 2,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "18",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:36:03.089743Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "19",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:36:10.034007Z",
+      "taskStarted": {
+        "scheduledEventId": "18",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "20",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:36:10.180973Z",
+      "taskCompleted": {
+        "scheduledEventId": "18",
+        "startedEventId": "19",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "21",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:36:35.471882Z",
+      "activityCompleted": {
+        "scheduledEventId": "15",
+        "seq": "3",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIiwibGFuZU5hbWUiOiJjdy1ncmVldC0xNDJlOGFiMDZmMjNiMWU3ZGVkNjBiOWQ2ODdkYjM3NyIsInJlcG9ydFBhdGgiOiIvVXNlcnMvYWZmYW4vLmNvZGV4L2xhbmVzL2N3LWdyZWV0LTE0MmU4YWIwNmYyM2IxZTdkZWQ2MGI5ZDY4N2RiMzc3L2xhc3QtbWVzc2FnZS0xLm1kIiwiaGVhZCI6ImU3MDY3ZGI1OTc4ZDA5Mzc5YjczZTgyMDY1Yjc1N2UzZWJmMzk5NDgifQ=="
+        },
+        "attempt": 3,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "22",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:36:35.474598Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "23",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:36:35.483401Z",
+      "taskStarted": {
+        "scheduledEventId": "22",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "24",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:36:38.116047Z",
+      "taskCompleted": {
+        "scheduledEventId": "22",
+        "startedEventId": "23",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "25",
+      "type": "EVENT_TYPE_MARKER_RECORDED",
+      "time": "2026-09-28T19:36:38.118727Z",
+      "markerRecorded": {
+        "seq": "5",
+        "name": "uuid",
+        "details": {
+          "contentType": "application/json",
+          "data": "IjA5MDI1ZDEyLWIzNzItNDY4NC05MWJiLTA3YjM3ODU3NDdjYSI="
+        },
+        "taskCompletedEventId": "24"
+      }
+    },
+    {
+      "eventId": "26",
+      "type": "EVENT_TYPE_APPROVAL_REQUESTED",
+      "time": "2026-09-28T19:36:38.120289Z",
+      "approvalRequested": {
+        "seq": "6",
+        "approvalId": "09025d12-b372-4684-91bb-07b3785747ca",
+        "source": "APPROVAL_SOURCE_HUMAN",
+        "prompt": "merge lanes greet, count?",
+        "options": [
+          "greet",
+          "count",
+          "none"
+        ],
+        "taskCompletedEventId": "24"
+      }
+    },
+    {
+      "eventId": "27",
+      "type": "EVENT_TYPE_APPROVAL_RESOLVED",
+      "time": "2026-09-28T19:36:38.562673Z",
+      "approvalResolved": {
+        "requestedEventId": "26",
+        "seq": "6",
+        "approvalId": "09025d12-b372-4684-91bb-07b3785747ca",
+        "outcome": "APPROVAL_OUTCOME_APPROVED",
+        "choice": "greet",
+        "resolver": "workload-demo",
+        "note": "Authorized AWS proof: merge greeting lane only"
+      }
+    },
+    {
+      "eventId": "28",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:36:38.564121Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "29",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:36:38.893155Z",
+      "taskStarted": {
+        "scheduledEventId": "28",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "30",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:36:39.106115Z",
+      "taskCompleted": {
+        "scheduledEventId": "28",
+        "startedEventId": "29",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "31",
+      "type": "EVENT_TYPE_ACTIVITY_SCHEDULED",
+      "time": "2026-09-28T19:36:39.107677Z",
+      "activityScheduled": {
+        "seq": "7",
+        "activityType": "mergeLane",
+        "taskQueue": "workload-aws-1790624087007",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxIiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy8xMzIxZmQ3YWUxZDkyZWMxYjIyZjZlYWNhOTcyZDNkMjFkZTNhMGIwZDAwNjAxZTllY2RjYTQxNWYyODY2NmQxL2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIiwibGFuZU5hbWUiOiJjdy1ncmVldC0xNDJlOGFiMDZmMjNiMWU3ZGVkNjBiOWQ2ODdkYjM3NyIsInJlcG9ydFBhdGgiOiIvVXNlcnMvYWZmYW4vLmNvZGV4L2xhbmVzL2N3LWdyZWV0LTE0MmU4YWIwNmYyM2IxZTdkZWQ2MGI5ZDY4N2RiMzc3L2xhc3QtbWVzc2FnZS0xLm1kIiwiaGVhZCI6ImU3MDY3ZGI1OTc4ZDA5Mzc5YjczZTgyMDY1Yjc1N2UzZWJmMzk5NDgifQ=="
+        },
+        "scheduleToCloseTimeout": "300s",
+        "startToCloseTimeout": "120s",
+        "taskCompletedEventId": "30"
+      }
+    },
+    {
+      "eventId": "32",
+      "type": "EVENT_TYPE_ACTIVITY_COMPLETED",
+      "time": "2026-09-28T19:36:39.282463Z",
+      "activityCompleted": {
+        "scheduledEventId": "31",
+        "seq": "7",
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJuYW1lIjoiZ3JlZXQiLCJicmFuY2giOiJkZW1vL2dyZWV0IiwiaGVhZCI6ImU3MDY3ZGI1OTc4ZDA5Mzc5YjczZTgyMDY1Yjc1N2UzZWJmMzk5NDgifQ=="
+        },
+        "attempt": 1,
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "33",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T19:36:39.283898Z",
+      "taskScheduled": {
+        "taskQueue": "workload-aws-1790624087007",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "34",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T19:36:39.290154Z",
+      "taskStarted": {
+        "scheduledEventId": "33",
+        "identity": "workload-1"
+      }
+    },
+    {
+      "eventId": "35",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T19:36:39.476241Z",
+      "taskCompleted": {
+        "scheduledEventId": "33",
+        "startedEventId": "34",
+        "identity": "workload-1",
+        "buildId": "3b0913a7171d4e0773cba32c5fe130a6664422c21e226f06ab4109dcdec09b61"
+      }
+    },
+    {
+      "eventId": "36",
+      "type": "EVENT_TYPE_RUN_COMPLETED",
+      "time": "2026-09-28T19:36:39.477433Z",
+      "runCompleted": {
+        "result": {
+          "contentType": "application/json",
+          "data": "eyJsYW5lcyI6W3sibmFtZSI6ImdyZWV0IiwiYnJhbmNoIjoiZGVtby9ncmVldCIsImVmZm9ydCI6InhoaWdoIiwicmVwbyI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzIiwic3RhdGVEaXIiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMSIsIndvcmt0cmVlIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MvLmdpdC9jYXBzdGFuLWNvZGV4LWxhbmVzLzEzMjFmZDdhZTFkOTJlYzFiMjJmNmVhY2E5NzJkM2QyMWRlM2EwYjBkMDA2MDFlOWVjZGNhNDE1ZjI4NjY2ZDEvd29ya3RyZWUiLCJicmllZlBhdGgiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvMTMyMWZkN2FlMWQ5MmVjMWIyMmY2ZWFjYTk3MmQzZDIxZGUzYTBiMGQwMDYwMWU5ZWNkY2E0MTVmMjg2NjZkMS9icmllZi5tZCIsImJhc2VDb21taXQiOiJhMTNhODA2YzM1NWE2ZmQ1OTkxYTg2MTQ2YmQ0ODBlY2I5MmFiNjdjIiwidGFyZ2V0QnJhbmNoIjoibWFpbiIsImxhbmVOYW1lIjoiY3ctZ3JlZXQtMTQyZThhYjA2ZjIzYjFlN2RlZDYwYjlkNjg3ZGIzNzciLCJyZXBvcnRQYXRoIjoiL1VzZXJzL2FmZmFuLy5jb2RleC9sYW5lcy9jdy1ncmVldC0xNDJlOGFiMDZmMjNiMWU3ZGVkNjBiOWQ2ODdkYjM3Ny9sYXN0LW1lc3NhZ2UtMS5tZCIsImhlYWQiOiJlNzA2N2RiNTk3OGQwOTM3OWI3M2U4MjA2NWI3NTdlM2ViZjM5OTQ4In0seyJuYW1lIjoiY291bnQiLCJicmFuY2giOiJkZW1vL2NvdW50IiwiZWZmb3J0IjoieGhpZ2giLCJyZXBvIjoiL1VzZXJzL2FmZmFuL1Byb2plY3RzL2NhcHN0YW4tLXdvcmtsb2FkLy5sYW5lL2RlbW8tcmVwby1hd3MiLCJzdGF0ZURpciI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1Iiwid29ya3RyZWUiOiIvVXNlcnMvYWZmYW4vUHJvamVjdHMvY2Fwc3Rhbi0td29ya2xvYWQvLmxhbmUvZGVtby1yZXBvLWF3cy8uZ2l0L2NhcHN0YW4tY29kZXgtbGFuZXMvOTdiNTljYmE4ZTlkZDY4Y2MwM2MxN2UyYzgwYmFmYmE4ODE0YmE4M2ZlZDhkYzU3ZTE2OWIzNDU1MzY1MjBlNS93b3JrdHJlZSIsImJyaWVmUGF0aCI6Ii9Vc2Vycy9hZmZhbi9Qcm9qZWN0cy9jYXBzdGFuLS13b3JrbG9hZC8ubGFuZS9kZW1vLXJlcG8tYXdzLy5naXQvY2Fwc3Rhbi1jb2RleC1sYW5lcy85N2I1OWNiYThlOWRkNjhjYzAzYzE3ZTJjODBiYWZiYTg4MTRiYTgzZmVkOGRjNTdlMTY5YjM0NTUzNjUyMGU1L2JyaWVmLm1kIiwiYmFzZUNvbW1pdCI6ImExM2E4MDZjMzU1YTZmZDU5OTFhODYxNDZiZDQ4MGVjYjkyYWI2N2MiLCJ0YXJnZXRCcmFuY2giOiJtYWluIiwibGFuZU5hbWUiOiJjdy1jb3VudC1lZWQ1YWMwM2JmNzc4Yjg3MGFiNDI4NGY2MWNjNzAxMSIsInJlcG9ydFBhdGgiOiIvVXNlcnMvYWZmYW4vLmNvZGV4L2xhbmVzL2N3LWNvdW50LWVlZDVhYzAzYmY3NzhiODcwYWI0Mjg0ZjYxY2M3MDExL2xhc3QtbWVzc2FnZS0xLm1kIiwiaGVhZCI6Ijg5NjIyYTc1NDY0NmE2OTI2YzdmOWJmYzMxMzY5YjIzMTg5MmVmMzUifV0sImRlY2lzaW9uIjp7Im91dGNvbWUiOiJhcHByb3ZlZCIsImNob2ljZSI6ImdyZWV0IiwicmVzb2x2ZXIiOiJ3b3JrbG9hZC1kZW1vIiwibm90ZSI6IkF1dGhvcml6ZWQgQVdTIHByb29mOiBtZXJnZSBncmVldGluZyBsYW5lIG9ubHkifSwibWVyZ2VkIjp7Im5hbWUiOiJncmVldCIsImJyYW5jaCI6ImRlbW8vZ3JlZXQiLCJoZWFkIjoiZTcwNjdkYjU5NzhkMDkzNzliNzNlODIwNjViNzU3ZTNlYmYzOTk0OCJ9fQ=="
+        },
+        "taskCompletedEventId": "35"
+      }
+    }
+  ],
+  "result": {
+    "lanes": [
+      {
+        "name": "greet",
+        "branch": "demo/greet",
+        "effort": "xhigh",
+        "repo": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws",
+        "stateDir": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/1321fd7ae1d92ec1b22f6eaca972d3d21de3a0b0d00601e9ecdca415f28666d1",
+        "worktree": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/1321fd7ae1d92ec1b22f6eaca972d3d21de3a0b0d00601e9ecdca415f28666d1/worktree",
+        "briefPath": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/1321fd7ae1d92ec1b22f6eaca972d3d21de3a0b0d00601e9ecdca415f28666d1/brief.md",
+        "baseCommit": "a13a806c355a6fd5991a86146bd480ecb92ab67c",
+        "targetBranch": "main",
+        "laneName": "cw-greet-142e8ab06f23b1e7ded60b9d687db377",
+        "reportPath": "/Users/affan/.codex/lanes/cw-greet-142e8ab06f23b1e7ded60b9d687db377/last-message-1.md",
+        "head": "e7067db5978d09379b73e82065b757e3ebf39948"
+      },
+      {
+        "name": "count",
+        "branch": "demo/count",
+        "effort": "xhigh",
+        "repo": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws",
+        "stateDir": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/97b59cba8e9dd68cc03c17e2c80bafba8814ba83fed8dc57e169b345536520e5",
+        "worktree": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/97b59cba8e9dd68cc03c17e2c80bafba8814ba83fed8dc57e169b345536520e5/worktree",
+        "briefPath": "/Users/affan/Projects/capstan--workload/.lane/demo-repo-aws/.git/capstan-codex-lanes/97b59cba8e9dd68cc03c17e2c80bafba8814ba83fed8dc57e169b345536520e5/brief.md",
+        "baseCommit": "a13a806c355a6fd5991a86146bd480ecb92ab67c",
+        "targetBranch": "main",
+        "laneName": "cw-count-eed5ac03bf778b870ab4284f61cc7011",
+        "reportPath": "/Users/affan/.codex/lanes/cw-count-eed5ac03bf778b870ab4284f61cc7011/last-message-1.md",
+        "head": "89622a754646a6926c7f9bfc31369b231892ef35"
+      }
+    ],
+    "decision": {
+      "outcome": "approved",
+      "choice": "greet",
+      "resolver": "workload-demo",
+      "note": "Authorized AWS proof: merge greeting lane only"
+    },
+    "merged": {
+      "name": "greet",
+      "branch": "demo/greet",
+      "head": "e7067db5978d09379b73e82065b757e3ebf39948"
+    }
+  },
+  "reports": [
+    {
+      "name": "greet",
+      "laneName": "cw-greet-142e8ab06f23b1e7ded60b9d687db377",
+      "reportPath": "/Users/affan/.codex/lanes/cw-greet-142e8ab06f23b1e7ded60b9d687db377/last-message-1.md",
+      "report": "- Commit: `e7067db` — Add greeting script and tests\n- Files: executable `greet.sh` and `test-greet.sh`\n- Test: `./test-greet.sh` passed; output: `All greeting tests passed.`\n\nCommitted locally on `demo/greet`; working tree clean.",
+      "head": "e7067db5978d09379b73e82065b757e3ebf39948"
+    },
+    {
+      "name": "count",
+      "laneName": "cw-count-eed5ac03bf778b870ab4284f61cc7011",
+      "reportPath": "/Users/affan/.codex/lanes/cw-count-eed5ac03bf778b870ab4284f61cc7011/last-message-1.md",
+      "report": "Committed locally on `demo/count`: `89622a7` — `Add line counter and tests`.\n\nFiles: executable `count.sh` and `test-count.sh`.\n\n`./test-count.sh` passed:\n```text\nPASS: empty file\nPASS: three-line file\n```\n\nWorking tree is clean.",
+      "head": "89622a754646a6926c7f9bfc31369b231892ef35"
+    }
+  ],
+  "reconnectLog": [
+    "{\"event\":\"codex-lane-attached\",\"laneName\":\"cw-greet-142e8ab06f23b1e7ded60b9d687db377\",\"attempt\":1,\"workerPid\":50527,\"state\":\"running\"}",
+    "{\"event\":\"codex-lane-attached\",\"laneName\":\"cw-count-eed5ac03bf778b870ab4284f61cc7011\",\"attempt\":1,\"workerPid\":50527,\"state\":\"running\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":3}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unavailable] Service Unavailable\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unavailable] Service Unavailable\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unavailable] Service Unavailable\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":3}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unavailable] Service Unavailable\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":3}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":3}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":3}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"activity heartbeat failed\",\"runId\":\"workload-aws-1790624087007\",\"seq\":4}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"workflow\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"event\":\"codex-lane-attached\",\"laneName\":\"cw-greet-142e8ab06f23b1e7ded60b9d687db377\",\"attempt\":2,\"workerPid\":50527,\"state\":\"finished\"}",
+    "{\"event\":\"codex-lane-attached\",\"laneName\":\"cw-count-eed5ac03bf778b870ab4284f61cc7011\",\"attempt\":2,\"workerPid\":50527,\"state\":\"finished\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"level\":\"warn\",\"message\":\"task poll failed\",\"kind\":\"activity\",\"error\":\"[unknown] Internal Server Error\"}",
+    "{\"event\":\"codex-lane-attached\",\"laneName\":\"cw-greet-142e8ab06f23b1e7ded60b9d687db377\",\"attempt\":3,\"workerPid\":50527,\"state\":\"finished\"}"
+  ],
+  "cleanedAt": "2026-09-28T19:36:42.854Z",
+  "cleanup": "2026-09-28T19:36:42.854Z Local cleanup verified: 1 child processes exited; 2 demo lane directories removed; demo worktrees/repo removed. AWS resources must now be destroyed in runbook order."
+}

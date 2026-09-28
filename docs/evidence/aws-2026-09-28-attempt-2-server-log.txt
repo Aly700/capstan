@@ -1,0 +1,3 @@
+2026-09-28T19:28:42 {"time":"2026-09-28T19:28:42.399883487Z","level":"INFO","msg":"server listening","address":"[::]:7233"}
+2026-09-28T19:35:07 {"time":"2026-09-28T19:35:07.478152778Z","level":"INFO","msg":"server stopped"}
+2026-09-28T19:35:56 {"time":"2026-09-28T19:35:56.098748305Z","level":"INFO","msg":"server listening","address":"[::]:7233"}

@@ -1,0 +1,27 @@
+[
+    {
+        "Time": "2026-09-28T18:50:09.787000+00:00",
+        "Resource": "CapstanGithubOidc",
+        "Status": "UPDATE_COMPLETE"
+    },
+    {
+        "Time": "2026-09-28T18:50:07.305000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_COMPLETE"
+    },
+    {
+        "Time": "2026-09-28T18:50:06.918000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_IN_PROGRESS"
+    },
+    {
+        "Time": "2026-09-28T18:49:50.504000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_IN_PROGRESS"
+    },
+    {
+        "Time": "2026-09-28T18:49:47.126000+00:00",
+        "Resource": "CapstanGithubOidc",
+        "Status": "UPDATE_IN_PROGRESS"
+    }
+]

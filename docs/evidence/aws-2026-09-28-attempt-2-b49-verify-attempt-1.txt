@@ -1,0 +1,60 @@
+verify	Run make verify	﻿2026-09-28T19:08:15.8943632Z ##[group]Run make verify
+verify	Run make verify	2026-09-28T19:08:15.8944166Z [36;1mmake verify[0m
+verify	Run make verify	2026-09-28T19:08:15.9036073Z shell: /usr/bin/bash -e {0}
+verify	Run make verify	2026-09-28T19:08:15.9036530Z env:
+verify	Run make verify	2026-09-28T19:08:15.9037403Z   CAPSTAN_TEST_DATABASE_URL: ***127.0.0.1:55432/postgres?sslmode=disable
+verify	Run make verify	2026-09-28T19:08:15.9038210Z ##[endgroup]
+verify	Run make verify	2026-09-28T19:08:15.9316661Z buf generate
+verify	Run make verify	2026-09-28T19:08:16.5548485Z buf lint
+verify	Run make verify	2026-09-28T19:08:16.7333039Z go vet ./...
+verify	Run make verify	2026-09-28T19:08:22.4401918Z cd sdk && npx tsc --noEmit
+verify	Run make verify	2026-09-28T19:08:23.3735314Z go test -race -count=1 $(go list ./... | grep -v '/internal/lab$')
+verify	Run make verify	2026-09-28T19:08:28.5324253Z ok  	github.com/Aly700/capstan/cmd/capstan-lab	1.211s
+verify	Run make verify	2026-09-28T19:08:29.8701741Z ok  	github.com/Aly700/capstan/cmd/capstan-load	1.013s
+verify	Run make verify	2026-09-28T19:08:33.3204732Z ok  	github.com/Aly700/capstan/cmd/capstan-server	2.287s
+verify	Run make verify	2026-09-28T19:08:33.3206799Z ?   	github.com/Aly700/capstan/gen/capstan/v1	[no test files]
+verify	Run make verify	2026-09-28T19:08:33.3214524Z ?   	github.com/Aly700/capstan/gen/capstan/v1/capstanv1connect	[no test files]
+verify	Run make verify	2026-09-28T19:08:33.3216234Z ok  	github.com/Aly700/capstan/internal/auth	1.015s
+verify	Run make verify	2026-09-28T19:08:33.6304735Z ok  	github.com/Aly700/capstan/internal/config	1.268s
+verify	Run make verify	2026-09-28T19:08:37.2010238Z ok  	github.com/Aly700/capstan/internal/engine	1.585s
+verify	Run make verify	2026-09-28T19:08:37.2031834Z ok  	github.com/Aly700/capstan/internal/gate	1.077s
+verify	Run make verify	2026-09-28T19:08:38.3122742Z ok  	github.com/Aly700/capstan/internal/lab/labworker	1.188s
+verify	Run make verify	2026-09-28T19:08:38.7012628Z ok  	github.com/Aly700/capstan/internal/lab/scenarios	1.012s
+verify	Run make verify	2026-09-28T19:09:02.6296722Z 2026/09/28 19:08:49 INFO server listening address=127.0.0.1:7600
+verify	Run make verify	2026-09-28T19:09:02.6324863Z 2026/09/28 19:08:49 INFO server stopped
+verify	Run make verify	2026-09-28T19:09:02.6331123Z 2026/09/28 19:08:49 INFO server listening address=127.0.0.1:7600
+verify	Run make verify	2026-09-28T19:09:02.6332799Z 2026/09/28 19:08:50 INFO server stopped
+verify	Run make verify	2026-09-28T19:09:02.6334072Z --- FAIL: TestAuditPostgresFourWayTerminalRace (12.36s)
+verify	Run make verify	2026-09-28T19:09:02.6336071Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/10 (10.00s)
+verify	Run make verify	2026-09-28T19:09:02.6337836Z         audit_race_test.go:133: three lifecycle RPCs did not overlap at PostgreSQL lock
+verify	Run make verify	2026-09-28T19:09:02.6339368Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/11 (0.05s)
+verify	Run make verify	2026-09-28T19:09:02.6342871Z         audit_race_test.go:42: invalid_argument: invalid argument: command seq must increase beyond 1
+verify	Run make verify	2026-09-28T19:09:02.6344836Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/12 (0.05s)
+verify	Run make verify	2026-09-28T19:09:02.6347220Z         audit_race_test.go:63: timer not proven due before race: due=0 err=<nil>
+verify	Run make verify	2026-09-28T19:09:02.6349269Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/13 (0.10s)
+verify	Run make verify	2026-09-28T19:09:02.6351699Z         audit_race_test.go:141: timer processed while parent externally locked: 1
+verify	Run make verify	2026-09-28T19:09:02.6353581Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/14 (0.18s)
+verify	Run make verify	2026-09-28T19:09:02.6355976Z         audit_race_test.go:141: timer processed while parent externally locked: 1
+verify	Run make verify	2026-09-28T19:09:02.6358150Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/15 (0.05s)
+verify	Run make verify	2026-09-28T19:09:02.6360762Z         audit_race_test.go:42: invalid_argument: invalid argument: command seq must increase beyond 1
+verify	Run make verify	2026-09-28T19:09:02.6362796Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/16 (0.12s)
+verify	Run make verify	2026-09-28T19:09:02.6364619Z         audit_race_test.go:63: timer not proven due before race: due=0 err=<nil>
+verify	Run make verify	2026-09-28T19:09:02.6365923Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/17 (0.15s)
+verify	Run make verify	2026-09-28T19:09:02.6367853Z         audit_race_test.go:141: timer processed while parent externally locked: 1
+verify	Run make verify	2026-09-28T19:09:02.6369350Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/18 (0.04s)
+verify	Run make verify	2026-09-28T19:09:02.6371640Z         audit_race_test.go:42: invalid_argument: invalid argument: command seq must increase beyond 1
+verify	Run make verify	2026-09-28T19:09:02.6373132Z     --- FAIL: TestAuditPostgresFourWayTerminalRace/19 (0.06s)
+verify	Run make verify	2026-09-28T19:09:02.6374662Z         audit_race_test.go:63: timer not proven due before race: due=0 err=<nil>
+verify	Run make verify	2026-09-28T19:09:02.6376832Z     audit_race_test.go:218: 20 four-way races: completed=3 terminated=7 timer_fired=0 timer_removed_at_close=10; no duplicate terminal/timer events or remaining resources
+verify	Run make verify	2026-09-28T19:09:02.6378945Z FAIL
+verify	Run make verify	2026-09-28T19:09:02.6379756Z FAIL	github.com/Aly700/capstan/internal/server	21.457s
+verify	Run make verify	2026-09-28T19:09:02.6381173Z ok  	github.com/Aly700/capstan/internal/server/ui	1.026s
+verify	Run make verify	2026-09-28T19:09:02.6382281Z ?   	github.com/Aly700/capstan/internal/store	[no test files]
+verify	Run make verify	2026-09-28T19:09:02.6383395Z ok  	github.com/Aly700/capstan/internal/store/memstore	3.576s
+verify	Run make verify	2026-09-28T19:09:21.4256584Z ok  	github.com/Aly700/capstan/internal/store/pgstore	33.234s
+verify	Run make verify	2026-09-28T19:09:21.4281153Z ?   	github.com/Aly700/capstan/internal/store/storetest	[no test files]
+verify	Run make verify	2026-09-28T19:09:21.4282330Z ?   	github.com/Aly700/capstan/internal/store/subscriptions	[no test files]
+verify	Run make verify	2026-09-28T19:09:21.4283359Z ok  	github.com/Aly700/capstan/internal/testpg	2.927s
+verify	Run make verify	2026-09-28T19:09:21.4283974Z FAIL
+verify	Run make verify	2026-09-28T19:09:21.4675758Z make: *** [Makefile:26: test-go] Error 1
+verify	Run make verify	2026-09-28T19:09:21.4694067Z ##[error]Process completed with exit code 2.

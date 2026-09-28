@@ -1,0 +1,193 @@
+{
+    "tasks": [
+        {
+            "attachments": [
+                {
+                    "id": "a92bbcd4-a8e4-446f-8521-9e09378fc789",
+                    "type": "ElasticNetworkInterface",
+                    "status": "DELETED",
+                    "details": [
+                        {
+                            "name": "subnetId",
+                            "value": "subnet-03cb775ec97715ddb"
+                        },
+                        {
+                            "name": "networkInterfaceId",
+                            "value": "eni-01a11db0fbb2005ee"
+                        },
+                        {
+                            "name": "macAddress",
+                            "value": "02:ff:e7:69:b1:bf"
+                        },
+                        {
+                            "name": "privateDnsName",
+                            "value": "ip-10-0-0-142.ec2.internal"
+                        },
+                        {
+                            "name": "privateIPv4Address",
+                            "value": "10.0.0.142"
+                        }
+                    ]
+                }
+            ],
+            "attributes": [
+                {
+                    "name": "ecs.cpu-architecture",
+                    "value": "arm64"
+                }
+            ],
+            "availabilityZone": "us-east-1a",
+            "clusterArn": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+            "connectivity": "CONNECTED",
+            "connectivityAt": "2026-09-28T15:28:33.820000-04:00",
+            "containers": [
+                {
+                    "containerArn": "arn:aws:ecs:us-east-1:280517746513:container/capstan/e336e3c6ed924eb68de521757d1e2c41/2912fa9b-3019-43b5-9d91-7724090f61ef",
+                    "taskArn": "arn:aws:ecs:us-east-1:280517746513:task/capstan/e336e3c6ed924eb68de521757d1e2c41",
+                    "name": "server",
+                    "image": "280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:b49c41363288e9585493c35def019053c06b03ea",
+                    "imageDigest": "sha256:e98374f1fc224350b3f6a63af146ea94533851420c246f5cfb973a7ad0aab7a2",
+                    "runtimeId": "e336e3c6ed924eb68de521757d1e2c41-1085029842",
+                    "lastStatus": "STOPPED",
+                    "exitCode": 0,
+                    "networkBindings": [],
+                    "networkInterfaces": [
+                        {
+                            "attachmentId": "a92bbcd4-a8e4-446f-8521-9e09378fc789",
+                            "privateIpv4Address": "10.0.0.142"
+                        }
+                    ],
+                    "healthStatus": "UNKNOWN",
+                    "cpu": "0"
+                }
+            ],
+            "cpu": "256",
+            "createdAt": "2026-09-28T15:28:30.470000-04:00",
+            "desiredStatus": "STOPPED",
+            "enableExecuteCommand": false,
+            "executionStoppedAt": "2026-09-28T15:35:18.556000-04:00",
+            "group": "service:capstan-server",
+            "healthStatus": "UNKNOWN",
+            "lastStatus": "STOPPED",
+            "launchType": "FARGATE",
+            "memory": "512",
+            "overrides": {
+                "containerOverrides": [
+                    {
+                        "name": "server"
+                    }
+                ],
+                "inferenceAcceleratorOverrides": []
+            },
+            "platformVersion": "1.4.0",
+            "platformFamily": "Linux",
+            "pullStartedAt": "2026-09-28T15:28:41.398000-04:00",
+            "pullStoppedAt": "2026-09-28T15:28:43.133000-04:00",
+            "startedAt": "2026-09-28T15:29:07.507000-04:00",
+            "startedBy": "ecs-svc/7037194190361225921",
+            "stopCode": "UserInitiated",
+            "stoppedAt": "2026-09-28T15:35:42.098000-04:00",
+            "stoppedReason": "workload-proof",
+            "stoppingAt": "2026-09-28T15:34:54.591000-04:00",
+            "tags": [],
+            "taskArn": "arn:aws:ecs:us-east-1:280517746513:task/capstan/e336e3c6ed924eb68de521757d1e2c41",
+            "taskDefinitionArn": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:2",
+            "version": 10,
+            "ephemeralStorage": {
+                "sizeInGiB": 20
+            }
+        },
+        {
+            "attachments": [
+                {
+                    "id": "6d502a8b-5dee-4880-b116-54037532ecbf",
+                    "type": "ElasticNetworkInterface",
+                    "status": "ATTACHED",
+                    "details": [
+                        {
+                            "name": "subnetId",
+                            "value": "subnet-03cb775ec97715ddb"
+                        },
+                        {
+                            "name": "networkInterfaceId",
+                            "value": "eni-0c53320d13f5aec0c"
+                        },
+                        {
+                            "name": "macAddress",
+                            "value": "02:ff:d1:28:dc:97"
+                        },
+                        {
+                            "name": "privateDnsName",
+                            "value": "ip-10-0-0-186.ec2.internal"
+                        },
+                        {
+                            "name": "privateIPv4Address",
+                            "value": "10.0.0.186"
+                        }
+                    ]
+                }
+            ],
+            "attributes": [
+                {
+                    "name": "ecs.cpu-architecture",
+                    "value": "arm64"
+                }
+            ],
+            "availabilityZone": "us-east-1a",
+            "clusterArn": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+            "connectivity": "CONNECTED",
+            "connectivityAt": "2026-09-28T15:35:47.924000-04:00",
+            "containers": [
+                {
+                    "containerArn": "arn:aws:ecs:us-east-1:280517746513:container/capstan/baee95253a054a0aa968cda4addcf56d/f453727f-1d01-48c8-8051-589d52d81ca5",
+                    "taskArn": "arn:aws:ecs:us-east-1:280517746513:task/capstan/baee95253a054a0aa968cda4addcf56d",
+                    "name": "server",
+                    "image": "280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:b49c41363288e9585493c35def019053c06b03ea",
+                    "imageDigest": "sha256:e98374f1fc224350b3f6a63af146ea94533851420c246f5cfb973a7ad0aab7a2",
+                    "runtimeId": "baee95253a054a0aa968cda4addcf56d-1085029842",
+                    "lastStatus": "RUNNING",
+                    "networkBindings": [],
+                    "networkInterfaces": [
+                        {
+                            "attachmentId": "6d502a8b-5dee-4880-b116-54037532ecbf",
+                            "privateIpv4Address": "10.0.0.186"
+                        }
+                    ],
+                    "healthStatus": "UNKNOWN",
+                    "cpu": "0"
+                }
+            ],
+            "cpu": "256",
+            "createdAt": "2026-09-28T15:35:43.505000-04:00",
+            "desiredStatus": "RUNNING",
+            "enableExecuteCommand": false,
+            "group": "service:capstan-server",
+            "healthStatus": "UNKNOWN",
+            "lastStatus": "RUNNING",
+            "launchType": "FARGATE",
+            "memory": "512",
+            "overrides": {
+                "containerOverrides": [
+                    {
+                        "name": "server"
+                    }
+                ],
+                "inferenceAcceleratorOverrides": []
+            },
+            "platformVersion": "1.4.0",
+            "platformFamily": "Linux",
+            "pullStartedAt": "2026-09-28T15:35:53.974000-04:00",
+            "pullStoppedAt": "2026-09-28T15:35:55.633000-04:00",
+            "startedAt": "2026-09-28T15:36:21.059000-04:00",
+            "startedBy": "ecs-svc/7037194190361225921",
+            "tags": [],
+            "taskArn": "arn:aws:ecs:us-east-1:280517746513:task/capstan/baee95253a054a0aa968cda4addcf56d",
+            "taskDefinitionArn": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:2",
+            "version": 5,
+            "ephemeralStorage": {
+                "sizeInGiB": 20
+            }
+        }
+    ],
+    "failures": []
+}
