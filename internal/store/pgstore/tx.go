@@ -13,10 +13,11 @@ import (
 )
 
 type transaction struct {
-	ctx       context.Context
-	tx        pgx.Tx
-	notifyErr error
-	notifySeq uint64
+	ctx         context.Context
+	tx          pgx.Tx
+	notifyErr   error
+	notifySeq   uint64
+	claimedRuns map[string]struct{}
 }
 
 var _ store.Tx = (*transaction)(nil)
@@ -130,4 +131,9 @@ func readLimit(limit int) any {
 		return nil
 	}
 	return limit
+}
+
+// qualifiedColumns receives only package constants, just like the SQL builders.
+func qualifiedColumns(alias, columns string) string {
+	return alias + "." + strings.ReplaceAll(columns, ",", ","+alias+".")
 }

@@ -36,6 +36,6 @@ func (t *transaction) RunApprovals(runID string) ([]*store.Approval, error) {
 	return collect(rows, err, scanApproval)
 }
 func (t *transaction) DueApprovals(now time.Time, limit int) ([]*store.Approval, error) {
-	rows, err := t.tx.Query(t.ctx, "select "+approvalColumns+` from approval where status=1 and check_at<=$1 order by check_at,run_id,approval_id limit $2 for update skip locked`, nullTime(now), max(limit, 0))
+	rows, err := t.tx.Query(t.ctx, "select "+qualifiedColumns("a", approvalColumns)+` from approval a join run r on r.run_id=a.run_id where a.status=1 and a.check_at<=$1 order by a.check_at,a.run_id,a.approval_id limit $2 for update of r,a skip locked`, nullTime(now), max(limit, 0))
 	return collect(rows, err, scanApproval)
 }
