@@ -1,0 +1,62 @@
+[
+  {
+    "name": "CapstanService",
+    "createdAt": "2026-09-28T19:27:11.984000+00:00",
+    "command": "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stack-events --stack-name arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/9a8158b0-bb72-11f1-b977-0affd6b97895 --query StackEvents[?ResourceType=='AWS::CloudFormation::Stack' && ResourceStatus=='DELETE_COMPLETE'].{At:Timestamp,Status:ResourceStatus,Id:StackId}",
+    "events": [
+      {
+        "At": "2026-09-28T19:41:55.093000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/9a8158b0-bb72-11f1-b977-0affd6b97895"
+      }
+    ]
+  },
+  {
+    "name": "CapstanData",
+    "createdAt": "2026-09-28T18:25:14.390000+00:00",
+    "command": "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stack-events --stack-name arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/f2b53c80-bb69-11f1-a994-0e9ef0ee18b3 --query StackEvents[?ResourceType=='AWS::CloudFormation::Stack' && ResourceStatus=='DELETE_COMPLETE'].{At:Timestamp,Status:ResourceStatus,Id:StackId}",
+    "events": [
+      {
+        "At": "2026-09-28T19:43:58.036000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/f2b53c80-bb69-11f1-a994-0e9ef0ee18b3"
+      }
+    ]
+  },
+  {
+    "name": "CapstanGithubOidc",
+    "createdAt": "2026-09-28T18:24:21.271000+00:00",
+    "command": "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stack-events --stack-name arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/d2fca950-bb69-11f1-a580-0effc039fdc1 --query StackEvents[?ResourceType=='AWS::CloudFormation::Stack' && ResourceStatus=='DELETE_COMPLETE'].{At:Timestamp,Status:ResourceStatus,Id:StackId}",
+    "events": [
+      {
+        "At": "2026-09-28T19:45:52.059000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/d2fca950-bb69-11f1-a580-0effc039fdc1"
+      }
+    ]
+  },
+  {
+    "name": "CapstanBudget",
+    "createdAt": "2026-09-28T18:24:08.949000+00:00",
+    "command": "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stack-events --stack-name arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/cbb4f3f0-bb69-11f1-98b1-0affe13c0ec9 --query StackEvents[?ResourceType=='AWS::CloudFormation::Stack' && ResourceStatus=='DELETE_COMPLETE'].{At:Timestamp,Status:ResourceStatus,Id:StackId}",
+    "events": [
+      {
+        "At": "2026-09-28T19:44:56.210000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/cbb4f3f0-bb69-11f1-98b1-0affe13c0ec9"
+      }
+    ]
+  },
+  {
+    "name": "CapstanNetwork",
+    "createdAt": "2026-09-28T18:23:15.801000+00:00",
+    "command": "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stack-events --stack-name arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/ac0401e0-bb69-11f1-81bd-0edd9a39b38d --query StackEvents[?ResourceType=='AWS::CloudFormation::Stack' && ResourceStatus=='DELETE_COMPLETE'].{At:Timestamp,Status:ResourceStatus,Id:StackId}",
+    "events": [
+      {
+        "At": "2026-09-28T19:45:24.973000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/ac0401e0-bb69-11f1-81bd-0edd9a39b38d"
+      }
+    ]
+  }
+]

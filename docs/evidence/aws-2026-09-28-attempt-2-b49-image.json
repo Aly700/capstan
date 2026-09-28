@@ -1,0 +1,16 @@
+{
+    "imageDetails": [
+        {
+            "registryId": "280517746513",
+            "repositoryName": "capstan-server",
+            "imageDigest": "sha256:e98374f1fc224350b3f6a63af146ea94533851420c246f5cfb973a7ad0aab7a2",
+            "imageTags": [
+                "b49c41363288e9585493c35def019053c06b03ea"
+            ],
+            "imageSizeInBytes": 5447681,
+            "imagePushedAt": "2026-09-28T15:26:56.230000-04:00",
+            "imageManifestMediaType": "application/vnd.oci.image.index.v1+json",
+            "lastRecordedPullTime": "2026-09-28T15:28:40.566000-04:00"
+        }
+    ]
+}

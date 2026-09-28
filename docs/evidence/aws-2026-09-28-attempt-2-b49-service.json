@@ -1,0 +1,11 @@
+{
+  "Status": "CREATE_COMPLETE",
+  "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/9a8158b0-bb72-11f1-b977-0affd6b97895",
+  "Outputs": [
+    {
+      "OutputKey": "ApiUrl",
+      "OutputValue": "https://qsd4aga0cg.execute-api.us-east-1.amazonaws.com"
+    }
+  ],
+  "Created": "2026-09-28T19:27:11.984000+00:00"
+}

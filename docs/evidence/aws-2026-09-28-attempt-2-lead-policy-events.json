@@ -1,0 +1,38 @@
+[
+    {
+        "Time": "2026-09-28T19:10:15.372000+00:00",
+        "Resource": "CapstanGithubOidc",
+        "Status": "UPDATE_COMPLETE",
+        "Reason": null
+    },
+    {
+        "Time": "2026-09-28T19:10:14.350000+00:00",
+        "Resource": "CapstanGithubOidc",
+        "Status": "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
+        "Reason": null
+    },
+    {
+        "Time": "2026-09-28T19:10:12.771000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_COMPLETE",
+        "Reason": null
+    },
+    {
+        "Time": "2026-09-28T19:10:12.230000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+    },
+    {
+        "Time": "2026-09-28T19:09:56.189000+00:00",
+        "Resource": "CloudFormationExecutionDefaultPolicyF71969BB",
+        "Status": "UPDATE_IN_PROGRESS",
+        "Reason": null
+    },
+    {
+        "Time": "2026-09-28T19:09:52.739000+00:00",
+        "Resource": "CapstanGithubOidc",
+        "Status": "UPDATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+    }
+]

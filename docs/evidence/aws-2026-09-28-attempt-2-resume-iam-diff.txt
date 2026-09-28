@@ -1,0 +1,132 @@
+AI agent detected
+Stack CapstanGithubOidc (aws://280517746513/us-east-1)
+IAM Statement Changes
+┌───┬────────────────────────────────────────────────────────────────────────────────┬────────┬────────────────────────────────────────────┬────────────────────────────────┬──────────────────────────────────────┐
+│   │ Resource                                                                       │ Effect │ Action                                     │ Principal                      │ Condition                            │
+├───┼────────────────────────────────────────────────────────────────────────────────┼────────┼────────────────────────────────────────────┼────────────────────────────────┼──────────────────────────────────────┤
+│ + │ *                                                                              │ Allow  │ ec2:DescribeAvailabilityZones              │ AWS:${CloudFormationExecution} │ "StringEquals": {                    │
+│   │                                                                                │        │ ec2:DescribeInternetGateways               │                                │   "aws:RequestedRegion": "us-east-1" │
+│   │                                                                                │        │ ec2:DescribeNetworkInterfaces              │                                │ }                                    │
+│   │                                                                                │        │ ec2:DescribeRegions                        │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeRouteTables                    │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSecurityGroupRules             │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSecurityGroups                 │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSubnets                        │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeVpcAttribute                   │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeVpcs                           │                                │                                      │
+│   │                                                                                │        │ ecs:RegisterTaskDefinition                 │                                │                                      │
+│   │                                                                                │        │ servicediscovery:CreatePrivateDnsNamespace │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetOperation              │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListNamespaces            │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListServices              │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListTagsForResource       │                                │                                      │
+│   │                                                                                │        │ servicediscovery:TagResource               │                                │                                      │
+│   │                                                                                │        │ servicediscovery:UntagResource             │                                │                                      │
+│ - │ *                                                                              │ Allow  │ ec2:DescribeAvailabilityZones              │ AWS:${CloudFormationExecution} │ "StringEquals": {                    │
+│   │                                                                                │        │ ec2:DescribeInternetGateways               │                                │   "aws:RequestedRegion": "us-east-1" │
+│   │                                                                                │        │ ec2:DescribeNetworkInterfaces              │                                │ }                                    │
+│   │                                                                                │        │ ec2:DescribeRegions                        │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeRouteTables                    │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSecurityGroupRules             │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSecurityGroups                 │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeSubnets                        │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeVpcAttribute                   │                                │                                      │
+│   │                                                                                │        │ ec2:DescribeVpcs                           │                                │                                      │
+│   │                                                                                │        │ ecs:RegisterTaskDefinition                 │                                │                                      │
+│   │                                                                                │        │ servicediscovery:CreatePrivateDnsNamespace │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetOperation              │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListNamespaces            │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListServices              │                                │                                      │
+├───┼────────────────────────────────────────────────────────────────────────────────┼────────┼────────────────────────────────────────────┼────────────────────────────────┼──────────────────────────────────────┤
+│ + │ arn:${AWS::Partition}:apigateway:us-east-1::/apis*                             │ Allow  │ apigateway:TagResource                     │ AWS:${CloudFormationExecution} │                                      │
+│   │ arn:${AWS::Partition}:apigateway:us-east-1::/vpclinks*                         │        │ apigateway:UntagResource                   │                                │                                      │
+├───┼────────────────────────────────────────────────────────────────────────────────┼────────┼────────────────────────────────────────────┼────────────────────────────────┼──────────────────────────────────────┤
+│ + │ arn:${AWS::Partition}:servicediscovery:us-east-1:${AWS::AccountId}:namespace/* │ Allow  │ servicediscovery:CreateService             │ AWS:${CloudFormationExecution} │                                      │
+│   │ arn:${AWS::Partition}:servicediscovery:us-east-1:${AWS::AccountId}:service/*   │        │ servicediscovery:DeleteNamespace           │                                │                                      │
+│   │                                                                                │        │ servicediscovery:DeleteService             │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetNamespace              │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetService                │                                │                                      │
+│   │                                                                                │        │ servicediscovery:UpdateService             │                                │                                      │
+│ - │ arn:${AWS::Partition}:servicediscovery:us-east-1:${AWS::AccountId}:namespace/* │ Allow  │ servicediscovery:CreateService             │ AWS:${CloudFormationExecution} │                                      │
+│   │ arn:${AWS::Partition}:servicediscovery:us-east-1:${AWS::AccountId}:service/*   │        │ servicediscovery:DeleteNamespace           │                                │                                      │
+│   │                                                                                │        │ servicediscovery:DeleteService             │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetNamespace              │                                │                                      │
+│   │                                                                                │        │ servicediscovery:GetService                │                                │                                      │
+│   │                                                                                │        │ servicediscovery:ListTagsForResource       │                                │                                      │
+│   │                                                                                │        │ servicediscovery:TagResource               │                                │                                      │
+│   │                                                                                │        │ servicediscovery:UntagResource             │                                │                                      │
+│   │                                                                                │        │ servicediscovery:UpdateService             │                                │                                      │
+└───┴────────────────────────────────────────────────────────────────────────────────┴────────┴────────────────────────────────────────────┴────────────────────────────────┴──────────────────────────────────────┘
+(NOTE: There may be security-related changes not in this list. See https://github.com/aws/aws-cdk/issues/1299)
+
+Resources
+[~] AWS::IAM::Policy CloudFormationExecution/DefaultPolicy CloudFormationExecutionDefaultPolicyF71969BB
+ └─ [~] PolicyDocument
+     └─ [~] .Statement:
+         └─ @@ -15,7 +15,10 @@
+            [ ]   "servicediscovery:CreatePrivateDnsNamespace",
+            [ ]   "servicediscovery:GetOperation",
+            [ ]   "servicediscovery:ListNamespaces",
+            [-]   "servicediscovery:ListServices"
+            [+]   "servicediscovery:ListServices",
+            [+]   "servicediscovery:ListTagsForResource",
+            [+]   "servicediscovery:TagResource",
+            [+]   "servicediscovery:UntagResource"
+            [ ] ],
+            [ ] "Condition": {
+            [ ]   "StringEquals": {
+            @@ -201,9 +204,6 @@
+            [ ]   "servicediscovery:DeleteService",
+            [ ]   "servicediscovery:GetNamespace",
+            [ ]   "servicediscovery:GetService",
+            [-]   "servicediscovery:ListTagsForResource",
+            [-]   "servicediscovery:TagResource",
+            [-]   "servicediscovery:UntagResource",
+            [ ]   "servicediscovery:UpdateService"
+            [ ] ],
+            [ ] "Effect": "Allow",
+            @@ -292,6 +292,39 @@
+            [ ] },
+            [ ] {
+            [ ]   "Action": [
+            [+]     "apigateway:TagResource",
+            [+]     "apigateway:UntagResource"
+            [+]   ],
+            [+]   "Effect": "Allow",
+            [+]   "Resource": [
+            [+]     {
+            [+]       "Fn::Join": [
+            [+]         "",
+            [+]         [
+            [+]           "arn:",
+            [+]           {
+            [+]             "Ref": "AWS::Partition"
+            [+]           },
+            [+]           ":apigateway:us-east-1::/apis*"
+            [+]         ]
+            [+]       ]
+            [+]     },
+            [+]     {
+            [+]       "Fn::Join": [
+            [+]         "",
+            [+]         [
+            [+]           "arn:",
+            [+]           {
+            [+]             "Ref": "AWS::Partition"
+            [+]           },
+            [+]           ":apigateway:us-east-1::/vpclinks*"
+            [+]         ]
+            [+]       ]
+            [+]     }
+            [+]   ]
+            [+] },
+            [+] {
+            [+]   "Action": [
+            [ ]     "logs:CreateLogGroup",
+            [ ]     "logs:DeleteLogGroup",
+            [ ]     "logs:DeleteRetentionPolicy",
+
+
+
+✨  Number of stacks with differences: 1
+

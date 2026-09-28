@@ -1,0 +1,129 @@
+{"workerReady":true,"pid":50527}
+{"event":"codex-lane-attached","laneName":"cw-greet-142e8ab06f23b1e7ded60b9d687db377","attempt":1,"workerPid":50527,"state":"running"}
+{"event":"codex-lane-attached","laneName":"cw-count-eed5ac03bf778b870ab4284f61cc7011","attempt":1,"workerPid":50527,"state":"running"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":3}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unavailable] Service Unavailable"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unavailable] Service Unavailable"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unavailable] Service Unavailable"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":3}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unavailable] Service Unavailable"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":3}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":3}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":3}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task result could not be reported","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"activity heartbeat failed","runId":"workload-aws-1790624087007","seq":4}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task result could not be reported","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"workflow","error":"[unknown] Internal Server Error"}
+{"event":"codex-lane-attached","laneName":"cw-greet-142e8ab06f23b1e7ded60b9d687db377","attempt":2,"workerPid":50527,"state":"finished"}
+{"event":"codex-lane-attached","laneName":"cw-count-eed5ac03bf778b870ab4284f61cc7011","attempt":2,"workerPid":50527,"state":"finished"}
+{"level":"warn","message":"task result could not be reported","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"level":"warn","message":"task poll failed","kind":"activity","error":"[unknown] Internal Server Error"}
+{"event":"codex-lane-attached","laneName":"cw-greet-142e8ab06f23b1e7ded60b9d687db377","attempt":3,"workerPid":50527,"state":"finished"}

@@ -1,0 +1,16 @@
+[
+    {
+        "Name": "CapstanService",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/e22e5540-bb6e-11f1-8b36-0affd998c35f",
+        "Created": "2026-09-28T19:00:34.250000+00:00",
+        "Deleted": "2026-09-28T19:10:23.593000+00:00",
+        "Status": "DELETE_COMPLETE"
+    },
+    {
+        "Name": "CapstanService",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/1f8990c0-bb6b-11f1-b949-0affeea01ff5",
+        "Created": "2026-09-28T18:33:39.198000+00:00",
+        "Deleted": "2026-09-28T18:51:12.199000+00:00",
+        "Status": "DELETE_COMPLETE"
+    }
+]

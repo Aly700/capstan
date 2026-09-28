@@ -1,0 +1,23 @@
+[
+    {
+        "Time": "2026-09-28T19:07:50.137000+00:00",
+        "Resource": "CapstanService",
+        "Type": "AWS::CloudFormation::Stack",
+        "Status": "ROLLBACK_FAILED",
+        "Reason": "The following resource(s) failed to delete: [Task79114B6B]. "
+    },
+    {
+        "Time": "2026-09-28T19:07:05.282000+00:00",
+        "Resource": "Task79114B6B",
+        "Type": "AWS::ECS::TaskDefinition",
+        "Status": "DELETE_FAILED",
+        "Reason": "Resource handler returned message: \"Invalid request provided: Delete TaskDefinition: User: arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform: ecs:DeregisterTaskDefinition on resource: * because no identity-based policy allows the ecs:DeregisterTaskDefinition action (Service: AmazonECS; Status Code: 400; Error Code: AccessDeniedException; Request ID: 666f98ff-7baa-4a8f-b5ea-baac95536078; Proxy: null)\" (RequestToken: e7ce1f1c-e3f7-33c6-6016-0d7236b1cebf, HandlerErrorCode: InvalidRequest)"
+    },
+    {
+        "Time": "2026-09-28T19:05:52.209000+00:00",
+        "Resource": "ServiceD69D759B",
+        "Type": "AWS::ECS::Service",
+        "Status": "CREATE_FAILED",
+        "Reason": "Resource handler returned message: \"Error occurred during operation 'ECS Deployment Circuit Breaker was triggered'.\" (RequestToken: 90fbc71d-ee66-bb00-1e99-4797c3e015e6, HandlerErrorCode: GeneralServiceException)"
+    }
+]

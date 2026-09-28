@@ -1,0 +1,415 @@
+deploy	Push image, deploy, and smoke	﻿2026-09-28T18:59:23.4453847Z ##[group]Run bash .github/scripts/deploy.sh
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4454352Z [36;1mbash .github/scripts/deploy.sh[0m
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4502892Z shell: /usr/bin/bash -e {0}
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4503340Z env:
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4503691Z   AWS_REGION: us-east-1
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4504087Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4504531Z   COMMIT_SHA: b7202f748318e927b6daae3dab11d64ab420f879
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4505035Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4505397Z   GATE_URL: 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4505788Z   AWS_DEFAULT_REGION: us-east-1
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4506380Z   AWS_ACCESS_KEY_ID: ***
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4506846Z   AWS_SECRET_ACCESS_KEY: ***
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4511312Z   AWS_SESSION_TOKEN: ***
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:23.4512320Z ##[endgroup]
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7229321Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7230495Z Login Succeeded
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7231326Z WARNING! Your credentials are stored unencrypted in '/home/runner/.docker/config.json'.
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7233026Z Configure a credential helper to remove this warning. See
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7234149Z https://docs.docker.com/go/credential-store/
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.7234663Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9992918Z #0 building with "builder-ca8a5a60-1c6c-4f2b-8a02-0b55be220a71" instance using docker-container driver
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9994081Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9994638Z #1 [internal] load build definition from Dockerfile
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9995433Z #1 transferring dockerfile: 521B done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9996007Z #1 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9996301Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:26.9996912Z #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.2228140Z #2 ...
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.2228510Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.2228845Z #3 [auth] docker/dockerfile:pull token for registry-1.docker.io
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.2229563Z #3 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.3727704Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.3729028Z #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.7149018Z #2 DONE 0.9s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.8766757Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.8768774Z #4 docker-image://docker.io/docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.8771327Z #4 resolve docker.io/docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:27.8794350Z #4 sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 14.14MB / 14.14MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.1194952Z #4 sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 14.14MB / 14.14MB 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.1196426Z #4 extracting sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.1197268Z #4 DONE 0.4s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.2423652Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.2425344Z #5 [auth] library/golang:pull token for registry-1.docker.io
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.3934993Z #5 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.3935678Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.3936181Z #6 [internal] load metadata for docker.io/library/golang:1.26.4
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.8248519Z #6 DONE 0.7s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.8249311Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:28.8253491Z #7 [internal] load metadata for gcr.io/distroless/static-debian12:nonroot
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.0165988Z #7 DONE 0.8s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.1775622Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.1779493Z #8 [internal] load .dockerignore
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.1780131Z #8 transferring context: 176B done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.1780729Z #8 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4446372Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4447922Z #9 [internal] load build context
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4449360Z #9 transferring context: 1.27MB 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4451169Z #9 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4458221Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4459792Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4462323Z #10 resolve gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4463520Z #10 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4464380Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4465395Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.4467048Z #11 resolve docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.5751682Z #11 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.5754241Z #11 sha256:09e821fe2d4bc3fa8873bdb939114850c34148b272b4e0c917af9e6f47c23a6c 126B / 126B 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.6979028Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 0B / 67.28MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.6981004Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 0B / 102.27MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.6985174Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 1.05MB / 67.78MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.8062954Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 10.49MB / 67.28MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.8066387Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 34.60MB / 102.27MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.8068964Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 35.65MB / 67.78MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.8071243Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 0B / 25.63MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.9087768Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 35.65MB / 67.28MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.9093172Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 61.87MB / 102.27MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:29.9094687Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 8.39MB / 25.63MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.0351919Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 60.82MB / 67.28MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.0357239Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 55.57MB / 67.78MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.1411525Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 87.03MB / 102.27MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.1413245Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 67.78MB / 67.78MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.1414384Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 25.17MB / 25.63MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.2460795Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 67.28MB / 67.28MB 0.8s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:30.2463962Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 102.27MB / 102.27MB 0.8s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.7028640Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 67.28MB / 67.28MB 3.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.7030331Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 102.27MB / 102.27MB 3.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.7038252Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 67.78MB / 67.78MB 3.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.7041040Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 25.63MB / 25.63MB 3.0s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.8492582Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 29.36MB / 49.32MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:32.9992719Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 49.32MB / 49.32MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2658087Z #11 ...
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2658713Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2659729Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2665519Z #10 sha256:dcaa5a89b0ccda4b283e16d0b4d0891cd93d5fe05c6798f7806781a6a2d84354 314B / 314B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2668087Z #10 sha256:4db96f2c7ae9e90f3fd5e91cf947d19cced1d8a778d12923113f62c7fff3ec3e 143.35kB / 143.35kB 1.5s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2671491Z #10 sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a 351B / 351B 0.3s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2673984Z #10 sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112 80B / 80B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2675160Z #10 sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296 162B / 162B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2676627Z #10 sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4 123B / 123B 0.3s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2677867Z #10 sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212 188B / 188B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2679167Z #10 sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a 67B / 67B 2.5s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2680390Z #10 sha256:bf7a4185f01524837d19abde915ffde84e64368b250f5b5e9f6f75aea62a11d4 29.00kB / 29.00kB 2.6s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2681991Z #10 sha256:39dc083afc39bd8dc43d456fe7ff7d39292e593bb2769972c11bb2e5f9119386 445.71kB / 445.71kB 2.6s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2683464Z #10 sha256:990a9c434e5e0f11549a8d4a41a1991e621b04e30cd63269adbc97b1dc38fd7e 12.48kB / 12.48kB 0.7s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2684923Z #10 sha256:f7c03e5221c3717bfa68250498f74132c03d9d7271f301c9b2a9cfc00fc6e231 83.90kB / 83.90kB 0.7s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2686817Z #10 extracting sha256:f7c03e5221c3717bfa68250498f74132c03d9d7271f301c9b2a9cfc00fc6e231 0.0s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2687766Z #10 DONE 3.9s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2688066Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2689355Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2690884Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 49.32MB / 49.32MB 0.7s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.2692914Z #11 extracting sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4168403Z #11 ...
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4168914Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4171899Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4173727Z #10 extracting sha256:990a9c434e5e0f11549a8d4a41a1991e621b04e30cd63269adbc97b1dc38fd7e done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4174819Z #10 extracting sha256:39dc083afc39bd8dc43d456fe7ff7d39292e593bb2769972c11bb2e5f9119386 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.4175543Z #10 DONE 4.1s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6294466Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6295883Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6301101Z #10 extracting sha256:bf7a4185f01524837d19abde915ffde84e64368b250f5b5e9f6f75aea62a11d4 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6302776Z #10 extracting sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6304033Z #10 extracting sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6305248Z #10 extracting sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6306601Z #10 extracting sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6307770Z #10 extracting sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6308978Z #10 extracting sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6309788Z #10 extracting sha256:dcaa5a89b0ccda4b283e16d0b4d0891cd93d5fe05c6798f7806781a6a2d84354 done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6310638Z #10 extracting sha256:4db96f2c7ae9e90f3fd5e91cf947d19cced1d8a778d12923113f62c7fff3ec3e 0.0s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6311323Z #10 DONE 4.1s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6314053Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:33.6317557Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.2061953Z #11 extracting sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 1.0s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.2063756Z #11 DONE 4.9s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.3583304Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.3585760Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.3588171Z #11 extracting sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.6460928Z #11 extracting sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 0.4s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:34.6463184Z #11 extracting sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:35.9453460Z #11 extracting sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 1.3s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:35.9457283Z #11 DONE 6.6s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:36.0958543Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:36.0961019Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:36.0966082Z #11 extracting sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:37.6231137Z #11 extracting sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 1.7s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:37.6232502Z #11 DONE 8.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:37.7735432Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:37.7736740Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:37.7737803Z #11 extracting sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.5152768Z #11 extracting sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 2.9s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.5154466Z #11 DONE 11.2s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.7467534Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.7469124Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.7470839Z #11 extracting sha256:09e821fe2d4bc3fa8873bdb939114850c34148b272b4e0c917af9e6f47c23a6c 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:40.7472068Z #11 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:41.1648866Z #11 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0.6s done
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:41.1649845Z #11 DONE 11.8s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:41.3484843Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:41.3485895Z #12 [build 2/8] WORKDIR /src
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.5033393Z #12 DONE 7.3s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.6714342Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.6715301Z #13 [build 3/8] COPY go.mod go.sum ./
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.6715803Z #13 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.6715967Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:48.6716165Z #14 [build 4/8] RUN go mod download
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.3718405Z #14 DONE 1.9s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6002049Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6023057Z #15 [build 5/8] COPY cmd/ cmd/
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6024239Z #15 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6024702Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6025162Z #16 [build 6/8] COPY internal/ internal/
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6025983Z #16 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6026418Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6026780Z #17 [build 7/8] COPY gen/ gen/
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6027403Z #17 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6027743Z 
+deploy	Push image, deploy, and smoke	2026-09-28T18:59:50.6028567Z #18 [build 8/8] RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o /out/capstan-server ./cmd/capstan-server
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.4142381Z #18 DONE 33.0s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.5549350Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.5551727Z #19 [stage-1 2/2] COPY --from=build /out/capstan-server /capstan-server
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.5552908Z #19 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.7068931Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.7070734Z #20 exporting to image
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:23.7071817Z #20 exporting layers
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.0263297Z #20 exporting layers 0.5s done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.1973521Z #20 exporting manifest sha256:bea025e602eaa96eee2621c3b1cf453d85973989b2fee51214d1123224ee65ef done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.1974815Z #20 exporting config sha256:d29bcc2e717f9acb69b00ab6012cb512e986532eb7fc216db569e94c728b3820 done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.1975900Z #20 exporting attestation manifest sha256:76b98d74d4a96fbeb140bd864684ee6a59a4149f2dfa6eecce43488a2f0ecfb9 done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.1977105Z #20 exporting manifest list sha256:31e20b175b251eac66dbf51b7572599346eebc4cd28a83f9f5951178e572e9ca done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.1978293Z #20 pushing layers
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.3791660Z #20 ...
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.3791974Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.3792376Z #21 [auth] sharing credentials for 280517746513.dkr.ecr.us-east-1.amazonaws.com
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.3793236Z #21 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.5293626Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:24.5294546Z #20 exporting to image
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:25.2533517Z #20 pushing layers 1.2s done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:25.2535520Z #20 pushing manifest for 280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:b7202f748318e927b6daae3dab11d64ab420f879@sha256:31e20b175b251eac66dbf51b7572599346eebc4cd28a83f9f5951178e572e9ca
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:26.2753056Z #20 pushing manifest for 280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:b7202f748318e927b6daae3dab11d64ab420f879@sha256:31e20b175b251eac66dbf51b7572599346eebc4cd28a83f9f5951178e572e9ca 1.0s done
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:26.2759138Z #20 DONE 2.7s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:29.4235501Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:29.4240353Z ✨  Synthesis time: 2.07s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:29.4241548Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:29.4254080Z CapstanData
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:30.6693645Z CapstanData: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6219415Z CapstanData: deploying... [1/3]
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6220197Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6221020Z ✅  CapstanData (no changes)
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6221894Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6222731Z ✨  Deployment time: 0s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6223121Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6223446Z Outputs:
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6224840Z CapstanData.ExportsOutputRefApiKeyHashes98F8A7191A08F3C4 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-KBYPq0
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6227438Z CapstanData.ExportsOutputRefDatabaseUrl8D88187D37D128A7 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-HRGBN1
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6229186Z CapstanData.ExportsOutputRefGateKeyAE58746A296A7CD0 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/gate-api-key-T0iEYc
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6230416Z Stack ARN:
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6231629Z arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/f2b53c80-bb69-11f1-a994-0e9ef0ee18b3
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:31.6232711Z CapstanBudget
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:32.4144726Z CapstanBudget: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4292001Z CapstanBudget: deploying... [2/3]
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4292718Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4293568Z ✅  CapstanBudget (no changes)
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4293850Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4294197Z ✨  Deployment time: 0s
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4294553Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4294752Z Stack ARN:
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4295563Z arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/cbb4f3f0-bb69-11f1-98b1-0affe13c0ec9
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.4312744Z CapstanService
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:33.8250176Z CapstanService: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:39.8491274Z CapstanService: deploying... [3/3]
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:42.9733677Z CapstanService |  0/29 | 7:00:34 PM | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack                 | CapstanService User Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:42.9736199Z CapstanService |  0/29 | 7:00:40 PM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack                 | CapstanService User Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2441582Z CapstanService |  0/29 | 7:00:42 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2444374Z CapstanService |  0/29 | 7:00:42 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2446109Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2448894Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2450582Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2453199Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2454969Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2461321Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2463521Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2465218Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2472510Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2474378Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2476063Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2477770Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2479401Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2481220Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2483258Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2496180Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2498010Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2517831Z CapstanService |  0/29 | 7:00:43 PM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2523331Z CapstanService |  0/29 | 7:00:44 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2525134Z CapstanService |  0/29 | 7:00:44 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2526512Z CapstanService |  0/29 | 7:00:44 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2528226Z CapstanService |  0/29 | 7:00:44 PM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2529585Z CapstanService |  1/29 | 7:00:44 PM | CREATE_COMPLETE         | AWS::SNS::Topic                            | Alerts (Alerts91F83244) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2530800Z CapstanService |  1/29 | 7:00:44 PM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2532190Z CapstanService |  2/29 | 7:00:44 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Api                     | HttpApi 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2533450Z CapstanService |  2/29 | 7:00:45 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2538581Z CapstanService |  2/29 | 7:00:45 PM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:45.2539969Z CapstanService |  2/29 | 7:00:45 PM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5881228Z CapstanService |  2/29 | 7:00:45 PM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5883845Z CapstanService |  3/29 | 7:00:45 PM | CREATE_COMPLETE         | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5887755Z CapstanService |  3/29 | 7:00:46 PM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5889524Z CapstanService |  4/29 | 7:00:47 PM | CREATE_COMPLETE         | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5890950Z CapstanService |  4/29 | 7:00:47 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:47.5892726Z CapstanService |  4/29 | 7:00:47 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9134160Z CapstanService |  5/29 | 7:00:47 PM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9136252Z CapstanService |  6/29 | 7:00:47 PM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9138406Z CapstanService |  6/29 | 7:00:48 PM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9140347Z CapstanService |  6/29 | 7:00:48 PM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9142399Z CapstanService |  7/29 | 7:00:48 PM | CREATE_COMPLETE         | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9143846Z CapstanService |  8/29 | 7:00:48 PM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:49.9145263Z CapstanService |  8/29 | 7:00:49 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage 
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:52.2094467Z CapstanService |  8/29 | 7:00:50 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:52.2096609Z CapstanService |  8/29 | 7:00:50 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:00:52.2098479Z CapstanService |  9/29 | 7:00:51 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Stage                   | Stage 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:03.7204468Z CapstanService |  9/29 | 7:01:02 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:03.7213308Z CapstanService |  9/29 | 7:01:02 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:03.7216825Z CapstanService | 10/29 | 7:01:03 PM | CREATE_COMPLETE         | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:03.7218208Z CapstanService | 11/29 | 7:01:03 PM | CREATE_COMPLETE         | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:06.0236585Z CapstanService | 11/29 | 7:01:03 PM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:06.0238955Z CapstanService | 11/29 | 7:01:04 PM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:06.0241178Z CapstanService | 12/29 | 7:01:04 PM | CREATE_COMPLETE         | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:06.0243345Z CapstanService | 12/29 | 7:01:04 PM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:06.0244731Z CapstanService | 12/29 | 7:01:05 PM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:08.3473497Z CapstanService | 12/29 | 7:01:06 PM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:08.3474856Z CapstanService | 12/29 | 7:01:06 PM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:08.3477827Z CapstanService | 13/29 | 7:01:07 PM | CREATE_COMPLETE         | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:22.2381205Z CapstanService | 13/29 | 7:01:20 PM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:22.2383900Z CapstanService | 14/29 | 7:01:21 PM | CREATE_COMPLETE         | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:26.8874245Z CapstanService | 14/29 | 7:01:26 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:29.2078552Z CapstanService | 15/29 | 7:01:26 PM | CREATE_COMPLETE         | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:29.2080736Z CapstanService | 15/29 | 7:01:27 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:29.2083459Z CapstanService | 15/29 | 7:01:28 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:29.2085669Z CapstanService | 15/29 | 7:01:28 PM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:29.2087575Z CapstanService | 16/29 | 7:01:28 PM | CREATE_COMPLETE         | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:31.5187595Z CapstanService | 16/29 | 7:01:29 PM | CREATE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:01:31.5189782Z CapstanService | 16/29 | 7:01:31 PM | CREATE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:45.7240254Z CapstanService | 16/29 | 7:02:43 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:45.7242260Z CapstanService | 17/29 | 7:02:45 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::VpcLink                 | VpcLink 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:48.0911522Z CapstanService | 17/29 | 7:02:45 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:48.0914152Z CapstanService | 17/29 | 7:02:46 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:48.0916350Z CapstanService | 17/29 | 7:02:46 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:48.0917949Z CapstanService | 18/29 | 7:02:47 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Integration             | CloudMapIntegration 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4663123Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4664471Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4665559Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4666862Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4668195Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4669698Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4671006Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4677480Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4679654Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4681720Z CapstanService | 18/29 | 7:02:48 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4683617Z CapstanService | 18/29 | 7:02:49 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4685373Z CapstanService | 18/29 | 7:02:49 PM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4687087Z CapstanService | 19/29 | 7:02:49 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Client 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4688412Z CapstanService | 20/29 | 7:02:49 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Ready 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4689783Z CapstanService | 21/29 | 7:02:49 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Health 
+deploy	Push image, deploy, and smoke	2026-09-28T19:02:50.4691125Z CapstanService | 22/29 | 7:02:49 PM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Worker 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:53.2259884Z CapstanService | 22/29 | 7:05:52 PM | CREATE_FAILED           | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Resource handler returned message: "Error occurred during operation 'ECS Deployment Circuit Breaker was triggered'." (RequestToken: 90fbc71d-ee66-bb00-1e99-4797c3e015e6, HandlerErrorCode: GeneralServiceException)
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:53.2263481Z CapstanService | 22/29 | 7:05:52 PM | ROLLBACK_IN_PROGRESS    | AWS::CloudFormation::Stack                 | CapstanService The following resource(s) failed to create: [ServiceD69D759B]. Rollback requested by user.
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6270458Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6272763Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6289014Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6290789Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6292928Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6294376Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6295955Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6297772Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6299515Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6300836Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6302437Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6304065Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6306135Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6308198Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6310511Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6312617Z CapstanService | 22/29 | 7:05:54 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6314326Z CapstanService | 22/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6315759Z CapstanService | 22/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6317757Z CapstanService | 22/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Cannot delete a subscription which is pending confirmation. Detaching subscription from stack.
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6320466Z CapstanService | 22/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Cannot delete a subscription which is pending confirmation. Detaching subscription from stack.
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6322916Z CapstanService | 21/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6330972Z CapstanService | 20/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6332634Z CapstanService | 20/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6333931Z CapstanService | 19/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6334994Z CapstanService | 19/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6335882Z CapstanService | 19/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6336804Z CapstanService | 18/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:55.6337688Z CapstanService | 17/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Stage                   | Stage 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:57.9996469Z CapstanService | 16/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Health 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:57.9998374Z CapstanService | 15/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Ready 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0011315Z CapstanService | 15/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0012924Z CapstanService | 14/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Worker 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0014193Z CapstanService | 13/29 | 7:05:55 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Client 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0015673Z CapstanService | 13/29 | 7:05:55 PM | DELETE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0017212Z CapstanService | 13/29 | 7:05:56 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0018745Z CapstanService | 12/29 | 7:05:56 PM | DELETE_COMPLETE         | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0020334Z CapstanService | 12/29 | 7:05:56 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:05:58.0021948Z CapstanService | 11/29 | 7:05:57 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Integration             | CloudMapIntegration 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:00.3866736Z CapstanService | 11/29 | 7:05:57 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:00.3868462Z CapstanService | 11/29 | 7:05:57 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:00.3872733Z CapstanService | 11/29 | 7:05:59 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:00.3876803Z CapstanService | 10/29 | 7:05:59 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::Api                     | HttpApi 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:05.1303635Z CapstanService | 10/29 | 7:06:04 PM | DELETE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:07.5180531Z CapstanService | 10/29 | 7:06:05 PM | DELETE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:07.5186349Z CapstanService |  9/29 | 7:06:05 PM | DELETE_COMPLETE         | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:07.5187455Z CapstanService |  8/29 | 7:06:05 PM | DELETE_COMPLETE         | AWS::ApiGatewayV2::VpcLink                 | VpcLink 
+deploy	Push image, deploy, and smoke	2026-09-28T19:06:43.8956029Z CapstanService |  7/29 | 7:06:41 PM | DELETE_COMPLETE         | AWS::SNS::Topic                            | Alerts (Alerts91F83244) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:05.3532603Z CapstanService |  7/29 | 7:07:03 PM | DELETE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:05.3535537Z CapstanService |  8/29 | 7:07:04 PM | DELETE_COMPLETE         | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:05.3537218Z CapstanService |  8/29 | 7:07:04 PM | DELETE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:05.3538705Z CapstanService |  8/29 | 7:07:04 PM | DELETE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:05.3540076Z CapstanService |  8/29 | 7:07:04 PM | DELETE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:07.7281151Z CapstanService |  8/29 | 7:07:05 PM | DELETE_FAILED           | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Resource handler returned message: "Invalid request provided: Delete TaskDefinition: User: arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform: ecs:DeregisterTaskDefinition on resource: * because no identity-based policy allows the ecs:DeregisterTaskDefinition action (Service: AmazonECS; Status Code: 400; Error Code: AccessDeniedException; Request ID: 666f98ff-7baa-4a8f-b5ea-baac95536078; Proxy: null)" (RequestToken: e7ce1f1c-e3f7-33c6-6016-0d7236b1cebf, HandlerErrorCode: InvalidRequest)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:07.7285818Z CapstanService |  8/29 | 7:07:05 PM | DELETE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:07.7287921Z CapstanService |  7/29 | 7:07:05 PM | DELETE_COMPLETE         | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:07.7289317Z CapstanService |  7/29 | 7:07:06 PM | DELETE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:17.2026936Z CapstanService |  7/29 | 7:07:15 PM | DELETE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:17.2028882Z CapstanService |  6/29 | 7:07:15 PM | DELETE_COMPLETE         | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:50.3474667Z CapstanService |  6/29 | 7:07:49 PM | DELETE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:50.3476615Z CapstanService |  5/29 | 7:07:49 PM | DELETE_COMPLETE         | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:52.7026604Z CapstanService |  5/29 | 7:07:50 PM | ROLLBACK_FAILED         | AWS::CloudFormation::Stack                 | CapstanService The following resource(s) failed to delete: [Task79114B6B]. 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7119526Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7120589Z Failed resources:
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7124178Z CapstanService | 7:05:52 PM | CREATE_FAILED           | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Resource handler returned message: "Error occurred during operation 'ECS Deployment Circuit Breaker was triggered'." (RequestToken: 90fbc71d-ee66-bb00-1e99-4797c3e015e6, HandlerErrorCode: GeneralServiceException)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7129940Z CapstanService | 7:07:05 PM | DELETE_FAILED           | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Resource handler returned message: "Invalid request provided: Delete TaskDefinition: User: arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform: ecs:DeregisterTaskDefinition on resource: * because no identity-based policy allows the ecs:DeregisterTaskDefinition action (Service: AmazonECS; Status Code: 400; Error Code: AccessDeniedException; Request ID: 666f98ff-7baa-4a8f-b5ea-baac95536078; Proxy: null)" (RequestToken: e7ce1f1c-e3f7-33c6-6016-0d7236b1cebf, HandlerErrorCode: InvalidRequest)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7286876Z ❌  CapstanService failed to deploy
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7287965Z ‣ DeploymentError: Resource updates failed:
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7289017Z CapstanService/Service/Service  (AWS::ECS::Service ServiceD69D759B)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7290563Z   Resource handler returned message: "Error occurred during operation 'ECS Deployment Circuit Breaker was triggered'."
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7292184Z   (RequestToken: 90fbc71d-ee66-bb00-1e99-4797c3e015e6, HandlerErrorCode: GeneralServiceException)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7294350Z Source Location: ...new FargateService2 in aws-cdk-lib...
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7295185Z                  new CapstanService (file:///home/runner/work/capstan/capstan/infra/lib/service.ts:54:21)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7296215Z                  createStacks (file:///home/runner/work/capstan/capstan/infra/lib/app.ts:31:19)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7297084Z                  file:///home/runner/work/capstan/capstan/infra/bin/capstan.ts:4 (:)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7297927Z                  ...node internals...
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7298324Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7298941Z    The service and its tasks were removed during rollback, so container-level failure detail is unavailable.
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7300149Z    Re-run the deployment with `--no-rollback` to retain the failed tasks and see why they stopped.
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7300794Z 
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7301252Z CapstanService/Task/Resource  (AWS::ECS::TaskDefinition Task79114B6B)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7302410Z   Resource handler returned message: "Invalid request provided: Delete TaskDefinition: User:
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7303619Z   arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation is not authorized to perform:
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7304960Z   ecs:DeregisterTaskDefinition on resource: * because no identity-based policy allows the ecs:DeregisterTaskDefinition
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7306266Z   action (Service: AmazonECS; Status Code: 400; Error Code: AccessDeniedException; Request ID:
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7307461Z   666f98ff-7baa-4a8f-b5ea-baac95536078; Proxy: null)" (RequestToken: e7ce1f1c-e3f7-33c6-6016-0d7236b1cebf,
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7308365Z   HandlerErrorCode: InvalidRequest)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7309074Z Source Location: ...new FargateTaskDefinition2 in aws-cdk-lib...
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7310139Z                  new CapstanService (file:///home/runner/work/capstan/capstan/infra/lib/service.ts:31:18)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7311042Z                  createStacks (file:///home/runner/work/capstan/capstan/infra/lib/app.ts:31:19)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7312213Z                  file:///home/runner/work/capstan/capstan/infra/bin/capstan.ts:4 (:)
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.7312948Z                  ...node internals...
+deploy	Push image, deploy, and smoke	2026-09-28T19:07:53.8634759Z ##[error]Process completed with exit code 1.

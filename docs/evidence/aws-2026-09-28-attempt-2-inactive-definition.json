@@ -1,0 +1,12 @@
+{
+    "arn": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:1",
+    "status": "INACTIVE",
+    "registeredAt": "2026-09-28T15:01:06.182000-04:00",
+    "deregisteredAt": "2026-09-28T15:10:26.422000-04:00",
+    "tags": [
+        {
+            "key": "Project",
+            "value": "capstan"
+        }
+    ]
+}

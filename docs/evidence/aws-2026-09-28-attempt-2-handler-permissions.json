@@ -1,0 +1,107 @@
+{
+  "capturedAt": "2026-09-28T18:39:31.999042+00:00",
+  "account": "280517746513",
+  "profile": "agentops",
+  "region": "us-east-1",
+  "source": "CloudFormation DescribeType Schema",
+  "resources": {
+    "AWS::ApiGatewayV2::VpcLink": {
+      "handlers": {
+        "create": {
+          "permissions": [
+            "apigateway:POST",
+            "apigateway:GET",
+            "apigateway:TagResource",
+            "iam:CreateServiceLinkedRole",
+            "iam:DeleteServiceLinkedRole",
+            "iam:GetServiceLinkedRoleDeletionStatus"
+          ]
+        },
+        "update": {
+          "permissions": [
+            "apigateway:PATCH",
+            "apigateway:POST",
+            "apigateway:GET",
+            "apigateway:DELETE",
+            "apigateway:TagResource",
+            "apigateway:unTagResource",
+            "iam:CreateServiceLinkedRole",
+            "iam:DeleteServiceLinkedRole",
+            "iam:GetServiceLinkedRoleDeletionStatus"
+          ]
+        },
+        "read": {
+          "permissions": [
+            "apigateway:GET",
+            "iam:CreateServiceLinkedRole",
+            "iam:DeleteServiceLinkedRole",
+            "iam:GetServiceLinkedRoleDeletionStatus"
+          ]
+        },
+        "delete": {
+          "permissions": [
+            "apigateway:GET",
+            "apigateway:DELETE",
+            "iam:CreateServiceLinkedRole",
+            "iam:DeleteServiceLinkedRole",
+            "iam:GetServiceLinkedRoleDeletionStatus"
+          ]
+        },
+        "list": {
+          "permissions": [
+            "apigateway:GET",
+            "iam:CreateServiceLinkedRole",
+            "iam:DeleteServiceLinkedRole",
+            "iam:GetServiceLinkedRoleDeletionStatus"
+          ]
+        }
+      }
+    },
+    "AWS::ServiceDiscovery::PrivateDnsNamespace": {
+      "handlers": {
+        "create": {
+          "permissions": [
+            "servicediscovery:CreatePrivateDnsNamespace",
+            "servicediscovery:TagResource",
+            "servicediscovery:GetOperation",
+            "servicediscovery:GetNamespace",
+            "servicediscovery:ListTagsForResource",
+            "route53:CreateHostedZone",
+            "route53:GetHostedZone",
+            "route53:ListHostedZonesByName",
+            "ec2:DescribeVpcs",
+            "ec2:DescribeRegions"
+          ]
+        },
+        "read": {
+          "permissions": [
+            "servicediscovery:GetNamespace",
+            "servicediscovery:ListTagsForResource"
+          ]
+        },
+        "update": {
+          "permissions": [
+            "servicediscovery:UpdatePrivateDnsNamespace",
+            "servicediscovery:UntagResource",
+            "servicediscovery:TagResource",
+            "servicediscovery:GetOperation",
+            "servicediscovery:GetNamespace",
+            "servicediscovery:ListTagsForResource",
+            "route53:ChangeResourceRecordSets"
+          ]
+        },
+        "delete": {
+          "permissions": [
+            "servicediscovery:DeleteNamespace",
+            "servicediscovery:GetOperation"
+          ]
+        },
+        "list": {
+          "permissions": [
+            "servicediscovery:ListNamespaces"
+          ]
+        }
+      }
+    }
+  }
+}

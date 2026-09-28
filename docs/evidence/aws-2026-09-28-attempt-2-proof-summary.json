@@ -1,0 +1,22 @@
+{
+  "runId": "workload-aws-1790624087007",
+  "deployedSha": "b49c41363288e9585493c35def019053c06b03ea",
+  "source": "c806b1cb9bfcaff148501aada5aebcfa67c15393",
+  "startedAt": "2026-09-28T19:34:47.007Z",
+  "killedAt": "2026-09-28T19:34:53.465Z",
+  "replacementAt": "2026-09-28T19:36:27.797Z",
+  "reachableAt": "2026-09-28T19:36:28.174Z",
+  "completedAt": "2026-09-28T19:36:42.414Z",
+  "cleanedAt": "2026-09-28T19:36:42.854Z",
+  "workerPid": 50527,
+  "taskBefore": "arn:aws:ecs:us-east-1:280517746513:task/capstan/e336e3c6ed924eb68de521757d1e2c41",
+  "taskAfter": "arn:aws:ecs:us-east-1:280517746513:task/capstan/baee95253a054a0aa968cda4addcf56d",
+  "prefixEvents": 16,
+  "finalEvents": 36,
+  "prefixBytes": 11483,
+  "prefixSha256": "4f256763d9690e9acd21ce28bdc54f9a1d24a71800a718ddc8e5ffeaed69a902",
+  "prefixEncoding": "UTF-8 compact JSON with original property order",
+  "prefixMatches": true,
+  "selectedLane": "greet",
+  "activityCompletions": 5
+}
