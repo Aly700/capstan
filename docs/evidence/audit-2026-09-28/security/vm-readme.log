@@ -1,0 +1,2 @@
+14:Workflow code runs in `node:vm` to support replay-safety. Workflows must use the SDK for
+16:`node:vm` is **not an isolation boundary for untrusted code**. Workers run trusted code only.

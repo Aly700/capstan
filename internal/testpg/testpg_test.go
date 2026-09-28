@@ -25,7 +25,7 @@ func TestNewCreatesMigratedDatabase(t *testing.T) {
 	if n != 1 {
 		t.Fatalf("migrations applied = %d, want 1", n)
 	}
-	if !regexp.MustCompile(`^capstan_t_[0-9a-f]{16}$`).MatchString(conn.Config().Database) {
+	if !regexp.MustCompile(`^capstan_audit_[0-9a-f]{16}$`).MatchString(conn.Config().Database) {
 		t.Fatalf("database name = %q", conn.Config().Database)
 	}
 }

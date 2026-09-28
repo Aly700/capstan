@@ -1,0 +1,19 @@
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/false
+    audit_privacy_test.go:38: credential "[SYNTHETIC_DATABASE_URL_CANARY]" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-db-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-gate-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-api-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-provider-canary" leaked in error/log
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/true
+    audit_privacy_test.go:38: credential "[SYNTHETIC_DATABASE_URL_CANARY]" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-db-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-gate-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-api-canary" leaked in error/log
+    audit_privacy_test.go:38: credential "audit-provider-canary" leaked in error/log
+--- FAIL: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs (0.00s)
+    --- FAIL: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/false (0.00s)
+    --- FAIL: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/true (0.00s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/server	0.243s
+FAIL

@@ -1,0 +1,62 @@
+
+> @capstan/sdk@0.1.0 test
+> vitest run test/audit-gate.test.ts test/agent-replay.test.ts test/agent-worker.test.ts
+
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > dispatches the recorded name and exact argument bytes after approved=false 5ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > dispatches the recorded name and exact argument bytes after approved=true 2ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks changedToolName before any dispatch after approved=false 2ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks changedToolName before any dispatch after approved=true 1ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks changedToolArgs before any dispatch after approved=false 1ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks changedToolArgs before any dispatch after approved=true 1ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks caughtChangedToolArgs before any dispatch after approved=false 1ms
+ ✓ test/audit-gate.test.ts > audit D29 exact Gate proposal binding > blocks caughtChangedToolArgs before any dispatch after approved=true 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > model emits one activity and replays its recorded result 13ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > tool schedules Gate first, with no worker configuration in the payload 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > ALLOW schedules exactly the registered activity at the next seq 5ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > DENY completes without scheduling the tool 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > REQUIRE_APPROVAL allocates one GATE approval and yields no work while waiting 6ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > approved Gate history resumes at the tool and preserves the resolver 5ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps DENIED without scheduling a tool 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps EXPIRED without scheduling a tool 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps APPROVED, including choice and note 6ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps DENIED, including choice and note 6ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps EXPIRED, including choice and note 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > allocates mixed parallel calls synchronously in call order 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > defaults risk to MEDIUM and tool timeout to five minutes 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > fails closed on an invalid recorded Gate effect 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the ALLOW proposal unchanged if the caller mutates its arguments 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the REQUIRE_APPROVAL proposal unchanged if the caller mutates its arguments 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > blocks changed arguments after a recorded ALLOW decision 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > blocks changed arguments after a recorded REQUIRE_APPROVAL decision 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > replays pre-D29 ALLOW decisions using their recorded proposal 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > replays pre-D29 REQUIRE_APPROVAL decisions using their recorded proposal 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > does not apply the ALLOW decision to a renamed tool 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > does not apply the REQUIRE_APPROVAL decision to a renamed tool 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > compares ALLOW arguments canonically and emits the decided bytes 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > compares REQUIRE_APPROVAL arguments canonically and emits the decided bytes 5ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > posts the Gate API body and key, maps id, and drops echoed request data 71ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > a 5xx retry reuses the key and body across distinct activity attempts 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > retries a disconnected success response using the same Gate idempotency key 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > 409 is a non-retryable failure and never copies the response body 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > returns Gate approval identity 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > reports changed ALLOW arguments as HISTORY_MISMATCH without scheduling the tool 54ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > reports changed REQUIRE_APPROVAL arguments as HISTORY_MISMATCH without scheduling the tool 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"00000000-0000-4000-8000-000000000001","effect":"REQUIRE_APPROVAL","approvalId":null} 54ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"gate-secret-must-never-appear-in-history","effect":"ALLOW"} 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"00000000-0000-4000-8000-000000000001","effect":"UNKNOWN"} 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > does not forward a Gate key through a redirect 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > fails closed if Gate options are absent 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > registers capstan.model and fails closed at the real RPC boundary 54ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > never records a Gate key even when it is a UUID echoed as a decision id 54ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > the real Anthropic SDK uses only the environment key and never logs bodies in debug mode 55ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > worker shutdown waits for model ledger cleanup with its own RPC deadline 118ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > a local model timeout finishes before the worker reports the activity failure 155ms
+
+ Test Files  3 passed (3)
+      Tests  49 passed (49)
+   Start at  13:46:23
+   Duration  1.30s (tests 81%, transform 10%, import 9%)
+

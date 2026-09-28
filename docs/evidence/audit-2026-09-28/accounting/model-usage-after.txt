@@ -1,0 +1,46 @@
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > reserves before one provider call and returns server-priced usage 2ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses real model ids and counts UTF-8 input conservatively as well as all output 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses configured default model and honours an explicit upper-bound estimate 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > reads worker price overrides for the estimate and chooses the longest family prefix 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > fails closed for an unknown model without an explicit estimate 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > accepts an explicit estimate for an unknown model 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses the installed SDK structured-output field and validates nested JSON 4ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: not json: secret-output 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: {"count":"secret-output"} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: {"count":2,"extra":true} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > enforces original numeric bounds after simplifying the provider schema 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > does not let JSON Schema defaults fabricate required output 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > defaults are annotations, so absent optional fields remain absent 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > retains properties named default and validates defaults behind local refs 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects unsupported draft-7 definitions before reserving instead of sending dangling refs 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > cap exceeded fails closed without calling or finishing a model 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > provider errors always finish and contain only fixed public error text 2ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a billed timeout records any reported usage even after the activity signal aborts 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a timeout with no usage still finishes with a distinguishable fixed code 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > malformed timeout usage stays charged at the reservation: {} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > malformed timeout usage stays charged at the reservation: {"input_tokens":20} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > malformed timeout usage stays charged at the reservation: {"input_tokens":-1,"output_tokens":9} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > malformed timeout usage stays charged at the reservation: {"input_tokens":null,"output_tokens":9} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > malformed timeout usage stays charged at the reservation: {"input_tokens":20,"output_tokens":9,"cache_read_input_tokens":"invalid"} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > missing or malformed successful usage fails closed: undefined 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > missing or malformed successful usage fails closed: {} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > missing or malformed successful usage fails closed: {"input_tokens":11,"output_tokens":-1} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a reported zero-usage timeout is known usage 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a cancellation before the provider call does not claim unknown billed usage 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > recognizes the installed SDK's real timeout error class 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > retries only the idempotent finish RPC if its acknowledgement is lost 101ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > unavailable accounting does not trigger another billed provider attempt 302ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"maxTokens":0} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"maxTokens":1.5} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":-1} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":null} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":null} 0ms
+
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+   Start at  13:37:03
+   Duration  607ms (tests 75%, import 14%, transform 11%)
+

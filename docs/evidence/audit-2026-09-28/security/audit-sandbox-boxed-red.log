@@ -1,0 +1,56 @@
+
+> @capstan/sdk@0.1.0 test
+> vitest run test/audit-sandbox.test.ts
+
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > uses SDK time and random through ordinary constructors and prototype traversal 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.constructor('return Date.now()')() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf(globalThis[Symbol.for('capstan.workflow.runtime')].now).constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf((async () => {})()).constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (async () => {}).constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (function* () {}).constructor('yield process')().next() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation new TextEncoder().encode('x').constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not expose host constructors through SDK results 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects dynamic Node imports even when the module name is computed 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(0).getHours() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(2000, 0, 1).getTime() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date.parse('2000-01-01T00:00:00') 1ms
+ × test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(new String('2000-01-01T00:00:00')).getTime() 2ms
+   → expected 946702800000 to deeply equal 946684800000
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through (() => { const d = new Date(0); d.setHours(2); return [d.getTime(), d.getTimezoneOffset(), d.toString(), d.toDateString(), d.toTimeString()]; })() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleString() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleDateString() 0ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleTimeString() 0ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: Date.parse('9/28/2026') 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > keeps explicit UTC dates and offsets 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(new String('2000-01-01T00:00:00')).getTime()
+AssertionError: expected 946702800000 to deeply equal 946684800000
+
+- Expected
++ Received
+
+- 946684800000
++ 946702800000
+
+ ❯ test/audit-sandbox.test.ts:46:27
+     44|       const utc = run(source);
+     45|       process.env.TZ = "America/Toronto";
+     46|       expect(run(source)).toEqual(utc);
+       |                           ^
+     47|     } finally {
+     48|       if (prior === undefined) delete process.env.TZ;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  13:43:03
+   Duration  86ms (tests 53%, transform 32%, import 12%, worker 3%)
+

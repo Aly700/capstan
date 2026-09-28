@@ -23,7 +23,7 @@ export function estimateCost(request: MessageCreateParamsNonStreaming, explicit?
       for (const [key, rate] of Object.entries(value)) {
         if (!key || !rate || typeof rate !== "object" || !Number.isFinite(rate.input) || rate.input < 0 || !Number.isFinite(rate.output) || rate.output < 0) throw new Error();
       }
-      prices = value as typeof defaults;
+      prices = { ...defaults, ...value as typeof defaults };
     } catch { throw new ApplicationFailure("Worker model prices are invalid", { type: "ModelConfigurationInvalid", nonRetryable: true }); }
   }
   const family = Object.keys(prices).sort((a, b) => b.length - a.length).find((name) => request.model === name || request.model.startsWith(`${name}-`));

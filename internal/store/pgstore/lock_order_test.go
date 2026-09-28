@@ -42,9 +42,6 @@ func TestClaimedRunLockDoesNotWaitAndRollsBackLease(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer lock.Rollback(context.Background())
-	if _, err := lock.Exec(t.Context(), `select 1 from run where run_id='first' for update`); err != nil {
-		t.Fatal(err)
-	}
 	ctx, cancel := context.WithTimeout(t.Context(), 2*time.Second)
 	defer cancel()
 	err = s.InTx(ctx, func(tx store.Tx) error {
@@ -54,6 +51,10 @@ func TestClaimedRunLockDoesNotWaitAndRollsBackLease(t *testing.T) {
 		}
 		if task == nil || task.ID != firstID {
 			return fmt.Errorf("first claim = %+v", task)
+		}
+		// A run can become busy after ClaimTask checks it and before GetRun.
+		if _, err := lock.Exec(ctx, `select 1 from run where run_id='first' for update`); err != nil {
+			return err
 		}
 		// A competing claimant must progress on another run while this task is held.
 		if err := s.InTx(ctx, func(other store.Tx) error {

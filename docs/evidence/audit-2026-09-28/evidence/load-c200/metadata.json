@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-28T17:42:04.258Z",
+  "database": "capstan_audit_load_c200_w4_18200_1790617322721",
+  "command": "scripts/run-load.sh 200 1000 4",
+  "serverPID": 18223,
+  "workerPIDs": [
+    18236,
+    18237,
+    18238,
+    18239
+  ],
+  "workflowConcurrencyPerWorker": 10,
+  "activityConcurrencyPerWorker": 10,
+  "container": "capstan-postgres-1",
+  "phase": "audit",
+  "dbMaxConns": "default",
+  "port": 7651
+}

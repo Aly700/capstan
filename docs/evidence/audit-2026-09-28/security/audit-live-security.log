@@ -1,0 +1,5 @@
+=== RUN   TestAuditLiveAuthenticationAndCredentialPrivacy
+    audit_live_security_test.go:153: 19 RPCs × 6 invalid-header cases rejected; metrics authenticated; viewer data RPCs guarded; history, logs, UI, metrics and three CLI commands contained no canaries
+--- PASS: TestAuditLiveAuthenticationAndCredentialPrivacy (0.41s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	1.789s

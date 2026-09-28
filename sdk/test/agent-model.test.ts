@@ -67,6 +67,13 @@ describe("capstan.model accounting and provider boundary", () => {
     const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
     expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 11 + 20 * 53) / 1e6);
   });
+  it("merges price overrides with built-in families like the server", async () => {
+    vi.stubEnv("CAPSTAN_MODEL_PRICES", JSON.stringify({ claude: { input: 0.001, output: 0.001 } }));
+    const s = setup();
+    await s.invoke({ model: "claude-sonnet-5", prompt: "Hi", maxTokens: 20 });
+    const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
+    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 2 + 20 * 10) / 1e6);
+  });
   it("fails closed for an unknown model without an explicit estimate", async () => {
     const s = setup();
     await expect(s.invoke({ model: "unknown", prompt: "Hi" })).rejects.toMatchObject({ type: "ModelEstimateRequired", nonRetryable: true });
@@ -133,6 +140,14 @@ describe("capstan.model accounting and provider boundary", () => {
     expect(s.call).not.toHaveBeenCalled();
     expect(s.finish).not.toHaveBeenCalled();
   });
+  it("a lost reservation acknowledgement never reaches the provider", async () => {
+    const s = setup();
+    s.reserve.mockRejectedValueOnce(new ConnectError("acknowledgement lost after commit", Code.Unavailable));
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelReservationFailed" });
+    expect(s.reserve).toHaveBeenCalledTimes(1);
+    expect(s.call).not.toHaveBeenCalled();
+    expect(s.finish).not.toHaveBeenCalled();
+  });
   it("provider errors always finish and contain only fixed public error text", async () => {
     vi.stubEnv("CAPSTAN_KEEP_STACKS", "1");
     const s = setup(async () => { throw Object.assign(new Error("secret-key secret-prompt secret-response"), { status: 500 }); });
@@ -155,6 +170,22 @@ describe("capstan.model accounting and provider boundary", () => {
     const s = setup(async () => { throw Object.assign(new Error("private"), { name: "APIConnectionTimeoutError" }); });
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
     expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 0n, outputTokens: 0n, errorCode: "ModelTimeoutUsageUnknown", usageUnknown: true });
+  });
+  it.each([
+    {},
+    { input_tokens: 20 },
+    { input_tokens: -1, output_tokens: 9 },
+    { input_tokens: NaN, output_tokens: 9 },
+    { input_tokens: 20, output_tokens: 9, cache_read_input_tokens: "invalid" },
+  ])("malformed timeout usage stays charged at the reservation: %j", async (usage) => {
+    const s = setup(async () => { throw Object.assign(new Anthropic.APIConnectionTimeoutError(), { usage }); });
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: true, errorCode: "ModelTimeoutUsageUnknown" });
+  });
+  it.each([undefined, {}, { input_tokens: 11, output_tokens: -1 }])("missing or malformed successful usage fails closed: %j", async (usage) => {
+    const s = setup(async () => ({ ...response(), usage }) as unknown as Message);
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelUsageInvalid", nonRetryable: true });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: true, errorCode: "ModelUsageInvalid" });
   });
   it("a reported zero-usage timeout is known usage", async () => {
     const s = setup(async () => { throw Object.assign(new Anthropic.APIConnectionTimeoutError(), { usage: { input_tokens: 0, output_tokens: 0 } }); });

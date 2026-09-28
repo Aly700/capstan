@@ -23,5 +23,6 @@ Result from the recorded run:
   daily cap was $0.01.
 - `DescribeRun` reports the same `costUsd` as the ledger, and the workflow received that
   server-priced figure in its result.
-- The ledger stores token counts only. No prompt or response text is stored, and the script
-  never prints the API key (the recording was checked for it).
+- The `ai_call` ledger stores token counts and cost, without prompt or response text.
+  Model request and result payloads are persisted separately in workflow history. The
+  script never prints the API key (the recording was checked for it).

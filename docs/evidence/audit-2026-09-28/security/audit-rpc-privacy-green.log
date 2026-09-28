@@ -1,0 +1,50 @@
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/false
+=== RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/true
+--- PASS: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs (0.01s)
+    --- PASS: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/false (0.00s)
+    --- PASS: TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/true (0.00s)
+=== RUN   TestErrorMappingAndInternalPrivacy
+=== RUN   TestErrorMappingAndInternalPrivacy/not_foundnot_found
+=== RUN   TestErrorMappingAndInternalPrivacy/already_existsalready_exists
+=== RUN   TestErrorMappingAndInternalPrivacy/invalid_argumentinvalid_argument
+=== RUN   TestErrorMappingAndInternalPrivacy/failed_preconditionstale_task_token
+=== RUN   TestErrorMappingAndInternalPrivacy/failed_preconditionrun_is_closed
+=== RUN   TestErrorMappingAndInternalPrivacy/failed_preconditionfailed_precondition
+=== RUN   TestErrorMappingAndInternalPrivacy/resource_exhausteddaily_AI_cap_exceeded
+=== RUN   TestErrorMappingAndInternalPrivacy/canceledcontext_canceled
+=== RUN   TestErrorMappingAndInternalPrivacy/deadline_exceededcontext_deadline_exceeded
+=== RUN   TestErrorMappingAndInternalPrivacy/internaldatabase-password-secret
+=== RUN   TestErrorMappingAndInternalPrivacy/internalinternal:_database-password-secret
+--- PASS: TestErrorMappingAndInternalPrivacy (0.02s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/not_foundnot_found (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/already_existsalready_exists (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/invalid_argumentinvalid_argument (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/failed_preconditionstale_task_token (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/failed_preconditionrun_is_closed (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/failed_preconditionfailed_precondition (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/resource_exhausteddaily_AI_cap_exceeded (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/canceledcontext_canceled (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/deadline_exceededcontext_deadline_exceeded (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/internaldatabase-password-secret (0.00s)
+    --- PASS: TestErrorMappingAndInternalPrivacy/internalinternal:_database-password-secret (0.00s)
+=== RUN   TestLoopsDrainBatchesThenSleepAndCancel
+--- PASS: TestLoopsDrainBatchesThenSleepAndCancel (0.00s)
+=== RUN   TestLoopsHonorNearWakeupAndPaceOverdueWork
+=== RUN   TestLoopsHonorNearWakeupAndPaceOverdueWork/near
+=== RUN   TestLoopsHonorNearWakeupAndPaceOverdueWork/overdue
+--- PASS: TestLoopsHonorNearWakeupAndPaceOverdueWork (0.00s)
+    --- PASS: TestLoopsHonorNearWakeupAndPaceOverdueWork/near (0.00s)
+    --- PASS: TestLoopsHonorNearWakeupAndPaceOverdueWork/overdue (0.00s)
+=== RUN   TestLoopsBackOffWorkAndWakeupErrors
+=== RUN   TestLoopsBackOffWorkAndWakeupErrors/work
+=== RUN   TestLoopsBackOffWorkAndWakeupErrors/wakeup
+--- PASS: TestLoopsBackOffWorkAndWakeupErrors (0.00s)
+    --- PASS: TestLoopsBackOffWorkAndWakeupErrors/work (0.00s)
+    --- PASS: TestLoopsBackOffWorkAndWakeupErrors/wakeup (0.00s)
+=== RUN   TestLoopCancellationInterruptsBatchDrainAndEngineCall
+--- PASS: TestLoopCancellationInterruptsBatchDrainAndEngineCall (0.00s)
+=== RUN   TestLoopAndWaitingMetrics
+--- PASS: TestLoopAndWaitingMetrics (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	1.305s

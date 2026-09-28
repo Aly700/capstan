@@ -1,0 +1,8 @@
+import { Worker } from "../sdk/src/worker/index.ts";
+const worker = await Worker.create({
+  address: process.env.CAPSTAN_ADDRESS!, apiKey: process.env.CAPSTAN_API_KEY!, taskQueue: process.env.AUDIT_QUEUE!,
+  workflowsPath: process.env.AUDIT_WORKFLOWS!, maxConcurrentActivities: 1, maxConcurrentWorkflowTasks: 1,
+  activities: { returningDependency() { return process.env.ANTHROPIC_API_KEY; }, failingDependency() { throw new Error(`dependency rejected credential ${process.env.ANTHROPIC_API_KEY}`); } },
+});
+process.on("SIGTERM", () => void worker.shutdown(0).then(() => process.exit(0)));
+await worker.run();

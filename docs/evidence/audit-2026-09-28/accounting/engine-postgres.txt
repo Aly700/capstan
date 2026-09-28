@@ -1,0 +1,116 @@
+=== RUN   TestReserveFailsClosedAtCap
+--- PASS: TestReserveFailsClosedAtCap (0.11s)
+=== RUN   TestReservedCountsUntilFinished
+--- PASS: TestReservedCountsUntilFinished (0.11s)
+=== RUN   TestFinishPricesFromTable
+=== RUN   TestFinishPricesFromTable/input_and_output
+=== RUN   TestFinishPricesFromTable/cache_classes
+=== RUN   TestFinishPricesFromTable/all_classes
+--- PASS: TestFinishPricesFromTable (0.30s)
+    --- PASS: TestFinishPricesFromTable/input_and_output (0.10s)
+    --- PASS: TestFinishPricesFromTable/cache_classes (0.10s)
+    --- PASS: TestFinishPricesFromTable/all_classes (0.10s)
+=== RUN   TestFinishRoundsUSDToMicroDollars
+=== RUN   TestFinishRoundsUSDToMicroDollars/one_cache_read_token
+=== RUN   TestFinishRoundsUSDToMicroDollars/three_cache_read_tokens
+=== RUN   TestFinishRoundsUSDToMicroDollars/half_micro_dollar
+--- PASS: TestFinishRoundsUSDToMicroDollars (0.30s)
+    --- PASS: TestFinishRoundsUSDToMicroDollars/one_cache_read_token (0.10s)
+    --- PASS: TestFinishRoundsUSDToMicroDollars/three_cache_read_tokens (0.10s)
+    --- PASS: TestFinishRoundsUSDToMicroDollars/half_micro_dollar (0.10s)
+=== RUN   TestReserveRoundsUSDToMicroDollars
+=== RUN   TestReserveRoundsUSDToMicroDollars/below_half
+=== RUN   TestReserveRoundsUSDToMicroDollars/half_micro_dollar
+=== RUN   TestReserveRoundsUSDToMicroDollars/above_half
+--- PASS: TestReserveRoundsUSDToMicroDollars (0.30s)
+    --- PASS: TestReserveRoundsUSDToMicroDollars/below_half (0.10s)
+    --- PASS: TestReserveRoundsUSDToMicroDollars/half_micro_dollar (0.10s)
+    --- PASS: TestReserveRoundsUSDToMicroDollars/above_half (0.10s)
+=== RUN   TestReserveComparesRoundedUSDAtCap
+--- PASS: TestReserveComparesRoundedUSDAtCap (0.10s)
+=== RUN   TestReserveReturnsRoundedUSDSum
+--- PASS: TestReserveReturnsRoundedUSDSum (0.10s)
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding/negative_sub_micro_dollar
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding/nan
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding/positive_infinity
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding/negative_infinity
+=== RUN   TestFinishRejectsInvalidCostBeforeRounding/finite_price_overflow
+--- PASS: TestFinishRejectsInvalidCostBeforeRounding (0.50s)
+    --- PASS: TestFinishRejectsInvalidCostBeforeRounding/negative_sub_micro_dollar (0.10s)
+    --- PASS: TestFinishRejectsInvalidCostBeforeRounding/nan (0.10s)
+    --- PASS: TestFinishRejectsInvalidCostBeforeRounding/positive_infinity (0.10s)
+    --- PASS: TestFinishRejectsInvalidCostBeforeRounding/negative_infinity (0.10s)
+    --- PASS: TestFinishRejectsInvalidCostBeforeRounding/finite_price_overflow (0.10s)
+=== RUN   TestLedgerTimestampsUseMicroseconds
+--- PASS: TestLedgerTimestampsUseMicroseconds (0.10s)
+=== RUN   TestFinishUsesConfiguredPrices
+--- PASS: TestFinishUsesConfiguredPrices (0.10s)
+=== RUN   TestFinishUnknownModelChargesEstimate
+--- PASS: TestFinishUnknownModelChargesEstimate (0.10s)
+=== RUN   TestFinishFailureChargesOnlyUsage
+=== RUN   TestFinishFailureChargesOnlyUsage/claude-sonnet-5/0s
+=== RUN   TestFinishFailureChargesOnlyUsage/claude-sonnet-5/100µs
+=== RUN   TestFinishFailureChargesOnlyUsage/unpriced/0s
+=== RUN   TestFinishFailureChargesOnlyUsage/unpriced/100µs
+--- PASS: TestFinishFailureChargesOnlyUsage (0.39s)
+    --- PASS: TestFinishFailureChargesOnlyUsage/claude-sonnet-5/0s (0.10s)
+    --- PASS: TestFinishFailureChargesOnlyUsage/claude-sonnet-5/100µs (0.10s)
+    --- PASS: TestFinishFailureChargesOnlyUsage/unpriced/0s (0.10s)
+    --- PASS: TestFinishFailureChargesOnlyUsage/unpriced/100µs (0.10s)
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate/missing_rounded_usage
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate/reported_usage_below_estimate
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate/reported_usage_above_estimate
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate/unknown_model
+=== RUN   TestFinishUnknownUsageChargesAtLeastEstimate/successful_call_ignores_flag
+--- PASS: TestFinishUnknownUsageChargesAtLeastEstimate (0.51s)
+    --- PASS: TestFinishUnknownUsageChargesAtLeastEstimate/missing_rounded_usage (0.10s)
+    --- PASS: TestFinishUnknownUsageChargesAtLeastEstimate/reported_usage_below_estimate (0.10s)
+    --- PASS: TestFinishUnknownUsageChargesAtLeastEstimate/reported_usage_above_estimate (0.10s)
+    --- PASS: TestFinishUnknownUsageChargesAtLeastEstimate/unknown_model (0.10s)
+    --- PASS: TestFinishUnknownUsageChargesAtLeastEstimate/successful_call_ignores_flag (0.10s)
+=== RUN   TestFinishIsIdempotent
+--- PASS: TestFinishIsIdempotent (0.10s)
+=== RUN   TestFinishRejectsNegativeTokens
+--- PASS: TestFinishRejectsNegativeTokens (0.11s)
+=== RUN   TestCapResetsAtTorontoMidnight
+=== RUN   TestCapResetsAtTorontoMidnight/2026-09-29T03:59:59Z
+=== RUN   TestCapResetsAtTorontoMidnight/2026-12-01T04:59:59Z
+=== RUN   TestCapResetsAtTorontoMidnight/2026-03-08T04:59:59Z
+=== RUN   TestCapResetsAtTorontoMidnight/2026-11-01T03:59:59Z
+--- PASS: TestCapResetsAtTorontoMidnight (0.45s)
+    --- PASS: TestCapResetsAtTorontoMidnight/2026-09-29T03:59:59Z (0.12s)
+    --- PASS: TestCapResetsAtTorontoMidnight/2026-12-01T04:59:59Z (0.11s)
+    --- PASS: TestCapResetsAtTorontoMidnight/2026-03-08T04:59:59Z (0.12s)
+    --- PASS: TestCapResetsAtTorontoMidnight/2026-11-01T03:59:59Z (0.11s)
+=== RUN   TestConcurrentReservationsCannotExceedCap
+--- PASS: TestConcurrentReservationsCannotExceedCap (0.15s)
+=== RUN   TestReserveRequiresLiveActivityToken
+--- PASS: TestReserveRequiresLiveActivityToken (0.11s)
+=== RUN   TestReserveAICallSeeded
+--- PASS: TestReserveAICallSeeded (0.08s)
+=== RUN   TestFinishAICallSeeded
+--- PASS: TestFinishAICallSeeded (0.08s)
+=== RUN   TestReserveAndFinishRollBackOnTransactionFailure
+--- PASS: TestReserveAndFinishRollBackOnTransactionFailure (0.11s)
+=== RUN   TestFinishMatchesModelFamilyPrices
+=== RUN   TestFinishMatchesModelFamilyPrices/exact
+=== RUN   TestFinishMatchesModelFamilyPrices/family
+=== RUN   TestFinishMatchesModelFamilyPrices/dated_haiku
+=== RUN   TestFinishMatchesModelFamilyPrices/boundary_required
+=== RUN   TestFinishMatchesModelFamilyPrices/unknown
+=== RUN   TestFinishMatchesModelFamilyPrices/longest
+=== RUN   TestFinishMatchesModelFamilyPrices/exact_over_family
+=== RUN   TestFinishMatchesModelFamilyPrices/zero_price_is_present
+--- PASS: TestFinishMatchesModelFamilyPrices (0.80s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/exact (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/family (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/dated_haiku (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/boundary_required (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/unknown (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/longest (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/exact_over_family (0.10s)
+    --- PASS: TestFinishMatchesModelFamilyPrices/zero_price_is_present (0.10s)
+PASS
+ok  	github.com/Aly700/capstan/internal/engine	6.285s

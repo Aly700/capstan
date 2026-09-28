@@ -1,5 +1,11 @@
 # PostgreSQL fault-lab campaign
 
+Audit provenance note: this historical report's referenced `.lane/` raw logs are
+absent from the audit worktree. Its original timing/provenance claims remain FAILED
+where they cannot be traced. Fresh bounded reruns and raw output are preserved in the
+[independent audit](audit-2026-09-28.md); the PostgreSQL rerun reproduces its seed and
+fault counts, while the large historical memstore seed ranges were not rerun in full.
+
 A small real-clock campaign is practical on the shared PostgreSQL: **500 seeds
 passed in 5 minutes 22.945 seconds** on the final sources, with zero reproduced
 engine or store defects. It is a separate, deliberately narrower driver than

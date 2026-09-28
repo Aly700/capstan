@@ -1,0 +1,37 @@
+Mutation baseline: 2000 seeds; catalogue internal/lab/mutants/*.patch
+M001: caught; seed 0; baseline pipeline: P3: run "lab": timer row 2 is duplicated or retained after settling
+M002: caught; seed 2; protocol cancel-before-start: cancel-before-start emitted 0 cancellation events
+M003: invalid; seed -1; git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/003-started-token-check.patch]: exit status 1: error: patch failed: internal/engine/workflow_task.go:65
+error: internal/engine/workflow_task.go: patch does not apply
+
+M004: caught; seed 6; protocol retry-attempt: activity retry attempt = 1 after 1
+M005: invalid; seed -1; git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/005-closed-inbox.patch]: exit status 1: error: patch failed: internal/engine/workflow_task.go:215
+error: internal/engine/workflow_task.go: patch does not apply
+
+M006: caught; seed 0; scenario pipeline: signal peer/inflight-40: got 0 deliveries, want one
+M007: caught; seed 3; protocol failed-workflow-release: failed workflow task still owns InFlight
+M008: caught; seed 0; baseline pipeline: store: conflict
+M009: caught; seed 0; protocol heartbeat-renewal: renewed heartbeat task expired early: processed 1
+M010: caught; seed 1; protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2
+M011: caught; seed 2; protocol cancel-before-start: cancelled unstarted activity was delivered
+M012: caught; seed 7; baseline continuation: did not finish in 1000 steps
+M013: caught; seed 4; protocol approval-once: duplicate approval resolution must be rejected: <nil>
+M014: caught; seed 0; baseline pipeline: P3: run "lab": 1 timer(s) lost: no row, terminal event, or sufficient inbox entries
+M015: caught; seed 0; baseline pipeline: worker replay failed: invalid history after TaskStarted event 3
+M016: invalid; seed -1; git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/016-expired-workflow-completion.patch]: exit status 1: error: patch failed: internal/engine/workflow_task.go:65
+error: internal/engine/workflow_task.go: patch does not apply
+
+M017: caught; seed 2; scenario signal: late activity completion accepted: <nil>
+M018: caught; seed 7; scenario continuation: did not finish in 1000 steps
+M019: caught; seed 5; protocol signal-order: accepted signal order[0] = "third"
+M020: caught; seed 0; scenario pipeline: P3: run "lab": timer 2 fired before its deadline 2000-01-01T00:00:00.081Z
+M021: caught; seed 0; baseline pipeline: P3: run "lab": timer row 2 references an unknown start
+M022: caught; seed 0; baseline pipeline: root peer: scenario pipeline-peer: unexpected result content_type:"application/json"  data:"[1,\"done\"]" or failure <nil>
+M023: invalid; seed -1; git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/023-gate-late-decision.patch]: exit status 1: error: patch failed: internal/engine/approvals.go:173
+error: internal/engine/approvals.go: patch does not apply
+
+M024: caught; seed 5; baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:"application/json" data:"{\"choice\":\"\",\"note\":\"\",\"outcome\":\"approved\",\"resolver\":\"\"}" or failure <nil>
+M025: caught; seed 5; baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:"application/json"  data:"{\"choice\":\"\",\"note\":\"\",\"outcome\":\"denied\",\"resolver\":\"gate-error\"}" or failure <nil>
+M026: caught; seed 0; baseline pipeline: did not finish in 1000 steps
+Report: /Users/affan/Projects/capstan--audit/.lane/audit-mutations.md
+exit status 1

@@ -1,0 +1,11 @@
+{"Time":"2026-09-28T13:36:13.267148-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T13:36:13.502575-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T13:36:13.502641-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T13:36:13.502707-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T13:36:13.525541-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 0 scenario pipeline: P3: run \"lab\": timer 2 fired before its deadline 2000-01-01T00:00:00.081Z\n"}
+{"Time":"2026-09-28T13:36:13.525574-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\n"}
+{"Time":"2026-09-28T13:36:13.525591-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.02s)\n"}
+{"Time":"2026-09-28T13:36:13.525596-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0.02}
+{"Time":"2026-09-28T13:36:13.525605-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T13:36:13.526531-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.259s\n"}
+{"Time":"2026-09-28T13:36:13.52655-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.259}

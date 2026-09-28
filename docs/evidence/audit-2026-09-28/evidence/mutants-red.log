@@ -1,0 +1,20 @@
+--- FAIL: TestMutationCatalogueAppliesToCurrentSources (0.27s)
+    --- FAIL: TestMutationCatalogueAppliesToCurrentSources/M003 (0.01s)
+        mutate_test.go:144: catalogue patch no longer applies: exit status 1
+            error: patch failed: internal/engine/workflow_task.go:65
+            error: internal/engine/workflow_task.go: patch does not apply
+    --- FAIL: TestMutationCatalogueAppliesToCurrentSources/M005 (0.01s)
+        mutate_test.go:144: catalogue patch no longer applies: exit status 1
+            error: patch failed: internal/engine/workflow_task.go:215
+            error: internal/engine/workflow_task.go: patch does not apply
+    --- FAIL: TestMutationCatalogueAppliesToCurrentSources/M016 (0.01s)
+        mutate_test.go:144: catalogue patch no longer applies: exit status 1
+            error: patch failed: internal/engine/workflow_task.go:65
+            error: internal/engine/workflow_task.go: patch does not apply
+    --- FAIL: TestMutationCatalogueAppliesToCurrentSources/M023 (0.01s)
+        mutate_test.go:144: catalogue patch no longer applies: exit status 1
+            error: patch failed: internal/engine/approvals.go:173
+            error: internal/engine/approvals.go: patch does not apply
+FAIL
+FAIL	github.com/Aly700/capstan/cmd/capstan-lab	0.445s
+FAIL

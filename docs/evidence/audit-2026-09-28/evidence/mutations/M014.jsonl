@@ -1,0 +1,11 @@
+{"Time":"2026-09-28T13:36:09.325001-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T13:36:09.549449-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T13:36:09.549483-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T13:36:09.549523-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T13:36:09.553205-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 0 baseline pipeline: P3: run \"lab\": 1 timer(s) lost: no row, terminal event, or sufficient inbox entries\n"}
+{"Time":"2026-09-28T13:36:09.553221-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\n"}
+{"Time":"2026-09-28T13:36:09.553233-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.00s)\n"}
+{"Time":"2026-09-28T13:36:09.553239-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0}
+{"Time":"2026-09-28T13:36:09.553243-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T13:36:09.55384-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.229s\n"}
+{"Time":"2026-09-28T13:36:09.553852-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.229}

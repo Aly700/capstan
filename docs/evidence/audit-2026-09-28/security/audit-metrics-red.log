@@ -1,0 +1,12 @@
+=== RUN   TestAuditMetricsRequiresOneValidKey
+    audit_auth_test.go:19: headers=[] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Bearer wrong"] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Bearer owner:secret"] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Basic secret"] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Bearer  secret"] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Bearer secret extra"] exposed metrics: status=200
+    audit_auth_test.go:19: headers=["Bearer secret" "Bearer secret"] exposed metrics: status=200
+--- FAIL: TestAuditMetricsRequiresOneValidKey (0.00s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/server	0.222s
+FAIL

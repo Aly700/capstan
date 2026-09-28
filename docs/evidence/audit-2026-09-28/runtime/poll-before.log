@@ -1,0 +1,15 @@
+=== RUN   TestAuditPollProgressPastBusyRun
+=== RUN   TestAuditPollProgressPastBusyRun/workflow
+2026/09/28 13:37:44 INFO server listening address=127.0.0.1:7600
+    audit_poll_test.go:113: poll returned "" after 2.000927666s while available task waited behind busy run
+2026/09/28 13:37:46 INFO server stopped
+=== RUN   TestAuditPollProgressPastBusyRun/activity
+2026/09/28 13:37:46 INFO server listening address=127.0.0.1:7600
+    audit_poll_test.go:113: poll returned "" after 2.000398541s while available task waited behind busy run
+2026/09/28 13:37:48 INFO server stopped
+--- FAIL: TestAuditPollProgressPastBusyRun (4.17s)
+    --- FAIL: TestAuditPollProgressPastBusyRun/workflow (2.07s)
+    --- FAIL: TestAuditPollProgressPastBusyRun/activity (2.09s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/server	4.411s
+FAIL

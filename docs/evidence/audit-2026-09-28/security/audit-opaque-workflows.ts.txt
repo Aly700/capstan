@@ -1,0 +1,7 @@
+import { activity } from "../sdk/src/workflow/index.ts";
+export async function auditSecretFailure() {
+  return activity("failingDependency", null, { startToCloseTimeout: "5s", retry: { maximumAttempts: 1 } });
+}
+export async function auditSecretResult() {
+  return activity("returningDependency", null, { startToCloseTimeout: "5s" });
+}

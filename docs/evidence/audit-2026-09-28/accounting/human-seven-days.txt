@@ -1,0 +1,5 @@
+=== RUN   TestAuditPostgresHumanWaitSevenDays
+    audit_human_test.go:93: HUMAN approval waited seven engine-clock days in PostgreSQL with zero tasks/leases and no worker; resolution produced one ApprovalResolved, preserved history prefix, and run completed
+--- PASS: TestAuditPostgresHumanWaitSevenDays (0.15s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	1.414s

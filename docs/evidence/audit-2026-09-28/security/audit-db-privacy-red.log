@@ -1,0 +1,8 @@
+=== RUN   TestAuditStartupDatabaseErrorsDoNotRevealCredentials
+=== RUN   TestAuditStartupDatabaseErrorsDoNotRevealCredentials/serve
+=== RUN   TestAuditStartupDatabaseErrorsDoNotRevealCredentials/migrate
+--- PASS: TestAuditStartupDatabaseErrorsDoNotRevealCredentials (0.00s)
+    --- PASS: TestAuditStartupDatabaseErrorsDoNotRevealCredentials/serve (0.00s)
+    --- PASS: TestAuditStartupDatabaseErrorsDoNotRevealCredentials/migrate (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/cmd/capstan-server	0.315s
