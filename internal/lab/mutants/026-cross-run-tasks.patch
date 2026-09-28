@@ -1,0 +1,13 @@
+diff --git a/internal/store/memstore/memstore.go b/internal/store/memstore/memstore.go
+index de7bd3f..8504851 100644
+--- a/internal/store/memstore/memstore.go
++++ b/internal/store/memstore/memstore.go
+@@ -448,7 +448,7 @@ func (tx *transaction) RunTasks(id string) ([]*store.Task, error) {
+ 	}
+ 	var rows []*store.Task
+ 	for _, t := range tx.data.tasks {
+-		if t.RunID == id {
++		if t.RunID != "" {
+ 			rows = append(rows, cloneTask(t))
+ 		}
+ 	}

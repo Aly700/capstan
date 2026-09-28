@@ -1,0 +1,13 @@
+diff --git a/internal/engine/runs.go b/internal/engine/runs.go
+index fe4f943..6838e5b 100644
+--- a/internal/engine/runs.go
++++ b/internal/engine/runs.go
+@@ -97,7 +97,7 @@ func (e *Engine) appendEvents(tx store.Tx, r *store.Run, events ...*v1.HistoryEv
+ 	if err := tx.AppendEvents(r.RunID, events); err != nil {
+ 		return err
+ 	}
+-	r.LastEventID += int64(len(events))
++	r.LastEventID += int64(len(events)) + 1
+ 	return nil
+ }
+ func (e *Engine) scheduleWorkflow(tx store.Tx, r *store.Run, attempt int32, visible time.Time) error {

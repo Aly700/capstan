@@ -1,0 +1,14 @@
+diff --git a/internal/engine/deliver.go b/internal/engine/deliver.go
+index b8c68f8..8d88abe 100644
+--- a/internal/engine/deliver.go
++++ b/internal/engine/deliver.go
+@@ -13,6 +13,9 @@ func (e *Engine) deliver(tx store.Tx, r *store.Run, ev *v1.HistoryEvent) error {
+ 		return nil
+ 	}
+ 	if r.InFlight {
++		if ev.Type == v1.EventType_EVENT_TYPE_SIGNAL_RECEIVED {
++			return nil
++		}
+ 		ev.Time = timestamppb.New(e.now())
+ 		return tx.PushInbox(r.RunID, ev)
+ 	}
