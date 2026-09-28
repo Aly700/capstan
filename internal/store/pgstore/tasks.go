@@ -71,11 +71,11 @@ func (t *transaction) DeleteTask(id int64) error {
 }
 
 func (t *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Time, lease time.Duration, workerID string) (*store.Task, error) {
-	skipped := []int64{}
+	skipped := []string{}
 	var v *store.Task
 	for {
 		var err error
-		v, err = scanTask(t.tx.QueryRow(t.ctx, "select "+taskColumns+` from task where kind=$1 and task_queue=$2 and visible_at<=$3 and leased_until is null and not (id=any($4::bigint[])) order by visible_at,id limit 1 for update skip locked`, kind, queue, nullTime(now), skipped))
+		v, err = scanTask(t.tx.QueryRow(t.ctx, "select "+taskColumns+` from task where kind=$1 and task_queue=$2 and visible_at<=$3 and leased_until is null and not (run_id=any($4::text[])) order by visible_at,id limit 1 for update skip locked`, kind, queue, nullTime(now), skipped))
 		if errors.Is(err, store.ErrNotFound) {
 			return nil, nil
 		}
@@ -102,7 +102,9 @@ func (t *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Time
 		if !errors.As(probeErr, &state) || state.SQLState() != "55P03" {
 			return nil, dbError(probeErr)
 		}
-		skipped = append(skipped, v.ID)
+		// Every task of this busy run would hit the same lock. Skip the run
+		// for this transaction so a large fan-out cannot consume the poll deadline.
+		skipped = append(skipped, v.RunID)
 	}
 	v.LeasedUntil = now.Add(lease).UTC()
 	v.WorkerID = workerID
