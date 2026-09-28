@@ -140,6 +140,14 @@ describe("capstan.model accounting and provider boundary", () => {
     expect(s.call).not.toHaveBeenCalled();
     expect(s.finish).not.toHaveBeenCalled();
   });
+  it("a lost reservation acknowledgement never reaches the provider", async () => {
+    const s = setup();
+    s.reserve.mockRejectedValueOnce(new ConnectError("acknowledgement lost after commit", Code.Unavailable));
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelReservationFailed" });
+    expect(s.reserve).toHaveBeenCalledTimes(1);
+    expect(s.call).not.toHaveBeenCalled();
+    expect(s.finish).not.toHaveBeenCalled();
+  });
   it("provider errors always finish and contain only fixed public error text", async () => {
     vi.stubEnv("CAPSTAN_KEEP_STACKS", "1");
     const s = setup(async () => { throw Object.assign(new Error("secret-key secret-prompt secret-response"), { status: 500 }); });
