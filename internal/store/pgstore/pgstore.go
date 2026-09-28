@@ -16,10 +16,3 @@ func Open(ctx context.Context, dsn string) (store.Store, error) {
 	_, _ = ctx, dsn
 	return nil, errNotImplemented
 }
-
-// Migrate applies every pending migration in migrations/ in one transaction and records
-// them in schema_migration. It is safe to run concurrently from several processes.
-func Migrate(ctx context.Context, dsn string) error {
-	_, _ = ctx, dsn
-	return errNotImplemented
-}
