@@ -50,7 +50,7 @@ test('one ARM task uses secret injection and only HTTPS gateway ingress with SRV
     Cpu: '256', Memory: '512', RuntimePlatform: { CpuArchitecture: 'ARM64', OperatingSystemFamily: 'LINUX' },
     ContainerDefinitions: Match.arrayWith([Match.objectLike({
       Environment: Match.arrayWith([{ Name: 'CAPSTAN_POLL_TIMEOUT', Value: '20s' }]),
-      Secrets: Match.arrayWith(['CAPSTAN_DATABASE_URL', 'CAPSTAN_API_KEY_HASHES', 'CAPSTAN_GATE_API_KEY'].map(Name => ({ Name, ValueFrom: Match.anyValue() }))),
+      Secrets: Match.arrayWith(['CAPSTAN_DATABASE_URL', 'CAPSTAN_API_KEY_HASHES'].map(Name => ({ Name, ValueFrom: Match.anyValue() }))),
       PortMappings: Match.arrayWith([Match.objectLike({ ContainerPort: 7233 })]), ReadonlyRootFilesystem: true,
     })]),
   });
@@ -207,4 +207,18 @@ test('workload deployment imports the owner-managed network and has no EC2 mutat
   const ec2Actions = statements.flatMap(s => [s.Action].flat()).filter((a: string) => a.startsWith('ec2:'));
   assert.ok(ec2Actions.length > 0);
   assert.ok(ec2Actions.every((a: string) => a.startsWith('ec2:Describe')), 'network provisioning and mutation belong to the owner');
+});
+
+// The server refuses to start with only one of CAPSTAN_GATE_URL / CAPSTAN_GATE_API_KEY
+// (AWS attempt 2: the ECS circuit breaker tripped on exactly that).
+test('Gate URL and key are injected together or not at all', async () => {
+  const container = (templates: Record<string, Template>) =>
+    (Object.values(templates.service.findResources('AWS::ECS::TaskDefinition'))[0] as any).Properties.ContainerDefinitions[0];
+  const names = (list: { Name: string }[] = []) => list.map(e => e.Name);
+  const without = container(await synth());
+  assert.ok(!names(without.Environment).includes('CAPSTAN_GATE_URL'));
+  assert.ok(!names(without.Secrets).includes('CAPSTAN_GATE_API_KEY'));
+  const withGate = container(await synth({ gateUrl: 'https://gate.example.com' }));
+  assert.ok(names(withGate.Environment).includes('CAPSTAN_GATE_URL'));
+  assert.ok(names(withGate.Secrets).includes('CAPSTAN_GATE_API_KEY'));
 });
