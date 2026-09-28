@@ -1,0 +1,10 @@
+{
+  "name": "capstan-codex-lanes-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --import ../../sdk/node_modules/tsx/dist/loader.mjs --test test/*.test.ts",
+    "typecheck": "../../sdk/node_modules/.bin/tsc --noEmit -p tsconfig.json",
+    "worker": "node --import ../../sdk/node_modules/tsx/dist/loader.mjs worker.ts"
+  }
+}
