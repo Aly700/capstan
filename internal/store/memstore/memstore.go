@@ -11,6 +11,7 @@ import (
 
 	capstanv1 "github.com/Aly700/capstan/gen/capstan/v1"
 	"github.com/Aly700/capstan/internal/store"
+	"github.com/Aly700/capstan/internal/store/subscriptions"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -33,7 +34,7 @@ type memory struct {
 	closed                 bool
 	data                   *snapshot
 	nextTaskID, nextCallID int64
-	subs                   map[subscriptionKey]map[chan struct{}]struct{}
+	subs                   map[subscriptionKey]*subscriptions.Group
 }
 type snapshot struct {
 	runs      map[string]*store.Run
@@ -49,7 +50,7 @@ type transaction struct {
 	ctx           context.Context
 	owner         *memory
 	data          *snapshot
-	notifications map[subscriptionKey]struct{}
+	notifications map[subscriptionKey]int
 }
 
 var _ store.Store = (*memory)(nil)
@@ -69,7 +70,7 @@ func New() store.Store {
 			signals:   make(map[stringKey]struct{}),
 			calls:     make(map[int64]*store.AICall),
 		},
-		subs: make(map[subscriptionKey]map[chan struct{}]struct{}),
+		subs: make(map[subscriptionKey]*subscriptions.Group),
 	}
 }
 
@@ -115,7 +116,7 @@ func (s *memory) InTx(ctx context.Context, fn func(store.Tx) error) error {
 		s.wakeLocked()
 		s.mu.Unlock()
 	}()
-	tx := &transaction{ctx: ctx, owner: s, data: data, notifications: make(map[subscriptionKey]struct{})}
+	tx := &transaction{ctx: ctx, owner: s, data: data, notifications: make(map[subscriptionKey]int)}
 	if err := fn(tx); err != nil {
 		return err
 	}
@@ -128,12 +129,19 @@ func (s *memory) InTx(ctx context.Context, fn func(store.Tx) error) error {
 		return errClosed
 	}
 	s.data = data
-	for key := range tx.notifications {
-		for ch := range s.subs[key] {
-			select {
-			case ch <- struct{}{}:
-			default:
-			}
+	for key, count := range tx.notifications {
+		group := s.subs[key]
+		if group == nil {
+			continue
+		}
+		if key.run {
+			group.WakeAll()
+			continue
+		}
+		// Each new task gets one waiting poller; a pending hint already occupies
+		// that subscriber's slot, so additional tasks wake other pollers.
+		for range count {
+			group.WakeOne()
 		}
 	}
 	return nil
@@ -145,27 +153,26 @@ func (s *memory) SubscribeRun(runID string) (<-chan struct{}, func()) {
 	return s.subscribe(subscriptionKey{name: runID, run: true})
 }
 func (s *memory) subscribe(key subscriptionKey) (<-chan struct{}, func()) {
-	ch := make(chan struct{}, 1)
 	s.mu.Lock()
 	if s.closed {
+		ch := make(chan struct{})
 		close(ch)
 		s.mu.Unlock()
 		return ch, func() {}
 	}
 	if s.subs[key] == nil {
-		s.subs[key] = make(map[chan struct{}]struct{})
+		s.subs[key] = new(subscriptions.Group)
 	}
-	s.subs[key][ch] = struct{}{}
+	ch := s.subs[key].Add()
 	s.mu.Unlock()
 	var once sync.Once
 	return ch, func() {
 		once.Do(func() {
 			s.mu.Lock()
 			defer s.mu.Unlock()
-			if _, ok := s.subs[key][ch]; ok {
-				delete(s.subs[key], ch)
-				close(ch)
-				if len(s.subs[key]) == 0 {
+			if group := s.subs[key]; group != nil {
+				group.Remove(ch)
+				if group.Len() == 0 {
 					delete(s.subs, key)
 				}
 			}
@@ -181,9 +188,7 @@ func (s *memory) Close() error {
 	s.closed = true
 	s.wakeLocked()
 	for _, subscribers := range s.subs {
-		for ch := range subscribers {
-			close(ch)
-		}
+		subscribers.Close()
 	}
 	clear(s.subs)
 	return nil
@@ -680,10 +685,10 @@ func (tx *transaction) RunCost(id string) (float64, error) {
 	return tx.callSum(func(c *store.AICall) bool { return c.RunID == id })
 }
 func (tx *transaction) Notify(kind store.TaskKind, queue string) {
-	tx.notifications[subscriptionKey{kind: kind, name: queue}] = struct{}{}
+	tx.notifications[subscriptionKey{kind: kind, name: queue}]++
 }
 func (tx *transaction) NotifyRunClosed(runID string) {
-	tx.notifications[subscriptionKey{name: runID, run: true}] = struct{}{}
+	tx.notifications[subscriptionKey{name: runID, run: true}] = 1
 }
 func compare[T ~string | ~int64](a, b T) int {
 	if a < b {

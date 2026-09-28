@@ -2,16 +2,22 @@ package pgstore
 
 import (
 	"context"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Aly700/capstan/internal/store"
+	"github.com/Aly700/capstan/internal/store/subscriptions"
 	"github.com/jackc/pgx/v5"
 )
 
 func topic(kind store.TaskKind, queue string) string { return kind.String() + ":" + queue }
 
 func (t *transaction) Notify(kind store.TaskKind, queue string) {
-	t.notify(topic(kind, queue))
+	// PostgreSQL folds identical payloads within a transaction. A sequence keeps
+	// one wake-up per new task when one activation schedules several activities.
+	t.notifySeq++
+	t.notify("task:" + strconv.FormatUint(t.notifySeq, 10) + ":" + topic(kind, queue))
 }
 
 func (t *transaction) NotifyRunClosed(runID string) {
@@ -36,51 +42,44 @@ func (s *pgStore) SubscribeRun(runID string) (<-chan struct{}, func()) {
 }
 
 func (s *pgStore) subscribe(key string) (<-chan struct{}, func()) {
-	ch := make(chan struct{}, 1)
 	s.mu.Lock()
 	if s.closed {
 		s.mu.Unlock()
+		ch := make(chan struct{})
 		close(ch)
 		return ch, func() {}
 	}
 	if s.subs[key] == nil {
-		s.subs[key] = make(map[chan struct{}]struct{})
+		s.subs[key] = new(subscriptions.Group)
 	}
-	s.subs[key][ch] = struct{}{}
+	ch := s.subs[key].Add()
 	s.mu.Unlock()
 	return ch, func() {
 		s.mu.Lock()
 		defer s.mu.Unlock()
-		if _, ok := s.subs[key][ch]; ok {
-			delete(s.subs[key], ch)
-			if len(s.subs[key]) == 0 {
+		if group := s.subs[key]; group != nil {
+			group.Remove(ch)
+			if group.Len() == 0 {
 				delete(s.subs, key)
 			}
-			closeSubscription(ch)
 		}
 	}
-}
-
-func closeSubscription(ch chan struct{}) {
-	select {
-	case <-ch:
-	default:
-	}
-	close(ch)
 }
 
 func (s *pgStore) wake(key string, all bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	for k, subscribers := range s.subs {
-		if !all && k != key {
-			continue
+	if all {
+		for _, group := range s.subs {
+			group.WakeAll()
 		}
-		for ch := range subscribers {
-			select {
-			case ch <- struct{}{}:
-			default:
-			}
+		return
+	}
+	if group := s.subs[key]; group != nil {
+		if strings.HasPrefix(key, "run:") {
+			group.WakeAll()
+		} else {
+			group.WakeOne()
 		}
 	}
 }
@@ -112,7 +111,11 @@ func (s *pgStore) listen(conn *pgx.Conn) {
 	for s.listenCtx.Err() == nil {
 		n, err := conn.WaitForNotification(s.listenCtx)
 		if err == nil {
-			s.wake(n.Payload, false)
+			key := n.Payload
+			if payload, ok := strings.CutPrefix(key, "task:"); ok {
+				_, key, _ = strings.Cut(payload, ":")
+			}
+			s.wake(key, false)
 			continue
 		}
 		closeListener(conn)
