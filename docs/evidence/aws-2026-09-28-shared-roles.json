@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "AWSServiceRoleForECS",
+    "Arn": "arn:aws:iam::280517746513:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+    "Created": "2026-08-29T03:12:35+00:00"
+  },
+  {
+    "Name": "AWSServiceRoleForRDS",
+    "Arn": "arn:aws:iam::280517746513:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS",
+    "Created": "2026-08-29T03:03:34+00:00"
+  }
+]

@@ -1,0 +1,30 @@
+deploy	Run aws-actions/configure-aws-credentials@v4	﻿2026-09-28T17:47:53.0096557Z ##[warning]Unexpected input(s) 'allowed-account-ids', valid inputs are ['aws-region', 'role-to-assume', 'aws-access-key-id', 'aws-secret-access-key', 'aws-session-token', 'web-identity-token-file', 'role-chaining', 'audience', 'http-proxy', 'mask-aws-account-id', 'role-duration-seconds', 'role-external-id', 'role-session-name', 'role-skip-session-tagging', 'inline-session-policy', 'managed-session-policies', 'output-credentials', 'output-env-credentials', 'unset-current-credentials', 'disable-retry', 'retry-max-attempts', 'special-characters-workaround', 'use-existing-credentials']
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0110748Z ##[group]Run aws-actions/configure-aws-credentials@v4
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0111073Z with:
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0111363Z   role-to-assume: arn:aws:iam::280517746513:role/capstan-github-deploy
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0111746Z   allowed-account-ids: 280517746513
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0112013Z   aws-region: us-east-1
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0112260Z   role-session-name: capstan-36460600521
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0112543Z   role-duration-seconds: 3600
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0112833Z   audience: sts.amazonaws.com
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0113097Z   output-env-credentials: true
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0113339Z env:
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0113733Z   AWS_REGION: us-east-1
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0113968Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0114257Z   COMMIT_SHA: 867a557a514e0862ea0a7df3e6cbb1bb140c41a2
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0114579Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0114842Z   GATE_URL:
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.0115039Z ##[endgroup]
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.4232717Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.6055469Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.6814262Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:53.8322599Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:54.2291925Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:54.2881226Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:54.3421784Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:47:57.4796140Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:48:02.1897091Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:48:05.3510943Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:48:30.9008103Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:49:09.2380472Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v4	2026-09-28T17:50:10.2309911Z ##[error]Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity
