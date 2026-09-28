@@ -15,3 +15,22 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+  server:
+    profiles: ["full"]
+    build: .
+    platform: linux/arm64
+    environment:
+      CAPSTAN_ADDR: ":7233"
+      CAPSTAN_DATABASE_URL: "${CAPSTAN_DATABASE_URL:-postgres://capstan:capstan@postgres:5432/capstan?sslmode=disable}"
+      CAPSTAN_API_KEY_HASHES: "${CAPSTAN_API_KEY_HASHES:-}"
+      CAPSTAN_DAILY_CAP_USD: "${CAPSTAN_DAILY_CAP_USD:-2.00}"
+      CAPSTAN_MIGRATE: "${CAPSTAN_MIGRATE:-true}"
+      CAPSTAN_LOG_LEVEL: "${CAPSTAN_LOG_LEVEL:-info}"
+      CAPSTAN_POLL_TIMEOUT: "${CAPSTAN_POLL_TIMEOUT:-20s}"
+      CAPSTAN_GATE_URL: "${CAPSTAN_GATE_URL:-}"
+      CAPSTAN_GATE_API_KEY: "${CAPSTAN_GATE_API_KEY:-}"
+    ports:
+      - "127.0.0.1:7233:7233"
+    depends_on:
+      postgres:
+        condition: service_healthy

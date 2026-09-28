@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: capstan-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      AWS_REGION: us-east-1
+      AWS_ACCOUNT_ID: ${{ vars.CAPSTAN_AWS_ACCOUNT_ID }}
+      COMMIT_SHA: ${{ github.sha }}
+      BUDGET_EMAIL: ${{ vars.CAPSTAN_BUDGET_EMAIL }}
+      GATE_URL: ${{ vars.CAPSTAN_GATE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require integrated server and deployment configuration
+        run: |
+          if grep -Fq 'not implemented yet (server lane)' cmd/capstan-server/main.go; then
+            echo 'The server stub cannot be deployed. Integrate and verify the server first.' >&2
+            exit 1
+          fi
+          test -n "$AWS_ACCOUNT_ID"
+          test -n "$BUDGET_EMAIL"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+      - run: npm ci
+        working-directory: infra
+      - run: npm run typecheck && npm test
+        working-directory: infra
+      - uses: docker/setup-buildx-action@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.CAPSTAN_DEPLOY_ROLE_ARN }}
+          allowed-account-ids: ${{ vars.CAPSTAN_AWS_ACCOUNT_ID }}
+          aws-region: us-east-1
+          role-session-name: capstan-${{ github.run_id }}
+          role-duration-seconds: 3600
+      - name: Push image, deploy, and smoke
+        run: bash .github/scripts/deploy.sh
