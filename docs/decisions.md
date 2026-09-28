@@ -167,3 +167,17 @@ never changes a record's creation fields, so no caller depends on which fields a
 a limit of zero or less returns none (pgstore's behaviour). `ReadHistory` and `ListRuns` keep
 their documented rule that a limit of zero or less means no limit. The engine's background
 methods reject `limit <= 0` with ErrInvalidArgument.
+
+## D25 — 2026-09-28 — Model prices match by family prefix
+
+The price table is keyed by model family (`claude-opus-5`, `claude-sonnet-5`, `claude-haiku-4-5`,
+`claude-fable-5-1`), while workers send the real model id (`claude-opus-5-5`,
+`claude-haiku-4-5-20251001`, …). The engine prices a call by the exact key if present, otherwise
+by the longest key that is a prefix of the id and ends at a `-` boundary of it; otherwise the
+model is unknown and is charged its estimate (D8). Implemented by the lead at integration.
+
+## D26 — 2026-09-28 — Gates run on the pinned toolchain
+
+The machine's default Go is 1.27.1; go.mod and CI say 1.26.4. The Makefile exports
+`GOTOOLCHAIN ?= go1.26.4` so local gates run what CI runs. `GOTOOLCHAIN=local make verify`
+opts out.
