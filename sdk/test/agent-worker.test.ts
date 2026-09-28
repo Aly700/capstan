@@ -125,7 +125,9 @@ describe("built-in activities in a real worker with local HTTP and Connect fakes
       },
     } });
     await expect.poll(() => s.server.requests("FailWorkflowTask").length, { timeout: 1_000 }).toBe(1);
-    expect(s.server.requests<FailWorkflowTaskRequest>("FailWorkflowTask")[0]).toMatchObject({ cause: TaskFailedCause.HISTORY_MISMATCH, failure: { type: "HistoryMismatchError", message: expect.stringContaining("arguments changed since the Gate decided") } });
+    const failed = s.server.requests<FailWorkflowTaskRequest>("FailWorkflowTask")[0]!;
+    expect(failed).toMatchObject({ cause: TaskFailedCause.HISTORY_MISMATCH, failure: { type: "HistoryMismatchError", message: expect.stringContaining("arguments changed since the Gate decided") } });
+    expect(decode(failed.failure!.details)).toEqual({ $capstan: { kind: "mismatch", eventId: Number(h.history.find((event) => event.activityCompleted)?.eventId) } });
     expect(s.server.requests("CompleteWorkflowTask")).toHaveLength(0);
     expect(s.server.requests("CompleteActivityTask")).toHaveLength(0);
     expect(executeTool).not.toHaveBeenCalled();
