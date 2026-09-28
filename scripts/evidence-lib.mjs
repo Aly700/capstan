@@ -38,10 +38,14 @@ export class Evidence {
     this.workers = [];
     this.created = false;
   }
+  ensureActive() {
+    if (this.closing) throw new Error("Evidence cleanup has begun; refusing new resources");
+  }
   sql(query, args = []) {
     return execFileSync("psql", [this.dsn, "-X", "-v", "ON_ERROR_STOP=1", ...args, "-c", query], { encoding: "utf8" });
   }
   async setup() {
+    this.ensureActive();
     mkdirSync(join(root, ".lane/bin"), { recursive: true });
     execFileSync("go", ["build", "-o", ".lane/bin/capstan-server", "./cmd/capstan-server"], { cwd: root, env: { ...process.env, GOTOOLCHAIN: "go1.26.4" }, stdio: "inherit" });
     execFileSync("psql", [this.admin, "-X", "-v", "ON_ERROR_STOP=1", "-qc", `create database ${this.database}`]);
@@ -50,6 +54,7 @@ export class Evidence {
     return this;
   }
   child(binary, args, name, extraEnv = {}, cwd = root) {
+    this.ensureActive();
     const fd = openSync(join(this.logdir, `${name}.log`), "a", 0o600);
     // As in sdk/test/e2e.test.ts: the worker is one Node process, not a tsx wrapper.
     const child = spawn(binary, args, { cwd, env: { ...process.env, ...extraEnv }, detached: true, stdio: ["ignore", fd, fd] });
@@ -60,6 +65,7 @@ export class Evidence {
     return child;
   }
   async startServer() {
+    this.ensureActive();
     const probe = createServer();
     await new Promise((resolve, reject) => {
       probe.once("error", reject);
@@ -88,7 +94,7 @@ export class Evidence {
     return child;
   }
   async stop(child, signal = "SIGTERM") {
-    if (!child || child.exitCode !== null || child.signalCode !== null) return;
+    if (!child || child.pid === undefined || child.exitCode !== null || child.signalCode !== null) return;
     try { process.kill(-child.pid, signal); } catch (error) { if (error.code !== "ESRCH") throw error; }
     try { await until("process exit", () => child.exitCode !== null || child.signalCode !== null, 5000); }
     catch { try { process.kill(-child.pid, "SIGKILL"); } catch {} await until("killed process exit", () => child.exitCode !== null || child.signalCode !== null, 5000); }
@@ -122,13 +128,16 @@ export class Evidence {
     }
   }
   cli(...args) {
-    console.log(`$ capstan ${args.join(" ")}`);
+    const quote = (value) => /^[A-Za-z0-9_./:-]+$/.test(value) ? value : "'" + value.replaceAll("'", "'\\''") + "'";
+    console.log(`$ capstan ${args.map(quote).join(" ")}`);
     const result = execFileSync(process.execPath, [join(root, "sdk/bin/capstan.mjs"), ...args], { cwd: root, env: { ...process.env, CAPSTAN_ADDRESS: this.address, CAPSTAN_API_KEY: this.key }, encoding: "utf8" });
     process.stdout.write(result);
     return result;
   }
   async cleanup() {
     if (this.cleaning) return this.cleaning;
+    // Close registration synchronously, before any stop operation yields.
+    this.closing = true;
     this.cleaning = (async () => {
       await Promise.all([...this.children].reverse().map((child) => this.stop(child)));
       if (this.created) {
@@ -143,6 +152,6 @@ export async function managed(evidence, action) {
   let handlingSignal = false;
   const interrupted = async () => { if (handlingSignal) return; handlingSignal = true; await evidence.cleanup(); process.exit(130); };
   process.once("SIGINT", interrupted); process.once("SIGTERM", interrupted);
-  try { await evidence.setup(); return await action(evidence); }
+  try { await evidence.setup(); evidence.ensureActive(); return await action(evidence); }
   finally { await evidence.cleanup(); process.removeListener("SIGINT", interrupted); process.removeListener("SIGTERM", interrupted); }
 }
