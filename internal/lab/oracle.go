@@ -57,18 +57,20 @@ func checkScenario(snapshot Snapshot, name string) error {
 	switch name {
 	case "pipeline":
 		result = []any{1, 2}
+	case "pipeline-peer":
+		result = []any{"peer", "done"}
 	case "fanout":
 		result = []any{10, 20, 30}
 	case "signal":
 		result = 7
 	case "retry":
 		result = 99
-	case "human", "gate", "approval-expiry":
+	case "human", "gate", "gate-errors", "gate-late", "approval-expiry":
 		resolver, outcome := "lab-human", "approved"
-		if name == "gate" {
+		if name == "gate" || name == "gate-errors" {
 			resolver = "lab-gate"
 		}
-		if name == "approval-expiry" {
+		if name == "approval-expiry" || name == "gate-late" {
 			resolver, outcome = "timeout", "expired"
 		}
 		result = map[string]any{"outcome": outcome, "choice": "", "resolver": resolver, "note": ""}

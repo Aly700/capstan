@@ -65,6 +65,20 @@ func scenarioCatalog() []scenario {
 			}
 			return effect(wf, value)
 		}},
+		{name: "gate-errors", workflow: func(wf *labworker.Context, _ any) (any, error) {
+			value, err := wf.Approval(labworker.ApprovalRequest{ApprovalID: "gate-errors", GateDecisionID: "decision", Source: v1.ApprovalSource_APPROVAL_SOURCE_GATE})
+			if err != nil {
+				return nil, err
+			}
+			return effect(wf, value)
+		}},
+		{name: "gate-late", workflow: func(wf *labworker.Context, _ any) (any, error) {
+			value, err := wf.Approval(labworker.ApprovalRequest{ApprovalID: "gate-late", GateDecisionID: "decision", Source: v1.ApprovalSource_APPROVAL_SOURCE_GATE, Timeout: 30 * time.Millisecond})
+			if err != nil {
+				return nil, err
+			}
+			return effect(wf, value)
+		}},
 		{name: "continuation", input: float64(0), workflow: func(wf *labworker.Context, input any) (any, error) {
 			n := input.(float64)
 			value, err := effect(wf, n)
@@ -87,4 +101,18 @@ func scenarioCatalog() []scenario {
 		}},
 		{name: "retry", workflow: func(wf *labworker.Context, _ any) (any, error) { return effect(wf, 99) }},
 	}
+}
+
+// The queue companion preserves two independent effects and distinct results;
+// primary scenarios already exercise durable timers and need their own wakeups.
+func peerScenario() scenario {
+	return scenario{name: "pipeline-peer", input: []any{"peer", "done"}, workflow: func(wf *labworker.Context, input any) (any, error) {
+		values := input.([]any)
+		first, err := wf.Activity("effect", values[0], labworker.ActivityOptions{StartToCloseTimeout: 20 * time.Millisecond})
+		if err != nil {
+			return nil, err
+		}
+		second, err := wf.Activity("effect", values[1], labworker.ActivityOptions{StartToCloseTimeout: 20 * time.Millisecond})
+		return []any{first, second}, err
+	}}
 }
