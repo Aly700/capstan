@@ -40,12 +40,14 @@ export class CapstanService extends Stack {
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'server', logGroup: logs }),
       environment: {
         CAPSTAN_ADDR: ':7233', CAPSTAN_POLL_TIMEOUT: '20s', CAPSTAN_MIGRATE: 'true',
-        CAPSTAN_DAILY_CAP_USD: '2.00', CAPSTAN_LOG_LEVEL: 'info', CAPSTAN_GATE_URL: props.gateUrl,
+        CAPSTAN_DAILY_CAP_USD: '2.00', CAPSTAN_LOG_LEVEL: 'info',
+        // The server requires the Gate URL and key together, so both are injected only when a Gate is configured.
+        ...(props.gateUrl ? { CAPSTAN_GATE_URL: props.gateUrl } : {}),
       },
       secrets: {
         CAPSTAN_DATABASE_URL: ecs.Secret.fromSecretsManager(data.databaseUrl),
         CAPSTAN_API_KEY_HASHES: ecs.Secret.fromSecretsManager(data.apiKeyHashes),
-        CAPSTAN_GATE_API_KEY: ecs.Secret.fromSecretsManager(data.gateKey),
+        ...(props.gateUrl ? { CAPSTAN_GATE_API_KEY: ecs.Secret.fromSecretsManager(data.gateKey) } : {}),
       },
       stopTimeout: Duration.seconds(30),
     });
