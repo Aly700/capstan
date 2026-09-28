@@ -35,8 +35,10 @@ export class CapstanGithubOidc extends Stack {
     allow(['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:DeleteDBInstance', 'rds:DescribeDBInstances', 'rds:AddTagsToResource', 'rds:RemoveTagsFromResource', 'rds:ListTagsForResource', 'rds:CreateDBSubnetGroup', 'rds:ModifyDBSubnetGroup', 'rds:DeleteDBSubnetGroup', 'rds:DescribeDBSubnetGroups'], [arn('rds', 'db:capstan'), arn('rds', 'subgrp:capstandata-*')]);
     allow(['secretsmanager:CreateSecret', 'secretsmanager:DeleteSecret', 'secretsmanager:DescribeSecret', 'secretsmanager:UpdateSecret', 'secretsmanager:PutSecretValue', 'secretsmanager:GetSecretValue', 'secretsmanager:TagResource', 'secretsmanager:UntagResource', 'secretsmanager:GetResourcePolicy'], [arn('secretsmanager', 'secret:capstan/*')]);
     allow(['secretsmanager:GetRandomPassword'], ['*']);
-    allow(['ecs:CreateCluster', 'ecs:DeleteCluster', 'ecs:DescribeClusters', 'ecs:UpdateClusterSettings', 'ecs:CreateService', 'ecs:UpdateService', 'ecs:DeleteService', 'ecs:DescribeServices', 'ecs:DescribeTaskDefinition', 'ecs:DeregisterTaskDefinition', 'ecs:TagResource', 'ecs:UntagResource'], [arn('ecs', 'cluster/capstan'), arn('ecs', 'service/capstan/*'), arn('ecs', 'task-definition/capstan-server:*')]);
-    allow(['ecs:RegisterTaskDefinition'], ['*'], { StringEquals: { 'aws:RequestedRegion': this.region } });
+    allow(['ecs:CreateCluster', 'ecs:DeleteCluster', 'ecs:DescribeClusters', 'ecs:UpdateClusterSettings', 'ecs:CreateService', 'ecs:UpdateService', 'ecs:DeleteService', 'ecs:DescribeServices', 'ecs:TagResource', 'ecs:UntagResource'], [arn('ecs', 'cluster/capstan'), arn('ecs', 'service/capstan/*'), arn('ecs', 'task-definition/capstan-server:*')]);
+    // Task-definition register/describe/deregister are authorized against "*", not a task-definition ARN
+    // (AWS attempt 2: the service rollback failed on ecs:DeregisterTaskDefinition on resource *).
+    allow(['ecs:RegisterTaskDefinition', 'ecs:DescribeTaskDefinition', 'ecs:DeregisterTaskDefinition'], ['*'], { StringEquals: { 'aws:RequestedRegion': this.region } });
     allow(['servicediscovery:CreateService', 'servicediscovery:GetNamespace', 'servicediscovery:GetService', 'servicediscovery:UpdateService', 'servicediscovery:DeleteNamespace', 'servicediscovery:DeleteService'], [arn('servicediscovery', 'namespace/*'), arn('servicediscovery', 'service/*')]);
     // These Cloud Map APIs do not support resource-level permissions. Namespace
     // creation checks TagResource before it has an ARN (observed in AWS attempt 2).
