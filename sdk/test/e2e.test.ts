@@ -19,7 +19,7 @@ const port = Number(process.env.CAPSTAN_E2E_PORT ?? 7299);
 const address = `http://127.0.0.1:${port}`;
 const apiKey = `cap_e2e_${randomBytes(16).toString("hex")}`;
 const adminUrl = process.env.CAPSTAN_TEST_DATABASE_URL ?? "postgres://capstan:capstan@127.0.0.1:55432/postgres?sslmode=disable";
-const database = `capstan_e2e_${process.pid}_${Date.now()}`;
+const database = `capstan_audit_e2e_${process.pid}_${Date.now()}`;
 const scratch = mkdtempSync(join(tmpdir(), "capstan-e2e-"));
 const children: ChildProcess[] = [];
 
