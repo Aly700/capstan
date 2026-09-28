@@ -143,6 +143,40 @@ func ledgerLock(t *testing.T, s store.Store) {
 	})
 }
 
+func ledgerBounded(t *testing.T, s store.Store) {
+	seed(t, s, "r")
+	for _, bounded := range []bool{false, true} {
+		call := &store.AICall{RunID: "r", Model: "m", Status: store.AICallReserved, Bounded: bounded, EstimateUSD: .25, At: epoch}
+		mustTx(t, s, func(tx store.Tx) error { return tx.InsertAICall(call) })
+		mustTx(t, s, func(tx store.Tx) error {
+			got, err := tx.GetAICall(call.ID, false)
+			if err != nil {
+				return err
+			}
+			equal(t, got, call)
+			// Changing a returned record must not mutate the stored flag.
+			got.Bounded = !bounded
+			return nil
+		})
+		mustTx(t, s, func(tx store.Tx) error {
+			got, err := tx.GetAICall(call.ID, true)
+			if err != nil {
+				return err
+			}
+			equal(t, got, call)
+			call.Bounded = !bounded
+			return tx.UpdateAICall(call)
+		})
+		mustTx(t, s, func(tx store.Tx) error {
+			got, err := tx.GetAICall(call.ID, false)
+			if err == nil {
+				equal(t, got, call)
+			}
+			return err
+		})
+	}
+}
+
 func txRollback(t *testing.T, s store.Store) {
 	seed(t, s, "r")
 	task := sampleTask("r")

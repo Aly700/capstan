@@ -39,7 +39,7 @@ describe("capstan.model accounting and provider boundary", () => {
     const s = setup();
     expect(await s.invoke({ prompt: "Hello", system: "Be brief", maxTokens: 64 })).toEqual({ text: "hello", model: "claude-sonnet-5", inputTokens: 11, outputTokens: 7, cacheReadTokens: 3, cacheWriteTokens: 5, costUsd: 0.0002, stopReason: "end_turn" });
     expect(s.order).toEqual(["reserve", "provider", "finish"]);
-    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ taskToken: new Uint8Array([1, 2]), model: "claude-sonnet-5" });
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ taskToken: new Uint8Array([1, 2]), model: "claude-sonnet-5", maxOutputTokens: 64n, inputTokensUpperBound: 141n });
     expect(s.call.mock.calls[0]).toEqual([{ model: "claude-sonnet-5", system: "Be brief", messages: [{ role: "user", content: "Hello" }], max_tokens: 64 }, { signal: s.controller.signal, maxRetries: 0 }]);
     expect(s.finish.mock.calls[0]![0]).toEqual({ reservationId: 17n, ok: true, inputTokens: 11n, outputTokens: 7n, cacheReadTokens: 3n, cacheWriteTokens: 5n, errorCode: "", usageUnknown: false });
   });
@@ -49,30 +49,51 @@ describe("capstan.model accounting and provider boundary", () => {
     const system = "Instructions";
     await s.invoke({ model: "claude-opus-5-5", messages, system, maxTokens: 200 });
     const reservation = s.reserve.mock.calls[0]![0];
-    const inputBytes = Buffer.byteLength(JSON.stringify({ messages, system }), "utf8");
-    // One token per UTF-8 byte, plus framing/schema safety allowance, rounded upward.
-    const inputBound = inputBytes + 1024 + 64 * messages.length;
-    expect(reservation).toMatchObject({ model: "claude-opus-5-5", estimateUsd: Math.ceil(inputBound * 5 + 200 * 25) / 1e6 });
+    // 1,300 UTF-8 message bytes + 12 system bytes + 128 framing tokens.
+    const inputBound = 1440;
+    expect(reservation).toMatchObject({ model: "claude-opus-5-5", estimateUsd: Math.ceil(inputBound * 5 + 200 * 25) / 1e6, maxOutputTokens: 200n, inputTokensUpperBound: BigInt(inputBound) });
     expect(s.call.mock.calls[0]![0].model).toBe("claude-opus-5-5");
+  });
+  it("bounds every message and the system prompt by UTF-8 bytes", async () => {
+    const messages = [{ role: "user" as const, content: "日本語🙂" }, { role: "assistant" as const, content: "é" }, { role: "user" as const, content: "終" }];
+    const s = setup();
+    await s.invoke({ messages, system: "café🔒", maxTokens: 8 });
+    // 13 + 2 + 3 message bytes + 9 system bytes + 64 base + 3 × 64 framing.
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ maxOutputTokens: 8n, inputTokensUpperBound: 283n, estimateUsd: 0.000646 });
+    expect(s.call.mock.calls[0]![0]).toMatchObject({ messages, system: "café🔒", max_tokens: 8 });
+  });
+  it("keeps a positive framing bound for an empty text message", async () => {
+    const s = setup();
+    await s.invoke({ prompt: "", maxTokens: 8 });
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ maxOutputTokens: 8n, inputTokensUpperBound: 128n });
+  });
+  it.each([undefined, 0, 0.01])("bounds the recorded 14-token live prompt even with estimate %s", async (estimateUsd) => {
+    const recorded = response("OK.");
+    recorded.model = "claude-haiku-4-5-20251001";
+    recorded.usage = { ...recorded.usage, input_tokens: 14, output_tokens: 4, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 };
+    const s = setup(async () => recorded);
+    const result = await s.invoke({ model: recorded.model, prompt: "Reply with the single word OK.", maxTokens: 32, ...(estimateUsd === undefined ? {} : { estimateUsd }) });
+    const reservation = s.reserve.mock.calls[0]![0];
+    expect(reservation).toMatchObject({ maxOutputTokens: 32n, inputTokensUpperBound: 158n, estimateUsd: estimateUsd ?? 0.000318 });
+    expect(reservation.inputTokensUpperBound).toBeGreaterThanOrEqual(BigInt(result.inputTokens));
+    expect(s.order).toEqual(["reserve", "provider", "finish"]);
   });
   it("uses configured default model and honours an explicit upper-bound estimate", async () => {
     const s = setup();
     await s.invoke({ prompt: "Hi", estimateUsd: 0.0123451 }, "claude-haiku-4-5-20251001");
-    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ model: "claude-haiku-4-5-20251001", estimateUsd: 0.012346 });
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ model: "claude-haiku-4-5-20251001", estimateUsd: 0.012346, maxOutputTokens: 1024n, inputTokensUpperBound: 130n });
   });
   it("reads worker price overrides for the estimate and chooses the longest family prefix", async () => {
     vi.stubEnv("CAPSTAN_MODEL_PRICES", JSON.stringify({ "claude-opus-5": { input: 7, output: 31 }, "claude-opus-5-5": { input: 11, output: 53 } }));
     const s = setup();
     await s.invoke({ model: "claude-opus-5-5", prompt: "Hi", maxTokens: 20 });
-    const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
-    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 11 + 20 * 53) / 1e6);
+    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil(130 * 11 + 20 * 53) / 1e6);
   });
   it("merges price overrides with built-in families like the server", async () => {
     vi.stubEnv("CAPSTAN_MODEL_PRICES", JSON.stringify({ claude: { input: 0.001, output: 0.001 } }));
     const s = setup();
     await s.invoke({ model: "claude-sonnet-5", prompt: "Hi", maxTokens: 20 });
-    const bytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "Hi" }] }));
-    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((bytes + 1088) * 2 + 20 * 10) / 1e6);
+    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil(130 * 2 + 20 * 10) / 1e6);
   });
   it("fails closed for an unknown model without an explicit estimate", async () => {
     const s = setup();
@@ -83,11 +104,11 @@ describe("capstan.model accounting and provider boundary", () => {
   it("accepts an explicit estimate for an unknown model", async () => {
     const s = setup();
     await s.invoke({ model: "custom-model", prompt: "Hi", estimateUsd: 0.1 });
-    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ model: "custom-model", estimateUsd: 0.1 });
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ model: "custom-model", estimateUsd: 0.1, maxOutputTokens: 1024n, inputTokensUpperBound: 130n });
   });
   it("uses the installed SDK structured-output field and validates nested JSON", async () => {
     const value = { result: { count: 2 }, tags: ["ok"] };
-    const schema = z.toJSONSchema(z.strictObject({ result: z.strictObject({ count: z.number().int().positive() }), tags: z.array(z.string()) }));
+    const schema = z.toJSONSchema(z.strictObject({ result: z.strictObject({ count: z.number().int().positive() }), tags: z.array(z.string().describe("日本語🙂")) }));
     const s = setup(async () => response(JSON.stringify(value)));
     expect(await s.invoke({ prompt: "JSON", jsonSchema: schema })).toMatchObject({ json: value, text: JSON.stringify(value) });
     const format = s.call.mock.calls[0]![0].output_config?.format;
@@ -95,8 +116,11 @@ describe("capstan.model accounting and provider boundary", () => {
     expect(format?.schema).toMatchObject({ type: "object", properties: { result: { properties: { count: { type: "integer" } } } } });
     expect(format?.schema).not.toHaveProperty("properties.result.properties.count.exclusiveMinimum");
     expect(format?.schema).toHaveProperty("properties.result.properties.count.description");
-    const inputBytes = Buffer.byteLength(JSON.stringify({ messages: [{ role: "user", content: "JSON" }], output_config: { format } }));
-    expect(s.reserve.mock.calls[0]![0].estimateUsd).toBe(Math.ceil((inputBytes + 1088) * 2 + 1024 * 10) / 1e6);
+    const schemaJson = JSON.stringify(format!.schema);
+    const schemaBytes = Buffer.byteLength(schemaJson, "utf8");
+    expect(schemaBytes).toBeGreaterThan(schemaJson.length);
+    const inputBound = 132 + schemaBytes;
+    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ inputTokensUpperBound: BigInt(inputBound), maxOutputTokens: 1024n, estimateUsd: Math.ceil(inputBound * 2 + 1024 * 10) / 1e6 });
   });
   it.each(["not json: secret-output", '{"count":"secret-output"}', '{"count":2,"extra":true}'])("invalid output still records billed tokens: %s", async (text) => {
     const s = setup(async () => response(text));

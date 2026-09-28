@@ -305,6 +305,7 @@ type AICall struct {
 	ActivitySeq      int64
 	Model            string
 	Status           AICallStatus
+	Bounded          bool // both token bounds were priced by the server; false for legacy or unknown models
 	EstimateUSD      float64
 	CostUSD          float64 // 0 while reserved
 	InputTokens      int64
