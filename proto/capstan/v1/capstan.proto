@@ -1,0 +1,740 @@
+// Capstan protocol, version 1.
+//
+// This file is the contract between the Go server and every worker SDK. It is frozen for
+// the build: lanes implement it and do not change it. A change needs the lead, a note in
+// docs/decisions.md, and regenerated code in the same commit.
+//
+// Vocabulary used throughout:
+//   run      one execution of a workflow, identified by a caller-supplied run_id
+//   command  what worker code asks for (returned when a workflow task completes)
+//   event    what the server durably recorded; the history of a run is its events
+//   seq      the per-run sequence number the SDK assigns to each command it emits, in
+//            emission order starting at 1; it identifies activities, timers, markers
+//            and approvals across replays
+syntax = "proto3";
+
+package capstan.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Aly700/capstan/gen/capstan/v1;capstanv1";
+
+// ---------------------------------------------------------------------------------------
+// Common
+// ---------------------------------------------------------------------------------------
+
+// Payload is opaque to the server. The SDK owns serialization; the server never parses it.
+message Payload {
+  string content_type = 1; // "application/json" unless stated otherwise
+  bytes data = 2;
+}
+
+message RetryPolicy {
+  google.protobuf.Duration initial_interval = 1; // default 1s
+  double backoff_coefficient = 2; // default 2.0
+  google.protobuf.Duration maximum_interval = 3; // default 100 x initial_interval
+  int32 maximum_attempts = 4; // 0 means unlimited
+  repeated string non_retryable_error_types = 5; // matched against Failure.type
+}
+
+message Failure {
+  string message = 1;
+  string type = 2; // error class or category; used for retry decisions
+  bool non_retryable = 3;
+  string stack = 4; // may be empty; never carries secrets
+  Payload details = 5;
+  Failure cause = 6;
+}
+
+enum RunStatus {
+  RUN_STATUS_UNSPECIFIED = 0;
+  RUN_STATUS_RUNNING = 1;
+  RUN_STATUS_COMPLETED = 2;
+  RUN_STATUS_FAILED = 3;
+  RUN_STATUS_CANCELLED = 4;
+  RUN_STATUS_TIMED_OUT = 5;
+  // Paused because workflow code no longer matches its history. Resumable.
+  RUN_STATUS_BLOCKED = 6;
+  RUN_STATUS_CONTINUED_AS_NEW = 7;
+}
+
+enum TimeoutType {
+  TIMEOUT_TYPE_UNSPECIFIED = 0;
+  TIMEOUT_TYPE_SCHEDULE_TO_START = 1;
+  TIMEOUT_TYPE_START_TO_CLOSE = 2;
+  TIMEOUT_TYPE_SCHEDULE_TO_CLOSE = 3;
+  TIMEOUT_TYPE_HEARTBEAT = 4;
+}
+
+enum TaskFailedCause {
+  TASK_FAILED_CAUSE_UNSPECIFIED = 0;
+  // Replay produced a command that does not match the recorded event. Blocks the run.
+  TASK_FAILED_CAUSE_HISTORY_MISMATCH = 1;
+  // The SDK itself failed (bug, bundle load error, sandbox violation). Retried.
+  TASK_FAILED_CAUSE_SDK_ERROR = 2;
+}
+
+enum ApprovalSource {
+  APPROVAL_SOURCE_UNSPECIFIED = 0;
+  APPROVAL_SOURCE_GATE = 1; // the approval lives in AgentOps Gate; the server watches it
+  APPROVAL_SOURCE_HUMAN = 2; // the approval lives only in Capstan; resolved via ResolveApproval
+}
+
+enum ApprovalOutcome {
+  APPROVAL_OUTCOME_UNSPECIFIED = 0;
+  APPROVAL_OUTCOME_APPROVED = 1;
+  APPROVAL_OUTCOME_DENIED = 2;
+  APPROVAL_OUTCOME_EXPIRED = 3;
+}
+
+// ---------------------------------------------------------------------------------------
+// History
+// ---------------------------------------------------------------------------------------
+
+enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0;
+  EVENT_TYPE_RUN_STARTED = 1;
+  EVENT_TYPE_RUN_COMPLETED = 2;
+  EVENT_TYPE_RUN_FAILED = 3;
+  EVENT_TYPE_RUN_CANCEL_REQUESTED = 4;
+  EVENT_TYPE_RUN_CANCELLED = 5;
+  EVENT_TYPE_RUN_TIMED_OUT = 6;
+  EVENT_TYPE_RUN_CONTINUED_AS_NEW = 7;
+  EVENT_TYPE_RUN_BLOCKED = 8;
+  EVENT_TYPE_RUN_RESUMED = 9;
+
+  EVENT_TYPE_TASK_SCHEDULED = 10;
+  EVENT_TYPE_TASK_STARTED = 11;
+  EVENT_TYPE_TASK_COMPLETED = 12;
+  EVENT_TYPE_TASK_FAILED = 13;
+  EVENT_TYPE_TASK_TIMED_OUT = 14;
+
+  EVENT_TYPE_ACTIVITY_SCHEDULED = 20;
+  EVENT_TYPE_ACTIVITY_COMPLETED = 21;
+  EVENT_TYPE_ACTIVITY_FAILED = 22;
+  EVENT_TYPE_ACTIVITY_TIMED_OUT = 23;
+  EVENT_TYPE_ACTIVITY_CANCEL_REQUESTED = 24;
+  EVENT_TYPE_ACTIVITY_CANCELLED = 25;
+
+  EVENT_TYPE_TIMER_STARTED = 30;
+  EVENT_TYPE_TIMER_FIRED = 31;
+  EVENT_TYPE_TIMER_CANCELLED = 32;
+
+  EVENT_TYPE_SIGNAL_RECEIVED = 40;
+
+  EVENT_TYPE_MARKER_RECORDED = 50;
+
+  EVENT_TYPE_APPROVAL_REQUESTED = 60;
+  EVENT_TYPE_APPROVAL_RESOLVED = 61;
+}
+
+// One entry in a run's append-only, gap-free history. event_id starts at 1.
+//
+// Shape of every history, which the engine guarantees and the SDK relies on:
+//
+//   RunStarted
+//   TaskScheduled
+//   TaskStarted                 <- a workflow task begins; now() is this event's time
+//   TaskCompleted               <- the task's commands follow immediately, in emission order
+//   <command events>            ActivityScheduled, TimerStarted, TimerCancelled,
+//                               MarkerRecorded, ApprovalRequested,
+//                               ActivityCancelRequested, and at most one closing event
+//                               (RunCompleted, RunFailed, RunCancelled, RunContinuedAsNew)
+//   <external events>           ActivityCompleted/Failed/TimedOut/Cancelled, TimerFired,
+//                               SignalReceived, ApprovalResolved, RunCancelRequested,
+//                               TaskFailed, TaskTimedOut, RunBlocked, RunResumed
+//   TaskScheduled
+//   TaskStarted
+//   ...
+//
+// External events never appear between TaskStarted and the end of that task's command
+// events: while a workflow task is in flight they wait in the run's inbox and are flushed
+// after the task's command events, in arrival order.
+message HistoryEvent {
+  int64 event_id = 1;
+  EventType type = 2;
+  google.protobuf.Timestamp time = 3;
+
+  oneof attributes {
+    RunStartedAttributes run_started = 10;
+    RunCompletedAttributes run_completed = 11;
+    RunFailedAttributes run_failed = 12;
+    RunCancelRequestedAttributes run_cancel_requested = 13;
+    RunCancelledAttributes run_cancelled = 14;
+    RunTimedOutAttributes run_timed_out = 15;
+    RunContinuedAsNewAttributes run_continued_as_new = 16;
+    RunBlockedAttributes run_blocked = 17;
+    RunResumedAttributes run_resumed = 18;
+
+    TaskScheduledAttributes task_scheduled = 20;
+    TaskStartedAttributes task_started = 21;
+    TaskCompletedAttributes task_completed = 22;
+    TaskFailedAttributes task_failed = 23;
+    TaskTimedOutAttributes task_timed_out = 24;
+
+    ActivityScheduledAttributes activity_scheduled = 30;
+    ActivityCompletedAttributes activity_completed = 31;
+    ActivityFailedAttributes activity_failed = 32;
+    ActivityTimedOutAttributes activity_timed_out = 33;
+    ActivityCancelRequestedAttributes activity_cancel_requested = 34;
+    ActivityCancelledAttributes activity_cancelled = 35;
+
+    TimerStartedAttributes timer_started = 40;
+    TimerFiredAttributes timer_fired = 41;
+    TimerCancelledAttributes timer_cancelled = 42;
+
+    SignalReceivedAttributes signal_received = 50;
+
+    MarkerRecordedAttributes marker_recorded = 60;
+
+    ApprovalRequestedAttributes approval_requested = 70;
+    ApprovalResolvedAttributes approval_resolved = 71;
+  }
+}
+
+message RunStartedAttributes {
+  string workflow_type = 1;
+  string task_queue = 2;
+  Payload input = 3;
+  google.protobuf.Duration run_timeout = 4; // unset means no run timeout
+  google.protobuf.Duration task_timeout = 5; // workflow task start-to-close; default 10s
+  string continued_from_run_id = 6;
+  string identity = 7; // who started it (API key name)
+}
+
+message RunCompletedAttributes {
+  Payload result = 1;
+  int64 task_completed_event_id = 2;
+}
+
+message RunFailedAttributes {
+  Failure failure = 1;
+  int64 task_completed_event_id = 2;
+}
+
+message RunCancelRequestedAttributes {
+  string reason = 1;
+  string identity = 2;
+}
+
+message RunCancelledAttributes {
+  Payload details = 1;
+  int64 task_completed_event_id = 2;
+}
+
+message RunTimedOutAttributes {}
+
+message RunContinuedAsNewAttributes {
+  string new_run_id = 1;
+  string workflow_type = 2;
+  string task_queue = 3;
+  Payload input = 4;
+  int64 task_completed_event_id = 5;
+}
+
+message RunBlockedAttributes {
+  int64 task_failed_event_id = 1;
+  Failure failure = 2; // carries the mismatch description
+}
+
+message RunResumedAttributes {
+  string identity = 1;
+  string reason = 2;
+}
+
+message TaskScheduledAttributes {
+  string task_queue = 1;
+  google.protobuf.Duration start_to_close_timeout = 2;
+  int32 attempt = 3; // 1 for the first attempt
+}
+
+message TaskStartedAttributes {
+  int64 scheduled_event_id = 1;
+  string identity = 2; // worker identity
+}
+
+message TaskCompletedAttributes {
+  int64 scheduled_event_id = 1;
+  int64 started_event_id = 2;
+  string identity = 3;
+  string build_id = 4;
+}
+
+message TaskFailedAttributes {
+  int64 scheduled_event_id = 1;
+  int64 started_event_id = 2;
+  TaskFailedCause cause = 3;
+  Failure failure = 4;
+  string identity = 5;
+}
+
+message TaskTimedOutAttributes {
+  int64 scheduled_event_id = 1;
+  int64 started_event_id = 2;
+}
+
+message ActivityScheduledAttributes {
+  int64 seq = 1;
+  string activity_type = 2;
+  string task_queue = 3;
+  Payload input = 4;
+  google.protobuf.Duration schedule_to_close_timeout = 5; // unset means none
+  google.protobuf.Duration schedule_to_start_timeout = 6; // unset means none
+  google.protobuf.Duration start_to_close_timeout = 7; // required
+  google.protobuf.Duration heartbeat_timeout = 8; // unset means none
+  RetryPolicy retry_policy = 9; // unset means the default policy
+  int64 task_completed_event_id = 10;
+}
+
+message ActivityCompletedAttributes {
+  int64 scheduled_event_id = 1;
+  int64 seq = 2;
+  Payload result = 3;
+  int32 attempt = 4;
+  string identity = 5;
+}
+
+message ActivityFailedAttributes {
+  int64 scheduled_event_id = 1;
+  int64 seq = 2;
+  Failure failure = 3;
+  int32 attempt = 4;
+  string identity = 5;
+}
+
+message ActivityTimedOutAttributes {
+  int64 scheduled_event_id = 1;
+  int64 seq = 2;
+  TimeoutType timeout_type = 3;
+  Failure last_failure = 4;
+  int32 attempt = 5;
+}
+
+message ActivityCancelRequestedAttributes {
+  int64 scheduled_event_id = 1;
+  int64 seq = 2;
+  int64 task_completed_event_id = 3;
+}
+
+message ActivityCancelledAttributes {
+  int64 scheduled_event_id = 1;
+  int64 seq = 2;
+  Payload details = 3;
+}
+
+message TimerStartedAttributes {
+  int64 seq = 1;
+  google.protobuf.Duration fire_after = 2;
+  int64 task_completed_event_id = 3;
+}
+
+message TimerFiredAttributes {
+  int64 started_event_id = 1;
+  int64 seq = 2;
+}
+
+message TimerCancelledAttributes {
+  int64 started_event_id = 1;
+  int64 seq = 2;
+  int64 task_completed_event_id = 3;
+}
+
+message SignalReceivedAttributes {
+  string name = 1;
+  Payload input = 2;
+  string identity = 3;
+  string request_id = 4; // duplicate signals with the same request_id are dropped
+}
+
+// Markers record values that must come back identically on replay: patch decisions,
+// side-effect results, generated ids.
+message MarkerRecordedAttributes {
+  int64 seq = 1;
+  string name = 2; // "patch", "side_effect", "uuid", "deprecated_patch"
+  string marker_id = 3; // e.g. the patch id; empty when not applicable
+  Payload details = 4;
+  int64 task_completed_event_id = 5;
+}
+
+message ApprovalRequestedAttributes {
+  int64 seq = 1;
+  string approval_id = 2; // GATE: the Gate's approval id; HUMAN: an SDK-generated id
+  ApprovalSource source = 3;
+  string gate_decision_id = 4; // GATE only
+  string tool = 5; // GATE: the tool name; HUMAN: empty
+  Payload arguments = 6; // GATE: the tool arguments; HUMAN: empty
+  string prompt = 7; // HUMAN: the question; GATE: optional context
+  repeated string options = 8; // HUMAN: allowed choices; empty means approve/deny
+  google.protobuf.Duration timeout = 9; // unset means wait indefinitely
+  int64 task_completed_event_id = 10;
+}
+
+message ApprovalResolvedAttributes {
+  int64 requested_event_id = 1;
+  int64 seq = 2;
+  string approval_id = 3;
+  ApprovalOutcome outcome = 4;
+  string choice = 5; // HUMAN with options: the chosen option
+  string resolver = 6; // who decided; "timeout" for expiry
+  string note = 7;
+}
+
+// ---------------------------------------------------------------------------------------
+// Commands
+// ---------------------------------------------------------------------------------------
+
+// A command a workflow task returns. Each command maps to exactly one command event, and
+// the engine appends those events in the order the commands were returned.
+message Command {
+  oneof attributes {
+    ScheduleActivityCommand schedule_activity = 1;
+    RequestActivityCancelCommand request_activity_cancel = 2;
+    StartTimerCommand start_timer = 3;
+    CancelTimerCommand cancel_timer = 4;
+    RecordMarkerCommand record_marker = 5;
+    RequestApprovalCommand request_approval = 6;
+    CompleteRunCommand complete_run = 7;
+    FailRunCommand fail_run = 8;
+    CancelRunCommand cancel_run = 9;
+    ContinueAsNewCommand continue_as_new = 10;
+  }
+}
+
+message ScheduleActivityCommand {
+  int64 seq = 1;
+  string activity_type = 2;
+  string task_queue = 3; // empty means the run's task queue
+  Payload input = 4;
+  google.protobuf.Duration schedule_to_close_timeout = 5;
+  google.protobuf.Duration schedule_to_start_timeout = 6;
+  google.protobuf.Duration start_to_close_timeout = 7; // required
+  google.protobuf.Duration heartbeat_timeout = 8;
+  RetryPolicy retry_policy = 9;
+}
+
+message RequestActivityCancelCommand {
+  int64 seq = 1; // the seq of the activity to cancel
+}
+
+message StartTimerCommand {
+  int64 seq = 1;
+  google.protobuf.Duration fire_after = 2; // must be > 0
+}
+
+message CancelTimerCommand {
+  int64 seq = 1; // the seq of the timer to cancel
+}
+
+message RecordMarkerCommand {
+  int64 seq = 1;
+  string name = 2;
+  string marker_id = 3;
+  Payload details = 4;
+}
+
+message RequestApprovalCommand {
+  int64 seq = 1;
+  string approval_id = 2;
+  ApprovalSource source = 3;
+  string gate_decision_id = 4;
+  string tool = 5;
+  Payload arguments = 6;
+  string prompt = 7;
+  repeated string options = 8;
+  google.protobuf.Duration timeout = 9;
+}
+
+message CompleteRunCommand {
+  Payload result = 1;
+}
+
+message FailRunCommand {
+  Failure failure = 1;
+}
+
+// Acknowledges a RunCancelRequested event and closes the run as cancelled.
+message CancelRunCommand {
+  Payload details = 1;
+}
+
+message ContinueAsNewCommand {
+  string workflow_type = 1; // empty means the same type
+  string task_queue = 2; // empty means the same queue
+  Payload input = 3;
+}
+
+// ---------------------------------------------------------------------------------------
+// Task tokens
+// ---------------------------------------------------------------------------------------
+
+enum TaskKind {
+  TASK_KIND_UNSPECIFIED = 0;
+  TASK_KIND_WORKFLOW = 1;
+  TASK_KIND_ACTIVITY = 2;
+}
+
+// Serialized into the opaque task_token bytes handed to workers. The server validates
+// every field against its own state; a token that no longer matches is stale.
+message TaskToken {
+  TaskKind kind = 1;
+  string run_id = 2;
+  int64 task_id = 3;
+  int32 attempt = 4;
+  int64 scheduled_event_id = 5; // workflow: TaskScheduled id; activity: ActivityScheduled id
+  int64 started_event_id = 6; // workflow: TaskStarted id; activity: 0
+  int64 seq = 7; // activity: its seq; workflow: 0
+}
+
+// ---------------------------------------------------------------------------------------
+// Worker service
+// ---------------------------------------------------------------------------------------
+
+service WorkerService {
+  // Long poll, up to 30 seconds. An empty task_token means no task was available.
+  rpc PollWorkflowTask(PollWorkflowTaskRequest) returns (PollWorkflowTaskResponse);
+  rpc CompleteWorkflowTask(CompleteWorkflowTaskRequest) returns (CompleteWorkflowTaskResponse);
+  rpc FailWorkflowTask(FailWorkflowTaskRequest) returns (FailWorkflowTaskResponse);
+
+  // Long poll, up to 30 seconds. An empty task_token means no task was available.
+  rpc PollActivityTask(PollActivityTaskRequest) returns (PollActivityTaskResponse);
+  rpc CompleteActivityTask(CompleteActivityTaskRequest) returns (CompleteActivityTaskResponse);
+  rpc FailActivityTask(FailActivityTaskRequest) returns (FailActivityTaskResponse);
+  rpc HeartbeatActivityTask(HeartbeatActivityTaskRequest) returns (HeartbeatActivityTaskResponse);
+
+  // Model-call accounting. Reserve before calling a model; finish after. Reserve fails with
+  // RESOURCE_EXHAUSTED when the day's spend plus the estimate would exceed the cap.
+  rpc ReserveAICall(ReserveAICallRequest) returns (ReserveAICallResponse);
+  rpc FinishAICall(FinishAICallRequest) returns (FinishAICallResponse);
+}
+
+message PollWorkflowTaskRequest {
+  string task_queue = 1;
+  string identity = 2;
+  string build_id = 3;
+}
+
+message PollWorkflowTaskResponse {
+  bytes task_token = 1; // empty: no task
+  string run_id = 2;
+  string workflow_type = 3;
+  int32 attempt = 4;
+  // The full history up to and including this task's TaskStarted event.
+  repeated HistoryEvent history = 5;
+}
+
+message CompleteWorkflowTaskRequest {
+  bytes task_token = 1;
+  repeated Command commands = 2;
+  string identity = 3;
+  string build_id = 4;
+}
+
+message CompleteWorkflowTaskResponse {}
+
+message FailWorkflowTaskRequest {
+  bytes task_token = 1;
+  TaskFailedCause cause = 2;
+  Failure failure = 3;
+  string identity = 4;
+}
+
+message FailWorkflowTaskResponse {}
+
+message PollActivityTaskRequest {
+  string task_queue = 1;
+  string identity = 2;
+}
+
+message PollActivityTaskResponse {
+  bytes task_token = 1; // empty: no task
+  string run_id = 2;
+  string workflow_type = 3;
+  int64 seq = 4;
+  string activity_type = 5;
+  Payload input = 6;
+  int32 attempt = 7;
+  google.protobuf.Timestamp scheduled_time = 8;
+  google.protobuf.Timestamp started_time = 9;
+  google.protobuf.Duration start_to_close_timeout = 10;
+  google.protobuf.Duration heartbeat_timeout = 11;
+  Payload heartbeat_details = 12; // the last details recorded by a previous attempt
+  // Stable across every attempt of this activity: "<run_id>/<seq>". Pass it to any
+  // external system that supports idempotency keys.
+  string idempotency_key = 13;
+}
+
+message CompleteActivityTaskRequest {
+  bytes task_token = 1;
+  Payload result = 2;
+  string identity = 3;
+}
+
+message CompleteActivityTaskResponse {}
+
+message FailActivityTaskRequest {
+  bytes task_token = 1;
+  Failure failure = 2;
+  string identity = 3;
+}
+
+message FailActivityTaskResponse {}
+
+message HeartbeatActivityTaskRequest {
+  bytes task_token = 1;
+  Payload details = 2;
+}
+
+message HeartbeatActivityTaskResponse {
+  bool cancel_requested = 1;
+}
+
+message ReserveAICallRequest {
+  bytes task_token = 1; // the activity task making the model call
+  string model = 2;
+  double estimate_usd = 3; // upper bound for this call
+}
+
+message ReserveAICallResponse {
+  int64 reservation_id = 1;
+  double spent_today_usd = 2;
+  double cap_usd = 3;
+}
+
+message FinishAICallRequest {
+  int64 reservation_id = 1;
+  bool ok = 2;
+  int64 input_tokens = 3;
+  int64 output_tokens = 4;
+  int64 cache_read_tokens = 5;
+  int64 cache_write_tokens = 6;
+  string error_code = 7; // fixed codes only, never raw provider text
+}
+
+message FinishAICallResponse {
+  double cost_usd = 1; // computed by the server from its price table
+}
+
+// ---------------------------------------------------------------------------------------
+// Client service
+// ---------------------------------------------------------------------------------------
+
+service ClientService {
+  // Idempotent on run_id: starting an existing run with the same workflow_type returns it
+  // with started=false; a different workflow_type is ALREADY_EXISTS.
+  rpc StartRun(StartRunRequest) returns (StartRunResponse);
+  rpc SignalRun(SignalRunRequest) returns (SignalRunResponse);
+  rpc CancelRun(CancelRunRequest) returns (CancelRunResponse);
+  // Moves a BLOCKED run back to RUNNING and schedules a workflow task.
+  rpc ResumeRun(ResumeRunRequest) returns (ResumeRunResponse);
+  rpc DescribeRun(DescribeRunRequest) returns (DescribeRunResponse);
+  // Long poll, up to 30 seconds: returns when the run closes or the wait elapses.
+  rpc AwaitRun(AwaitRunRequest) returns (AwaitRunResponse);
+  rpc ListRuns(ListRunsRequest) returns (ListRunsResponse);
+  rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse);
+  rpc ResolveApproval(ResolveApprovalRequest) returns (ResolveApprovalResponse);
+}
+
+message StartRunRequest {
+  string run_id = 1; // required, caller-chosen, 1-200 chars of [A-Za-z0-9._:-]
+  string workflow_type = 2;
+  string task_queue = 3;
+  Payload input = 4;
+  google.protobuf.Duration run_timeout = 5;
+  google.protobuf.Duration task_timeout = 6;
+}
+
+message StartRunResponse {
+  RunInfo run = 1;
+  bool started = 2; // false when the run already existed
+}
+
+message SignalRunRequest {
+  string run_id = 1;
+  string name = 2;
+  Payload input = 3;
+  string request_id = 4; // optional dedupe key
+}
+
+message SignalRunResponse {}
+
+message CancelRunRequest {
+  string run_id = 1;
+  string reason = 2;
+}
+
+message CancelRunResponse {}
+
+message ResumeRunRequest {
+  string run_id = 1;
+  string reason = 2;
+}
+
+message ResumeRunResponse {}
+
+message DescribeRunRequest {
+  string run_id = 1;
+}
+
+message DescribeRunResponse {
+  RunInfo run = 1;
+}
+
+message AwaitRunRequest {
+  string run_id = 1;
+}
+
+message AwaitRunResponse {
+  RunInfo run = 1;
+  bool closed = 2;
+}
+
+message ListRunsRequest {
+  RunStatus status = 1; // UNSPECIFIED means any
+  string workflow_type = 2; // empty means any
+  int32 page_size = 3; // default 50, max 500
+  string page_token = 4;
+}
+
+message ListRunsResponse {
+  repeated RunInfo runs = 1;
+  string next_page_token = 2;
+}
+
+message GetHistoryRequest {
+  string run_id = 1;
+  int64 after_event_id = 2; // 0 means from the start
+  int32 page_size = 3; // default 1000, max 5000
+}
+
+message GetHistoryResponse {
+  repeated HistoryEvent events = 1;
+  bool more = 2;
+}
+
+message ResolveApprovalRequest {
+  string run_id = 1;
+  string approval_id = 2;
+  ApprovalOutcome outcome = 3; // APPROVED or DENIED
+  string choice = 4;
+  string resolver = 5;
+  string note = 6;
+}
+
+message ResolveApprovalResponse {}
+
+message RunInfo {
+  string run_id = 1;
+  string workflow_type = 2;
+  string task_queue = 3;
+  RunStatus status = 4;
+  google.protobuf.Timestamp started_at = 5;
+  google.protobuf.Timestamp closed_at = 6;
+  int64 last_event_id = 7;
+  Payload result = 8;
+  Failure failure = 9;
+  double cost_usd = 10;
+  int32 pending_activities = 11;
+  int32 pending_approvals = 12;
+  string continued_as_new_run_id = 13;
+}
