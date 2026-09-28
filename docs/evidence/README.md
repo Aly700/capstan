@@ -8,11 +8,11 @@ The root README is owned by integration and was not edited.
 | Spec §13 claim | Evidence file | Command to reproduce | Status |
 | --- | --- | --- | --- |
 | A run survives a crash | [crash.md](crash.md), [session](demo-crash.cast), [GIF](demo-crash.gif) | `scripts/demo-crash.sh` | **VERIFIED — 2026-09-28.** Real server SIGKILL/restart; result `[1,2,3,4]`; original 10 events remain an exact prefix. |
-| Effects apply once when the destination honors the idempotency key (D3) | Lab-owned `lab-*.md` and `defects.md`; see [pending evidence](#pending-evidence) | Planned lab command: `GOTOOLCHAIN=go1.26.4 go test ./internal/lab -run TestLab -seeds 2000` | **PENDING — lab lane P1**, campaign and duplicate-delivery effect-sink evidence. |
+| Effects apply once when the destination honors the idempotency key (D3) | [lab-2026-09-28.md](lab-2026-09-28.md), [defects.md](defects.md), [fault model](lab-l2.md) | `go run ./cmd/capstan-lab -seeds 200000 -parallel 8 -workers 3 -max-steps 1000 -faults all` | **VERIFIED within the lab's fault model — 2026-09-28.** 200,000 seeds, 0 failures, P1–P4 checked on every seed (memstore; bounds in lab-l2.md). Mutation score pending. |
 | A workflow can wait days | [idle-wait.md](idle-wait.md), [session](demo-idle-wait.cast); clock-jump evidence pending | `scripts/demo-idle-wait.sh` reproduces the verified idle portion | **PENDING — full multi-day approval claim.** Zero demo workers/leases and later signal resume **verified 2026-09-28**; agent/lab approval plus clock-jump proof remains. |
 | Code changes do not corrupt live runs | [blocked.md](blocked.md), [session](demo-blocked.cast) | `scripts/demo-blocked.sh` | **VERIFIED — 2026-09-28.** Incompatible V2 blocks; explicit resume with `patched()` preserves the old result; new runs take the new branch. |
 | Throughput, with its ceiling named | [load.md](load.md), [full numbers](load-results.json) | `scripts/run-load.sh 50 1000 4`; `scripts/run-load.sh 200 1000 4`; `scripts/run-load.sh 800 1600 4` | **VERIFIED — 2026-09-28.** Eleven measurements including repeats and worker controls; 11,700 runs, 58,500 activity completions, zero failed runs. |
-| Cost of a real agent run | [Pending ledger artifact](#pending-evidence) | After a real agent run: `psql "$CAPSTAN_DATABASE_URL" -c 'select run_id,activity_seq,model,status,input_tokens,output_tokens,cost_usd from ai_call order by id'` | **PENDING — agent lane / real cost ledger.** No paid model call was made in this lane. |
+| Cost of a real agent run | [cost.md](cost.md), [session](demo-cost.cast) | `CAPSTAN_ANTHROPIC_ENV_FILE=<file> scripts/demo-cost.sh` | **VERIFIED — 2026-09-28.** One real claude-haiku-4-5 call: 14 in / 4 out tokens, $0.000034, one ledger row after a second worker replayed the run. |
 
 The [run viewer evidence](ui.md) includes inspected [list](ui-list.png),
 [completed](ui-completed.png), [blocked](ui-blocked.png), and [mobile](ui-mobile.png)
@@ -44,9 +44,6 @@ signal fallback proves an idle wait with no worker process or leased task in thi
 demo, followed by persisted signal delivery and successful resume. Five real seconds
 are not multi-day clock-jump evidence. The complete approval/days claim stays pending.
 
-A real agent `ai_call` ledger export has not been delivered. Its evidence filename
-and invocation will be linked when supplied by the agent/workload lane. A zero-cost
-non-agent workflow is not evidence of model pricing or replay billing behavior.
 
 ## Verification
 
