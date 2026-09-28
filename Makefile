@@ -27,7 +27,7 @@ test-go:
 	go test -race -count=1 -tags pgengine ./internal/engine/...
 
 test-sdk:
-	cd sdk && npx vitest run
+	cd sdk && CAPSTAN_E2E=1 npx vitest run
 
 test: test-go test-sdk
 
