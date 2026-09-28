@@ -222,3 +222,13 @@ test('Gate URL and key are injected together or not at all', async () => {
   assert.ok(names(withGate.Environment).includes('CAPSTAN_GATE_URL'));
   assert.ok(names(withGate.Secrets).includes('CAPSTAN_GATE_API_KEY'));
 });
+
+// AWS attempt 2: ecs:DeregisterTaskDefinition is evaluated against "*", so a
+// task-definition-ARN grant left the failed service stack in ROLLBACK_FAILED.
+test('the CloudFormation role can register, describe and deregister task definitions', async () => {
+  const { oidc } = await synth();
+  const statements = Object.values(oidc.findResources('AWS::IAM::Policy')).flatMap((p: any) => p.Properties.PolicyDocument.Statement);
+  for (const action of ['ecs:RegisterTaskDefinition', 'ecs:DescribeTaskDefinition', 'ecs:DeregisterTaskDefinition']) {
+    assert.ok(statements.some((s: any) => [s.Action].flat().includes(action) && [s.Resource].flat().includes('*')), `${action} on *`);
+  }
+});
