@@ -100,6 +100,14 @@ All three workload roles require the foundation's fixed permissions boundary, so
 inline role policy cannot broaden their runtime access. The task role itself has no
 AWS permissions; the ECS execution role fetches the three injected secrets.
 
+Cloud Map's tag, untag and list-tags APIs do not support namespace/service ARN
+permissions. The execution role grants those explicit actions on `*`, restricted to
+`us-east-1`. Live namespace creation failed when tagging was limited to resource ARNs.
+See the [Cloud Map authorization reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_servicediscovery.html).
+After an execution-role policy fix lands on main, the owner must redeploy
+`CapstanGithubOidc` with the same imported-provider context before retrying Deploy;
+the GitHub workflow cannot update that foundation policy itself.
+
 `CapstanNetwork` is also owner-managed. Workload synthesis imports its named subnet,
 AZ and security-group exports; the GitHub execution role has no EC2 mutation actions.
 Network changes require an owner-reviewed deployment. This avoids granting broad
