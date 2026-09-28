@@ -181,3 +181,27 @@ model is unknown and is charged its estimate (D8). Implemented by the lead at in
 The machine's default Go is 1.27.1; go.mod and CI say 1.26.4. The Makefile exports
 `GOTOOLCHAIN ?= go1.26.4` so local gates run what CI runs. `GOTOOLCHAIN=local make verify`
 opts out.
+
+## D27 — 2026-09-28 — Unknown provider usage is charged at the estimate
+
+A model call can fail after the provider has billed it (a timeout on a non-streaming
+response), with no token counts to report. `FinishAICallRequest` gains
+`bool usage_unknown`. When it is set on a failed call, the engine charges the reservation
+estimate instead of zero, so the ledger over-counts rather than under-counts. The worker
+sets it when a provider request was sent and no usage came back. (Agent lane issue 1.)
+
+## D28 — 2026-09-28 — A lost Reserve acknowledgement stays counted until midnight
+
+If a ReserveAICall commits but its response is lost, the worker never calls the provider
+(it has no reservation id), and the orphaned reservation counts at its estimate against
+that Toronto day's cap. No money is spent, and the cap fails closed. This is a documented
+v1 limitation. Reconciling orphaned reservations is later work. (Agent lane issue 2.)
+
+## D29 — 2026-09-28 — A tool runs with the arguments the Gate decided on
+
+`capstan.gate.decide` returns the exact arguments it proposed, alongside the decision.
+`tool()` runs the tool activity with the arguments from that recorded result, never with
+arguments recomputed by the current code. When the current code proposes different
+arguments for a step the Gate has already decided, the workflow task fails as a history
+mismatch and the run blocks, naming the step. An approval therefore can never authorise
+arguments nobody saw. (Agent lane issue 4.)
