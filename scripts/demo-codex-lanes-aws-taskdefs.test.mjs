@@ -10,7 +10,8 @@ function fixture(details = definition(), before = baseline()) {
   const calls = [];
   const aws = args => {
     calls.push(args);
-    if (args[1] === 'list-task-definitions') return { taskDefinitionArns: [arn] };
+    // ECS calls this family-prefix, but the API requires the full family name.
+    if (args[1] === 'list-task-definitions') return { taskDefinitionArns: args[args.indexOf('--family-prefix') + 1] === 'capstan-server' ? [arn] : [] };
     if (args[1] === 'describe-task-definition') return details;
     if (args[1] === 'delete-task-definitions') return { taskDefinitions: [{ taskDefinitionArn: arn, status: 'DELETE_IN_PROGRESS' }], failures: [] };
     throw new Error(`Unexpected AWS call: ${args}`);

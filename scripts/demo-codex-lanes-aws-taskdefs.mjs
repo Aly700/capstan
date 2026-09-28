@@ -8,7 +8,7 @@ export function deleteOwnedInactiveDefinitions({ aws, baseline, startedAt }) {
   }
   const start = Date.parse(startedAt);
   assert(Number.isFinite(start));
-  const arns = aws(['ecs', 'list-task-definitions', '--family-prefix', 'capstan', '--status', 'INACTIVE']).taskDefinitionArns;
+  const arns = aws(['ecs', 'list-task-definitions', '--family-prefix', 'capstan-server', '--status', 'INACTIVE']).taskDefinitionArns;
   // Validate every candidate before making the first mutation.
   for (const arn of arns) {
     assert.match(arn, /^arn:aws:ecs:us-east-1:280517746513:task-definition\/capstan-server:\d+$/);

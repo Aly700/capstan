@@ -245,7 +245,11 @@ and retry after resolving the named resource; a failed deploy does not imply cle
 
 CloudFormation deregisters ECS task definitions, leaving `INACTIVE` revisions behind.
 After the stack deletions, list `capstan` task definitions in `ACTIVE`, `INACTIVE` and
-`DELETE_IN_PROGRESS` states. Delete only inactive revisions verified as created by this
+`DELETE_IN_PROGRESS` states. The ECS `--family-prefix` parameter requires the full
+family name (`capstan-server`); `capstan` silently misses those revisions. A general
+inventory should list all revisions and filter their ARNs. See the
+[ListTaskDefinitions API](https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListTaskDefinitions.html).
+Delete only inactive revisions verified as created by this
 session, using `aws ecs delete-task-definitions --task-definitions <exact-owned-arns>`.
 The workload cleanup script checks the empty pre-deploy baseline, exact account/region
 and family, registration time and `Project=capstan` tag before deleting any revision.
