@@ -60,7 +60,8 @@ export class CapstanGithubOidc extends Stack {
       roleName: 'capstan-github-deploy', maxSessionDuration: Duration.hours(1),
       assumedBy: new FederatedPrincipal(providerArn, { StringEquals: {
         'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-        'token.actions.githubusercontent.com:sub': 'repo:Aly700/capstan:ref:refs/heads/main',
+        // GitHub's immutable subject includes the owner and repository IDs.
+        'token.actions.githubusercontent.com:sub': 'repo:Aly700@112176329/capstan@1392801248:ref:refs/heads/main',
       } }, 'sts:AssumeRoleWithWebIdentity'),
     });
     github.addToPolicy(new PolicyStatement({ actions: ['ecr:GetAuthorizationToken'], resources: ['*'] }));
