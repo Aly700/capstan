@@ -25,13 +25,21 @@ export function createStacks(app: App): Record<string, Stack> {
     // assets or assumed bootstrap roles; deploy.yml passes the execution role.
     synthesizer: new LegacyStackSynthesizer(),
   });
-  const network = new CapstanNetwork(app, 'CapstanNetwork', props());
-  const data = new CapstanData(app, 'CapstanData', { ...props(), network });
+  const network = workloadOnly ? undefined : new CapstanNetwork(app, 'CapstanNetwork', props());
+  const data = new CapstanData(app, 'CapstanData', props());
   const budget = new CapstanBudget(app, 'CapstanBudget', { ...props(), email });
-  const service = new CapstanService(app, 'CapstanService', { ...props(), network, data, imageTag, email, gateUrl });
+  const service = new CapstanService(app, 'CapstanService', { ...props(), data, imageTag, email, gateUrl });
   service.addStackDependency(budget);
-  const stacks: Record<string, Stack> = { network, data, service, budget };
-  if (!workloadOnly) stacks.oidc = new CapstanGithubOidc(app, 'CapstanGithubOidc', { ...props(), existingProvider: context('existingGithubProvider') === 'true' });
+  const stacks: Record<string, Stack> = { data, service, budget };
+  if (network) {
+    data.addStackDependency(network);
+    service.addStackDependency(network);
+    stacks.network = network;
+  }
+  if (!workloadOnly) {
+    stacks.oidc = new CapstanGithubOidc(app, 'CapstanGithubOidc', { ...props(), existingProvider: context('existingGithubProvider') === 'true' });
+    service.addStackDependency(stacks.oidc);
+  }
   for (const stack of Object.values(stacks)) Tags.of(stack).add('Project', 'capstan');
   return stacks;
 }

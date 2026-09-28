@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { App } from 'aws-cdk-lib';
 import { Template, Match } from 'aws-cdk-lib/assertions';
@@ -8,7 +8,8 @@ async function synth(extra: Record<string, unknown> = {}) {
   assert.ok(existsSync(new URL('../lib/app.ts', import.meta.url)), 'CDK stacks must be implemented');
   const { createStacks } = await import('../lib/app.ts');
   mkdirSync(new URL('../../.lane/', import.meta.url), { recursive: true });
-  const app = new App({ outdir: mkdtempSync(new URL('../../.lane/cdk-test-', import.meta.url).pathname), context: { imageTag: 'test', budgetEmail: 'test@example.com', ...extra } });
+  const defaults = JSON.parse(readFileSync(new URL('../cdk.json', import.meta.url), 'utf8')).context;
+  const app = new App({ outdir: mkdtempSync(new URL('../../.lane/cdk-test-', import.meta.url).pathname), context: { ...defaults, imageTag: 'test', budgetEmail: 'test@example.com', ...extra } });
   const stacks = createStacks(app);
   return Object.fromEntries(Object.entries(stacks).map(([name, stack]) => [name, Template.fromStack(stack)]));
 }
@@ -38,6 +39,7 @@ test('database is private, encrypted, single-AZ micro with a generated secret an
   data.hasResource('AWS::RDS::DBInstance', { DeletionPolicy: 'Delete', UpdateReplacePolicy: 'Delete' });
   data.resourceCountIs('AWS::SecretsManager::Secret', 4);
   data.hasResourceProperties('AWS::SecretsManager::Secret', { Name: 'capstan/database-url', SecretString: Match.anyValue() });
+  data.hasResourceProperties('AWS::SecretsManager::Secret', { GenerateSecretString: Match.objectLike({ GenerateStringKey: 'password', ExcludePunctuation: true, PasswordLength: 40 }) });
   assert.match(JSON.stringify(data.toJSON()), /resolve:secretsmanager:/);
   assert.doesNotMatch(JSON.stringify(data.toJSON().Outputs ?? {}), /password|SecretString|database-url/i);
 });
@@ -64,6 +66,13 @@ test('one ARM task uses secret injection and only HTTPS gateway ingress with SRV
   const outputs = JSON.stringify(service.toJSON().Outputs);
   assert.match(outputs, /execute-api/);
   assert.doesNotMatch(outputs, /SecretString|password|api-key-hashes/i);
+  assert.deepEqual((Object.values(service.findResources('AWS::ApiGatewayV2::Route')) as any[]).map(r => r.Properties.RouteKey).sort(), ['GET /healthz', 'GET /readyz', 'POST /capstan.v1.ClientService/{method}', 'POST /capstan.v1.WorkerService/{method}']);
+  for (const log of Object.values(service.findResources('AWS::Logs::LogGroup')) as any[]) {
+    assert.equal(log.Properties.RetentionInDays, 7);
+    assert.equal(log.DeletionPolicy, 'Delete');
+  }
+  const taskRole = Object.entries(service.findResources('AWS::IAM::Role')).find(([, r]) => r.Properties.RoleName === 'capstan-task')![0];
+  for (const policy of Object.values(service.findResources('AWS::IAM::Policy')) as any[]) assert.ok(!JSON.stringify(policy.Properties.Roles).includes(taskRole), 'application task role stays empty');
 });
 
 test('alarms measure the 5xx rate and actual service task count, treating missing task data as failure', async () => {
@@ -91,7 +100,7 @@ test('GitHub trust permits only main and permissions cannot mutate its own found
   const policies = Object.values(oidc.findResources('AWS::IAM::Policy')).filter((p: any) => JSON.stringify(p.Properties.Roles).includes(githubID));
   assert.equal(policies.length, 1);
   const policy = JSON.stringify(policies[0]);
-  assert.doesNotMatch(policy, /AdministratorAccess|sts:AssumeRole"|iam:Create|iam:Put|secretsmanager:|CapstanGithubOidc/);
+  assert.doesNotMatch(policy, /AdministratorAccess|sts:AssumeRole"|iam:Create|iam:Put|secretsmanager:|CapstanGithubOidc|CapstanNetwork/);
   assert.match(policy, /ecr:PutImage/);
   assert.match(policy, /cloudformation:CreateChangeSet/);
   assert.match(policy, /iam:PassedToService/);
@@ -129,4 +138,40 @@ test('deployment can create Cloud Map namespaces and runtime roles cannot escape
   assert.doesNotMatch(JSON.stringify(statements), /iam:DeleteRolePermissionsBoundary|iam:AttachRolePolicy|AdministratorAccess/);
   for (const policy of policies) assert.ok(JSON.stringify(policy.Properties.PolicyDocument).length < 10240, 'inline role policy quota');
   for (const template of [oidc, service]) assert.ok(JSON.stringify(template.toJSON()).length < 51200, 'inline CloudFormation template limit');
+});
+
+test('first deployment can create the API Gateway service-linked role under its actual service name', async () => {
+  const { oidc } = await synth();
+  const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);
+  const create = statements.find(s => [s.Action].flat().includes('iam:CreateServiceLinkedRole'));
+  assert.deepEqual(create.Condition.StringEquals['iam:AWSServiceName'], ['ecs.amazonaws.com', 'rds.amazonaws.com', 'ops.apigateway.amazonaws.com']);
+});
+
+test('GitHub can apply and remove the workload stack tags required by CloudFormation changesets', async () => {
+  const { oidc } = await synth();
+  const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);
+  const changesets = statements.find(s => [s.Action].flat().includes('cloudformation:CreateChangeSet'));
+  assert.ok(changesets.Action.includes('cloudformation:TagResource'));
+  assert.ok(changesets.Action.includes('cloudformation:UntagResource'));
+  assert.equal(changesets.Resource.length, 3);
+  assert.doesNotMatch(JSON.stringify(changesets.Resource), /CapstanGithubOidc|CapstanNetwork/);
+});
+
+test('workload deployment imports the owner-managed network and has no EC2 mutation permissions', async () => {
+  const { oidc, network, data, service } = await synth();
+  const workload = await synth({ workloadOnly: 'true' });
+  assert.deepEqual(Object.keys(workload).sort(), ['budget', 'data', 'service']);
+  for (const template of Object.values(workload)) assert.ok(Object.values(template.toJSON().Resources).every((r: any) => !r.Type.startsWith('AWS::EC2::')), 'workload cannot create networking');
+  assert.deepEqual(workload.data.toJSON(), data.toJSON(), 'owner and GitHub deploy the same data template');
+  assert.deepEqual(workload.service.toJSON(), service.toJSON(), 'owner and GitHub deploy the same service template');
+  const exports = Object.values(network.toJSON().Outputs).map((o: any) => o.Export.Name);
+  for (const name of ['VpcId', 'PublicSubnet1Id', 'PublicSubnet2Id', 'PublicSubnet1Az', 'PublicSubnet2Az', 'LinkGroupId', 'TaskGroupId', 'DatabaseGroupId']) {
+    assert.ok(exports.includes(`CapstanNetwork:${name}`), `${name} must have a stable export`);
+  }
+  service.hasResourceProperties('AWS::ApiGatewayV2::VpcLink', { SecurityGroupIds: [{ 'Fn::ImportValue': 'CapstanNetwork:LinkGroupId' }], SubnetIds: [{ 'Fn::ImportValue': 'CapstanNetwork:PublicSubnet1Id' }, { 'Fn::ImportValue': 'CapstanNetwork:PublicSubnet2Id' }] });
+  data.hasResourceProperties('AWS::RDS::DBInstance', { VPCSecurityGroups: [{ 'Fn::ImportValue': 'CapstanNetwork:DatabaseGroupId' }] });
+  const statements = (Object.values(oidc.findResources('AWS::IAM::Policy')) as any[]).flatMap(p => p.Properties.PolicyDocument.Statement);
+  const ec2Actions = statements.flatMap(s => [s.Action].flat()).filter((a: string) => a.startsWith('ec2:'));
+  assert.ok(ec2Actions.length > 0);
+  assert.ok(ec2Actions.every((a: string) => a.startsWith('ec2:Describe')), 'network provisioning and mutation belong to the owner');
 });
