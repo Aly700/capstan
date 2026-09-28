@@ -188,7 +188,7 @@ describe("built-in activities in a real worker with local HTTP and Connect fakes
       reserveAICall: () => ({ reservationId: 14n }), finishAICall: () => ({ costUsd: 0 }),
     } });
     await expect.poll(() => s.server.requests("FailActivityTask").length).toBe(1);
-    expect(s.server.requests<FinishAICallRequest>("FinishAICall")[0]).toMatchObject({ reservationId: 14n, ok: false, errorCode: "ModelTimeoutUsageUnknown" });
+    expect(s.server.requests<FinishAICallRequest>("FinishAICall")[0]).toMatchObject({ reservationId: 14n, ok: false, errorCode: "ModelTimeoutUsageUnknown", usageUnknown: true });
     expect(s.server.requests<FailActivityTaskRequest>("FailActivityTask")[0]!.failure).toMatchObject({ type: "ModelTimeout" });
     const methods = s.server.calls.map((call) => call.method);
     expect(methods.indexOf("FinishAICall")).toBeLessThan(methods.indexOf("FailActivityTask"));

@@ -41,7 +41,7 @@ describe("capstan.model accounting and provider boundary", () => {
     expect(s.order).toEqual(["reserve", "provider", "finish"]);
     expect(s.reserve.mock.calls[0]![0]).toMatchObject({ taskToken: new Uint8Array([1, 2]), model: "claude-sonnet-5" });
     expect(s.call.mock.calls[0]).toEqual([{ model: "claude-sonnet-5", system: "Be brief", messages: [{ role: "user", content: "Hello" }], max_tokens: 64 }, { signal: s.controller.signal, maxRetries: 0 }]);
-    expect(s.finish.mock.calls[0]![0]).toEqual({ reservationId: 17n, ok: true, inputTokens: 11n, outputTokens: 7n, cacheReadTokens: 3n, cacheWriteTokens: 5n, errorCode: "" });
+    expect(s.finish.mock.calls[0]![0]).toEqual({ reservationId: 17n, ok: true, inputTokens: 11n, outputTokens: 7n, cacheReadTokens: 3n, cacheWriteTokens: 5n, errorCode: "", usageUnknown: false });
   });
   it("uses real model ids and counts UTF-8 input conservatively as well as all output", async () => {
     const s = setup();
@@ -138,7 +138,7 @@ describe("capstan.model accounting and provider boundary", () => {
     const s = setup(async () => { throw Object.assign(new Error("secret-key secret-prompt secret-response"), { status: 500 }); });
     const error = await s.invoke().catch((e: unknown) => e);
     expect(error).toMatchObject({ type: "ModelProviderError", nonRetryable: false });
-    expect(s.finish.mock.calls[0]![0]).toEqual({ reservationId: 17n, ok: false, inputTokens: 0n, outputTokens: 0n, cacheReadTokens: 0n, cacheWriteTokens: 0n, errorCode: "ModelProviderError" });
+    expect(s.finish.mock.calls[0]![0]).toEqual({ reservationId: 17n, ok: false, inputTokens: 0n, outputTokens: 0n, cacheReadTokens: 0n, cacheWriteTokens: 0n, errorCode: "ModelProviderError", usageUnknown: true });
     expect(JSON.stringify(failureToProto(error))).not.toContain("secret-");
   });
   it("a billed timeout records any reported usage even after the activity signal aborts", async () => {
@@ -148,13 +148,25 @@ describe("capstan.model accounting and provider boundary", () => {
       throw Object.assign(new Error("private"), { name: "APIConnectionTimeoutError", usage: { input_tokens: 20, output_tokens: 9 } });
     });
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
-    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 20n, outputTokens: 9n, errorCode: "ModelTimeout" });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 20n, outputTokens: 9n, errorCode: "ModelTimeout", usageUnknown: false });
     expect((s.finish.mock.calls[0]![1] as { signal?: AbortSignal } | undefined)?.signal?.aborted).not.toBe(true);
   });
   it("a timeout with no usage still finishes with a distinguishable fixed code", async () => {
     const s = setup(async () => { throw Object.assign(new Error("private"), { name: "APIConnectionTimeoutError" }); });
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
-    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 0n, outputTokens: 0n, errorCode: "ModelTimeoutUsageUnknown" });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 0n, outputTokens: 0n, errorCode: "ModelTimeoutUsageUnknown", usageUnknown: true });
+  });
+  it("a reported zero-usage timeout is known usage", async () => {
+    const s = setup(async () => { throw Object.assign(new Anthropic.APIConnectionTimeoutError(), { usage: { input_tokens: 0, output_tokens: 0 } }); });
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, inputTokens: 0n, outputTokens: 0n, errorCode: "ModelTimeout", usageUnknown: false });
+  });
+  it("a cancellation before the provider call does not claim unknown billed usage", async () => {
+    const s = setup();
+    s.controller.abort(new Error("worker stopped"));
+    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelCancelled" });
+    expect(s.call).not.toHaveBeenCalled();
+    expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: false });
   });
   it("recognizes the installed SDK's real timeout error class", async () => {
     const s = setup(async () => { throw new Anthropic.APIConnectionTimeoutError(); });

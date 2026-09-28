@@ -79,8 +79,14 @@ func (e *Engine) FinishAICall(ctx context.Context, req *v1.FinishAICallRequest) 
 		if price, ok := e.modelPrice(call.Model); ok {
 			cost = (float64(req.InputTokens)*price.Input + float64(req.OutputTokens)*price.Output + float64(req.CacheReadTokens)*price.CacheRead + float64(req.CacheWriteTokens)*price.CacheWrite) / 1_000_000
 		}
-		if !req.Ok && req.InputTokens == 0 && req.OutputTokens == 0 && req.CacheReadTokens == 0 && req.CacheWriteTokens == 0 {
-			cost = 0
+		if !req.Ok {
+			if req.UsageUnknown {
+				// D27: missing usage keeps the reserved upper bound counted, but
+				// cannot reduce a larger charge from any reported token counts.
+				cost = math.Max(cost, call.EstimateUSD)
+			} else if req.InputTokens == 0 && req.OutputTokens == 0 && req.CacheReadTokens == 0 && req.CacheWriteTokens == 0 {
+				cost = 0
+			}
 		}
 		if cost < 0 || math.IsNaN(cost) || math.IsInf(cost, 0) {
 			return Invalid("model price produces an invalid cost")
