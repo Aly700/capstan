@@ -594,7 +594,13 @@ message HeartbeatActivityTaskResponse {
 message ReserveAICallRequest {
   bytes task_token = 1; // the activity task making the model call
   string model = 2;
-  double estimate_usd = 3; // upper bound for this call
+  double estimate_usd = 3; // worker's estimate; the server may reserve a larger bound
+  // Provider-enforced output limit. Both token bounds must be positive for a
+  // server-priced bound; zero in either field retains legacy estimate-only behavior.
+  int64 max_output_tokens = 4;
+  // Conservative input bound including system prompt, messages, framing, and schema.
+  // Negative token bounds are invalid. Unknown models still use the worker estimate.
+  int64 input_tokens_upper_bound = 5;
 }
 
 message ReserveAICallResponse {

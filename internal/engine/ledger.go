@@ -15,6 +15,9 @@ func (e *Engine) ReserveAICall(ctx context.Context, req *v1.ReserveAICallRequest
 	if req == nil {
 		return nil, Invalid("AI call reservation is required")
 	}
+	if req.MaxOutputTokens < 0 || req.InputTokensUpperBound < 0 {
+		return nil, Invalid("token bounds must not be negative")
+	}
 	var response *v1.ReserveAICallResponse
 	err := e.inTx(ctx, func(tx store.Tx) error {
 		response = nil
@@ -37,11 +40,25 @@ func (e *Engine) ReserveAICall(ctx context.Context, req *v1.ReserveAICallRequest
 			return ErrBudgetExceeded
 		}
 		estimate = roundUSD(estimate)
+		bounded := false
+		if req.MaxOutputTokens > 0 && req.InputTokensUpperBound > 0 {
+			if price, ok := e.modelPrice(req.Model); ok {
+				// Convert before multiplying so int64 token limits cannot wrap.
+				// Use Finish's pricing order and D22 rounding for the same usage.
+				bound := (float64(req.InputTokensUpperBound)*price.Input + float64(req.MaxOutputTokens)*price.Output) / 1_000_000
+				if bound < 0 || math.IsNaN(bound) {
+					return Invalid("model price produces an invalid reservation bound")
+				}
+				estimate = math.Max(estimate, roundUSD(bound))
+				bounded = true
+			}
+		}
 		total := roundUSD(spent + estimate)
+		// A floating-point overflow is +Inf and fails closed against the finite cap.
 		if total > e.cfg.DailyCapUSD {
 			return ErrBudgetExceeded
 		}
-		call := &store.AICall{RunID: run.RunID, ActivitySeq: task.Activity.GetSeq(), Model: req.Model, Status: store.AICallReserved, EstimateUSD: estimate, At: now}
+		call := &store.AICall{RunID: run.RunID, ActivitySeq: task.Activity.GetSeq(), Model: req.Model, Status: store.AICallReserved, Bounded: bounded, EstimateUSD: estimate, At: now}
 		if err := tx.InsertAICall(call); err != nil {
 			return err
 		}

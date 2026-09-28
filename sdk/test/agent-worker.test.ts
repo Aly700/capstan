@@ -6,7 +6,7 @@ import { create, fromJson, type MessageInitShape } from "@bufbuild/protobuf";
 import { DurationSchema } from "@bufbuild/protobuf/wkt";
 import { Code, ConnectError } from "@connectrpc/connect";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { HistoryEventSchema, PollActivityTaskResponseSchema, TaskFailedCause, type CompleteActivityTaskRequest, type FailActivityTaskRequest, type FailWorkflowTaskRequest, type FinishAICallRequest } from "../src/gen/capstan/v1/capstan_pb.ts";
+import { HistoryEventSchema, PollActivityTaskResponseSchema, TaskFailedCause, type CompleteActivityTaskRequest, type FailActivityTaskRequest, type FailWorkflowTaskRequest, type FinishAICallRequest, type ReserveAICallRequest } from "../src/gen/capstan/v1/capstan_pb.ts";
 import { Worker, type WorkerOptions } from "../src/worker/index.ts";
 import { decode, encode } from "../src/internal/payload.ts";
 import { fakeServer } from "./fake-server.ts";
@@ -187,6 +187,7 @@ describe("built-in activities in a real worker with local HTTP and Connect fakes
     expect(g.requests[0]).toMatchObject({ url: "/v1/messages", headers: { "x-api-key": key }, body: { messages: [{ role: "user", content: prompt }], max_tokens: 32, model: "claude-sonnet-5" } });
     expect(g.requests[0]!.headers.authorization).toBeUndefined();
     expect(g.requests[0]!.body).not.toHaveProperty("apiKey");
+    expect(s.server.requests<ReserveAICallRequest>("ReserveAICall")[0]).toMatchObject({ maxOutputTokens: 32n, inputTokensUpperBound: 150n });
     expect(s.server.requests<FinishAICallRequest>("FinishAICall")[0]).toMatchObject({ reservationId: 12n, ok: true, inputTokens: 10n, outputTokens: 5n });
     expect(JSON.stringify([...output.flatMap((spy) => spy.mock.calls), ...s.logs])).not.toMatch(/provider-secret/);
   });
