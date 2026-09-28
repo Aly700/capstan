@@ -84,7 +84,7 @@ export function tool<T = unknown>(name: string, args: unknown, options?: ToolOpt
     // Gate authorized. This uses the same JSON representation as activity payloads.
     const serialized = JSON.stringify(args);
     const proposedArguments: unknown = serialized === undefined ? undefined : JSON.parse(serialized);
-    const decision = await activity<{ effect: string; decisionId: string; approvalId: string | null }>(
+    const decision = await activity<{ effect: string; decisionId: string; approvalId: string | null; arguments: unknown }>(
       "capstan.gate.decide", { toolName: name, arguments: proposedArguments, riskTier: options?.riskTier ?? "MEDIUM" }, { startToCloseTimeout: "30s" },
     );
     const invalid = () => new ApplicationFailure("Gate returned an invalid decision", { type: "GateResponseInvalid", nonRetryable: true });
@@ -94,7 +94,7 @@ export function tool<T = unknown>(name: string, args: unknown, options?: ToolOpt
     if (decision.effect === "REQUIRE_APPROVAL") {
       if (typeof decision.approvalId !== "string" || !decision.approvalId) throw invalid();
       const resolution = await approval({
-        source: "gate", approvalId: decision.approvalId, gateDecisionId: decision.decisionId, tool: name, arguments: proposedArguments,
+        source: "gate", approvalId: decision.approvalId, gateDecisionId: decision.decisionId, tool: name, arguments: decision.arguments,
         ...(options?.approvalTimeout === undefined ? {} : { timeout: options.approvalTimeout }),
       });
       if (resolution.outcome !== "approved") return {
@@ -102,7 +102,7 @@ export function tool<T = unknown>(name: string, args: unknown, options?: ToolOpt
       };
       approvedBy = resolution.resolver;
     } else if (decision.effect !== "ALLOW") throw invalid();
-    const value = await activity<T>(name, proposedArguments, { startToCloseTimeout: options?.startToCloseTimeout ?? "5m" });
+    const value = await activity<T>(name, decision.arguments, { startToCloseTimeout: options?.startToCloseTimeout ?? "5m" });
     return { allowed: true, value, decisionId: decision.decisionId, ...(approvedBy === undefined ? {} : { approvedBy }) };
   })();
 }

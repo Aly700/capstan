@@ -17,6 +17,7 @@ import { activations } from "./activation.ts";
 import type { Activation } from "./activation.ts";
 import { scheduleActivity } from "./commands.ts";
 import { matchCommands } from "./match.ts";
+import { replayGateDecision } from "../agent/decision.ts";
 
 export interface ReplayOptions {
   bundle: { code: string; buildId: string };
@@ -29,6 +30,7 @@ export interface ReplayOptions {
 interface Pending {
   kind: "activity" | "timer" | "approval";
   activityType?: string;
+  gateProposal?: { current: unknown; recorded: unknown };
   resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
 }
@@ -87,9 +89,9 @@ class ReplayRuntime implements WorkflowRuntime {
       catch (error) { this.fatal = error; }
     }
   }
-  private newPending<T>(seq: number, kind: Pending["kind"], activityType?: string): Promise<T> {
+  private newPending<T>(seq: number, kind: Pending["kind"], activityType?: string, gateProposal?: Pending["gateProposal"]): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.pending.set(seq, {kind, resolve: resolve as (value: unknown) => void, reject, ...(activityType === undefined ? {} : {activityType})});
+      this.pending.set(seq, {kind, resolve: resolve as (value: unknown) => void, reject, ...(activityType === undefined ? {} : {activityType}), ...(gateProposal === undefined ? {} : {gateProposal})});
     });
   }
   proxyActivities<A>(options: ActivityOptions): ActivityProxy<A> {
@@ -102,8 +104,13 @@ class ReplayRuntime implements WorkflowRuntime {
     if (this.cancelled) return Promise.reject(new CancelledFailure("run cancellation requested"));
     if (!activityType || durationMs(options.startToCloseTimeout) <= 0) throw new TypeError("activity requires a name and positive startToCloseTimeout");
     const seq = ++this.seq;
+    let gateProposal: Pending["gateProposal"];
+    if (activityType === "capstan.gate.decide") {
+      const recorded = this.activation.recorded[this.commands.length]?.attributes;
+      gateProposal = { current: input, recorded: recorded?.case === "activityScheduled" ? decode(recorded.value.input) : undefined };
+    }
     this.emit(scheduleActivity(seq, activityType, input, options));
-    return this.newPending<T>(seq, "activity", activityType);
+    return this.newPending<T>(seq, "activity", activityType, gateProposal);
   }
   sleep(duration: Duration): Promise<void> {
     if (this.cancelled) return Promise.reject(new CancelledFailure("run cancellation requested"));
@@ -282,7 +289,11 @@ class ReplayRuntime implements WorkflowRuntime {
     this.pending.delete(seq);
     this.revision++;
     switch(attrs.case) {
-      case "activityCompleted": pending.resolve(decode(attrs.value.result));break;
+      case "activityCompleted": {
+        let result = decode(attrs.value.result);
+        if (pending.gateProposal) result = replayGateDecision(pending.gateProposal.current, pending.gateProposal.recorded, result, seq, Number(event.eventId));
+        pending.resolve(result);break;
+      }
       case "activityFailed": pending.reject(new ActivityFailure(`activity ${pending.activityType} failed`,pending.activityType!,seq,
         attrs.value.failure ? {cause:failureFromProto(attrs.value.failure)} : {}));break;
       case "activityTimedOut": pending.reject(new TimeoutFailure(`activity ${pending.activityType} timed out`,

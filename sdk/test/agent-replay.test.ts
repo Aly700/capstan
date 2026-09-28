@@ -15,7 +15,7 @@ async function run(h: FixtureBuilder, workflowType = h.workflow) {
 const gateInput = { toolName: "fs.write", arguments: { path: "report.txt" }, riskTier: "HIGH" };
 function decided(effect: string) {
   return history("toolStep").scheduleActivity(1, "capstan.gate.decide", gateInput, { startToCloseTimeout: "30s" })
-    .completeActivity(1, { effect, decisionId: "decision-1", approvalId: effect === "REQUIRE_APPROVAL" ? "approval-1" : null }).task();
+    .completeActivity(1, { effect, decisionId: "decision-1", approvalId: effect === "REQUIRE_APPROVAL" ? "approval-1" : null, arguments: gateInput.arguments }).task();
 }
 function waiting() {
   return decided("REQUIRE_APPROVAL").command("approvalRequested", { seq: "2", approvalId: "approval-1", gateDecisionId: "decision-1", source: "APPROVAL_SOURCE_GATE", tool: "fs.write", arguments: payload(gateInput.arguments)!, timeout: "3600s" });
@@ -113,7 +113,7 @@ describe("agent replay uses the existing commands and sequence allocator", () =>
   it("defaults risk to MEDIUM and tool timeout to five minutes", async () => {
     const h = history("defaults");
     expect(await run(h)).toMatchObject([{ scheduleActivity: { input: payload({ toolName: "read", arguments: {}, riskTier: "MEDIUM" }) } }]);
-    h.scheduleActivity(1, "capstan.gate.decide", {}).completeActivity(1, { effect: "ALLOW", decisionId: "d", approvalId: null }).task();
+    h.scheduleActivity(1, "capstan.gate.decide", {}).completeActivity(1, { effect: "ALLOW", decisionId: "d", approvalId: null, arguments: {} }).task();
     expect(await run(h)).toMatchObject([{ scheduleActivity: { seq: "2", activityType: "read", startToCloseTimeout: "300s" } }]);
   });
   it("fails closed on an invalid recorded Gate effect", async () => {
@@ -121,8 +121,50 @@ describe("agent replay uses the existing commands and sequence allocator", () =>
   });
   it.each(["ALLOW", "REQUIRE_APPROVAL"])("keeps the %s proposal unchanged if the caller mutates its arguments", async (effect) => {
     const h = history("mutableTool").scheduleActivity(1, "capstan.gate.decide", { toolName: "fs.write", arguments: { path: "approved.txt" }, riskTier: "MEDIUM" })
-      .completeActivity(1, { effect, decisionId: "decision-1", approvalId: "approval-1" }).task();
+      .completeActivity(1, { effect, decisionId: "decision-1", approvalId: "approval-1", arguments: { path: "approved.txt" } }).task();
     if (effect === "ALLOW") expect(await run(h)).toMatchObject([{ scheduleActivity: { seq: "2", input: payload({ path: "approved.txt" }) } }]);
     else expect(await run(h)).toMatchObject([{ requestApproval: { seq: "2", arguments: payload({ path: "approved.txt" }) } }]);
+  });
+  it.each(["ALLOW", "REQUIRE_APPROVAL"])("blocks changed arguments after a recorded %s decision", async (effect) => {
+    const h = effect === "ALLOW" ? decided(effect) : resolved("APPROVED");
+    const eventId = Number(h.history.find((event) => event.activityCompleted)?.eventId);
+    await expect(run(h, "changedToolArgs")).rejects.toMatchObject({
+      name: "HistoryMismatchError", eventId,
+      message: expect.stringMatching(/seq=1.*fs\.write.*arguments changed since the Gate decided/),
+    });
+    // A workflow catch cannot swallow the mismatch and emit a successful task.
+    await expect(run(h, "caughtChangedToolArgs")).rejects.toMatchObject({ name: "HistoryMismatchError", eventId });
+  });
+  it.each(["ALLOW", "REQUIRE_APPROVAL"])("replays pre-D29 %s decisions using their recorded proposal", async (effect) => {
+    const h = effect === "ALLOW" ? decided(effect) : resolved("APPROVED");
+    const completed = h.history.find((event) => event.activityCompleted)!.activityCompleted as JsonObject;
+    completed.result = payload({ effect, decisionId: "decision-1", approvalId: effect === "ALLOW" ? null : "approval-1" })!;
+    expect(await run(h)).toMatchObject([{ scheduleActivity: { input: payload(gateInput.arguments), activityType: "fs.write" } }]);
+    // Legacy recovery must never take the changed proposal from current code.
+    await expect(run(h, "changedToolArgs")).rejects.toMatchObject({ name: "HistoryMismatchError" });
+  });
+  it.each(["ALLOW", "REQUIRE_APPROVAL"])("does not apply the %s decision to a renamed tool", async (effect) => {
+    const h = effect === "ALLOW" ? decided(effect) : resolved("APPROVED");
+    await expect(run(h, "changedToolName")).rejects.toMatchObject({ name: "HistoryMismatchError", message: expect.stringMatching(/seq=1.*fs\.write.*fs\.delete/) });
+  });
+  it.each(["ALLOW", "REQUIRE_APPROVAL"])("compares %s arguments canonically and emits the decided bytes", async (effect) => {
+    const args = { config: { z: ["é", { y: null, x: true }], a: 1 }, path: "report.txt" };
+    const h = history("reorderedToolArgs").scheduleActivity(1, "capstan.gate.decide", { toolName: "fs.write", arguments: args, riskTier: "MEDIUM" })
+      .completeActivity(1, { effect, decisionId: "decision-1", approvalId: "approval-1", arguments: args }).task();
+    if (effect === "REQUIRE_APPROVAL") {
+      expect(await run(h)).toMatchObject([{ requestApproval: { arguments: payload(args) } }]);
+      h.command("approvalRequested", { seq: "2", approvalId: "approval-1", source: "APPROVAL_SOURCE_GATE", gateDecisionId: "decision-1", tool: "fs.write", arguments: payload(args)! })
+        .external("approvalResolved", { seq: "2", approvalId: "approval-1", outcome: "APPROVAL_OUTCOME_APPROVED", resolver: "owner" }).task();
+    }
+    const commands = await replay({ bundle, runId: "agent-run", history: h.history.map((event) => fromJson(HistoryEventSchema, event)) });
+    const scheduled = commands[0]?.attributes;
+    expect(scheduled?.case).toBe("scheduleActivity");
+    if (scheduled?.case !== "scheduleActivity") throw new Error("tool was not scheduled");
+    expect(Buffer.from(scheduled.value.input!.data).toString("utf8")).toBe(JSON.stringify(args));
+    const seq = effect === "ALLOW" ? 2 : 3;
+    h.scheduleActivity(seq, "fs.write", args).completeActivity(seq, "written").task();
+    const completed = await run(h);
+    h.command("runCompleted", (completed[0] as JsonObject).completeRun as JsonObject);
+    expect(await run(h)).toEqual([]);
   });
 });
