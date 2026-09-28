@@ -221,3 +221,32 @@ run and task topics over the store's single LISTEN connection; it never allocate
 connection per waiter. Reconnection wakes subscribers to cover the notification gap.
 This replaces the 250 ms per-open-run observation poll; it changes neither run closure
 semantics nor the RPC contract.
+
+## D31 — 2026-09-28 — The fable cache-read price follows the 10% rule
+
+The price table billed `claude-fable-5-1` cache reads at $0.25/M, 2.5% of its $10/M input
+price, contradicting the table's own rule (cache reads at 10% of input, writes at 125%).
+The rule is right and the entry was a typo: fable cache reads are $1.00/M. The half-micro-
+dollar rounding test moves to a haiku case (5 cache-read tokens × $0.10/M = $0.0000005).
+(Review finding F11.)
+
+## D32 — 2026-09-28 — The server bounds every reservation itself
+
+The daily cap was only as strong as the worker's estimate: a $0 reservation could be
+followed by a $2 Finish (review finding F07). `ReserveAICallRequest` gains
+`max_output_tokens` and `input_tokens_upper_bound`. The server prices that worst case from
+its own table and reserves the larger of it and the worker's estimate, rejecting the call
+when that would exceed the cap. A provider cannot return more output than `max_tokens`, and
+the SDK counts input conservatively (UTF-8 bytes of every prompt part, never fewer than the
+provider's tokens), so for workers using the SDK the cap is absolute: actual spend never
+exceeds what was reserved. A reservation without the two bounds is still accepted but is
+recorded as unbounded, and the README states the cap is absolute only for bounded
+reservations. Finish still records true usage above a reservation rather than hide spend.
+
+## D33 — 2026-09-28 — Payloads are opaque, and the docs say so
+
+Capstan redacts the credentials it is configured with from diagnostics (review F03, F06),
+but it does not inspect activity results or other payloads: that would contradict D1's
+opaque-payload model and could never be complete. An activity that returns a secret puts it
+in history, visible to key holders. The README's security section says this plainly.
+(Review finding F08.)

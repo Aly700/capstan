@@ -19,6 +19,12 @@ formatting are rejected. Use ISO dates with an explicit offset when importing da
 Existing workflows that depended on a worker's local timezone need replay review before
 resuming with this runtime.
 
+Payloads are opaque. Capstan stores activity inputs and results, signal inputs and workflow
+results exactly as the worker sends them, and shows them to anyone holding an API key
+(history, `capstan describe`, the `/ui/` viewer). Capstan redacts the credentials it knows
+about from errors and logs, but it does not inspect payloads: an activity that returns a
+secret puts that secret in history. Return references to secrets, never the secrets.
+
 RPCs and `/metrics` require an API key. `/ui/` serves public static files; its run data
 comes from authenticated RPCs. Payloads are opaque and persisted as supplied: callers
 must keep credentials out of workflow inputs, results, markers and failure details.
