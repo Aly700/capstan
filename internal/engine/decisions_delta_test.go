@@ -295,24 +295,21 @@ func TestDefaultTaskTimeoutRequiresWholeMilliseconds(t *testing.T) {
 
 func TestSubmicrosecondRetryRemainsVisibleToSweeper(t *testing.T) {
 	e, _, s := newTestEngine(t)
+	ch, cancel := s.Subscribe(store.TaskActivity, "q")
+	defer cancel()
 	mustStart(t, e, "r")
 	cmd := activityCmd(1)
 	cmd.GetScheduleActivity().RetryPolicy = &v1.RetryPolicy{InitialInterval: durationpb.New(time.Nanosecond)}
 	mustComplete(t, e, mustPoll(t, e).TaskToken, cmd)
+	awaitNotification(t, ch)
 	a := mustActivity(t, e)
-	ch, cancel := s.Subscribe(store.TaskActivity, "q")
-	defer cancel()
 	if _, err := e.FailActivityTask(t.Context(), &v1.FailActivityTaskRequest{TaskToken: a.TaskToken, Failure: &v1.Failure{Type: "Retry"}}); err != nil {
 		t.Fatal(err)
 	}
 	if n, err := e.ProcessDueTasks(t.Context(), 1); n != 1 || err != nil {
 		t.Fatalf("immediate retry not discoverable: %d %v", n, err)
 	}
-	select {
-	case <-ch:
-	default:
-		t.Fatal("no immediate retry notification")
-	}
+	awaitNotification(t, ch)
 	if a = mustActivity(t, e); a.Attempt != 2 {
 		t.Fatalf("attempt=%d", a.Attempt)
 	}

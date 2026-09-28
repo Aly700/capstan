@@ -15,7 +15,8 @@ func (e *Engine) ReserveAICall(ctx context.Context, req *v1.ReserveAICallRequest
 		return nil, Invalid("AI call reservation is required")
 	}
 	var response *v1.ReserveAICallResponse
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response = nil
 		task, run, err := e.activityToken(tx, req.TaskToken)
 		if err != nil {
 			return err
@@ -57,7 +58,8 @@ func (e *Engine) FinishAICall(ctx context.Context, req *v1.FinishAICallRequest) 
 		return nil, Invalid("AI call result is required")
 	}
 	var response *v1.FinishAICallResponse
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response = nil
 		call, err := tx.GetAICall(req.ReservationId, true)
 		if errors.Is(err, store.ErrNotFound) {
 			return ErrNotFound
