@@ -25,7 +25,7 @@ func (t *transaction) DeleteTimer(runID string, seq int64) (bool, error) {
 	return tag.RowsAffected() != 0, dbError(err)
 }
 func (t *transaction) DueTimers(now time.Time, limit int) ([]*store.Timer, error) {
-	rows, err := t.tx.Query(t.ctx, "select "+timerColumns+` from timer where due_at<=$1 order by due_at,run_id,seq limit $2 for update skip locked`, nullTime(now), max(limit, 0))
+	rows, err := t.tx.Query(t.ctx, "select "+qualifiedColumns("t", timerColumns)+` from timer t join run r on r.run_id=t.run_id where t.due_at<=$1 order by t.due_at,t.run_id,t.seq limit $2 for update of r,t skip locked`, nullTime(now), max(limit, 0))
 	return collect(rows, err, scanTimer)
 }
 func (t *transaction) RunTimers(runID string) ([]*store.Timer, error) {

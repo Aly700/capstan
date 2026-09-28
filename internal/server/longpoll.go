@@ -68,7 +68,14 @@ func pollTask[T any](ctx context.Context, s *Server, kind store.TaskKind, queue 
 func (s *Server) AwaitRun(ctx context.Context, req *connect.Request[v1.AwaitRunRequest]) (*connect.Response[v1.AwaitRunResponse], error) {
 	pollCtx, cancel := s.pollContext(ctx)
 	defer cancel()
-	ticker := time.NewTicker(250 * time.Millisecond)
+	var notifications <-chan struct{}
+	if s.notifier != nil {
+		var unsubscribe func()
+		// Register before reading so closure in the read/wait gap remains observable.
+		notifications, unsubscribe = s.notifier.SubscribeRun(req.Msg.RunId)
+		defer unsubscribe()
+	}
+	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 	result := &v1.AwaitRunResponse{}
 	for {
@@ -98,6 +105,10 @@ func (s *Server) AwaitRun(ctx context.Context, req *connect.Request[v1.AwaitRunR
 		s.metrics.pollWaiting("run", 1)
 		select {
 		case <-pollCtx.Done():
+		case _, open := <-notifications:
+			if !open {
+				notifications = nil
+			}
 		case <-ticker.C:
 		}
 		s.metrics.pollWaiting("run", -1)

@@ -249,3 +249,230 @@ are shortened to their basenames):
   }
 }
 ```
+
+
+## After the performance lane
+
+Measured on 2026-09-28, with the same machine, versions, workload, driver, worker
+slots, transports, sampling SQL and timing boundaries described above. The before
+section is preserved verbatim. Four local performance commits are measured separately:
+`449874b` (D30), `00bac7a` (pool), `de91ce3` (queue wakes), and `df11bda` (lock order).
+The final campaigns also include main through `eb2659e`, including the fault lab.
+The required D30 fault-wrapper adapter affects lab tests only.
+
+The prescribed 11 runs were repeated in the exact original invocation order, then
+the entire 11-run campaign was repeated because other lanes were sampled. Together
+they completed **23,400 workflows and 117,000 persisted activity completions, with zero
+errors**, zero task failures and no remaining tasks in any post-run audit. All
+50 new baseline, tuning and final measurements are appended to
+[load-results.json](load-results.json); its original 11 entries are unchanged.
+Numbers in the tables are truncated downward to four decimals.
+
+### Reproduce the after campaigns
+
+Use the same 11 `scripts/run-load.sh` commands in the Reproduce section, with:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+export CAPSTAN_LOAD_PORT=7401 CAPSTAN_LOAD_DB_PREFIX=capstan_perf
+export CAPSTAN_LOAD_PHASE=after
+unset CAPSTAN_DB_MAX_CONNS  # measured default: 40
+# Run the original eleven commands in their listed order.
+# Repeat them with CAPSTAN_LOAD_PHASE=after-repeat.
+```
+
+The harness changes only add a safe database-prefix option, performance-lane ports,
+and phase/pool metadata. Its defaults remain `capstan_evidence_*` and 7301.
+The performance lane used only port 7401 and its own `capstan_perf_*` load databases.
+Raw logs are `.lane/after-1.log` through `after-11.log`, and
+`.lane/after-repeat-1.log` through `after-repeat-11.log`. Each points to an unchanged
+per-run directory containing samples, driver output, worker/server logs and SQL audit.
+Versions are in `.lane/after-versions.log`. `dbMaxConns: "default"` means 20 for the
+fresh `baseline`/`d30`/`d30-repeat` phases and 40 for `pool-default`/`after`/`after-repeat`.
+
+### Changes measured separately
+
+These are 1,000-run, four-worker points; each row adds only its named change to the
+previous row. No other active database was sampled in these selected comparisons.
+Early D30 runs and reverse-order pool confirmations were contaminated; they and
+their repeats remain in the JSON. Short points can vary even without sampled
+competition, so the table is evidence of the observed effect, not an isolated
+causal estimate of every throughput difference.
+
+| Implementation | c50 runs/s | c200 runs/s | c50 p99 ms | c200 p99 ms | Sampled commits c50 / c200 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Original, pool 20 | 73.1594 | 70.4963 | 827.8188 | 2964.6783 | 47,076 / 43,727 |
+| D30, pool 20 | 73.8684 | 73.8752 | 820.1086 | 2941.0007 | 37,547 / 34,594 |
+| D30, pool 40 | 82.7599 | 87.1296 | 742.3722 | 2591.4980 | 47,208 / 37,066 |
+| Targeted queue wakes, pool 40 | 97.0447 | 90.2726 | 633.8322 | 2381.7598 | 38,493 / 33,988 |
+| Run/child lock ordering, pool 40 | 102.9712 | 102.6073 | 591.4913 | 2300.6898 | 38,641 / 35,478 |
+
+D30 replaces the 250 ms status tick with commit-only run-close notifications and a
+five-second fallback. AwaitRun registers before reading state, and re-reads committed
+state when woken. Every waiter for that run receives a hint. PostgreSQL multiplexes
+these topics over its existing single LISTEN connection. The harness still sets a
+two-second server poll timeout, so renewed requests can re-read sooner than the
+five-second lost-notification fallback. The server close test failed at 250 ms before
+the change and now satisfies its 10 ms bound under Go's test clock.
+
+`CAPSTAN_DB_MAX_CONNS` accepts a positive 32-bit integer. The default is **40**,
+chosen from the following sweep after D30, before targeted wakeups:
+
+| Pool limit | c50 runs/s | c200 runs/s |
+| ---: | ---: | ---: |
+| 10 | 48.9822 * | 51.9673 |
+| 20 | 73.8684 | 73.8752 |
+| 40 | 82.7599 | 87.1296 |
+| 60 | 70.7011 | 81.4314 |
+
+`*` sampled another active database. Forty was the best of these measured limits
+on this machine; sixty added transactions and reduced throughput. Reverse-order
+confirmations also favored 40 over 20, but were all contaminated. This supports a
+configurable default for this setup, not a claim that 40 is optimal everywhere.
+The single LISTEN connection is additional to the configured transaction pool.
+No PostgreSQL setting or dependency was changed.
+
+Queue hints now rotate through waiting local subscribers and wake at most one per
+notification. Distinct same-transaction payloads preserve multiple new-task hints.
+Buffered subscribers are skipped; run-close hints still broadcast. The worker's
+existing one-second fallback remains. This targets one subscriber **per store/server
+instance**; multiple server listeners can each wake one poller for a database hint.
+Reconnect wakes all subscribers once to recover potentially lost hints.
+
+For a controlled 40-waiter/one-task test, `pg_stat_database.xact_commit` changed
+from 9 to 50 before (delta 41) and 9 to 11 after (delta 2). The matched no-claim
+control changed from 8 to 9 (delta 1), leaving **40 versus 1 claim transactions**.
+Direct claim-attempt counters independently measured 40 versus 1, with one task
+claimed in both cases. See `.lane/targeted-before.log` and
+`.lane/targeted-after-reviewed.log`. The insert and LISTEN delivery precede this
+window; both final isolated control and workload residuals are zero. Database-wide
+counters can include background work and delayed flushes, so the regression asserts
+actual attempts and claims and logs counter residuals. Whole-load commit deltas in
+the earlier table include all transactions and are not labeled claim counts.
+
+Lock-order changes take the run before a token's task, acquire due run/child rows
+with `SKIP LOCKED`, and use `NOWAIT` when a claim already holds a task. A busy parent
+rolls back that claim before the engine returns an empty poll result. The bounded
+`40P01` transaction retry remains. At concurrency 200 and 800, deadlock-counter
+deltas were **0 / 0 before and 0 / 0 after**. A forced terminate/activity-completion
+race did reproduce one deadlock retry before; the 16 ordered termination races now
+require zero retries. Load did not reproduce that race, so no load-throughput gain
+is attributed to avoiding measured deadlocks.
+
+### Before and after
+
+Ranges include every original repeat and both final campaigns, without discarding
+contaminated or slower runs:
+
+| Concurrency / workers | Before runs/s | After runs/s, both campaigns | Before p99 ms | After p99 ms, both campaigns |
+| --- | ---: | ---: | ---: | ---: |
+| 10 / 4 | 26.5831 | 35.1522–53.0748 | 533.4565 | 235.7692–371.1258 |
+| 25 / 4 | 46.8293 | 55.3789–85.1757 | 546.1956 | 357.1042–885.0265 |
+| 50 / 4 | 65.0399–78.7942 | 64.0164–100.4584 | 818.5701–845.9902 | 609.5528–911.7544 |
+| 100 / 4 | 76.6850 | 77.8635–104.0593 | 1604.0133 | 1076.9780–1452.7068 |
+| 200 / 4 | 55.3210–75.8139 | 65.2419–99.0307 | 2846.8105–4155.4549 | 2188.5067–3449.4383 |
+| 800 / 4 | 30.9716–39.0705 | 61.7943–99.9086 | 22581.8527–27482.4260 | 8584.0774–13778.9257 |
+| 50 / 1 | 61.8262 | 40.3525–69.4714 | 1048.8492 | 833.1988–1358.0146 |
+| 50 / 8 | 58.8740 | 60.1368–95.8973 | 1057.5688 | 602.4330–1023.2328 |
+
+### Final campaigns, in measurement order
+
+| Phase / run | Concurrency | Runs | Workers | Runs/s | Activities/s | p50 ms | p99 ms | Errors | Other active DBs sampled |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| after / 1 | 50 | 1000 | 4 | 100.4584 | 502.2922 | 479.8036 | 723.4297 | 0 | yes |
+| after / 2 | 200 | 1000 | 4 | 99.0307 | 495.1538 | 2008.3281 | 2188.5067 | 0 | yes |
+| after / 3 | 800 | 1600 | 4 | 99.9086 | 499.5431 | 7667.6937 | 8584.0774 | 0 | yes |
+| after / 4 | 50 | 1000 | 1 | 69.4714 | 347.3572 | 713.6930 | 833.1988 | 0 | yes |
+| after / 5 | 50 | 1000 | 8 | 95.8973 | 479.4865 | 515.9572 | 602.4330 | 0 | yes |
+| after / 6 | 25 | 1000 | 4 | 85.1757 | 425.8789 | 289.7465 | 357.1042 | 0 | yes |
+| after / 7 | 10 | 500 | 4 | 53.0748 | 265.3740 | 185.6120 | 235.7692 | 0 | yes |
+| after / 8 | 100 | 1000 | 4 | 104.0593 | 520.2965 | 953.8575 | 1076.9780 | 0 | yes |
+| after / 9 | 50 | 1000 | 4 | 98.6294 | 493.1474 | 504.0983 | 609.5528 | 0 | yes |
+| after / 10 | 200 | 1000 | 4 | 96.5353 | 482.6765 | 1970.1265 | 2521.5074 | 0 | yes |
+| after / 11 | 800 | 1600 | 4 | 84.4352 | 422.1761 | 8688.1524 | 10325.3389 | 0 | yes |
+| after-repeat / 1 | 50 | 1000 | 4 | 64.0164 | 320.0824 | 773.8389 | 911.7544 | 0 | yes |
+| after-repeat / 2 | 200 | 1000 | 4 | 65.2419 | 326.2097 | 3040.2248 | 3449.4383 | 0 | yes |
+| after-repeat / 3 | 800 | 1600 | 4 | 61.7943 | 308.9715 | 12525.3935 | 13778.9257 | 0 | yes |
+| after-repeat / 4 | 50 | 1000 | 1 | 40.3525 | 201.7626 | 1233.0484 | 1358.0146 | 0 | yes |
+| after-repeat / 5 | 50 | 1000 | 8 | 60.1368 | 300.6842 | 844.7996 | 1023.2328 | 0 | yes |
+| after-repeat / 6 | 25 | 1000 | 4 | 55.3789 | 276.8947 | 432.6226 | 885.0265 | 0 | yes |
+| after-repeat / 7 | 10 | 500 | 4 | 35.1522 | 175.7611 | 280.2942 | 371.1258 | 0 | yes |
+| after-repeat / 8 | 100 | 1000 | 4 | 77.8635 | 389.3175 | 1257.1277 | 1452.7068 | 0 | yes |
+| after-repeat / 9 | 50 | 1000 | 4 | 73.9042 | 369.5211 | 671.3789 | 827.0068 | 0 | yes |
+| after-repeat / 10 | 200 | 1000 | 4 | 74.4456 | 372.2284 | 2694.7702 | 2874.3902 | 0 | yes |
+| after-repeat / 11 | 800 | 1600 | 4 | 70.9953 | 354.9767 | 10969.5038 | 11851.9331 | 0 | yes |
+
+### Where it now saturates
+
+The observed ceiling is now around **100 runs/s**, reached around **50–100
+concurrent workflows** on this setup. The best final-campaign observation is
+104.0593 runs/s at concurrency 100 with 4 workers.
+At concurrency 100 the campaigns produced 77.8635–104.0593 runs/s;
+200 produced 65.2419–99.0307; 800 produced 61.7943–99.9086.
+More outstanding runs still primarily increase queueing: p99 at 800 is
+8584.0774–13778.9257 ms. The former 800-concurrency collapse to
+30.9716–39.0705 runs/s and p99 22,581.8527–27,482.4260 ms is substantially reduced.
+These short, shared-machine runs establish an observed operating range, not a
+statistical confidence interval or a universal capacity limit.
+
+The transaction path remains the most supported limiting-component inference.
+The following samples show pool occupancy and queued tasks as concurrency increases.
+At 800, hundreds of tasks wait while throughput stays near the 50–100 range.
+One/four/eight-worker controls do not show proportional scaling. PostgreSQL's shared
+container and server/worker CPU observations do not establish CPU exhaustion;
+`ClientRead` continues to dominate backend waits. The pool, application scheduling,
+and Mac-to-Colima statement round trips remain combined in this measurement.
+Separating them requires additional instrumentation; no fifth optimization was
+made without that measurement.
+
+| Phase / run | Concurrency / workers | Samples | PostgreSQL CPU % | Server CPU % | Sum worker CPU % | Max active/in-transaction backends | Max ready tasks | Max ungranted locks | Deadlock delta |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| after / 1 | 50 / 4 | 11 | 171.8966 | 166.9992 | 148.4034 | 39 | 22 | 2 | 0 |
+| after / 2 | 200 / 4 | 11 | 179.8197 | 166.4858 | 149.6654 | 40 | 164 | 1 | 0 |
+| after / 3 | 800 / 4 | 16 | 187.7708 | 186.3324 | 156.1407 | 39 | 767 | 1 | 0 |
+| after / 4 | 50 / 1 | 15 | 112.5673 | 111.4655 | 66.0199 | 18 | 41 | 0 | 0 |
+| after / 5 | 50 / 8 | 11 | 183.1759 | 172.1944 | 188.0963 | 40 | 28 | 1 | 0 |
+| after / 6 | 25 / 4 | 12 | 168.3621 | 150.8809 | 137.0667 | 28 | 13 | 1 | 0 |
+| after / 7 | 10 / 4 | 10 | 100.4130 | 97.1149 | 88.6834 | 12 | 7 | 0 | 0 |
+| after / 8 | 100 / 4 | 10 | 190.5615 | 180.2583 | 165.7246 | 40 | 61 | 2 | 0 |
+| after / 9 | 50 / 4 | 11 | 180.2159 | 167.5090 | 157.6714 | 40 | 21 | 1 | 0 |
+| after / 10 | 200 / 4 | 11 | 186.4148 | 168.5291 | 155.4465 | 39 | 163 | 1 | 0 |
+| after / 11 | 800 / 4 | 19 | 183.0284 | 163.5333 | 138.0157 | 39 | 764 | 0 | 0 |
+| after-repeat / 1 | 50 / 4 | 16 | 168.4401 | 141.3076 | 123.6138 | 38 | 33 | 0 | 0 |
+| after-repeat / 2 | 200 / 4 | 16 | 188.7756 | 144.0955 | 128.6842 | 39 | 166 | 0 | 0 |
+| after-repeat / 3 | 800 / 4 | 25 | 195.1394 | 149.6033 | 121.8558 | 40 | 763 | 2 | 0 |
+| after-repeat / 4 | 50 / 1 | 24 | 143.5111 | 89.5857 | 61.2975 | 19 | 42 | 0 | 0 |
+| after-repeat / 5 | 50 / 8 | 17 | 188.5050 | 134.0102 | 141.7290 | 39 | 36 | 1 | 0 |
+| after-repeat / 6 | 25 / 4 | 18 | 168.1386 | 119.8141 | 109.6694 | 32 | 13 | 1 | 0 |
+| after-repeat / 7 | 10 / 4 | 15 | 106.1406 | 84.8547 | 78.7690 | 15 | 5 | 2 | 0 |
+| after-repeat / 8 | 100 / 4 | 13 | 186.4564 | 158.9538 | 146.7440 | 40 | 64 | 0 | 0 |
+| after-repeat / 9 | 50 / 4 | 14 | 180.7315 | 152.8359 | 130.7627 | 40 | 26 | 2 | 0 |
+| after-repeat / 10 | 200 / 4 | 14 | 181.4597 | 152.8311 | 134.3294 | 40 | 163 | 1 | 0 |
+| after-repeat / 11 | 800 / 4 | 22 | 186.1713 | 163.5366 | 128.5671 | 40 | 764 | 0 | 0 |
+
+Other lanes shared the machine and PostgreSQL: **22 of these 22 final
+runs sampled other active databases**. An independent process audit observed the
+lab lane's PostgreSQL campaign and later CPU-heavy lab campaigns overlapping the
+first campaign, including its slower final 800 point. No performance-lane tests ran
+alongside its loads, and no own orphan process was found. The second campaign is
+retained regardless of overlap. Container CPU includes other databases; absence
+from a one-second sample still cannot establish an otherwise idle host. The JSON
+lists every observed competing database. All final deadlock deltas are zero. Unlike
+the before campaign, 17 of 331 samples observed ungranted locks, with a maximum of
+two. The separate lock-wait detail queries recorded 17 `transactionid` and six
+`object` backend observations. Wait durations were not measured, and the concurrent
+sampler queries do not describe exactly the same instant. These waits may contribute
+to latency; the samples do not establish row locking as the throughput ceiling.
+
+### Correctness
+
+Every performance commit passed `make verify`: generation drift checks, buf lint,
+gofmt, go vet, Go race tests, both store suites, pgengine engine tests, SDK typecheck
+and tests, and the real-server e2e. Logs are `.lane/d30-verify.log`,
+`.lane/pool-verify.log`, `.lane/targeted-verify.log`, and `.lane/lock-verify.log`.
+After merging main and adapting its fault wrapper to D30, the final merged gate
+passed (`.lane/merged-verify-reviewed.log`). It includes the lab at 50 seeds under
+race and 2,000 without; an additional `go test -count=1 -v ./internal/lab/...`
+passed its default 2,000 seeds (`.lane/lab-default-reviewed.log`). Database tests
+were never skipped. SDK output: 18 files passed, 2 opt-in files skipped;
+369 tests passed, 5 skipped. The performance lane made no SDK source changes.

@@ -21,12 +21,13 @@ export async function until(what, probe, timeout = 60000) {
   }
 }
 export class Evidence {
-  constructor(name, port) {
-    if (!/^[a-z0-9_]+$/.test(name) || port < 7300 || port > 7399) throw new Error("Invalid evidence name or port");
+  constructor(name, port, { databasePrefix = "capstan_evidence" } = {}) {
+    if (!/^[a-z0-9_]+$/.test(name) || port < 7300 || port > 7499) throw new Error("Invalid evidence name or port");
+    if (!["capstan_evidence", "capstan_perf"].includes(databasePrefix)) throw new Error("Invalid database prefix");
     this.name = name;
     this.port = port;
     this.address = `http://127.0.0.1:${port}`;
-    this.database = `capstan_evidence_${name}_${process.pid}_${Date.now()}`;
+    this.database = `${databasePrefix}_${name}_${process.pid}_${Date.now()}`;
     this.admin = process.env.CAPSTAN_TEST_DATABASE_URL || "postgres://capstan:capstan@127.0.0.1:55432/postgres?sslmode=disable";
     const url = new URL(this.admin); url.pathname = `/${this.database}`;
     this.dsn = url.toString();

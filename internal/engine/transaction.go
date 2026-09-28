@@ -8,8 +8,8 @@ import (
 )
 
 // inTx retries transactions PostgreSQL has explicitly aborted for a deadlock.
-// Claims and due scans lock a child row before its run; closure locks the run
-// before deleting its children. Either participant can lose that lock race.
+// Normal engine paths avoid inverted row locks; keep this bounded retry as a
+// safety net for other transactions that PostgreSQL explicitly aborts.
 // Callbacks contain database work only and reset any captured result per attempt.
 // Connection errors have an unknown commit outcome and must never be retried here.
 func (e *Engine) inTx(ctx context.Context, fn func(store.Tx) error) error {
@@ -24,4 +24,11 @@ func (e *Engine) inTx(ctx context.Context, fn func(store.Tx) error) error {
 			return err
 		}
 	}
+}
+
+// A poll may claim a task whose run is busy. PostgreSQL rejects the run lock
+// without waiting; callers check this only after InTx has rolled back the lease.
+func isRunLockBusy(err error) bool {
+	var state interface{ SQLState() string }
+	return errors.As(err, &state) && state.SQLState() == "55P03"
 }

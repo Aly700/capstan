@@ -47,6 +47,9 @@ func (e *Engine) PollWorkflowTask(ctx context.Context, req *v1.PollWorkflowTaskR
 		found = true
 		return nil
 	})
+	if isRunLockBusy(err) {
+		return &v1.PollWorkflowTaskResponse{}, false, nil
+	}
 	if err != nil {
 		return nil, false, err
 	}
@@ -55,6 +58,13 @@ func (e *Engine) PollWorkflowTask(ctx context.Context, req *v1.PollWorkflowTaskR
 
 func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run, error) {
 	tok, err := DecodeToken(raw)
+	if err != nil {
+		return nil, nil, err
+	}
+	r, err := tx.GetRun(tok.RunId, true)
+	if errors.Is(err, store.ErrNotFound) {
+		return nil, nil, ErrStaleTask
+	}
 	if err != nil {
 		return nil, nil, err
 	}
@@ -67,13 +77,6 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 	}
 	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
 		return nil, nil, ErrStaleTask
-	}
-	r, err := tx.GetRun(task.RunID, true)
-	if errors.Is(err, store.ErrNotFound) {
-		return nil, nil, ErrStaleTask
-	}
-	if err != nil {
-		return nil, nil, err
 	}
 	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING || !r.InFlight || r.WorkflowTaskID != task.ID || r.LastEventID != tok.StartedEventId {
 		return nil, nil, ErrStaleTask
@@ -216,5 +219,8 @@ func (e *Engine) closeRun(tx store.Tx, r *store.Run, status v1.RunStatus) error 
 	}
 	// A closing command wins over buffered external work; release the unreachable inbox.
 	_, err = tx.DrainInbox(r.RunID)
+	if err == nil {
+		tx.NotifyRunClosed(r.RunID)
+	}
 	return err
 }

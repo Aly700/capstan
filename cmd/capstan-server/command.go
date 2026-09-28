@@ -21,17 +21,17 @@ import (
 )
 
 // Dependencies isolate process wiring from the concrete engine and store. The
-// production path uses only their frozen constructors; tests supply fakes.
+// production path supplies the configured pool limit; tests supply fakes.
 type dependencies struct {
 	migrate   func(context.Context, string) error
-	open      func(context.Context, string) (store.Store, error)
+	open      func(context.Context, string, int32) (store.Store, error)
 	newEngine func(engine.Deps, engine.Config) (engine.API, error)
 	readiness func(context.Context, string) (func(context.Context) error, func(), error)
 	listen    func(string, string) (net.Listener, error)
 }
 
 func productionDependencies() dependencies {
-	return dependencies{migrate: pgstore.Migrate, open: pgstore.Open, newEngine: func(d engine.Deps, c engine.Config) (engine.API, error) { return engine.New(d, c) }, readiness: databaseReadiness, listen: net.Listen}
+	return dependencies{migrate: pgstore.Migrate, open: pgstore.OpenWithMaxConns, newEngine: func(d engine.Deps, c engine.Config) (engine.API, error) { return engine.New(d, c) }, readiness: databaseReadiness, listen: net.Listen}
 }
 
 func run(ctx context.Context, args []string, getenv func(string) string, in io.Reader, out, logOut io.Writer, d dependencies) error {
@@ -96,7 +96,7 @@ func run(ctx context.Context, args []string, getenv func(string) string, in io.R
 			return fmt.Errorf("migrate: %w", err)
 		}
 	}
-	st, err := d.open(ctx, cfg.DatabaseURL)
+	st, err := d.open(ctx, cfg.DatabaseURL, cfg.DBMaxConns)
 	if err != nil {
 		return fmt.Errorf("open store: %w", err)
 	}
