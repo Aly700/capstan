@@ -20,6 +20,7 @@ type campaignOptions struct {
 	first          int64
 	count          int
 	parallel       int
+	duration       time.Duration
 	outputPath     string
 	faultSelection string
 	options        lab.Options
@@ -34,7 +35,12 @@ type failureResult struct {
 
 type campaignSummary struct {
 	known, unknown, passed int
+	completed              int
 	steps                  int64
+	rootRuns               int64
+	transactionSteps       int64
+	gateResponses          map[string]int
+	schedulingStop         string
 	faults                 map[lab.FaultKind]int
 	failures               []failureResult
 	started                time.Time
@@ -42,6 +48,9 @@ type campaignSummary struct {
 }
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "mutate" {
+		os.Exit(runMutationCLI(os.Args[2:], os.Stdout))
+	}
 	os.Exit(runCLI(os.Args[1:], os.Stdout, lab.Run))
 }
 
@@ -55,7 +64,7 @@ func runCLI(args []string, output io.Writer, run func(context.Context, int64, la
 		return 2
 	}
 	summary := runCampaign(context.Background(), opts, run, lab.KnownFailure)
-	fmt.Fprintf(output, "Runs: %d; passed: %d; failing seeds: %d (%d known, %d unrecognized); elapsed: %s\n", opts.count, summary.passed, len(summary.failures), summary.known, summary.unknown, summary.elapsed)
+	fmt.Fprintf(output, "Runs: %d; passed: %d; failing seeds: %d (%d known, %d unrecognized); elapsed: %s\n", summary.completed, summary.passed, len(summary.failures), summary.known, summary.unknown, summary.elapsed)
 	for _, failure := range summary.failures {
 		classification := "pending triage"
 		if failure.known {
@@ -73,7 +82,7 @@ func runCLI(args []string, output io.Writer, run func(context.Context, int64, la
 		return 1
 	}
 	fmt.Fprintf(output, "Report: %s\n", opts.outputPath)
-	if summary.unknown > 0 {
+	if summary.unknown > 0 || summary.completed == 0 {
 		return 1
 	}
 	return 0
@@ -86,6 +95,7 @@ func parseOptions(args []string, output io.Writer) (campaignOptions, error) {
 	flags.SetOutput(output)
 	flags.IntVar(&opts.count, "seeds", 200000, "number of seeds, starting at zero")
 	flags.IntVar(&opts.parallel, "parallel", 8, "maximum number of concurrent seeds")
+	flags.DurationVar(&opts.duration, "duration", 0, "stop scheduling new seeds after this duration; zero is unlimited")
 	flags.Int64Var(&seed, "seed", 0, "run exactly this seed instead of the -seeds campaign")
 	flags.IntVar(&opts.options.Workers, "workers", 3, "lab workers per seed")
 	flags.IntVar(&opts.options.MaxSteps, "max-steps", 1000, "maximum scheduled steps per seed")
@@ -100,6 +110,9 @@ func parseOptions(args []string, output io.Writer) (campaignOptions, error) {
 	}
 	if opts.count <= 0 || opts.parallel <= 0 || opts.options.Workers <= 0 || opts.options.MaxSteps <= 0 {
 		return opts, errors.New("-seeds, -parallel, -workers, and -max-steps must be positive")
+	}
+	if opts.duration < 0 {
+		return opts, errors.New("-duration must be nonnegative")
 	}
 	if scenarios := lab.ScenarioNames(); opts.options.Scenario != "" && !slices.Contains(scenarios, opts.options.Scenario) {
 		return opts, fmt.Errorf("unknown scenario %q; choose from %v", opts.options.Scenario, scenarios)
@@ -152,9 +165,12 @@ func parseOptions(args []string, output io.Writer) (campaignOptions, error) {
 }
 
 func runCampaign(ctx context.Context, opts campaignOptions, run func(context.Context, int64, lab.Options) (lab.Result, error), known func(int64, error) bool) campaignSummary {
-	summary := campaignSummary{started: time.Now(), faults: make(map[lab.FaultKind]int)}
+	summary := campaignSummary{started: time.Now(), faults: make(map[lab.FaultKind]int), gateResponses: make(map[string]int), schedulingStop: "seed limit reached"}
 	for _, kind := range lab.AllFaults() {
 		summary.faults[kind] = 0
+	}
+	for _, response := range []string{"pending", "http-503", "timeout", "approved-after-deadline", "approved"} {
+		summary.gateResponses[response] = 0
 	}
 	parallel := min(opts.parallel, opts.count)
 	jobs := make(chan int64)
@@ -171,15 +187,47 @@ func runCampaign(ctx context.Context, opts campaignOptions, run func(context.Con
 		})
 	}
 	go func() {
-		for i := range opts.count {
-			jobs <- opts.first + int64(i)
-		}
+		// The scheduling timer does not cancel a seed's context. Every accepted
+		// job finishes and is reported, leaving one contiguous completed prefix.
+		func() {
+			var budget <-chan time.Time
+			if opts.duration > 0 {
+				timer := time.NewTimer(max(0, opts.duration-time.Since(summary.started)))
+				defer timer.Stop()
+				budget = timer.C
+			}
+			for i := range opts.count {
+				if ctx.Err() != nil {
+					summary.schedulingStop = "context canceled"
+					return
+				}
+				if opts.duration > 0 && time.Since(summary.started) >= opts.duration {
+					summary.schedulingStop = "time budget reached"
+					return
+				}
+				select {
+				case <-ctx.Done():
+					summary.schedulingStop = "context canceled"
+					return
+				case <-budget:
+					summary.schedulingStop = "time budget reached"
+					return
+				case jobs <- opts.first + int64(i):
+				}
+			}
+		}()
 		close(jobs)
 		workers.Wait()
 		close(results)
 	}()
 	for outcome := range results {
+		summary.completed++
 		summary.steps += int64(outcome.result.Steps)
+		summary.rootRuns += int64(outcome.result.RootRuns)
+		summary.transactionSteps += int64(outcome.result.TransactionSteps)
+		for _, response := range outcome.result.GateResponses {
+			summary.gateResponses[response]++
+		}
 		for _, fault := range outcome.result.Faults {
 			summary.faults[fault.Kind]++
 		}
@@ -211,23 +259,45 @@ func runCampaign(ctx context.Context, opts campaignOptions, run func(context.Con
 func renderReport(opts campaignOptions, summary campaignSummary) string {
 	var report strings.Builder
 	report.WriteString("# Capstan fault-lab campaign\n\n")
-	if len(summary.failures) == 0 {
+	if summary.completed == 0 {
+		report.WriteString("Campaign incomplete: no seeds completed. No defect estimate produced.\n\n")
+	} else if len(summary.failures) == 0 {
 		report.WriteString("Confirmed defects found: 0\n\n")
 	} else {
 		report.WriteString("Defect count: pending triage. Failing seeds are not a count of unique confirmed defects. Recognized failures are classified against the exact known-failure list.\n\n")
 	}
-	fmt.Fprintf(&report, "- Runs: %d\n- Passed: %d\n- Failing seeds: %d\n- Recognized known failures: %d\n- Unrecognized failures: %d\n- Started: %s\n- Elapsed: %s\n- Total steps: %d\n", opts.count, summary.passed, len(summary.failures), summary.known, summary.unknown, summary.started.UTC().Format(time.RFC3339), summary.elapsed, summary.steps)
+	fmt.Fprintf(&report, "- Runs: %d\n- Passed: %d\n- Failing seeds: %d\n- Recognized known failures: %d\n- Unrecognized failures: %d\n- Started: %s\n- Elapsed: %s\n- Total steps: %d\n- Root runs: %d\n- Store transaction steps: %d\n", summary.completed, summary.passed, len(summary.failures), summary.known, summary.unknown, summary.started.UTC().Format(time.RFC3339), summary.elapsed, summary.steps, summary.rootRuns, summary.transactionSteps)
 	scenario := opts.options.Scenario
 	if scenario == "" {
 		scenario = "selected by seed"
 	}
-	fmt.Fprintf(&report, "\n## Campaign options\n\n- Seed range: %d..%d\n- Parallelism: %d\n- Workers per seed: %d\n- Maximum steps per seed: %d\n- Scenario: %s\n- Fault selection: %s\n", opts.first, opts.first+int64(opts.count-1), opts.parallel, opts.options.Workers, opts.options.MaxSteps, scenario, opts.faultSelection)
-	report.WriteString("\nRun the same campaign:\n\n")
+	seedRange := "none (no seeds completed)"
+	if summary.completed > 0 {
+		seedRange = fmt.Sprintf("%d..%d", opts.first, opts.first+int64(summary.completed-1))
+	}
+	budget := "unlimited"
+	if opts.duration > 0 {
+		budget = opts.duration.String()
+	}
+	fmt.Fprintf(&report, "\n## Campaign options\n\n- Seed range: %s\n- Requested seed limit: %d\n- Time budget: %s\n- Scheduling stopped: %s\n- Parallelism: %d\n- Workers per seed: %d\n- Maximum steps per seed: %d\n- Scenario: %s\n- Fault selection: %s\n", seedRange, opts.count, budget, summary.schedulingStop, opts.parallel, opts.options.Workers, opts.options.MaxSteps, scenario, opts.faultSelection)
+	report.WriteString("\nRepeat the requested campaign:\n\n")
 	selector := fmt.Sprintf("-seeds %d", opts.count)
 	if opts.count == 1 {
 		selector = fmt.Sprintf("-seed %d", opts.first)
 	}
-	writeIndented(&report, fmt.Sprintf("go run ./cmd/capstan-lab %s -parallel %d%s -out %s", selector, opts.parallel, runArguments(opts), shellQuote(opts.outputPath)))
+	durationArgument := ""
+	if opts.duration > 0 {
+		durationArgument = " -duration " + opts.duration.String()
+	}
+	writeIndented(&report, fmt.Sprintf("go run ./cmd/capstan-lab %s -parallel %d%s%s -out %s", selector, opts.parallel, durationArgument, runArguments(opts), shellQuote(opts.outputPath)))
+	if summary.completed > 0 && summary.completed < opts.count {
+		report.WriteString("\nReplay the completed seed prefix without a time limit:\n\n")
+		selector = fmt.Sprintf("-seeds %d", summary.completed)
+		if summary.completed == 1 {
+			selector = fmt.Sprintf("-seed %d", opts.first)
+		}
+		writeIndented(&report, fmt.Sprintf("go run ./cmd/capstan-lab %s -parallel %d%s -out %s", selector, opts.parallel, runArguments(opts), shellQuote(opts.outputPath)))
+	}
 	report.WriteString("\n## Injected faults\n\n| Fault | Count |\n| --- | ---: |\n")
 	kinds := make([]lab.FaultKind, 0, len(summary.faults))
 	for kind := range summary.faults {
@@ -236,6 +306,15 @@ func renderReport(opts campaignOptions, summary campaignSummary) string {
 	slices.Sort(kinds)
 	for _, kind := range kinds {
 		fmt.Fprintf(&report, "| %s | %d |\n", kind, summary.faults[kind])
+	}
+	report.WriteString("\n## Gate responses\n\n| Response | Count |\n| --- | ---: |\n")
+	responses := make([]string, 0, len(summary.gateResponses))
+	for response := range summary.gateResponses {
+		responses = append(responses, response)
+	}
+	slices.Sort(responses)
+	for _, response := range responses {
+		fmt.Fprintf(&report, "| %s | %d |\n", response, summary.gateResponses[response])
 	}
 	report.WriteString("\n## Failing seeds\n\n")
 	if len(summary.failures) == 0 {

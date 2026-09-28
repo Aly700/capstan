@@ -1,0 +1,13 @@
+diff --git a/internal/engine/commands.go b/internal/engine/commands.go
+index 10d6a66..f860330 100644
+--- a/internal/engine/commands.go
++++ b/internal/engine/commands.go
+@@ -263,7 +263,7 @@ func (e *Engine) applyCommand(tx store.Tx, r *store.Run, completed int64, cmd *v
+ 		if err := e.closeRun(tx, r, v1.RunStatus_RUN_STATUS_CONTINUED_AS_NEW); err != nil {
+ 			return err
+ 		}
+-		next := &store.Run{RunID: id, WorkflowType: typ, TaskQueue: queue, Status: v1.RunStatus_RUN_STATUS_RUNNING, Input: c.Input, TaskTimeout: r.TaskTimeout, RunTimeout: r.RunTimeout, StartedAt: now, ContinuedFromRunID: r.RunID, Identity: r.Identity}
++		next := &store.Run{RunID: id, WorkflowType: typ, TaskQueue: queue, Status: v1.RunStatus_RUN_STATUS_RUNNING, Input: r.Input, TaskTimeout: r.TaskTimeout, RunTimeout: r.RunTimeout, StartedAt: now, ContinuedFromRunID: r.RunID, Identity: r.Identity}
+ 		if next.RunTimeout > 0 {
+ 			next.RunDeadline = addDeadline(now, next.RunTimeout)
+ 		}

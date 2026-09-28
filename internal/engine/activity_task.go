@@ -56,6 +56,9 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
 		found = true
 		return nil
 	})
+	if isRunLockBusy(err) {
+		return &v1.PollActivityTaskResponse{}, false, nil
+	}
 	if err != nil {
 		return nil, false, err
 	}
@@ -65,6 +68,13 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
 // activityToken rejects expiry even if the reaper has not processed the task yet.
 func (e *Engine) activityToken(tx store.Tx, raw []byte) (*store.Task, *store.Run, error) {
 	token, err := DecodeToken(raw)
+	if err != nil {
+		return nil, nil, err
+	}
+	run, err := tx.GetRun(token.RunId, true)
+	if errors.Is(err, store.ErrNotFound) {
+		return nil, nil, ErrStaleTask
+	}
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,13 +92,6 @@ func (e *Engine) activityToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 		task.StartedAt.IsZero() || !task.LeasedUntil.After(now) || activityDeadlinePassed(activityScheduleClose(task), now) ||
 		activityDeadlinePassed(activityHeartbeatDeadline(task), now) {
 		return nil, nil, ErrStaleTask
-	}
-	run, err := tx.GetRun(task.RunID, true)
-	if errors.Is(err, store.ErrNotFound) {
-		return nil, nil, ErrStaleTask
-	}
-	if err != nil {
-		return nil, nil, err
 	}
 	if !run.Open() {
 		return nil, nil, ErrStaleTask
