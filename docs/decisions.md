@@ -133,3 +133,10 @@ depth when two results arrive in the same activation; the Go reference worker do
 V8 microtasks and skips it. Workflow authors should not rely on which of two results that
 arrive together wins a `Promise.race`: the outcome is stable across replays of the same code,
 but it is an engine detail, not a guarantee. (SDK issue 8.)
+
+## D21 — 2026-09-28 — Caller run ids are at most 180 characters
+
+A continuation appends `~<k>` to its base id, and the schema caps run_id at 200 characters.
+StartRun therefore accepts caller ids of 1–180 characters, leaving room for up to 19
+characters of suffix. (Server lane issue 1.) The engine's contract comment on `Deps` now
+states that GATE approvals resolve only through the Gate or by timeout (server issue 2).

@@ -636,7 +636,7 @@ service ClientService {
 }
 
 message StartRunRequest {
-  string run_id = 1; // required, caller-chosen, 1-200 chars of [A-Za-z0-9._:-]
+  string run_id = 1; // required, caller-chosen, 1-180 chars of [A-Za-z0-9._:-]; "~" is reserved (D19, D21)
   string workflow_type = 2;
   string task_queue = 3;
   Payload input = 4;
