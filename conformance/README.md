@@ -29,7 +29,16 @@ Each file in `fixtures/` is JSON:
   final activation (the one whose `TaskStarted` ends the history) must return exactly these
   commands, in this order. An empty list means the workflow is waiting on something.
 - `{ "mismatch": { "eventId": N } }` — replay must fail with a history mismatch that names
-  event `N`: the first recorded command event the code did not reproduce.
+  event `N`: the first recorded command event the code did not reproduce, or, when the code
+  emitted an extra command past the end of a completed activation's command events, that
+  activation's `TaskCompleted` event (D14).
+
+A fixture may also carry `"only": ["ts"]` when its outcome depends on JavaScript promise
+scheduling; the Go reference worker skips such fixtures (D20).
+
+Allocating commands (`ScheduleActivity`, `StartTimer`, `RecordMarker`, `RequestApproval`)
+take the next `seq`; `RequestActivityCancel` and `CancelTimer` carry the `seq` of the
+activity or timer they refer to (D12).
 
 `workflow` names an export of `workflows.ts` (TypeScript) and a scenario of the same name in
 `internal/lab/scenarios` (Go). The two implementations must behave identically.
@@ -38,11 +47,12 @@ Each file in `fixtures/` is JSON:
 
 Replay walks the history in activations. An activation starts at a `TaskStarted` event:
 
-1. Resolve, in history order, every external event since the previous activation's command
+1. Set `now()` to this `TaskStarted` event's time.
+2. Resolve, in history order, every external event since the previous activation's command
    events: `ActivityCompleted/Failed/TimedOut/Cancelled`, `TimerFired`, `SignalReceived`,
    `ApprovalResolved`, `RunCancelRequested`. (`TaskFailed`, `TaskTimedOut`, `RunBlocked`,
-   `RunResumed`, `TaskScheduled` carry no workflow-visible result and are skipped.)
-2. Set `now()` to this `TaskStarted` event's time.
+   `RunResumed`, `TaskScheduled` carry no workflow-visible result and are skipped.) Signal
+   handlers therefore observe this activation's time (D15).
 3. Run workflow code until nothing more can happen without a new event, draining every
    pending promise continuation, and collect the commands it emits.
 4. If this activation has a `TaskCompleted` in history, compare the collected commands, in

@@ -5,7 +5,7 @@
 -- Zero Go times map to NULL. Durations are stored in milliseconds.
 
 create table run (
-    run_id                text primary key check (run_id ~ '^[A-Za-z0-9._:-]{1,200}$'),
+    run_id                text primary key check (run_id ~ '^[A-Za-z0-9._:~-]{1,200}$') -- '~' is reserved for continuations (D19),
     workflow_type         text        not null check (length(workflow_type) between 1 and 200),
     task_queue            text        not null check (length(task_queue) between 1 and 200),
     status                smallint    not null check (status between 1 and 7),
