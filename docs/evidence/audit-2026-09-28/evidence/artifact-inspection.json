@@ -1,0 +1,153 @@
+{
+  "scope": "Artifact arithmetic and structure; this does not authenticate historical recordings or campaign counts.",
+  "images": {
+    "ui-blocked.png": {
+      "width": 1280,
+      "height": 2435,
+      "metadata_keys": []
+    },
+    "ui-completed.png": {
+      "width": 1280,
+      "height": 1410,
+      "metadata_keys": []
+    },
+    "ui-list.png": {
+      "width": 1280,
+      "height": 1000,
+      "metadata_keys": []
+    },
+    "ui-mobile.png": {
+      "width": 390,
+      "height": 3802,
+      "metadata_keys": []
+    },
+    "demo-crash.gif": {
+      "width": 1200,
+      "height": 720,
+      "frames": 446,
+      "duration_seconds": "17.84"
+    }
+  },
+  "recordings": {
+    "demo-blocked.cast": {
+      "events": 34,
+      "duration_seconds": "9.36033",
+      "monotonic": true,
+      "captured_environment_keys": [
+        "TERM"
+      ],
+      "announced_pauses": [
+        {
+          "marker": "3 real seconds",
+          "at_seconds": "1.117077",
+          "next_event_seconds": "4.118032",
+          "gap_seconds": "3.000955"
+        },
+        {
+          "marker": "2 real seconds",
+          "at_seconds": "4.670195",
+          "next_event_seconds": "6.671665",
+          "gap_seconds": "2.001470"
+        },
+        {
+          "marker": "2 real seconds",
+          "at_seconds": "7.120886",
+          "next_event_seconds": "9.121584",
+          "gap_seconds": "2.000698"
+        }
+      ]
+    },
+    "demo-cost.cast": {
+      "events": 14,
+      "duration_seconds": "2.866916",
+      "monotonic": true,
+      "captured_environment_keys": [
+        "TERM"
+      ],
+      "announced_pauses": []
+    },
+    "demo-crash.cast": {
+      "events": 20,
+      "duration_seconds": "13.066471",
+      "monotonic": true,
+      "captured_environment_keys": [
+        "TERM"
+      ],
+      "announced_pauses": [
+        {
+          "marker": "Waiting 4",
+          "at_seconds": "0.921858",
+          "next_event_seconds": "4.921701",
+          "gap_seconds": "3.999843"
+        }
+      ]
+    },
+    "demo-idle-wait.cast": {
+      "events": 26,
+      "duration_seconds": "6.661564",
+      "monotonic": true,
+      "captured_environment_keys": [
+        "TERM"
+      ],
+      "announced_pauses": [
+        {
+          "marker": "Waiting 5",
+          "at_seconds": "0.903758",
+          "next_event_seconds": "5.904534",
+          "gap_seconds": "5.000776"
+        }
+      ]
+    }
+  },
+  "historical_delta_arithmetic": {
+    "input_seed_count_unverified": 148554,
+    "faulted_root_runs": 297108,
+    "baseline_plus_faulted_executions": 297108,
+    "baseline_plus_faulted_initial_roots": 594216,
+    "protocol_probes": 148554,
+    "arithmetic_matches": true
+  },
+  "current_lab_catalogues": {
+    "primary_scenarios": [
+      "pipeline",
+      "fanout",
+      "signal",
+      "human",
+      "gate",
+      "gate-errors",
+      "gate-late",
+      "continuation",
+      "cancel",
+      "timeout",
+      "approval-expiry",
+      "retry"
+    ],
+    "primary_scenario_count": 12,
+    "fault_types": [
+      "kill-workflow",
+      "kill-activity",
+      "crash-server",
+      "duplicate-task",
+      "late-ack",
+      "database-failure",
+      "early-timer",
+      "duplicate-timer",
+      "signal-in-flight"
+    ],
+    "fault_type_count": 9,
+    "protocol_probes": [
+      "heartbeat-renewal",
+      "retry-deadline",
+      "cancel-before-start",
+      "failed-workflow-release",
+      "approval-once",
+      "signal-order",
+      "retry-attempt",
+      "workflow-token-fields",
+      "closed-inbox",
+      "exclusive-claim"
+    ],
+    "protocol_probe_count": 10,
+    "workers_per_seed_in_audit_campaign": 3
+  }
+}
