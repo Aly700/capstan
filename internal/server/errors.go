@@ -8,7 +8,7 @@ import (
 	"github.com/Aly700/capstan/internal/engine"
 )
 
-func (s *Server) rpcError(ctx context.Context, procedure string, err error) error {
+func (s *Server) rpcError(ctx context.Context, procedure string, err error, key string) error {
 	if err == nil {
 		return nil
 	}
@@ -29,8 +29,8 @@ func (s *Server) rpcError(ctx context.Context, procedure string, err error) erro
 	case errors.Is(err, engine.ErrBudgetExceeded):
 		code = connect.CodeResourceExhausted
 	default:
-		s.logger.ErrorContext(ctx, "RPC failed", "procedure", procedure, "error", err)
+		s.logger.ErrorContext(ctx, "RPC failed", "procedure", procedure, "error", s.cfg.Redact(err.Error(), key))
 		return connect.NewError(connect.CodeInternal, errors.New("internal error"))
 	}
-	return connect.NewError(code, err)
+	return connect.NewError(code, errors.New(s.cfg.Redact(err.Error(), key)))
 }
