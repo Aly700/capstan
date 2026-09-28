@@ -23,6 +23,14 @@ supports its stated scope; it does not establish every possible execution.
 | Quickstart and viewer | Clean shell, example worker, completed run and authenticated viewer | [Transcript](raw/904cb6c/quickstart.log), [browser](raw/904cb6c/quickstart-ui.log) | VERIFIED — 2026-09-28, 904cb6c |
 <!-- final-evidence:end -->
 
+Recorded sessions (single runs, not recomputed by `raw/verify-numbers.py`):
+
+| Claim | How it is shown | Evidence | Status |
+| --- | --- | --- | --- |
+| Tool calls through AgentOps Gate | Real Gate from its own Compose: allow, deny, approval, worker SIGKILLed during the approval wait | [Gate](gate-e2e.md), [log](raw/historical/agent/agent-delta1-gate-e2e.log) | VERIFIED — 2026-09-28, agent lane (historical recorded run) |
+| Real agent work survives a worker crash | Two real Codex lanes at xhigh; worker SIGKILLed; activities reattach with one launch per lane | [Codex lanes](codex-lanes-local.md) | VERIFIED — 2026-09-28, workload lane (recorded) |
+| Cloud deployment survives a server kill | AWS agentops via GitHub OIDC; `ecs stop-task` mid-run; replacement task; 16-event prefix intact; teardown inventory | [AWS](aws-2026-09-28.md) | VERIFIED once — 2026-09-28, image b49c413 (recorded; standing resources deleted, AWS-retained INACTIVE records noted) |
+
 The final [quickstart transcript](raw/904cb6c/quickstart.log) runs from a clean shell.
 Its [browser transcript](raw/904cb6c/quickstart-ui.log) shows the completed run in the
 viewer. The original full viewer checks and screenshots remain [historical](ui.md).

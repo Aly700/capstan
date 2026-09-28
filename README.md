@@ -89,6 +89,14 @@ Final code: `904cb6c`, measured 2026-09-28. The paid-call row is historical.
 | Recorded model cost | Retained paid-call recording and ledger arithmetic | [Cost](docs/evidence/cost.md) | VERIFIED historical arithmetic; no paid rerun |
 <!-- final-evidence:end -->
 
+Recorded sessions from the same day. These are single recorded runs rather than numbers the verifier recomputes:
+
+| Claim | How it is shown | Evidence | Status |
+| --- | --- | --- | --- |
+| Tool calls through AgentOps Gate | Real Gate: allow, deny, approval, worker killed during the approval wait | [Gate](docs/evidence/gate-e2e.md) | VERIFIED locally |
+| Real agent work survives a worker crash | Two real Codex lanes; worker SIGKILLed mid-lane; activities reattach without a second launch | [Codex lanes](docs/evidence/codex-lanes-local.md) | VERIFIED locally |
+| Cloud deployment survives a server kill | AWS via GitHub OIDC; `ecs stop-task` mid-run with two live Codex lanes; replacement task; run completes with its history prefix intact; torn down after | [AWS](docs/evidence/aws-2026-09-28.md) | VERIFIED once, 2026-09-28 |
+
 The [evidence index](docs/evidence/README.md) names the source revision, commands, raw data and scope. Historical results remain labelled historical. Run `make verify` and `python3 docs/evidence/raw/verify-numbers.py` to check the code and the published numbers.
 
 ## Security model
@@ -106,7 +114,7 @@ RPCs and `/metrics` require an API key. `/ui/` serves public static files and ob
 - The fault lab covers a finite scenario and fault catalogue. It does not explore every workflow, instruction-level interleaving or network failure. [Fault model](docs/evidence/lab-l2.md).
 - Local Compose disables PostgreSQL durability settings for tests. Process restart demos do not prove recovery from database or host power loss. [Compose configuration](compose.yaml).
 - Histories have a configured size limit; use continuation for longer workflows. An orphaned model reservation can consume budget without a provider call. [History limit](internal/engine/workflow_task.go), [D28](docs/decisions.md#d28--2026-09-28--a-lost-reserve-acknowledgement-stays-counted-until-midnight).
-- A live Gate deployment, cloud operation and provider invoices are outside this local verification. The recorded paid model call was not repeated. [Audit](docs/evidence/audit-2026-09-28.md), [cost recording](docs/evidence/cost.md).
+- The AWS proof is one recorded session on the smallest configuration (one 0.25 vCPU task, db.t4g.micro), torn down afterwards; it is not an operated service. The Gate was run locally from its own Compose stack, not a deployed Gate. Provider invoices were not reconciled, and the recorded paid model call was not repeated. [AWS](docs/evidence/aws-2026-09-28.md), [Gate](docs/evidence/gate-e2e.md), [cost recording](docs/evidence/cost.md).
 
 ## License
 

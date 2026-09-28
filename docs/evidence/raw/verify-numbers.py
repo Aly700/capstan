@@ -426,6 +426,10 @@ def artifacts():
         events = [json.loads(line,parse_float=Decimal) for line in read(path).splitlines()]
         assert events[0]["version"]==2 and set(events[0]["env"])=={"TERM"}
         assert all(a[0]<=b[0] for a,b in zip(events[1:],events[2:]))
+        if path.name not in inspection["recordings"]:
+            # Recorded after the audit's inspection (workload lane); structure checked above.
+            print(f"recording {path.name}: structure OK; not in the audit inspection manifest")
+            continue
         reported = inspection["recordings"][path.name]
         same(len(events)-1,reported["events"])
         same(str(events[-1][0]),reported["duration_seconds"])
@@ -524,9 +528,12 @@ def main():
     parser.add_argument("--historical",action="store_true")
     parser.add_argument("--write",action="store_true")
     args = parser.parse_args()
+    # The measured code must be unchanged since SHA. The Codex-lanes workload example and
+    # its AWS demo scripts were merged afterwards; the campaigns never run them.
     subprocess.run(["git", "diff", "--exit-code", SHA, "--", "cmd", "internal",
                     "sdk", "gen", "proto", "examples", "scripts", "Makefile",
-                    "go.mod", "go.sum", "compose.yaml", "conformance"],
+                    "go.mod", "go.sum", "compose.yaml", "conformance",
+                    ":(exclude)examples/codex-lanes", ":(exclude)scripts/demo-codex-lanes*"],
                    cwd=ROOT, check=True)
     historical()
     artifacts()
