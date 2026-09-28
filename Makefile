@@ -23,7 +23,9 @@ lint:
 	cd sdk && npx tsc --noEmit
 
 test-go:
-	go test -race -count=1 ./...
+	go test -race -count=1 $$(go list ./... | grep -v '/internal/lab$$')
+	go test -race -count=1 ./internal/lab -seeds 50
+	go test -count=1 ./internal/lab -seeds 2000
 	go test -race -count=1 -tags pgengine ./internal/engine/...
 
 test-sdk:
