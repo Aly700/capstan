@@ -73,6 +73,10 @@ export class Client {
     await this.rpc.cancelRun({ runId, ...(reason === undefined ? {} : { reason }) });
   }
 
+  async terminate(runId: string, reason?: string): Promise<void> {
+    await this.rpc.terminateRun({ runId, ...(reason === undefined ? {} : { reason }) });
+  }
+
   async resume(runId: string, reason?: string): Promise<void> {
     await this.rpc.resumeRun({ runId, ...(reason === undefined ? {} : { reason }) });
   }
