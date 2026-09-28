@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"time"
 
 	"connectrpc.com/connect"
 	"github.com/Aly700/capstan/internal/auth"
@@ -38,6 +39,17 @@ func (s *Server) errors() connect.Interceptor {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
 			return resp, s.rpcError(ctx, req.Spec().Procedure, err)
+		}
+	})
+}
+
+func (s *Server) measure() connect.Interceptor {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			start := time.Now()
+			resp, err := next(ctx, req)
+			s.metrics.recordRPC(req.Spec().Procedure, err, time.Since(start))
+			return resp, err
 		}
 	})
 }

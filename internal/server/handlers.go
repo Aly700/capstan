@@ -2,9 +2,11 @@
 package server
 
 import (
+	"context"
 	"log/slog"
 	"maps"
 	"net/http"
+	"sync/atomic"
 	"time"
 
 	"connectrpc.com/connect"
@@ -22,14 +24,22 @@ type Notifier interface {
 
 var _ Notifier = (store.Store)(nil)
 
-type Options struct{ Logger *slog.Logger }
+type Options struct {
+	Logger *slog.Logger
+	Ready  func(context.Context) error
+}
 
 type Server struct {
-	cfg      config.Config
-	api      engine.API
-	notifier Notifier
-	logger   *slog.Logger
-	handler  http.Handler
+	metrics   *metrics
+	ready     func(context.Context) error
+	pollStop  context.Context
+	stopPolls context.CancelFunc
+	draining  atomic.Bool
+	cfg       config.Config
+	api       engine.API
+	notifier  Notifier
+	logger    *slog.Logger
+	handler   http.Handler
 }
 
 // New mounts both services without opening a listener or starting background work.
@@ -50,8 +60,14 @@ func New(cfg config.Config, api engine.API, notifier Notifier, opts Options) *Se
 		logger = slog.Default()
 	}
 	s := &Server{cfg: cfg, api: api, notifier: notifier, logger: logger}
+	s.metrics = newMetrics()
+	s.ready = opts.Ready
+	s.pollStop, s.stopPolls = context.WithCancel(context.Background())
 	mux := http.NewServeMux()
-	options := []connect.HandlerOption{connect.WithReadMaxBytes(cfg.MaxMessageBytes), connect.WithInterceptors(s.authenticate(), s.errors())}
+	mux.HandleFunc("/healthz", s.health)
+	mux.HandleFunc("/readyz", s.readiness)
+	mux.Handle("/metrics", s.metrics)
+	options := []connect.HandlerOption{connect.WithReadMaxBytes(cfg.MaxMessageBytes), connect.WithInterceptors(s.measure(), s.authenticate(), s.errors())}
 	mux.Handle(rpc.NewWorkerServiceHandler(s, options...))
 	mux.Handle(rpc.NewClientServiceHandler(s, options...))
 	s.handler = mux
@@ -59,3 +75,5 @@ func New(cfg config.Config, api engine.API, notifier Notifier, opts Options) *Se
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) { s.handler.ServeHTTP(w, r) }
+
+func (s *Server) cancelPolls() { s.stopPolls() }

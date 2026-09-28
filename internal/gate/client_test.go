@@ -114,7 +114,9 @@ func TestApprovalStatusRejectsBadBaseOrID(t *testing.T) {
 			t.Errorf("accepted base %q", base)
 		}
 	}
-	if _, err := New("https://gate.test", "key", hc).ApprovalStatus(context.Background(), ""); err == nil {
-		t.Error("accepted empty id")
+	for _, id := range []string{"", ".", ".."} {
+		if _, err := New("https://gate.test", "key", hc).ApprovalStatus(context.Background(), id); err == nil {
+			t.Errorf("accepted invalid id %q", id)
+		}
 	}
 }
