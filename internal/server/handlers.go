@@ -13,6 +13,7 @@ import (
 	rpc "github.com/Aly700/capstan/gen/capstan/v1/capstanv1connect"
 	"github.com/Aly700/capstan/internal/config"
 	"github.com/Aly700/capstan/internal/engine"
+	"github.com/Aly700/capstan/internal/server/ui"
 	"github.com/Aly700/capstan/internal/store"
 )
 
@@ -67,6 +68,7 @@ func New(cfg config.Config, api engine.API, notifier Notifier, opts Options) *Se
 	mux.HandleFunc("/healthz", s.health)
 	mux.HandleFunc("/readyz", s.readiness)
 	mux.Handle("/metrics", s.metrics)
+	mux.Handle("/ui/", ui.NewHandler())
 	options := []connect.HandlerOption{connect.WithReadMaxBytes(cfg.MaxMessageBytes), connect.WithInterceptors(s.measure(), s.authenticate(), s.errors())}
 	mux.Handle(rpc.NewWorkerServiceHandler(s, options...))
 	mux.Handle(rpc.NewClientServiceHandler(s, options...))
