@@ -31,10 +31,6 @@ func New(deps Deps, cfg Config) (*Engine, error) {
 
 var _ API = (*Engine)(nil)
 
-func (e *Engine) StartRun(ctx context.Context, identity string, req *capstanv1.StartRunRequest) (*capstanv1.StartRunResponse, error) {
-	return nil, errNotImplemented
-}
-
 func (e *Engine) SignalRun(ctx context.Context, identity string, req *capstanv1.SignalRunRequest) (*capstanv1.SignalRunResponse, error) {
 	return nil, errNotImplemented
 }
@@ -44,18 +40,6 @@ func (e *Engine) CancelRun(ctx context.Context, identity string, req *capstanv1.
 }
 
 func (e *Engine) ResumeRun(ctx context.Context, identity string, req *capstanv1.ResumeRunRequest) (*capstanv1.ResumeRunResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) DescribeRun(ctx context.Context, req *capstanv1.DescribeRunRequest) (*capstanv1.DescribeRunResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) ListRuns(ctx context.Context, req *capstanv1.ListRunsRequest) (*capstanv1.ListRunsResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) GetHistory(ctx context.Context, req *capstanv1.GetHistoryRequest) (*capstanv1.GetHistoryResponse, error) {
 	return nil, errNotImplemented
 }
 
