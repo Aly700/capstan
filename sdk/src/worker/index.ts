@@ -11,6 +11,8 @@ import { CancelledFailure, HistoryMismatchError } from "../types.ts";
 import { activityStorage, executeActivity } from "./activities.ts";
 import { createTransport } from "./transport.ts";
 import { pollLoop, report, untilAborted } from "./pollers.ts";
+import { createGateActivity } from "./builtins/gate.ts";
+import { createModelActivity } from "./builtins/model.ts";
 
 export interface WorkerOptions {
   /** Server address, e.g. "http://127.0.0.1:7233". */
@@ -21,6 +23,15 @@ export interface WorkerOptions {
   workflowsPath: string;
   /** Activity implementations by activity type. Built-in agent activities are added by the agent lane. */
   activities?: Record<string, (input: any) => unknown>;
+  /** Default model for capstan.model. Defaults to claude-sonnet-5. The API key is read only from ANTHROPIC_API_KEY. */
+  model?: string;
+  /** AgentOps Gate base URL. Gate configuration stays in the worker, outside workflow history. */
+  gateUrl?: string;
+  /** Gate's X-API-Key credential; distinct from the Capstan server's apiKey above. */
+  gateApiKey?: string;
+  /** Policy UUID and agent identity sent by capstan.gate.decide. Both are required to use tool(). */
+  gatePolicyId?: string;
+  gateAgentId?: string;
   /** Defaults to "<hostname>:<pid>". */
   identity?: string;
   /** Identifies the code version; recorded on TaskCompleted. Defaults to a hash of the bundle. */
@@ -114,7 +125,11 @@ export class Worker {
     for (let i = 0; i < (this.options.maxConcurrentActivities ?? 50); i++) loops.push(pollLoop({
       kind: "activity", signal: this.polls.signal, logger: this.log,
       poll: () => this.client.pollActivityTask({ taskQueue: this.options.taskQueue, identity: this.identity }, { signal: this.polls.signal, timeoutMs: 35_000 }),
-      execute: (task) => executeActivity({ task, client: this.client, activities: this.options.activities ?? {}, identity: this.identity, shutdown: this.tasks.signal, logger: this.log }),
+      execute: (task) => executeActivity({ task, client: this.client, activities: {
+        ...this.options.activities,
+        "capstan.gate.decide": createGateActivity(this.options),
+        "capstan.model": createModelActivity({ client: this.client, taskToken: task.taskToken, ...(this.options.model === undefined ? {} : { model: this.options.model }) }),
+      }, settleOnAbort: task.activityType === "capstan.model", identity: this.identity, shutdown: this.tasks.signal, logger: this.log }),
     }));
     this.running = Promise.all(loops).then(() => {});
     return this.running;
