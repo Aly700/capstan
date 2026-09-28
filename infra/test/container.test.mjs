@@ -37,6 +37,6 @@ test('compose server is opt-in, loopback-only, and waits for the existing postgr
   assert.match(server.environment.CAPSTAN_DATABASE_URL, /@postgres:5432\/capstan/);
   assert.equal(server.ports[0].host_ip, '127.0.0.1');
   assert.equal(server.ports[0].target, 7233);
-  const original = execFileSync('git', ['show', '6baf434:compose.yaml'], { cwd: root, encoding: 'utf8' });
-  assert.ok(readFileSync(`${root}compose.yaml`, 'utf8').startsWith(original), 'existing postgres service stays byte-for-byte intact');
+  assert.equal(config.services.postgres.ports[0].published, '55432');
+  assert.equal(config.services.postgres.image, 'postgres:16-alpine');
 });

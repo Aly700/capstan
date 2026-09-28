@@ -17,3 +17,10 @@ test('CI uses the local toolchain, shared-database contract, and complete merge 
   assert.match(workflow, /permissions:\s+contents: read/);
   assert.doesNotMatch(workflow, /id-token: write|aws-actions|pull_request_target|pg-up|pg-down/);
 });
+
+test('CI also checks the CDK templates without AWS credentials and builds the ARM image', () => {
+  const workflow = read('.github/workflows/verify.yml');
+  for (const expected of ['working-directory: infra', 'npm run typecheck', 'npm test', 'imageTag=test', 'budgetEmail=test@example.com', 'AWS_EC2_METADATA_DISABLED', 'AWS_SHARED_CREDENTIALS_FILE: /dev/null', 'linux/arm64', 'push: false']) {
+    assert.ok(workflow.includes(expected), `infra CI must contain ${expected}`);
+  }
+});

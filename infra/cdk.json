@@ -1,0 +1,11 @@
+{
+  "app": "node bin/capstan.ts",
+  "versionReporting": false,
+  "analyticsReporting": false,
+  "context": {
+    "@aws-cdk/core:defaultCrossStackReferences": "strong",
+    "@aws-cdk/aws-ec2:restrictDefaultSecurityGroup": false,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/aws-rds:databaseProxyUniqueResourceName": true
+  }
+}
