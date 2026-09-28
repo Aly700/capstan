@@ -1,8 +1,10 @@
 node_modules
 dist
+bin/capstan-server
 .env
 .env.*
 !.env.example
 *.log
 .lane/
 tmp/
+coverage/
