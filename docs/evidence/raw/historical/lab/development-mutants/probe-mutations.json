@@ -1,0 +1,42 @@
+[
+  {
+    "id": "M003",
+    "exit": 0,
+    "output": "ok  \tgithub.com/Aly700/capstan/internal/lab\t0.187s\n"
+  },
+  {
+    "id": "M005",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/closed-inbox (0.00s)\n        probes_test.go:12: protocol closed-inbox: closed run retains 1 buffered events\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.187s\nFAIL\n"
+  },
+  {
+    "id": "M007",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/failed-workflow-release (0.00s)\n        probes_test.go:12: protocol failed-workflow-release: failed workflow task still owns InFlight\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.188s\nFAIL\n"
+  },
+  {
+    "id": "M009",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/heartbeat-renewal (0.00s)\n        probes_test.go:12: protocol heartbeat-renewal: renewed heartbeat task expired early: processed 1\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.187s\nFAIL\n"
+  },
+  {
+    "id": "M010",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/retry-deadline (0.00s)\n        probes_test.go:12: protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.191s\nFAIL\n"
+  },
+  {
+    "id": "M011",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/cancel-before-start (0.00s)\n        probes_test.go:12: protocol cancel-before-start: cancelled unstarted activity was delivered\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.185s\nFAIL\n"
+  },
+  {
+    "id": "M013",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/approval-once (0.00s)\n        probes_test.go:12: protocol approval-once: duplicate approval resolution must be rejected: <nil>\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.183s\nFAIL\n"
+  },
+  {
+    "id": "M019",
+    "exit": 1,
+    "output": "--- FAIL: TestProtocolProbes (0.00s)\n    --- FAIL: TestProtocolProbes/signal-order (0.00s)\n        probes_test.go:12: protocol signal-order: accepted signal order[0] = \"third\"\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.179s\nFAIL\n"
+  }
+]

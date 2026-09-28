@@ -1,0 +1,6 @@
+--- FAIL: TestLab (0.01s)
+    lab_test.go:39: seed 0 scenario pipeline: signal lab/inflight-10: got 0 deliveries, want one
+        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.231s
+FAIL

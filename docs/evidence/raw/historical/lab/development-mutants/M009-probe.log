@@ -1,0 +1,6 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/heartbeat-renewal (0.00s)
+        probes_test.go:12: protocol heartbeat-renewal: renewed heartbeat task expired early: processed 1
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.187s
+FAIL

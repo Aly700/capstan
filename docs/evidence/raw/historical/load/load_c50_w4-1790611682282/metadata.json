@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-28T16:08:03.135Z",
+  "database": "capstan_perf_load_c50_w4_69275_1790611682282",
+  "command": "scripts/run-load.sh 50 1000 4",
+  "serverPID": 69290,
+  "workerPIDs": [
+    69302,
+    69303,
+    69304,
+    69305
+  ],
+  "workflowConcurrencyPerWorker": 10,
+  "activityConcurrencyPerWorker": 10,
+  "container": "capstan-postgres-1",
+  "phase": "pool-repeat",
+  "dbMaxConns": "40",
+  "port": 7401
+}

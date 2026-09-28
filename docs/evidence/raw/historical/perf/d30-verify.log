@@ -1,0 +1,406 @@
+buf generate
+buf lint
+go vet ./...
+cd sdk && npx tsc --noEmit
+go test -race -count=1 ./...
+ok  	github.com/Aly700/capstan/cmd/capstan-load	1.202s
+ok  	github.com/Aly700/capstan/cmd/capstan-server	2.323s
+?   	github.com/Aly700/capstan/gen/capstan/v1	[no test files]
+?   	github.com/Aly700/capstan/gen/capstan/v1/capstanv1connect	[no test files]
+ok  	github.com/Aly700/capstan/internal/auth	1.407s
+ok  	github.com/Aly700/capstan/internal/config	1.930s
+ok  	github.com/Aly700/capstan/internal/engine	1.701s
+ok  	github.com/Aly700/capstan/internal/gate	2.040s
+ok  	github.com/Aly700/capstan/internal/server	2.203s
+ok  	github.com/Aly700/capstan/internal/server/ui	2.838s
+?   	github.com/Aly700/capstan/internal/store	[no test files]
+ok  	github.com/Aly700/capstan/internal/store/memstore	4.714s
+ok  	github.com/Aly700/capstan/internal/store/pgstore	10.608s
+?   	github.com/Aly700/capstan/internal/store/storetest	[no test files]
+ok  	github.com/Aly700/capstan/internal/testpg	2.939s
+go test -race -count=1 -tags pgengine ./internal/engine/...
+ok  	github.com/Aly700/capstan/internal/engine	31.694s
+cd sdk && CAPSTAN_E2E=1 npx vitest run
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--perf/sdk
+
+ ✓ test/replay-match.test.ts > conformance command comparison > matches scheduleActivity by exactly its identifying fields 2ms
+ ✓ test/replay-match.test.ts > conformance command comparison > scheduleActivity compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > scheduleActivity compares activityType and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches requestActivityCancel by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > requestActivityCancel compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches startTimer by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > startTimer compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches cancelTimer by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > cancelTimer compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches recordMarker by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > recordMarker compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > recordMarker compares name and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > recordMarker compares markerId and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches requestApproval by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > requestApproval compares seq and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > requestApproval compares approvalId and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > requestApproval compares source and names the first recorded event 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches completeRun by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches failRun by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches cancelRun by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > matches continueAsNew by exactly its identifying fields 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > ignores activity input, queue, retry and all timeouts 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > ignores closing results and timer durations 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > rejects a removed command 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > pins an extra command to the completed task when no recorded event exists 0ms
+ ✓ test/replay-match.test.ts > conformance command comparison > rejects a changed command type 0ms
+ ✓ test/codecs.test.ts > payload codec > round trips JSON values including UTF-8 and null 1ms
+ ✓ test/codecs.test.ts > payload codec > represents undefined by an absent payload 0ms
+ ✓ test/codecs.test.ts > payload codec > rejects unsupported encodings and malformed JSON 1ms
+ ✓ test/codecs.test.ts > duration codec > parses 0 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 1.5 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 250ms 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 1.5s 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 2m 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 2h 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 3d 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects -1 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects NaN 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects Infinity 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects -1s 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 3w 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 1 s 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects  0ms
+ ✓ test/codecs.test.ts > duration codec > rejects x 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects Infinitys 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 1e999s 0ms
+ ✓ test/codecs.test.ts > duration codec > encodes seconds and nanoseconds without losing sub-millisecond precision 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips typed application failures and their JSON details 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips an ActivityFailure with an ApplicationFailure cause 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips timeout and cancellation classes 0ms
+ ✓ test/codecs.test.ts > failure codec > bounds nested and cyclic causes at ten failures 0ms
+ ✓ test/codecs.test.ts > failure codec > omits stacks by default and keeps them only on explicit opt-in 1ms
+ ✓ test/codecs.test.ts > failure codec > normalizes thrown primitives and errors from another realm 0ms
+ ↓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > ALLOW executes the registered tool once
+ ↓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > DENY completes without executing the registered tool
+ ↓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > a real Gate approval waits durably while the single-slot worker runs other work
+ ↓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > survives SIGKILL during approval, observes approval with no worker, and resumes once
+ ✓ test/fixtures/build.test.ts > fixture builder > links task completions and activity results with gap-free event ids 5ms
+ ✓ test/fixtures/build.test.ts > fixture builder > records empty completed and discarded activations without command events 1ms
+ ✓ test/fixtures/build.test.ts > fixture builder > discards timed-out activations without a TaskCompleted 1ms
+ ✓ test/fixtures/build.test.ts > fixture builder > requires a final TaskStarted and known operation references 1ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > contains at least 24 additional fixtures 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > shares the reviewed signal clock, patch memoization, and batched race edges 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > marks only the batched race fixture as TypeScript-specific 2ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 001-single-activity.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 002-parallel-out-of-order.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 003-failure-caught-retry.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 004-sleep-starts.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 005-sleep-fires.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 006-race-activity-wins.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 007-race-timer-wins.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 008-condition-already-true.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 009-condition-signal.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 010-condition-timeout.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 011-condition-cancels-timer.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 012-signal-before-registration.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 013-handler-history-order.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 014-next-signal-fifo.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 015-side-effect-recorded.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 016-uuid-recorded.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 017-patch-new.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 018-patch-old.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 019-deprecate-historical-patch.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 020-deprecate-new.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 021-random-stable.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 022-activation-time.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 023-cancel-pending-sleep.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 024-continue-as-new.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 025-discarded-activation.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 026-blocked-resumed-patch.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 027-stray-fired-after-cancel.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 028-mismatch-activity-type.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 029-mismatch-command-removed.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 030-mismatch-command-added.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 031-mismatch-seq-reordered.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 032-mismatch-marker-name.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 033-mismatch-marker-id.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 034-mismatch-marker-seq.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 035-mismatch-timer-seq.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 036-mismatch-command-type.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 037-approval-resolved.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 038-mismatch-approval-id.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 039-mismatch-approval-source.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 040-mismatch-approval-seq.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 041-activity-timeout.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 042-activity-cancelled.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 043-activity-failure-cause.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 044-nested-promise-drain.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 045-async-handler-drain.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 046-input-duration-not-compared.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 047-timer-duration-not-compared.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 048-mismatch-command-missing.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 049-mismatch-cancel-timer-seq.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 050-discarded-task-timeout.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 051-side-effect-new.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 052-signal-handler-current-clock.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 053-patch-false-memoized.json is valid protojson with gap-free history and a current activation 0ms
+ ✓ test/fixtures/build.test.ts > conformance corpus structure > 054-race-batched-native-order.json is valid protojson with gap-free history and a current activation 1ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > reports the first mismatch even when a later marker eagerly detects another 7ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > fails closed when a caught side effect has no recordable result: callback throws undefined 2ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > fails closed when a caught side effect has no recordable result: callback emits a command 1ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > fails closed when a caught side effect has no recordable result: callback throws 1ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > fails closed when a caught side effect has no recordable result: BigInt result 2ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > fails closed when a caught side effect has no recordable result: circular result 6ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > sets the current TaskStarted time before a synchronous signal handler runs 3ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > sets the current clock before evaluating a condition after a signal 2ms
+ ✓ test/replay-review.test.ts > independent replay contract regressions > memoizes an old-run false patch decision across later activations 2ms
+ ↓ test/agent-live.test.ts > live Anthropic smoke reserves under $0.05 and finishes with usage
+ ✓ test/types.test.ts > failure types > ApplicationFailure carries its type and retry flag 1ms
+ ✓ test/types.test.ts > failure types > type defaults to the class name 0ms
+ ✓ test/types.test.ts > failure types > ActivityFailure keeps the activity identity and the cause 0ms
+ ✓ test/types.test.ts > failure types > HistoryMismatchError names the event and both sides 0ms
+ ✓ test/fixtures/load.test.ts > conformance fixture language selection > loads shared and explicitly included fixtures for ts in filename order 1ms
+ ✓ test/fixtures/load.test.ts > conformance fixture language selection > loads shared and explicitly included fixtures for go in filename order 1ms
+ ✓ test/fixtures/load.test.ts > conformance fixture language selection > loads shared and explicitly included fixtures for another-language in filename order 0ms
+ ✓ test/fixtures/load.test.ts > conformance fixture language selection > preserves the selected fixture's language metadata 3ms
+ ✓ test/client.test.ts > client over scripted Connect > starts with encoded input and timeouts and maps every description field 22ms
+ ✓ test/client.test.ts > client over scripted Connect > sends signal dedupe keys, lifecycle reasons and approval decisions 13ms
+ ✓ test/client.test.ts > client over scripted Connect > maps closed descriptions, payloads, failures and continuation ids 4ms
+ ✓ test/client.test.ts > client over scripted Connect > repeats AwaitRun until closed, including blocked results, and returns the failed description 4ms
+ ✓ test/client.test.ts > client over scripted Connect > applies an overall result deadline across repeated long polls 45ms
+ ✓ test/client.test.ts > client over scripted Connect > propagates server failures and rejects missing run information 5ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > model emits one activity and replays its recorded result 21ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > tool schedules Gate first, with no worker configuration in the payload 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > ALLOW schedules exactly the registered activity at the next seq 8ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > DENY completes without scheduling the tool 5ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > REQUIRE_APPROVAL allocates one GATE approval and yields no work while waiting 25ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > approved Gate history resumes at the tool and preserves the resolver 17ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps DENIED without scheduling a tool 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps EXPIRED without scheduling a tool 6ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 001-single-activity.json: one activity, then complete 6ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 002-parallel-out-of-order.json: parallel out of order 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 003-failure-caught-retry.json: failure caught retry 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 004-sleep-starts.json: sleep starts 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 005-sleep-fires.json: sleep fires 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 006-race-activity-wins.json: race activity wins 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 007-race-timer-wins.json: race timer wins 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 008-condition-already-true.json: condition already true 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 009-condition-signal.json: condition signal 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 010-condition-timeout.json: condition timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 011-condition-cancels-timer.json: condition cancels timer 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 012-signal-before-registration.json: signal before registration 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 013-handler-history-order.json: handler history order 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 014-next-signal-fifo.json: next signal fifo 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 015-side-effect-recorded.json: side effect recorded 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 016-uuid-recorded.json: uuid recorded 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 017-patch-new.json: patch new 5ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 018-patch-old.json: patch old 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 019-deprecate-historical-patch.json: deprecate historical patch 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 020-deprecate-new.json: deprecate new 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 021-random-stable.json: random stable 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 022-activation-time.json: activation time 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 023-cancel-pending-sleep.json: cancel pending sleep 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 024-continue-as-new.json: continue as new 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 025-discarded-activation.json: discarded activation 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 026-blocked-resumed-patch.json: blocked resumed patch 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 027-stray-fired-after-cancel.json: stray fired after cancel 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 028-mismatch-activity-type.json: mismatch activity type 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 029-mismatch-command-removed.json: mismatch command removed 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 030-mismatch-command-added.json: mismatch command added 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 031-mismatch-seq-reordered.json: mismatch seq reordered 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 032-mismatch-marker-name.json: mismatch marker name 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 033-mismatch-marker-id.json: mismatch marker id 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 034-mismatch-marker-seq.json: mismatch marker seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 035-mismatch-timer-seq.json: mismatch timer seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 036-mismatch-command-type.json: mismatch command type 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 037-approval-resolved.json: approval resolved 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 038-mismatch-approval-id.json: mismatch approval id 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 039-mismatch-approval-source.json: mismatch approval source 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 040-mismatch-approval-seq.json: mismatch approval seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 041-activity-timeout.json: activity timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 042-activity-cancelled.json: activity cancelled 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 043-activity-failure-cause.json: activity failure cause 4ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 044-nested-promise-drain.json: nested promise drain 3ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 045-async-handler-drain.json: async handler drain 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 046-input-duration-not-compared.json: input duration not compared 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 047-timer-duration-not-compared.json: timer duration not compared 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 048-mismatch-command-missing.json: mismatch command missing 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 049-mismatch-cancel-timer-seq.json: mismatch cancel timer seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 050-discarded-task-timeout.json: discarded task timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 051-side-effect-new.json: side effect new 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 052-signal-handler-current-clock.json: signal handler current clock 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 053-patch-false-memoized.json: patch false memoized 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 054-race-batched-native-order.json: race batched native order 1ms
+ ✓ src/client/terminate.test.ts > Client.terminate over scripted Connect > sends the run, optional reason (undefined), and authentication 23ms
+ ✓ src/client/terminate.test.ts > Client.terminate over scripted Connect > sends the run, optional reason (operator stopped the run), and authentication 4ms
+ ✓ src/client/terminate.test.ts > Client.terminate over scripted Connect > propagates server error code 5 3ms
+ ✓ src/client/terminate.test.ts > Client.terminate over scripted Connect > propagates server error code 9 3ms
+ ✓ src/client/terminate.test.ts > Client.terminate over scripted Connect > propagates server error code 16 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps APPROVED, including choice and note 10ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps DENIED, including choice and note 20ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps EXPIRED, including choice and note 10ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > allocates mixed parallel calls synchronously in call order 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > defaults risk to MEDIUM and tool timeout to five minutes 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > fails closed on an invalid recorded Gate effect 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the ALLOW proposal unchanged if the caller mutates its arguments 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the REQUIRE_APPROVAL proposal unchanged if the caller mutates its arguments 1ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > runs an activity with isolated context, auth and a 35 second poll deadline 81ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > reserves before one provider call and returns server-priced usage 5ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses real model ids and counts UTF-8 input conservatively as well as all output 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses configured default model and honours an explicit upper-bound estimate 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > reads worker price overrides for the estimate and chooses the longest family prefix 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > fails closed for an unknown model without an explicit estimate 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > accepts an explicit estimate for an unknown model 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > uses the installed SDK structured-output field and validates nested JSON 5ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: not json: secret-output 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: {"count":"secret-output"} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > invalid output still records billed tokens: {"count":2,"extra":true} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > enforces original numeric bounds after simplifying the provider schema 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > does not let JSON Schema defaults fabricate required output 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > defaults are annotations, so absent optional fields remain absent 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > retains properties named default and validates defaults behind local refs 1ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects unsupported draft-7 definitions before reserving instead of sending dangling refs 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > cap exceeded fails closed without calling or finishing a model 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > provider errors always finish and contain only fixed public error text 2ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a billed timeout records any reported usage even after the activity signal aborts 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > a timeout with no usage still finishes with a distinguishable fixed code 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > recognizes the installed SDK's real timeout error class 0ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > posts the Gate API body and key, maps id, and drops echoed request data 92ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > retries only the idempotent finish RPC if its acknowledgement is lost 102ms
+ ✓ test/cli.test.ts > capstan launcher commands > start sends the workflow, run, queue and JSON input and prints its result 198ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > sends the run and optional reason (undefined) 197ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > preserves typed activity failure and rejects an unregistered activity without retry 57ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > a 5xx retry reuses the key and body across distinct activity attempts 59ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > retries a disconnected success response using the same Gate idempotency key 58ms
+ ✓ test/cli.test.ts > capstan launcher commands > describe prints the run's status and cost 119ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > sends the run and optional reason (operator stopped the run) 121ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > 409 is a non-retryable failure and never copies the response body 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > returns Gate approval identity 57ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > unavailable accounting does not trigger another billed provider attempt 303ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"maxTokens":0} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"maxTokens":1.5} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":-1} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":null} 0ms
+ ✓ test/agent-model.test.ts > capstan.model accounting and provider boundary > rejects invalid bounds before reserving: {"estimateUsd":null} 0ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > documents terminate in help 112ms
+ ✓ test/cli.test.ts > capstan launcher commands > history paginates and renders all events (JSON=false) 126ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"00000000-0000-4000-8000-000000000001","effect":"REQUIRE_APPROVAL","approvalId":null} 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"gate-secret-must-never-appear-in-history","effect":"ALLOW"} 58ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > invalid terminate usage exits 1: "terminate" 114ms
+ ✓ test/cli.test.ts > capstan launcher commands > history paginates and renders all events (JSON=true) 127ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > rejects malformed Gate decisions without leaking response fields: {"id":"00000000-0000-4000-8000-000000000001","effect":"UNKNOWN"} 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > does not forward a Gate key through a redirect 58ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > invalid terminate usage exits 1: "terminate" 120ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > fails closed if Gate options are absent 56ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > registers capstan.model and fails closed at the real RPC boundary 57ms
+ ✓ test/cli.test.ts > capstan launcher commands > signal sends its name and input 127ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > invalid terminate usage exits 1: "terminate" 115ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > never records a Gate key even when it is a UUID echoed as a decision id 57ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > the real Anthropic SDK uses only the environment key and never logs bodies in debug mode 56ms
+ ✓ test/cli.test.ts > capstan launcher commands > cancel sends its run and optional reason 117ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > invalid terminate usage exits 1: "terminate" 110ms
+ ✓ test/cli.test.ts > capstan launcher commands > resume sends its run and optional reason 117ms
+ ✓ test/replay.test.ts > replay activation runtime > completes plain workflow returns 4ms
+ ✓ test/replay.test.ts > replay activation runtime > allocates activity seq at call time inside Promise.all 2ms
+ ✓ test/replay.test.ts > replay activation runtime > drains nested async functions through Promise.all 4ms
+ ✓ test/replay.test.ts > replay activation runtime > Promise.race resolves in external history order 2ms
+ ✓ test/replay.test.ts > replay activation runtime > batched events retain native Promise.race continuation ordering 2ms
+ ✓ test/replay.test.ts > replay activation runtime > awaiting signal handler resumes and condition observes its mutation 2ms
+ ✓ test/replay.test.ts > replay activation runtime > handler can await an activity and emit a later command 2ms
+ ✓ test/replay.test.ts > replay activation runtime > sets workflow time before promise continuations and skips discarded time 4ms
+ ✓ test/replay.test.ts > replay activation runtime > unknown or duplicate activity results are SDK errors 2ms
+ ✓ test/replay.test.ts > replay activation runtime > unknown timer fires are SDK errors 2ms
+ ✓ test/replay.test.ts > replay activation runtime > cancellation rejects pending sleep and emits CancelRun 2ms
+ ✓ test/replay.test.ts > replay activation runtime > uses recorded side effects without calling the callback 2ms
+ ✓ test/replay.test.ts > replay activation runtime > does not invoke a side effect if its historical marker identity mismatches 1ms
+ ✓ test/replay.test.ts > replay activation runtime > reports the first mismatch even when a later marker also differs 1ms
+ ✓ test/replay.test.ts > replay activation runtime > queueMicrotask exceptions fail the task without escaping to the worker 2ms
+ ✓ test/replay.test.ts > replay activation runtime > missing workflow exports fail the task as an SDK error 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global fetch with author guidance 4ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setTimeout with author guidance 2ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setInterval with author guidance 2ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setImmediate with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global process with author guidance 2ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global require with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global WebAssembly with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global SharedArrayBuffer with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Atomics with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Buffer with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global performance with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global crypto with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Intl with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global eval with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > uses workflow time and randomness without native Date escape paths 2ms
+ ✓ test/sandbox.test.ts > sandbox > creates a fresh global and intrinsic graph for every workflow 2ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Function('return 1')() 2ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: ({}).constructor.constructor('return process')() 2ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: globalThis.constructor.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Math.random.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: console.log.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: TextEncoder.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: queueMicrotask.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Symbol.for('capstan.workflow.runtime') && globalThis[Symbol.for('capstan.workflow.runtime')].activity.constructor('return process')() 5ms
+ ✓ test/sandbox.test.ts > sandbox > provides realm-native text codecs, cloning and microtasks 2ms
+ ✓ test/sandbox.test.ts > sandbox > logs through the runtime only when not replaying 2ms
+ ✓ test/sandbox.test.ts > sandbox > bundles the SDK API into the VM and erases activity type imports 15ms
+ ✓ test/sandbox.test.ts > sandbox > rejects Node builtin imports with the import named 9ms
+ ✓ test/sandbox.test.ts > sandbox > invalidates cached output when a workflow dependency changes 11ms
+ ✓ test/sandbox.test.ts > sandbox > keeps host input, runtime objects and promises outside the realm 1ms
+ ✓ test/sandbox.test.ts > sandbox > rehydrates failure subclasses and their causes inside the bundle realm 6ms
+ ✓ test/sandbox.test.ts > sandbox > passes handler promises to the runtime without exposing host payloads 5ms
+ ✓ test/sandbox.test.ts > sandbox > does not expose host failures or their nested details 1ms
+ ✓ test/sandbox.test.ts > sandbox > synchronously invokes predicates and later settles their realm promise 3ms
+ ✓ test/sandbox.test.ts > sandbox > calls proxies immediately in call order and does not behave like a thenable 1ms
+ ✓ test/sandbox.test.ts > sandbox > preserves undefined inputs at the host boundary 1ms
+ ✓ test/sandbox.test.ts > sandbox > recreates standard host errors using realm-native error constructors 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects synchronous infinite loops during workflow invocation 1003ms
+ ✓ test/sandbox.test.ts > sandbox > reports detached microtask failures to the replay runtime: queueMicrotask(() => { throw new Error('microtask failed'); }) 1ms
+ ✓ test/sandbox.test.ts > sandbox > reports detached microtask failures to the replay runtime: queueMicrotask(async () => { await Promise.resolve(); throw new Error('microtask failed'); }) 1ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > worker shutdown waits for model ledger cleanup with its own RPC deadline 120ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > requires an API key before sending a request 112ms
+ ✓ test/replay.test.ts > replay activation runtime > synchronous workflow execution is bounded and fails the task 1003ms
+ ✓ test/replay.test.ts > replay activation runtime > disabled code generation fails the task as a sandbox error 1ms
+ ✓ test/replay.test.ts > replay activation runtime > workflow errors become FailRun and sandbox errors remain SDK errors 3ms
+ ✓ test/replay.test.ts > replay activation runtime > continueAsNew wins even if user catches its control signal 1ms
+ ✓ test/replay.test.ts > replay activation runtime > replays a closed history without returning already recorded commands 1ms
+ ✓ test/replay.test.ts > replay activation runtime > replays a 5,000-event history in under 2 seconds 84ms
+ ✓ test/agent-worker.test.ts > built-in activities in a real worker with local HTTP and Connect fakes > a local model timeout finishes before the worker reports the activity failure 157ms
+ ✓ test/cli.test.ts > capstan launcher commands > approve sends the approval choice, note and resolver 117ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > server error code 5 exits 2 117ms
+ ✓ src/cli/terminate.test.ts > capstan terminate launcher command > server error code 9 exits 2 110ms
+ ✓ test/cli.test.ts > capstan launcher commands > deny sends the approval choice, note and resolver 112ms
+ ✓ test/e2e.test.ts > end to end on the real server > runs singleActivity to completion 401ms
+ ✓ test/cli.test.ts > capstan launcher commands > list sends status filter and follows every page 109ms
+ ✓ test/cli.test.ts > capstan launcher commands > replay prints OK for a matching history 106ms
+ ✓ test/cli.test.ts > capstan launcher commands > replay exits 3 and names the first mismatch 109ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > throttles heartbeat RPCs to one second and sends the latest details 1330ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts the activity signal when the server requests cancellation 55ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: undefined 95ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: "unknown" 90ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts and reports local start-to-close expiry even when the function ignores abort 108ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours the original server start time for an already expired attempt 58ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not execute synchronous activity effects after its server deadline 55ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: "start" 98ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > reports malformed heartbeat details as an attempt failure 56ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: "signal" 97ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: "list" 87ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > cancels an in-flight heartbeat RPC once its activity completes 104ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not truncate activity timeouts longer than the native timer range 55ms
+ ✓ test/cli.test.ts > capstan launcher commands > invalid usage exits 1: "cancel" 90ms
+ ✓ test/cli.test.ts > capstan launcher commands > server errors exit 2 with an actionable error 94ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not truncate long heartbeat throttle intervals to one millisecond 107ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours activity concurrency and keeps AsyncLocalStorage contexts separate 104ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours workflow concurrency through the completion RPC 107ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > drops stale completion without reporting an activity failure 54ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > backs off poll errors before retrying 359ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > lets active work finish during shutdown and cancels outstanding polls 128ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts remaining work after shutdown grace without waiting forever 84ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > round trips a workflow task with commands, token, identity and build id 55ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > reports replay mismatch as HISTORY_MISMATCH 54ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > classifies workflow outcome for throwsApplication 55ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > classifies workflow outcome for forbidden 54ms
+ ✓ test/e2e.test.ts > end to end on the real server > finishes a run whose worker is killed mid-activity, with one completion 11660ms
+ ✓ test/e2e.test.ts > end to end on the real server > terminates a sleeping run and keeps its history closed past the timer deadline 1543ms
+
+ Test Files  18 passed | 2 skipped (20)
+      Tests  369 passed | 5 skipped (374)
+   Start at  12:03:31
+   Duration  14.91s (tests 90%, transform 6%, import 4%)
+

@@ -1,0 +1,6 @@
+=== RUN   TestCheckTimersWithDeadlinesRequiresObservedClock
+    properties_test.go:199: rejected a separately validated timer deadline: P3: run "r": timer row 1 has wrong deadline
+--- FAIL: TestCheckTimersWithDeadlinesRequiresObservedClock (0.00s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.446s
+FAIL

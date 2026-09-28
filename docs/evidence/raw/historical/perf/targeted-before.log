@@ -1,0 +1,7 @@
+=== RUN   TestQueueNotificationClaimTransactions
+    targeted_notify_test.go:134: waiters=40 pool_connections=1 claim_attempts=40 claimed=1 control_before=8 control_after=9 control_delta=1 xact_commit_before=9 xact_commit_after=50 xact_commit_delta=41 flush_before=1 flush_control=1 flush_after=1 setup_before_measurement=true claim_transactions=40
+    targeted_notify_test.go:137: one task: attempts=40 claimed=1, want 1 each
+--- FAIL: TestQueueNotificationClaimTransactions (3.18s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/store/pgstore	3.441s
+FAIL

@@ -1,0 +1,5 @@
+=== RUN   TestQueueNotificationClaimTransactions
+    targeted_notify_test.go:133: waiters=40 pool_connections=1 claim_attempts=1 claimed=1 control_before=8 control_after=9 control_delta=1 control_residual=0 xact_commit_before=9 xact_commit_after=11 xact_commit_delta=2 flush_before=1 flush_control=1 flush_after=1 setup_before_measurement=true commits_less_control=1 residual_commits=0
+--- PASS: TestQueueNotificationClaimTransactions (3.17s)
+PASS
+ok  	github.com/Aly700/capstan/internal/store/pgstore	4.420s

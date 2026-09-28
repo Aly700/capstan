@@ -1,0 +1,5 @@
+=== RUN   TestPostgresCampaign
+    pg_test.go:53: validated 500 PostgreSQL seeds; two shared-queue runs/seed; steps=53835 duplicate_acks=7589 database_errors=250 server_crashes=250 elapsed=9m12.646540041s
+--- PASS: TestPostgresCampaign (552.76s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab	553.014s

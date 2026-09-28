@@ -1,0 +1,5 @@
+=== RUN   TestLab
+    lab_test.go:45: validated 2000 seeds; injected faults: map[crash-server:1879 database-failure:1878 duplicate-task:417 duplicate-timer:29 early-timer:125 kill-activity:119 kill-workflow:103 late-ack:367 signal-in-flight:343]
+--- PASS: TestLab (16.87s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab	17.028s

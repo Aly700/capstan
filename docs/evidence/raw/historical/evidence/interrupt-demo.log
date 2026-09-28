@@ -1,0 +1,38 @@
+Capstan crash demo · 2026-09-28T15:48:05.664Z
+Real Go binary + SDK worker + PostgreSQL. Wall-clock playback; no simulated crash or clock jump.
+Source: 1e4ff51 + this demo's working-tree files
+$ GOTOOLCHAIN=go1.26.4 go build -o .lane/bin/capstan-server ./cmd/capstan-server
+$ CAPSTAN_ADDR=127.0.0.1:7302 .lane/bin/capstan-server serve  # database capstan_evidence_crash_38416_1790610485679
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # workflows: crash.ts
+PID  PGID UCOMM
+38436 38436 capstan-server  
+38441 38441 node
+$ capstan start crashSurvivor evidence-crash --queue evidence-crash
+{
+  "run": {
+    "runId": "evidence-crash",
+    "workflowType": "crashSurvivor",
+    "taskQueue": "evidence-crash",
+    "status": "running",
+    "startedAt": "2026-09-28T15:48:06.229Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ capstan describe evidence-crash
+{
+  "runId": "evidence-crash",
+  "workflowType": "crashSurvivor",
+  "taskQueue": "evidence-crash",
+  "status": "running",
+  "startedAt": "2026-09-28T15:48:06.229Z",
+  "lastEventId": 10,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ kill -9 38436  # the SERVER, while the run is waiting on its first timer
+Server is unreachable. Worker stays alive. Waiting 4 real seconds, past the timer's deadline.

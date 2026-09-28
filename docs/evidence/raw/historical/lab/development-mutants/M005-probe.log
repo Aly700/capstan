@@ -1,0 +1,6 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/closed-inbox (0.00s)
+        probes_test.go:12: protocol closed-inbox: closed run retains 1 buffered events
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.187s
+FAIL

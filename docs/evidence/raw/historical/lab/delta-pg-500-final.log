@@ -1,0 +1,6 @@
+=== RUN   TestPostgresCampaign
+    pg_test.go:43: pg seed 377: baseline: timeout: context deadline exceeded
+--- FAIL: TestPostgresCampaign (600.02s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	600.208s
+FAIL

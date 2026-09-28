@@ -1,0 +1,3 @@
+PASS: SIGTERM during the real crash demo exits 130 and completes cleanup.
+Owned server/worker/process-group survivors: 0
+Remaining capstan_evidence databases: none

@@ -1,0 +1,65 @@
+--- FAIL: TestCLIBudgetStopsQueuingAndDrainsStartedSeeds (0.00s)
+    main_test.go:315: code=2 calls=0 output=flag provided but not defined: -duration
+        Usage of capstan-lab:
+          -faults string
+            	all, none, or comma-separated fault names (default "all")
+          -max-steps int
+            	maximum scheduled steps per seed (default 1000)
+          -out string
+            	Markdown report path (default "docs/evidence/lab-1999-12-31.md")
+          -parallel int
+            	maximum number of concurrent seeds (default 8)
+          -scenario string
+            	scenario name (default: selected by seed)
+          -seed int
+            	run exactly this seed instead of the -seeds campaign
+          -seeds int
+            	number of seeds, starting at zero (default 200000)
+          -workers int
+            	lab workers per seed (default 3)
+        capstan-lab: flag provided but not defined: -duration
+--- FAIL: TestCampaignCancellationStopsScheduling (0.00s)
+    main_test.go:335: canceled campaign ran 10 seeds: {known:0 unknown:0 passed:10 steps:0 faults:map[crash-server:0 database-failure:0 duplicate-task:0 duplicate-timer:0 early-timer:0 kill-activity:0 kill-workflow:0 late-ack:0 signal-in-flight:0] failures:[] started:{wall:14026112560029556064 ext:4781334 loc:0x105219740} elapsed:69042}
+--- FAIL: TestCLIZeroCompletedSeedsCannotClaimSuccess (0.00s)
+    main_test.go:345: code=2 calls=0 output=flag provided but not defined: -duration
+        Usage of capstan-lab:
+          -faults string
+            	all, none, or comma-separated fault names (default "all")
+          -max-steps int
+            	maximum scheduled steps per seed (default 1000)
+          -out string
+            	Markdown report path (default "docs/evidence/lab-2026-09-28.md")
+          -parallel int
+            	maximum number of concurrent seeds (default 8)
+          -scenario string
+            	scenario name (default: selected by seed)
+          -seed int
+            	run exactly this seed instead of the -seeds campaign
+          -seeds int
+            	number of seeds, starting at zero (default 200000)
+          -workers int
+            	lab workers per seed (default 3)
+        capstan-lab: flag provided but not defined: -duration
+--- FAIL: TestCLICompletesSeedLimitBeforeBudget (0.00s)
+    main_test.go:358: code=2 output=flag provided but not defined: -duration
+        Usage of capstan-lab:
+          -faults string
+            	all, none, or comma-separated fault names (default "all")
+          -max-steps int
+            	maximum scheduled steps per seed (default 1000)
+          -out string
+            	Markdown report path (default "docs/evidence/lab-2026-09-28.md")
+          -parallel int
+            	maximum number of concurrent seeds (default 8)
+          -scenario string
+            	scenario name (default: selected by seed)
+          -seed int
+            	run exactly this seed instead of the -seeds campaign
+          -seeds int
+            	number of seeds, starting at zero (default 200000)
+          -workers int
+            	lab workers per seed (default 3)
+        capstan-lab: flag provided but not defined: -duration
+FAIL
+FAIL	github.com/Aly700/capstan/cmd/capstan-lab	0.169s
+FAIL

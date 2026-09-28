@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-28T15:30:35.780Z",
+  "database": "capstan_evidence_load_c50_w8_14558_1790609434922",
+  "command": "scripts/run-load.sh 50 1000 8",
+  "serverPID": 14572,
+  "workerPIDs": [
+    14583,
+    14584,
+    14585,
+    14586,
+    14587,
+    14588,
+    14589,
+    14590
+  ],
+  "workflowConcurrencyPerWorker": 10,
+  "activityConcurrencyPerWorker": 10,
+  "container": "capstan-postgres-1"
+}
