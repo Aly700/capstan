@@ -93,8 +93,10 @@ describe.skipIf(!enabled)("independent audit on real server processes", () => {
   it("fires every timer once with two server processes and keeps terminal races atomic", async () => {
     await managed(new Evidence("audit_timers", 7602, { databasePrefix: "capstan_audit" }), async (env) => {
       const primary = env.address;
+      const firstServer = env.server;
       env.port = 7603; env.address = "http://127.0.0.1:7603";
       await env.startServer();
+      const secondServer = env.server;
       env.address = primary;
       const runs = 20, timers = 3;
       for (let n = 0; n < runs; n++) {
@@ -117,7 +119,8 @@ describe.skipIf(!enabled)("independent audit on real server processes", () => {
         await complete(env, await poll(env), [timer("1", "0.03s")]);
         await env.rpc("SignalRun", { runId: id, name: "wake" });
         const task = await poll(env);
-        // A run lock holds the due timer and all three RPCs at the same boundary.
+        // Terminal RPCs contend on one run while both server timer loops operate.
+        // The Clock-controlled Go RPC audit separately forces all four operations to overlap.
         const lock = env.child("psql", [env.dsn, "-X", "-qc", `begin;select 1 from run where run_id='${id}' for update;select pg_sleep(0.15);commit`], `lock-${n}`);
         await until("run lock held", () => Number(env.sql("select count(*) from pg_stat_activity where datname=current_database() and wait_event='PgSleep'", ["-Atq"]).trim()) === 1);
         const outcomes = await Promise.allSettled([
@@ -135,6 +138,11 @@ describe.skipIf(!enabled)("independent audit on real server processes", () => {
         expect(env.sql(`select (select count(*) from task where run_id='${id}')+(select count(*) from timer where run_id='${id}')+(select count(*) from inbox where run_id='${id}')`, ["-Atq"]).trim()).toBe("0");
       }
       await delay(300);
+      for (const process of [firstServer, secondServer]) {
+        expect(process.exitCode).toBe(null);
+        expect(process.signalCode).toBe(null);
+      }
+      for (const address of [primary, "http://127.0.0.1:7603"]) expect((await fetch(`${address}/readyz`)).ok).toBe(true);
       console.log(`AUDIT timers: ${runs * timers}/${runs * timers} fired once with two processes; 20 terminal races retain one terminal event and no tasks/timers/inbox`);
     });
   }, 90000);
