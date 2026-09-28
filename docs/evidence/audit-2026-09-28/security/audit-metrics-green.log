@@ -1,0 +1,48 @@
+=== RUN   TestAuditMetricsRequiresOneValidKey
+--- PASS: TestAuditMetricsRequiresOneValidKey (0.00s)
+=== RUN   TestEveryRPCAuthenticatesAndForwards
+=== RUN   TestEveryRPCAuthenticatesAndForwards/PollWorkflowTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/CompleteWorkflowTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/FailWorkflowTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/PollActivityTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/CompleteActivityTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/FailActivityTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/HeartbeatActivityTask
+=== RUN   TestEveryRPCAuthenticatesAndForwards/ReserveAICall
+=== RUN   TestEveryRPCAuthenticatesAndForwards/FinishAICall
+=== RUN   TestEveryRPCAuthenticatesAndForwards/StartRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/SignalRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/CancelRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/TerminateRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/ResumeRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/DescribeRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/AwaitRun
+=== RUN   TestEveryRPCAuthenticatesAndForwards/ListRuns
+=== RUN   TestEveryRPCAuthenticatesAndForwards/GetHistory
+=== RUN   TestEveryRPCAuthenticatesAndForwards/ResolveApproval
+--- PASS: TestEveryRPCAuthenticatesAndForwards (0.04s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/PollWorkflowTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/CompleteWorkflowTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/FailWorkflowTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/PollActivityTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/CompleteActivityTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/FailActivityTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/HeartbeatActivityTask (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/ReserveAICall (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/FinishAICall (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/StartRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/SignalRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/CancelRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/TerminateRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/ResumeRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/DescribeRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/AwaitRun (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/ListRuns (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/GetHistory (0.00s)
+    --- PASS: TestEveryRPCAuthenticatesAndForwards/ResolveApproval (0.00s)
+=== RUN   TestRPCMetricsIncludeErrorsAndKeepLabelsBounded
+--- PASS: TestRPCMetricsIncludeErrorsAndKeepLabelsBounded (0.00s)
+=== RUN   TestLoopAndWaitingMetrics
+--- PASS: TestLoopAndWaitingMetrics (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	1.288s

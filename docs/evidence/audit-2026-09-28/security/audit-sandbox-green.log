@@ -1,0 +1,151 @@
+
+> @capstan/sdk@0.1.0 test
+> vitest run test/audit-sandbox.test.ts test/sandbox.test.ts test/agent-replay.test.ts test/conformance.test.ts
+
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > uses SDK time and random through ordinary constructors and prototype traversal 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.constructor('return Date.now()')() 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf(globalThis[Symbol.for('capstan.workflow.runtime')].now).constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf((async () => {})()).constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (async () => {}).constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (function* () {}).constructor('yield process')().next() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation new TextEncoder().encode('x').constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not expose host constructors through SDK results 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects dynamic Node imports even when the module name is computed 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date() 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(0).getHours() 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(2000, 0, 1).getTime() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date.parse('2000-01-01T00:00:00') 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(new String('2000-01-01T00:00:00')).getTime() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through (() => { const d = new Date(0); d.setHours(2); return [d.getTime(), d.getTimezoneOffset(), d.toString(), d.toDateString(), d.toTimeString()]; })() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleString() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleDateString() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: new Date().toLocaleTimeString() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects implicit locale or timezone input: Date.parse('9/28/2026') 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > keeps explicit UTC dates and offsets 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 001-single-activity.json: one activity, then complete 5ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 002-parallel-out-of-order.json: parallel out of order 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 003-failure-caught-retry.json: failure caught retry 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 004-sleep-starts.json: sleep starts 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 005-sleep-fires.json: sleep fires 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 006-race-activity-wins.json: race activity wins 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 007-race-timer-wins.json: race timer wins 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 008-condition-already-true.json: condition already true 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 009-condition-signal.json: condition signal 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 010-condition-timeout.json: condition timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 011-condition-cancels-timer.json: condition cancels timer 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 012-signal-before-registration.json: signal before registration 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 013-handler-history-order.json: handler history order 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 014-next-signal-fifo.json: next signal fifo 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 015-side-effect-recorded.json: side effect recorded 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 016-uuid-recorded.json: uuid recorded 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 017-patch-new.json: patch new 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 018-patch-old.json: patch old 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 019-deprecate-historical-patch.json: deprecate historical patch 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 020-deprecate-new.json: deprecate new 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 021-random-stable.json: random stable 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 022-activation-time.json: activation time 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 023-cancel-pending-sleep.json: cancel pending sleep 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 024-continue-as-new.json: continue as new 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 025-discarded-activation.json: discarded activation 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 026-blocked-resumed-patch.json: blocked resumed patch 2ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 027-stray-fired-after-cancel.json: stray fired after cancel 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 028-mismatch-activity-type.json: mismatch activity type 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 029-mismatch-command-removed.json: mismatch command removed 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 030-mismatch-command-added.json: mismatch command added 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 031-mismatch-seq-reordered.json: mismatch seq reordered 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 032-mismatch-marker-name.json: mismatch marker name 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 033-mismatch-marker-id.json: mismatch marker id 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 034-mismatch-marker-seq.json: mismatch marker seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 035-mismatch-timer-seq.json: mismatch timer seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 036-mismatch-command-type.json: mismatch command type 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 037-approval-resolved.json: approval resolved 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 038-mismatch-approval-id.json: mismatch approval id 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 039-mismatch-approval-source.json: mismatch approval source 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 040-mismatch-approval-seq.json: mismatch approval seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 041-activity-timeout.json: activity timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 042-activity-cancelled.json: activity cancelled 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 043-activity-failure-cause.json: activity failure cause 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 044-nested-promise-drain.json: nested promise drain 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 045-async-handler-drain.json: async handler drain 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 046-input-duration-not-compared.json: input duration not compared 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 047-timer-duration-not-compared.json: timer duration not compared 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 048-mismatch-command-missing.json: mismatch command missing 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 049-mismatch-cancel-timer-seq.json: mismatch cancel timer seq 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 050-discarded-task-timeout.json: discarded task timeout 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 051-side-effect-new.json: side effect new 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 052-signal-handler-current-clock.json: signal handler current clock 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 053-patch-false-memoized.json: patch false memoized 1ms
+ ✓ test/conformance.test.ts > shared conformance corpus > 054-race-batched-native-order.json: race batched native order 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > model emits one activity and replays its recorded result 13ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > tool schedules Gate first, with no worker configuration in the payload 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > ALLOW schedules exactly the registered activity at the next seq 5ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > DENY completes without scheduling the tool 4ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > REQUIRE_APPROVAL allocates one GATE approval and yields no work while waiting 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > approved Gate history resumes at the tool and preserves the resolver 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps DENIED without scheduling a tool 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > maps EXPIRED without scheduling a tool 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps APPROVED, including choice and note 8ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps DENIED, including choice and note 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > human records an id and maps EXPIRED, including choice and note 7ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > allocates mixed parallel calls synchronously in call order 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > defaults risk to MEDIUM and tool timeout to five minutes 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > fails closed on an invalid recorded Gate effect 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the ALLOW proposal unchanged if the caller mutates its arguments 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > keeps the REQUIRE_APPROVAL proposal unchanged if the caller mutates its arguments 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > blocks changed arguments after a recorded ALLOW decision 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > blocks changed arguments after a recorded REQUIRE_APPROVAL decision 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > replays pre-D29 ALLOW decisions using their recorded proposal 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > replays pre-D29 REQUIRE_APPROVAL decisions using their recorded proposal 2ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > does not apply the ALLOW decision to a renamed tool 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > does not apply the REQUIRE_APPROVAL decision to a renamed tool 1ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > compares ALLOW arguments canonically and emits the decided bytes 3ms
+ ✓ test/agent-replay.test.ts > agent replay uses the existing commands and sequence allocator > compares REQUIRE_APPROVAL arguments canonically and emits the decided bytes 4ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global fetch with author guidance 4ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setTimeout with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setInterval with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global setImmediate with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global process with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global require with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global WebAssembly with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global SharedArrayBuffer with author guidance 2ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Atomics with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Buffer with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global performance with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global crypto with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global Intl with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects forbidden global eval with author guidance 1ms
+ ✓ test/sandbox.test.ts > sandbox > uses workflow time and randomness without native Date escape paths 2ms
+ ✓ test/sandbox.test.ts > sandbox > creates a fresh global and intrinsic graph for every workflow 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Function('return 1')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: ({}).constructor.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: globalThis.constructor.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Math.random.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: console.log.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: TextEncoder.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: queueMicrotask.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > prevents string compilation and host constructor escape: Symbol.for('capstan.workflow.runtime') && globalThis[Symbol.for('capstan.workflow.runtime')].activity.constructor('return process')() 1ms
+ ✓ test/sandbox.test.ts > sandbox > provides realm-native text codecs, cloning and microtasks 1ms
+ ✓ test/sandbox.test.ts > sandbox > logs through the runtime only when not replaying 2ms
+ ✓ test/sandbox.test.ts > sandbox > bundles the SDK API into the VM and erases activity type imports 11ms
+ ✓ test/sandbox.test.ts > sandbox > rejects Node builtin imports with the import named 6ms
+ ✓ test/sandbox.test.ts > sandbox > invalidates cached output when a workflow dependency changes 10ms
+ ✓ test/sandbox.test.ts > sandbox > keeps host input, runtime objects and promises outside the realm 1ms
+ ✓ test/sandbox.test.ts > sandbox > rehydrates failure subclasses and their causes inside the bundle realm 4ms
+ ✓ test/sandbox.test.ts > sandbox > passes handler promises to the runtime without exposing host payloads 5ms
+ ✓ test/sandbox.test.ts > sandbox > does not expose host failures or their nested details 1ms
+ ✓ test/sandbox.test.ts > sandbox > synchronously invokes predicates and later settles their realm promise 1ms
+ ✓ test/sandbox.test.ts > sandbox > calls proxies immediately in call order and does not behave like a thenable 1ms
+ ✓ test/sandbox.test.ts > sandbox > preserves undefined inputs at the host boundary 1ms
+ ✓ test/sandbox.test.ts > sandbox > recreates standard host errors using realm-native error constructors 1ms
+ ✓ test/sandbox.test.ts > sandbox > rejects synchronous infinite loops during workflow invocation 1001ms
+ ✓ test/sandbox.test.ts > sandbox > reports detached microtask failures to the replay runtime: queueMicrotask(() => { throw new Error('microtask failed'); }) 1ms
+ ✓ test/sandbox.test.ts > sandbox > reports detached microtask failures to the replay runtime: queueMicrotask(async () => { await Promise.resolve(); throw new Error('microtask failed'); }) 1ms
+
+ Test Files  4 passed (4)
+      Tests  138 passed (138)
+   Start at  13:43:25
+   Duration  1.16s (tests 84%, transform 10%, import 5%)
+

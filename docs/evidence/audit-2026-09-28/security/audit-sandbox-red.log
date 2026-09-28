@@ -1,0 +1,88 @@
+
+> @capstan/sdk@0.1.0 test
+> vitest run test/audit-sandbox.test.ts
+
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > uses SDK time and random through ordinary constructors and prototype traversal 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.constructor('return Date.now()')() 3ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf(globalThis[Symbol.for('capstan.workflow.runtime')].now).constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation Object.getPrototypeOf((async () => {})()).constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (async () => {}).constructor('return process')() 2ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation (function* () {}).constructor('yield process')().next() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > blocks constructor compilation new TextEncoder().encode('x').constructor.constructor('return process')() 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > does not expose host constructors through SDK results 1ms
+ ✓ test/audit-sandbox.test.ts > audit workflow realm > rejects dynamic Node imports even when the module name is computed 1ms
+ × test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date() 6ms
+   → expected 'Fri Jan 15 2027 03:00:00 GMT-0500 (Ea…' to deeply equal 'Fri Jan 15 2027 08:00:00 GMT+0000 (Co…'
+ × test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(0).getHours() 4ms
+   → expected 19 to deeply equal +0
+ × test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(2000, 0, 1).getTime() 3ms
+   → expected 946702800000 to deeply equal 946684800000
+ × test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date.parse('2000-01-01T00:00:00') 2ms
+   → expected 946702800000 to deeply equal 946684800000
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date()
+AssertionError: expected 'Fri Jan 15 2027 03:00:00 GMT-0500 (Ea…' to deeply equal 'Fri Jan 15 2027 08:00:00 GMT+0000 (Co…'
+
+Expected: "Fri Jan 15 2027 08:00:00 GMT+0000 (Coordinated Universal Time)"
+Received: "Fri Jan 15 2027 03:00:00 GMT-0500 (Eastern Standard Time)"
+
+ ❯ test/audit-sandbox.test.ts:42:27
+     40|       const utc = run(source);
+     41|       process.env.TZ = "America/Toronto";
+     42|       expect(run(source)).toEqual(utc);
+       |                           ^
+     43|     } finally {
+     44|       if (prior === undefined) delete process.env.TZ;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(0).getHours()
+AssertionError: expected 19 to deeply equal +0
+
+- Expected
++ Received
+
+- 0
++ 19
+
+ ❯ test/audit-sandbox.test.ts:42:27
+     40|       const utc = run(source);
+     41|       process.env.TZ = "America/Toronto";
+     42|       expect(run(source)).toEqual(utc);
+       |                           ^
+     43|     } finally {
+     44|       if (prior === undefined) delete process.env.TZ;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through new Date(2000, 0, 1).getTime()
+ FAIL  test/audit-sandbox.test.ts > audit workflow realm > does not read worker timezone through Date.parse('2000-01-01T00:00:00')
+AssertionError: expected 946702800000 to deeply equal 946684800000
+
+- Expected
++ Received
+
+- 946684800000
++ 946702800000
+
+ ❯ test/audit-sandbox.test.ts:42:27
+     40|       const utc = run(source);
+     41|       process.env.TZ = "America/Toronto";
+     42|       expect(run(source)).toEqual(utc);
+       |                           ^
+     43|     } finally {
+     44|       if (prior === undefined) delete process.env.TZ;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 9 passed (13)
+   Start at  13:40:57
+   Duration  143ms (tests 48%, transform 36%, import 12%, worker 4%)
+

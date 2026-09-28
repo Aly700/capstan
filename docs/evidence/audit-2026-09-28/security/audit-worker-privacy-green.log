@@ -1,0 +1,62 @@
+
+> @capstan/sdk@0.1.0 test
+> vitest run test/audit-privacy.test.ts test/codecs.test.ts test/worker.test.ts
+
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+ ✓ test/codecs.test.ts > payload codec > round trips JSON values including UTF-8 and null 1ms
+ ✓ test/codecs.test.ts > payload codec > represents undefined by an absent payload 0ms
+ ✓ test/codecs.test.ts > payload codec > rejects unsupported encodings and malformed JSON 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 0 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 1.5 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 250ms 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 1.5s 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 2m 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 2h 0ms
+ ✓ test/codecs.test.ts > duration codec > parses 3d 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects -1 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects NaN 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects Infinity 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects -1s 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 3w 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 1 s 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects  0ms
+ ✓ test/codecs.test.ts > duration codec > rejects x 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects Infinitys 0ms
+ ✓ test/codecs.test.ts > duration codec > rejects 1e999s 0ms
+ ✓ test/codecs.test.ts > duration codec > encodes seconds and nanoseconds without losing sub-millisecond precision 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips typed application failures and their JSON details 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips an ActivityFailure with an ApplicationFailure cause 0ms
+ ✓ test/codecs.test.ts > failure codec > round trips timeout and cancellation classes 0ms
+ ✓ test/codecs.test.ts > failure codec > bounds nested and cyclic causes at ten failures 0ms
+ ✓ test/codecs.test.ts > failure codec > omits stacks by default and keeps them only on explicit opt-in 1ms
+ ✓ test/codecs.test.ts > failure codec > normalizes thrown primitives and errors from another realm 0ms
+ ✓ test/audit-privacy.test.ts > redacts configured credentials from activity failures, causes, details, stacks and worker logs 68ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > runs an activity with isolated context, auth and a 35 second poll deadline 67ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > preserves typed activity failure and rejects an unregistered activity without retry 55ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > throttles heartbeat RPCs to one second and sends the latest details 1338ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts the activity signal when the server requests cancellation 62ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts and reports local start-to-close expiry even when the function ignores abort 109ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours the original server start time for an already expired attempt 61ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not execute synchronous activity effects after its server deadline 61ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > reports malformed heartbeat details as an attempt failure 61ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > cancels an in-flight heartbeat RPC once its activity completes 111ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not truncate activity timeouts longer than the native timer range 60ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > does not truncate long heartbeat throttle intervals to one millisecond 109ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours activity concurrency and keeps AsyncLocalStorage contexts separate 106ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > honours workflow concurrency through the completion RPC 160ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > drops stale completion without reporting an activity failure 61ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > backs off poll errors before retrying 364ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > lets active work finish during shutdown and cancels outstanding polls 128ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > aborts remaining work after shutdown grace without waiting forever 91ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > round trips a workflow task with commands, token, identity and build id 62ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > reports replay mismatch as HISTORY_MISMATCH 61ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > classifies workflow outcome for throwsApplication 59ms
+ ✓ test/worker.test.ts > worker over scripted h2c Connect > classifies workflow outcome for forbidden 60ms
+
+ Test Files  3 passed (3)
+      Tests  49 passed (49)
+   Start at  13:49:51
+   Duration  3.42s (tests 92%, import 5%, transform 4%)
+
