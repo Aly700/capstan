@@ -1,0 +1,6 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/cancel-before-start (0.00s)
+        probes_test.go:12: protocol cancel-before-start: cancelled unstarted activity was delivered
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.185s
+FAIL

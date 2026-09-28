@@ -1,5 +1,9 @@
 # Cost of a real agent run
 
+## Historical paid-call recording
+
+This paid demo was not rerun. Its committed recording and pricing arithmetic remain the evidence; provider invoices have not been independently checked.
+
 Verified 2026-09-28: [recording](demo-cost.cast).
 
 ```sh
@@ -26,3 +30,17 @@ Result from the recorded run:
 - The `ai_call` ledger stores token counts and cost, without prompt or response text.
   Model request and result payloads are persisted separately in workflow history. The
   script never prints the API key (the recording was checked for it).
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+No provider request was made. The verifier reads the retained recording:
+14 input tokens and 4 output tokens, priced at $1/M and $5/M, give $0.000034.
+The recorded reservation was $0.010000, and the second worker left one ledger row.
+These are historical recording and arithmetic checks, not a new provider invoice
+or final-code paid-call measurement. Current reservation behavior follows D32
+and is checked by the final accounting tests.
+<!-- final-numbers:end -->

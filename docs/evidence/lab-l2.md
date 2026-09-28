@@ -1,5 +1,9 @@
 # Fault lab implementation
 
+## Historical implementation and measurements
+
+Historical seed timings and test counts now trace to [original logs](raw/historical/lab/), including [the original test](raw/historical/lab/l2-2000-final.log) and [the Delta 1 gate](raw/historical/lab/delta-make-verify-final.log). Current measurements appear below.
+
 Measured on Apple M5 Max, Go 1.26.4 (`darwin/arm64`); SDK gates used Node 26.8.1.
 
 The lab runs the merged engine on memstore with three worker actors, the timer,
@@ -132,3 +136,30 @@ the delivery assertion does not reject that documented close behavior.
 Passing this finite catalogue and seed range is evidence for those executions, not a
 proof over all workflows. No frozen contracts or production engine/store code were
 changed by the lab implementation.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The current fault model completed **200,000 seeds**, with
+**200,000 passing, 0 failing and
+0 known-failure exclusions**. Elapsed:
+**23m31.169260583s**. The seed range is 0–199999; parallelism is 8,
+with 3 workers and a 1,000-step bound per seed.
+
+The faulted executions contain **65,602,948 actor steps**,
+**400,000 initial root runs** and
+**13,285,961 scheduled store transaction steps**.
+Including fault-free baselines, that is 400,000 scenario executions and
+800,000 initial root runs, plus 200,000 protocol probes.
+Continuation descendants are additional.
+
+Raw [per-seed records](raw/904cb6c/lab-seeds.jsonl.gz), [command output](raw/904cb6c/lab.log)
+and the [emitted report](raw/904cb6c/lab-report.md) are committed. The verifier sums
+the individual records and checks the report. The logging-only overlay and its
+timing overhead are described in [raw/README.md](raw/README.md).
+
+All 9 fault kinds and 5 Gate response kinds occurred. The verifier also checks all 35 transaction wrappers against the Store interface. The final mutation catalogue catches 25 of 26 valid mutants; M003 is equivalent under the documented single-mutant, engine-reachable-state premise. These results do not expand the fault model's limits.
+<!-- final-numbers:end -->

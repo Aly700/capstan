@@ -1,0 +1,4 @@
+$ CAPSTAN_API_KEY=<ephemeral key> .lane/bin/capstan-load -address http://127.0.0.1:7401 -queue evidence-load_c800_w4 -concurrency 800 -n 1600 -samples .lane/<this-run>/runs.jsonl
+{"runs":1600,"concurrency":800,"completed":1600,"errors":0,"activities":8000,"elapsed_seconds":16.014633334,"runs_per_second":99.9086252323434,"activities_per_second":499.543126161717,"p50_ms":7667.693791,"p99_ms":8584.077458}
+SQL audit: {"runs" : 1600, "completed" : 1600, "other" : 0, "activity_completions" : 8000, "task_failures" : 0, "remaining_tasks" : 0}
+Raw logs: .lane/load_c800_w4-1790613077372

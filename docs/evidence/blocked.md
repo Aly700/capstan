@@ -1,5 +1,9 @@
 # A changed workflow blocks, then resumes
 
+## Historical recording
+
+The original recording is retained. A new final-code rerun is linked below.
+
 Verified 2026-09-28: [recording](demo-blocked.cast).
 
 ```sh
@@ -30,3 +34,16 @@ The `.cast` retains real wall-clock timing, including the script’s announced
 3-second/2-second pauses to read the displayed states. The script never edits history or run
 status directly. Each worker is one Node process in its own process group. Cleanup
 stops every owned process and drops only the script's database; logs stay in `.lane/`.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The real V2 worker blocked the old run at history event 5. An explicit
+resume with the patched worker completed it with value 1 and one activity
+completion; a new run recorded the patch marker and returned value 10.
+[Full CLI histories and assertions](raw/904cb6c/demo-blocked.log). The original
+recording was retained.
+<!-- final-numbers:end -->

@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-28T15:27:20.608Z",
+  "database": "capstan_evidence_load_c200_w4_8840_1790609239829",
+  "command": "scripts/run-load.sh 200 1000 4",
+  "serverPID": 8863,
+  "workerPIDs": [
+    8874,
+    8875,
+    8876,
+    8877
+  ],
+  "workflowConcurrencyPerWorker": 10,
+  "activityConcurrencyPerWorker": 10,
+  "container": "capstan-postgres-1"
+}

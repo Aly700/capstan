@@ -1,0 +1,18 @@
+{"Time":"2026-09-28T16:48:04.474447-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T16:48:04.709941-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T16:48:04.709986-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T16:48:04.710074-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T16:48:04.732665-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 1\n"}
+{"Time":"2026-09-28T16:48:04.752842-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 2\n"}
+{"Time":"2026-09-28T16:48:04.768388-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 3\n"}
+{"Time":"2026-09-28T16:48:04.788172-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 4\n"}
+{"Time":"2026-09-28T16:48:04.807137-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 5\n"}
+{"Time":"2026-09-28T16:48:04.824069-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 6\n"}
+{"Time":"2026-09-28T16:48:04.847284-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 7\n"}
+{"Time":"2026-09-28T16:48:04.910885-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 7 baseline continuation: did not finish in 1000 steps\n"}
+{"Time":"2026-09-28T16:48:04.910907-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 7 -lab.known=false\n"}
+{"Time":"2026-09-28T16:48:04.910919-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.20s)\n"}
+{"Time":"2026-09-28T16:48:04.910926-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0.2}
+{"Time":"2026-09-28T16:48:04.910934-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T16:48:04.911736-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.437s\n"}
+{"Time":"2026-09-28T16:48:04.911752-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.437}

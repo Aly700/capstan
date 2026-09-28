@@ -1,0 +1,13 @@
+{"Time":"2026-09-28T16:48:08.35013-04:00","Action":"start","Package":"github.com/Aly700/capstan/internal/lab"}
+{"Time":"2026-09-28T16:48:08.565477-04:00","Action":"run","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab"}
+{"Time":"2026-09-28T16:48:08.565509-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"=== RUN   TestLab\n"}
+{"Time":"2026-09-28T16:48:08.565603-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 0\n"}
+{"Time":"2026-09-28T16:48:08.587862-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 1\n"}
+{"Time":"2026-09-28T16:48:08.609162-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:35: mutation seed 2\n"}
+{"Time":"2026-09-28T16:48:08.619033-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"    lab_test.go:43: seed 2 scenario signal: late activity completion accepted: \u003cnil\u003e\n"}
+{"Time":"2026-09-28T16:48:08.619052-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"        reproduce: go test ./internal/lab -run TestLab -seed 2 -lab.known=false\n"}
+{"Time":"2026-09-28T16:48:08.619069-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Output":"--- FAIL: TestLab (0.05s)\n"}
+{"Time":"2026-09-28T16:48:08.619077-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Test":"TestLab","Elapsed":0.05}
+{"Time":"2026-09-28T16:48:08.61909-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\n"}
+{"Time":"2026-09-28T16:48:08.619897-04:00","Action":"output","Package":"github.com/Aly700/capstan/internal/lab","Output":"FAIL\tgithub.com/Aly700/capstan/internal/lab\t0.270s\n"}
+{"Time":"2026-09-28T16:48:08.619906-04:00","Action":"fail","Package":"github.com/Aly700/capstan/internal/lab","Elapsed":0.27}

@@ -1,5 +1,9 @@
 # Waiting without a worker
 
+## Historical recording
+
+The original signal recording is retained. Final-code signal and human-approval checks are linked below.
+
 Idle signal portion verified 2026-09-28: [recording](demo-idle-wait.cast).
 
 ```sh
@@ -33,3 +37,19 @@ is no run-owned task lease while idle. The shared server and its database pool s
 exist, and history occupies storage. The recording preserves wall-clock timing and
 contains the actual SQL/CLI output. Cleanup removes all demo processes and its
 database. Logs remain in `.lane/idle-*`.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The signal demo again observed zero demo workers and zero task leases across
+5 real seconds. It persisted the signal before starting a replacement worker,
+then completed with `{approved:true}`. [Raw SQL, process and CLI output](raw/904cb6c/demo-idle-wait.log).
+
+The separate [seven-day human-approval test](raw/904cb6c/human-seven-days.log)
+uses the engine Clock over real PostgreSQL RPCs. It verifies a 7-day clock
+advance with zero tasks or leases, then approval and completion. Neither test
+is a live multi-day Gate deployment.
+<!-- final-numbers:end -->

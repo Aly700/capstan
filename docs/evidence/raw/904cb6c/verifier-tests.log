@@ -1,0 +1,15 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 8094a86a03481816ebcdf95beb8bc3f6d99c97d2
+Command: ["python3", "-m", "unittest", "discover", "-s", "docs/evidence/raw", "-p", "test_*.py", "-v"]
+test_changed_emitted_rate_fails (test_verify_numbers.EvidenceVerifierTests.test_changed_emitted_rate_fails) ... ok
+test_changed_raw_latency_fails (test_verify_numbers.EvidenceVerifierTests.test_changed_raw_latency_fails) ... ok
+test_changed_sql_count_fails (test_verify_numbers.EvidenceVerifierTests.test_changed_sql_count_fails) ... ok
+test_duplicate_run_sample_fails (test_verify_numbers.EvidenceVerifierTests.test_duplicate_run_sample_fails) ... ok
+test_http_fault_category_is_not_dropped (test_verify_numbers.EvidenceVerifierTests.test_http_fault_category_is_not_dropped) ... ok
+test_original_samples_pass (test_verify_numbers.EvidenceVerifierTests.test_original_samples_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.030s
+
+OK
+Exit: 0

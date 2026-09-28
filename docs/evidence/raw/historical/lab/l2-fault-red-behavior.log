@@ -1,0 +1,149 @@
+--- FAIL: TestFaultStoreUnarmedConformance (1.03s)
+    --- FAIL: TestFaultStoreUnarmedConformance/Time/ZeroTimesRoundTrip (0.00s)
+        time.go:50: got store.Run{RunID:"r", WorkflowType:"wf", TaskQueue:"q", Status:1, Input:(*capstanv1.Payload)(nil), Result:(*capstanv1.Payload)(nil), Failure:(*capstanv1.Failure)(nil), TaskTimeout:10000000000, RunTimeout:0, RunDeadline:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), StartedAt:time.Date(2026, time.September, 28, 8, 0, 0, 123456000, time.Location("caller")), ClosedAt:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), LastEventID:0, WorkflowTaskID:0, InFlight:false, CancelRequested:false, ContinuedFromRunID:"", ContinuedToRunID:"", Identity:""}, want store.Run{RunID:"r", WorkflowType:"wf", TaskQueue:"q", Status:1, Input:(*capstanv1.Payload)(nil), Result:(*capstanv1.Payload)(nil), Failure:(*capstanv1.Failure)(nil), TaskTimeout:10000000000, RunTimeout:0, RunDeadline:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), StartedAt:time.Date(2026, time.September, 28, 12, 0, 0, 123456000, time.UTC), ClosedAt:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), LastEventID:0, WorkflowTaskID:0, InFlight:false, CancelRequested:false, ContinuedFromRunID:"", ContinuedToRunID:"", Identity:""}
+    --- FAIL: TestFaultStoreUnarmedConformance/Time/UTCPreserved (0.00s)
+        time.go:50: got store.Run{RunID:"r", WorkflowType:"wf", TaskQueue:"q", Status:1, Input:(*capstanv1.Payload)(nil), Result:(*capstanv1.Payload)(nil), Failure:(*capstanv1.Failure)(nil), TaskTimeout:10000000000, RunTimeout:0, RunDeadline:time.Date(2026, time.September, 28, 8, 0, 0, 123456000, time.Location("caller")), StartedAt:time.Date(2026, time.September, 28, 8, 0, 0, 123456000, time.Location("caller")), ClosedAt:time.Date(2026, time.September, 28, 8, 0, 0, 123456000, time.Location("caller")), LastEventID:0, WorkflowTaskID:0, InFlight:false, CancelRequested:false, ContinuedFromRunID:"", ContinuedToRunID:"", Identity:""}, want store.Run{RunID:"r", WorkflowType:"wf", TaskQueue:"q", Status:1, Input:(*capstanv1.Payload)(nil), Result:(*capstanv1.Payload)(nil), Failure:(*capstanv1.Failure)(nil), TaskTimeout:10000000000, RunTimeout:0, RunDeadline:time.Date(2026, time.September, 28, 12, 0, 0, 123456000, time.UTC), StartedAt:time.Date(2026, time.September, 28, 12, 0, 0, 123456000, time.UTC), ClosedAt:time.Date(2026, time.September, 28, 12, 0, 0, 123456000, time.UTC), LastEventID:0, WorkflowTaskID:0, InFlight:false, CancelRequested:false, ContinuedFromRunID:"", ContinuedToRunID:"", Identity:""}
+--- FAIL: TestFaultStoreRollsBackAtEachOperation (0.00s)
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=false/after=1 (0.00s)
+        faults_test.go:90: error = <nil>, panic = <nil>, want ErrInjected
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=false/after=2 (0.00s)
+        faults_test.go:90: error = <nil>, panic = <nil>, want ErrInjected
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=false/after=3 (0.00s)
+        faults_test.go:90: error = <nil>, panic = <nil>, want ErrInjected
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=false/after=4 (0.00s)
+        faults_test.go:90: error = <nil>, panic = <nil>, want ErrInjected
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=false/after=5 (0.00s)
+        faults_test.go:87: Notify panic = <nil>, want ErrInjected
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=true/after=1 (0.00s)
+        faults_test.go:83: panic = <nil>, want ErrServerCrash
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=true/after=2 (0.00s)
+        faults_test.go:83: panic = <nil>, want ErrServerCrash
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=true/after=3 (0.00s)
+        faults_test.go:83: panic = <nil>, want ErrServerCrash
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=true/after=4 (0.00s)
+        faults_test.go:83: panic = <nil>, want ErrServerCrash
+    --- FAIL: TestFaultStoreRollsBackAtEachOperation/crash=true/after=5 (0.00s)
+        faults_test.go:83: panic = <nil>, want ErrServerCrash
+--- FAIL: TestFaultStoreInterceptsEveryTxMethod (0.00s)
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InsertRun (0.00s)
+        faults_test.go:202: InsertRun returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/GetRun (0.00s)
+        faults_test.go:202: GetRun returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/UpdateRun (0.00s)
+        faults_test.go:202: UpdateRun returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/ListRuns (0.00s)
+        faults_test.go:202: ListRuns returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RunsPastDeadline (0.00s)
+        faults_test.go:202: RunsPastDeadline returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/AppendEvents (0.00s)
+        faults_test.go:202: AppendEvents returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/ReadHistory (0.00s)
+        faults_test.go:202: ReadHistory returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/PushInbox (0.00s)
+        faults_test.go:202: PushInbox returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DrainInbox (0.00s)
+        faults_test.go:202: DrainInbox returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InboxSize (0.00s)
+        faults_test.go:202: InboxSize returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InsertTask (0.00s)
+        faults_test.go:202: InsertTask returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/ClaimTask (0.00s)
+        faults_test.go:202: ClaimTask returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/GetTask (0.00s)
+        faults_test.go:202: GetTask returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/UpdateTask (0.00s)
+        faults_test.go:202: UpdateTask returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DeleteTask (0.00s)
+        faults_test.go:202: DeleteTask returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RunTasks (0.00s)
+        faults_test.go:202: RunTasks returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DueTasks (0.00s)
+        faults_test.go:202: DueTasks returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InsertTimer (0.00s)
+        faults_test.go:202: InsertTimer returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DeleteTimer (0.00s)
+        faults_test.go:202: DeleteTimer returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DueTimers (0.00s)
+        faults_test.go:202: DueTimers returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RunTimers (0.00s)
+        faults_test.go:202: RunTimers returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InsertApproval (0.00s)
+        faults_test.go:202: InsertApproval returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/GetApproval (0.00s)
+        faults_test.go:202: GetApproval returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/UpdateApproval (0.00s)
+        faults_test.go:202: UpdateApproval returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RunApprovals (0.00s)
+        faults_test.go:202: RunApprovals returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/DueApprovals (0.00s)
+        faults_test.go:202: DueApprovals returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RecordSignalRequest (0.00s)
+        faults_test.go:202: RecordSignalRequest returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/LockBudget (0.00s)
+        faults_test.go:202: LockBudget returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/InsertAICall (0.00s)
+        faults_test.go:202: InsertAICall returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/GetAICall (0.00s)
+        faults_test.go:202: GetAICall returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/UpdateAICall (0.00s)
+        faults_test.go:202: UpdateAICall returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/SpentSince (0.00s)
+        faults_test.go:202: SpentSince returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/RunCost (0.00s)
+        faults_test.go:202: RunCost returned <nil> before callback finished; want an immediate fault
+        faults_test.go:212: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreInterceptsEveryTxMethod/Notify (0.00s)
+        faults_test.go:202: Notify returned <nil> before callback finished; want an immediate fault
+        faults_test.go:209: Notify panic = <nil>
+--- FAIL: TestFaultStoreShortTransactionStillInjects (0.00s)
+    --- FAIL: TestFaultStoreShortTransactionStillInjects/crash=false/calls=0 (0.00s)
+        faults_test.go:236: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreShortTransactionStillInjects/crash=false/calls=1 (0.00s)
+        faults_test.go:236: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreShortTransactionStillInjects/crash=true/calls=0 (0.00s)
+        faults_test.go:236: error=<nil> panic=<nil>
+    --- FAIL: TestFaultStoreShortTransactionStillInjects/crash=true/calls=1 (0.00s)
+        faults_test.go:236: error=<nil> panic=<nil>
+--- FAIL: TestFaultStorePreservesRealErrorsAndCountsOnlySuccess (0.00s)
+    faults_test.go:266: error=<nil> hits=0
+--- FAIL: TestFaultStoreIgnoredInjectionStillRollsBack (0.00s)
+    faults_test.go:287: ignored fault allowed commit: <nil>
+--- FAIL: TestFaultStoreDisarmAndCancelledEntry (0.00s)
+    faults_test.go:313: cancelled entry consumed arm: <nil>
+--- FAIL: TestFaultStoreConcurrentTransactionsConsumeOneArm (0.00s)
+    faults_test.go:338: failures=0 hits=0, want one each
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	1.292s
+FAIL

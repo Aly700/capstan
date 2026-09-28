@@ -1,0 +1,6 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/retry-deadline (0.00s)
+        probes_test.go:12: protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.191s
+FAIL

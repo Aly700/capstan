@@ -1,0 +1,6 @@
+--- FAIL: TestLab (0.00s)
+    lab_test.go:39: seed 0 baseline pipeline: P3: run "lab": timer 2 fired twice
+        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.161s
+FAIL

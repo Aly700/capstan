@@ -1,0 +1,6 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/failed-workflow-release (0.00s)
+        probes_test.go:12: protocol failed-workflow-release: failed workflow task still owns InFlight
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.188s
+FAIL

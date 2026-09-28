@@ -1,5 +1,9 @@
 # Kill the server mid-run
 
+## Historical recording
+
+The original recording is retained. A new final-code command log and histories are linked below.
+
 Verified 2026-09-28: [recording](demo-crash.cast), [GIF](demo-crash.gif).
 
 Run and record on the local shared PostgreSQL, with an isolated database and port 7302:
@@ -30,3 +34,16 @@ it does not establish exactly-once execution of arbitrary external effects.
 
 Render the same captured session as a GIF at speed 1 with `vhs scripts/demo-crash.tape`.
 The GIF contains the recording’s original timing, plus the renderer’s final display pause.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The rerun on this revision returned `[1,2,3,4]`, preserving
+**10 pre-crash events** as an exact prefix. It recorded
+**4 activity completions and 3 distinct timer firings**. The original recording
+was retained. [Command log](raw/904cb6c/demo-crash.log),
+[before/after histories](raw/904cb6c/demo-crash/).
+<!-- final-numbers:end -->

@@ -1,0 +1,6 @@
+=== RUN   TestPostgresTimerClockWindow
+    pg_timers_test.go:24: separate legal clock reads rejected: PostgreSQL timer clock-window check not implemented
+--- FAIL: TestPostgresTimerClockWindow (0.00s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.290s
+FAIL

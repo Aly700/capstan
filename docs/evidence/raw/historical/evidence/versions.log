@@ -1,0 +1,43 @@
+Apple M5 Max
+51539607552
+18
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+go version go1.26.4 darwin/arm64
+connectrpc.com/connect v1.21.0
+github.com/jackc/pgx/v5 v5.11.0
+google.golang.org/protobuf v1.36.12
+v26.8.1
+11.19.0
+{
+  "dependencies": {
+    "@bufbuild/protobuf": "2.15.0",
+    "@connectrpc/connect": "2.2.0",
+    "@connectrpc/connect-node": "2.2.0",
+    "esbuild": "0.28.2",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@bufbuild/protoc-gen-es": "2.15.0",
+    "@types/node": "26.6.3",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  }
+}
+psql (PostgreSQL) 16.13 (Homebrew)
+PostgreSQL 16.15 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+colima version 0.10.3
+git commit: 00f6c297e92a82c04a4ab507db0a61435650d7e8
+
+runtime: docker
+arch: aarch64
+client: v29.4.1
+server: v29.5.2
+PROFILE    STATUS     ARCH       CPUS    MEMORY    DISK     RUNTIME    ADDRESS
+default    Running    aarch64    4       8GiB      60GiB    docker     
+4 CPUs; 8307109888 bytes memory; Docker server 29.5.2
+1.73.0
+asciinema 3.2.1
+vhs version 0.11.0

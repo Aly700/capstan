@@ -1,0 +1,7 @@
+=== RUN   TestPostgresProbe
+    pg_probe_test.go:5: seed=0 scenario=pipeline steps=1000 elapsed=3.771993333s error=seed 0 baseline pipeline: did not finish in 1000 steps
+    pg_probe_test.go:5: seed 0 baseline pipeline: did not finish in 1000 steps
+--- FAIL: TestPostgresProbe (3.78s)
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	3.993s
+FAIL

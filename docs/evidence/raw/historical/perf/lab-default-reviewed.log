@@ -1,0 +1,815 @@
+=== RUN   TestFaultStoreUnarmedPreservesStoreBehavior
+--- PASS: TestFaultStoreUnarmedPreservesStoreBehavior (0.00s)
+=== RUN   TestFaultStoreRollsBackAtEachOperation
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=false/after=1
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=false/after=2
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=false/after=3
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=false/after=4
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=false/after=5
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=true/after=1
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=true/after=2
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=true/after=3
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=true/after=4
+=== RUN   TestFaultStoreRollsBackAtEachOperation/crash=true/after=5
+--- PASS: TestFaultStoreRollsBackAtEachOperation (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=false/after=1 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=false/after=2 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=false/after=3 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=false/after=4 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=false/after=5 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=true/after=1 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=true/after=2 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=true/after=3 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=true/after=4 (0.00s)
+    --- PASS: TestFaultStoreRollsBackAtEachOperation/crash=true/after=5 (0.00s)
+=== RUN   TestFaultStoreInterceptsEveryTxMethod
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InsertRun
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/GetRun
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/UpdateRun
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/ListRuns
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RunsPastDeadline
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/AppendEvents
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/ReadHistory
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/PushInbox
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DrainInbox
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InboxSize
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InsertTask
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/ClaimTask
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/GetTask
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/UpdateTask
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DeleteTask
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RunTasks
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DueTasks
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InsertTimer
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DeleteTimer
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DueTimers
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RunTimers
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InsertApproval
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/GetApproval
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/UpdateApproval
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RunApprovals
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/DueApprovals
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RecordSignalRequest
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/LockBudget
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/InsertAICall
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/GetAICall
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/UpdateAICall
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/SpentSince
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/RunCost
+=== RUN   TestFaultStoreInterceptsEveryTxMethod/Notify
+--- PASS: TestFaultStoreInterceptsEveryTxMethod (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InsertRun (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/GetRun (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/UpdateRun (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/ListRuns (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RunsPastDeadline (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/AppendEvents (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/ReadHistory (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/PushInbox (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DrainInbox (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InboxSize (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InsertTask (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/ClaimTask (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/GetTask (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/UpdateTask (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DeleteTask (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RunTasks (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DueTasks (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InsertTimer (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DeleteTimer (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DueTimers (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RunTimers (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InsertApproval (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/GetApproval (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/UpdateApproval (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RunApprovals (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/DueApprovals (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RecordSignalRequest (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/LockBudget (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/InsertAICall (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/GetAICall (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/UpdateAICall (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/SpentSince (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/RunCost (0.00s)
+    --- PASS: TestFaultStoreInterceptsEveryTxMethod/Notify (0.00s)
+=== RUN   TestFaultStoreShortTransactionStillInjects
+=== RUN   TestFaultStoreShortTransactionStillInjects/crash=false/calls=0
+=== RUN   TestFaultStoreShortTransactionStillInjects/crash=false/calls=1
+=== RUN   TestFaultStoreShortTransactionStillInjects/crash=true/calls=0
+=== RUN   TestFaultStoreShortTransactionStillInjects/crash=true/calls=1
+--- PASS: TestFaultStoreShortTransactionStillInjects (0.00s)
+    --- PASS: TestFaultStoreShortTransactionStillInjects/crash=false/calls=0 (0.00s)
+    --- PASS: TestFaultStoreShortTransactionStillInjects/crash=false/calls=1 (0.00s)
+    --- PASS: TestFaultStoreShortTransactionStillInjects/crash=true/calls=0 (0.00s)
+    --- PASS: TestFaultStoreShortTransactionStillInjects/crash=true/calls=1 (0.00s)
+=== RUN   TestFaultStorePreservesRealErrorsAndCountsOnlySuccess
+--- PASS: TestFaultStorePreservesRealErrorsAndCountsOnlySuccess (0.00s)
+=== RUN   TestFaultStoreIgnoredInjectionStillRollsBack
+--- PASS: TestFaultStoreIgnoredInjectionStillRollsBack (0.00s)
+=== RUN   TestFaultStoreDisarmAndCancelledEntry
+--- PASS: TestFaultStoreDisarmAndCancelledEntry (0.00s)
+=== RUN   TestFaultStoreConcurrentTransactionsConsumeOneArm
+--- PASS: TestFaultStoreConcurrentTransactionsConsumeOneArm (0.00s)
+=== RUN   TestFaultStoreConcurrentControls
+--- PASS: TestFaultStoreConcurrentControls (0.00s)
+=== RUN   TestFaultStoreSelectsLaterTransaction
+=== RUN   TestFaultStoreSelectsLaterTransaction/crash=false
+=== RUN   TestFaultStoreSelectsLaterTransaction/crash=true
+--- PASS: TestFaultStoreSelectsLaterTransaction (0.00s)
+    --- PASS: TestFaultStoreSelectsLaterTransaction/crash=false (0.00s)
+    --- PASS: TestFaultStoreSelectsLaterTransaction/crash=true (0.00s)
+=== RUN   TestFaultStoreLaterTransactionCountsCallbackEntries
+--- PASS: TestFaultStoreLaterTransactionCountsCallbackEntries (0.00s)
+=== RUN   TestFaultStoreLaterTransactionDisarm
+--- PASS: TestFaultStoreLaterTransactionDisarm (0.00s)
+=== RUN   TestFaultStoreArmTransactionRejectsNonpositiveSelection
+=== RUN   TestFaultStoreArmTransactionRejectsNonpositiveSelection/[0_1]
+=== RUN   TestFaultStoreArmTransactionRejectsNonpositiveSelection/[-1_1]
+=== RUN   TestFaultStoreArmTransactionRejectsNonpositiveSelection/[1_0]
+=== RUN   TestFaultStoreArmTransactionRejectsNonpositiveSelection/[1_-1]
+--- PASS: TestFaultStoreArmTransactionRejectsNonpositiveSelection (0.00s)
+    --- PASS: TestFaultStoreArmTransactionRejectsNonpositiveSelection/[0_1] (0.00s)
+    --- PASS: TestFaultStoreArmTransactionRejectsNonpositiveSelection/[-1_1] (0.00s)
+    --- PASS: TestFaultStoreArmTransactionRejectsNonpositiveSelection/[1_0] (0.00s)
+    --- PASS: TestFaultStoreArmTransactionRejectsNonpositiveSelection/[1_-1] (0.00s)
+=== RUN   TestLab
+    lab_test.go:45: validated 2000 seeds; injected faults: map[crash-server:1879 database-failure:1878 duplicate-task:417 duplicate-timer:29 early-timer:125 kill-activity:119 kill-workflow:103 late-ack:367 signal-in-flight:343]
+--- PASS: TestLab (17.60s)
+=== RUN   TestSeedReproduces
+--- PASS: TestSeedReproduces (0.01s)
+=== RUN   TestEveryFaultIsExercised
+--- PASS: TestEveryFaultIsExercised (0.94s)
+=== RUN   TestFaultSelection
+=== RUN   TestFaultSelection/kill-workflow
+=== RUN   TestFaultSelection/kill-activity
+=== RUN   TestFaultSelection/crash-server
+=== RUN   TestFaultSelection/duplicate-task
+=== RUN   TestFaultSelection/late-ack
+=== RUN   TestFaultSelection/database-failure
+=== RUN   TestFaultSelection/early-timer
+=== RUN   TestFaultSelection/duplicate-timer
+=== RUN   TestFaultSelection/signal-in-flight
+--- PASS: TestFaultSelection (0.29s)
+    --- PASS: TestFaultSelection/kill-workflow (0.05s)
+    --- PASS: TestFaultSelection/kill-activity (0.04s)
+    --- PASS: TestFaultSelection/crash-server (0.01s)
+    --- PASS: TestFaultSelection/duplicate-task (0.01s)
+    --- PASS: TestFaultSelection/late-ack (0.01s)
+    --- PASS: TestFaultSelection/database-failure (0.01s)
+    --- PASS: TestFaultSelection/early-timer (0.03s)
+    --- PASS: TestFaultSelection/duplicate-timer (0.12s)
+    --- PASS: TestFaultSelection/signal-in-flight (0.01s)
+=== RUN   TestWorkerCrashDropsBothPollers
+--- PASS: TestWorkerCrashDropsBothPollers (0.00s)
+=== RUN   TestSeedReproducesAcrossClockDrivers
+=== RUN   TestSeedReproducesAcrossClockDrivers/0
+=== RUN   TestSeedReproducesAcrossClockDrivers/14
+=== RUN   TestSeedReproducesAcrossClockDrivers/17
+=== RUN   TestSeedReproducesAcrossClockDrivers/437
+--- PASS: TestSeedReproducesAcrossClockDrivers (0.07s)
+    --- PASS: TestSeedReproducesAcrossClockDrivers/0 (0.02s)
+    --- PASS: TestSeedReproducesAcrossClockDrivers/14 (0.02s)
+    --- PASS: TestSeedReproducesAcrossClockDrivers/17 (0.01s)
+    --- PASS: TestSeedReproducesAcrossClockDrivers/437 (0.01s)
+=== RUN   TestSignalOracleRejectsLostAndDuplicateSignals
+--- PASS: TestSignalOracleRejectsLostAndDuplicateSignals (0.00s)
+=== RUN   TestScenarioOracleRejectsWrongStatusAndResult
+--- PASS: TestScenarioOracleRejectsWrongStatusAndResult (0.00s)
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/task
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/lease
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/workflow-id
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/timer
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/inbox
+=== RUN   TestScenarioOracleRejectsWorkRetainedAfterClose/approval
+--- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/task (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/lease (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/workflow-id (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/timer (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/inbox (0.00s)
+    --- PASS: TestScenarioOracleRejectsWorkRetainedAfterClose/approval (0.00s)
+=== RUN   TestCaptureReadsRealStoreWithoutDrainingInbox
+--- PASS: TestCaptureReadsRealStoreWithoutDrainingInbox (0.00s)
+=== RUN   TestCheckHistoryAcceptsPrefixExtension
+--- PASS: TestCheckHistoryAcceptsPrefixExtension (0.00s)
+=== RUN   TestCheckHistoryRejectsCorruption
+=== RUN   TestCheckHistoryRejectsCorruption/rewritten_attributes
+=== RUN   TestCheckHistoryRejectsCorruption/rewritten_time
+=== RUN   TestCheckHistoryRejectsCorruption/truncated
+=== RUN   TestCheckHistoryRejectsCorruption/removed_run
+=== RUN   TestCheckHistoryRejectsCorruption/duplicate_run
+=== RUN   TestCheckHistoryRejectsCorruption/nil_event
+=== RUN   TestCheckHistoryRejectsCorruption/gap
+=== RUN   TestCheckHistoryRejectsCorruption/wrong_last_event
+=== RUN   TestCheckHistoryRejectsCorruption/orphan_history
+--- PASS: TestCheckHistoryRejectsCorruption (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/rewritten_attributes (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/rewritten_time (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/truncated (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/removed_run (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/duplicate_run (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/nil_event (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/gap (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/wrong_last_event (0.00s)
+    --- PASS: TestCheckHistoryRejectsCorruption/orphan_history (0.00s)
+=== RUN   TestCheckTimersAcceptsLegitimateStates
+=== RUN   TestCheckTimersAcceptsLegitimateStates/cancelled
+=== RUN   TestCheckTimersAcceptsLegitimateStates/buffered_fire_followed_by_cancellation
+=== RUN   TestCheckTimersAcceptsLegitimateStates/buffered
+=== RUN   TestCheckTimersAcceptsLegitimateStates/closed_cleanup
+=== RUN   TestCheckTimersAcceptsLegitimateStates/submicrosecond_truncation
+=== RUN   TestCheckTimersAcceptsLegitimateStates/pending
+=== RUN   TestCheckTimersAcceptsLegitimateStates/fired
+--- PASS: TestCheckTimersAcceptsLegitimateStates (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/cancelled (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/buffered_fire_followed_by_cancellation (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/buffered (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/closed_cleanup (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/submicrosecond_truncation (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/pending (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/fired (0.00s)
+=== RUN   TestCheckTimersRejectsCorruption
+=== RUN   TestCheckTimersRejectsCorruption/lost
+=== RUN   TestCheckTimersRejectsCorruption/double_fire
+=== RUN   TestCheckTimersRejectsCorruption/wrong_reference
+=== RUN   TestCheckTimersRejectsCorruption/wrong_due_time
+=== RUN   TestCheckTimersRejectsCorruption/closed_row_retained
+=== RUN   TestCheckTimersRejectsCorruption/inbox_too_small
+=== RUN   TestCheckTimersRejectsCorruption/early
+=== RUN   TestCheckTimersRejectsCorruption/double_cancel
+=== RUN   TestCheckTimersRejectsCorruption/unknown_fire
+=== RUN   TestCheckTimersRejectsCorruption/orphan_row
+=== RUN   TestCheckTimersRejectsCorruption/duplicate_row
+=== RUN   TestCheckTimersRejectsCorruption/fired_row_retained
+=== RUN   TestCheckTimersRejectsCorruption/inbox_without_task
+--- PASS: TestCheckTimersRejectsCorruption (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/lost (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/double_fire (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/wrong_reference (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/wrong_due_time (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/closed_row_retained (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/inbox_too_small (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/early (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/double_cancel (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/unknown_fire (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/orphan_row (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/duplicate_row (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/fired_row_retained (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/inbox_without_task (0.00s)
+=== RUN   TestCheckEffectsUsesAppliedCountsNotAttempts
+--- PASS: TestCheckEffectsUsesAppliedCountsNotAttempts (0.00s)
+=== RUN   TestCheckEffectsRejectsMissingAndUnknownKeys
+--- PASS: TestCheckEffectsRejectsMissingAndUnknownKeys (0.00s)
+=== RUN   TestCheckEffectsRejectsCorruptDestinationLedger
+=== RUN   TestCheckEffectsRejectsCorruptDestinationLedger/0
+=== RUN   TestCheckEffectsRejectsCorruptDestinationLedger/2
+--- PASS: TestCheckEffectsRejectsCorruptDestinationLedger (0.00s)
+    --- PASS: TestCheckEffectsRejectsCorruptDestinationLedger/0 (0.00s)
+    --- PASS: TestCheckEffectsRejectsCorruptDestinationLedger/2 (0.00s)
+=== RUN   TestCheckTimersInboxAllowanceIsBoundedByEventCount
+--- PASS: TestCheckTimersInboxAllowanceIsBoundedByEventCount (0.00s)
+=== RUN   TestCompareOutcomeIgnoresRetriesAndJSONFormatting
+--- PASS: TestCompareOutcomeIgnoresRetriesAndJSONFormatting (0.00s)
+=== RUN   TestCompareOutcomeRejectsDifferentEndState
+=== RUN   TestCompareOutcomeRejectsDifferentEndState/missing_run
+=== RUN   TestCompareOutcomeRejectsDifferentEndState/status
+=== RUN   TestCompareOutcomeRejectsDifferentEndState/result
+=== RUN   TestCompareOutcomeRejectsDifferentEndState/continuation
+=== RUN   TestCompareOutcomeRejectsDifferentEndState/failure
+--- PASS: TestCompareOutcomeRejectsDifferentEndState (0.00s)
+    --- PASS: TestCompareOutcomeRejectsDifferentEndState/missing_run (0.00s)
+    --- PASS: TestCompareOutcomeRejectsDifferentEndState/status (0.00s)
+    --- PASS: TestCompareOutcomeRejectsDifferentEndState/result (0.00s)
+    --- PASS: TestCompareOutcomeRejectsDifferentEndState/continuation (0.00s)
+    --- PASS: TestCompareOutcomeRejectsDifferentEndState/failure (0.00s)
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/same_binary
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/different_binary
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/nil_versus_JSON_null
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/numeric_string
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/array_order
+=== RUN   TestCompareOutcomeKeepsPayloadAndFailureMeaning/trailing_JSON
+--- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/same_binary (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/different_binary (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/nil_versus_JSON_null (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/numeric_string (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/array_order (0.00s)
+    --- PASS: TestCompareOutcomeKeepsPayloadAndFailureMeaning/trailing_JSON (0.00s)
+=== RUN   TestFaultStoreRunCloseNotification
+=== RUN   TestFaultStoreRunCloseNotification/commit
+=== RUN   TestFaultStoreRunCloseNotification/failure
+=== RUN   TestFaultStoreRunCloseNotification/crash
+--- PASS: TestFaultStoreRunCloseNotification (0.00s)
+    --- PASS: TestFaultStoreRunCloseNotification/commit (0.00s)
+    --- PASS: TestFaultStoreRunCloseNotification/failure (0.00s)
+    --- PASS: TestFaultStoreRunCloseNotification/crash (0.00s)
+=== RUN   TestEffectSinkKeepsFirstResultAndCountsAttempts
+--- PASS: TestEffectSinkKeepsFirstResultAndCountsAttempts (0.00s)
+=== RUN   TestEffectSinkConcurrentAttemptsAndStableSnapshot
+--- PASS: TestEffectSinkConcurrentAttemptsAndStableSnapshot (0.00s)
+=== RUN   TestEffectSinkRejectsEmptyKey
+--- PASS: TestEffectSinkRejectsEmptyKey (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab	19.384s
+=== RUN   TestActivationsGroupsCommandsAndExternalEvents
+--- PASS: TestActivationsGroupsCommandsAndExternalEvents (0.00s)
+=== RUN   TestActivationsDiscardedTasksPreserveBufferedEvents
+--- PASS: TestActivationsDiscardedTasksPreserveBufferedEvents (0.00s)
+=== RUN   TestActivationsClassifiesEveryExternalKind
+=== RUN   TestActivationsClassifiesEveryExternalKind/activityCompleted
+=== RUN   TestActivationsClassifiesEveryExternalKind/activityFailed
+=== RUN   TestActivationsClassifiesEveryExternalKind/activityTimedOut
+=== RUN   TestActivationsClassifiesEveryExternalKind/activityCancelled
+=== RUN   TestActivationsClassifiesEveryExternalKind/timerFired
+=== RUN   TestActivationsClassifiesEveryExternalKind/signalReceived
+=== RUN   TestActivationsClassifiesEveryExternalKind/approvalResolved
+=== RUN   TestActivationsClassifiesEveryExternalKind/runCancelRequested
+--- PASS: TestActivationsClassifiesEveryExternalKind (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/activityCompleted (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/activityFailed (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/activityTimedOut (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/activityCancelled (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/timerFired (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/signalReceived (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/approvalResolved (0.00s)
+    --- PASS: TestActivationsClassifiesEveryExternalKind/runCancelRequested (0.00s)
+=== RUN   TestActivationsClassifiesEveryCommandKind
+=== RUN   TestActivationsClassifiesEveryCommandKind/activityScheduled
+=== RUN   TestActivationsClassifiesEveryCommandKind/activityCancelRequested
+=== RUN   TestActivationsClassifiesEveryCommandKind/timerStarted
+=== RUN   TestActivationsClassifiesEveryCommandKind/timerCancelled
+=== RUN   TestActivationsClassifiesEveryCommandKind/markerRecorded
+=== RUN   TestActivationsClassifiesEveryCommandKind/approvalRequested
+=== RUN   TestActivationsClassifiesEveryCommandKind/runCompleted
+=== RUN   TestActivationsClassifiesEveryCommandKind/runFailed
+=== RUN   TestActivationsClassifiesEveryCommandKind/runCancelled
+=== RUN   TestActivationsClassifiesEveryCommandKind/runContinuedAsNew
+--- PASS: TestActivationsClassifiesEveryCommandKind (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/activityScheduled (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/activityCancelRequested (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/timerStarted (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/timerCancelled (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/markerRecorded (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/approvalRequested (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/runCompleted (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/runFailed (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/runCancelled (0.00s)
+    --- PASS: TestActivationsClassifiesEveryCommandKind/runContinuedAsNew (0.00s)
+=== RUN   TestActivationsAttemptUsesReferencedSchedule
+--- PASS: TestActivationsAttemptUsesReferencedSchedule (0.00s)
+=== RUN   TestActivationsEmptyAndDiscardedHistory
+=== RUN   TestActivationsEmptyAndDiscardedHistory/empty
+=== RUN   TestActivationsEmptyAndDiscardedHistory/no_task
+=== RUN   TestActivationsEmptyAndDiscardedHistory/failed
+=== RUN   TestActivationsEmptyAndDiscardedHistory/timed_out
+--- PASS: TestActivationsEmptyAndDiscardedHistory (0.00s)
+    --- PASS: TestActivationsEmptyAndDiscardedHistory/empty (0.00s)
+    --- PASS: TestActivationsEmptyAndDiscardedHistory/no_task (0.00s)
+    --- PASS: TestActivationsEmptyAndDiscardedHistory/failed (0.00s)
+    --- PASS: TestActivationsEmptyAndDiscardedHistory/timed_out (0.00s)
+=== RUN   TestActivationsRejectMalformedTaskBoundary
+=== RUN   TestActivationsRejectMalformedTaskBoundary/signalReceived
+=== RUN   TestActivationsRejectMalformedTaskBoundary/activityScheduled
+=== RUN   TestActivationsRejectMalformedTaskBoundary/taskStarted
+=== RUN   TestActivationsRejectMalformedTaskBoundary/taskScheduled
+=== RUN   TestActivationsRejectMalformedTaskBoundary/runBlocked
+=== RUN   TestActivationsRejectMalformedTaskBoundary/runTimedOut
+--- PASS: TestActivationsRejectMalformedTaskBoundary (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/signalReceived (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/activityScheduled (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/taskStarted (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/taskScheduled (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/runBlocked (0.00s)
+    --- PASS: TestActivationsRejectMalformedTaskBoundary/runTimedOut (0.00s)
+=== RUN   TestActivationsRejectNilHistoryEvent
+--- PASS: TestActivationsRejectNilHistoryEvent (0.00s)
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/schedule_activity
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/request_activity_cancel
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/start_timer
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/cancel_timer
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/record_marker
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/request_approval
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/complete_run
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/fail_run
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/cancel_run
+=== RUN   TestMatchCommandsIgnoresExecutionOptionsAndPayloads/continue_as_new
+--- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/start_timer (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/record_marker (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/request_approval (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/complete_run (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/fail_run (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsIgnoresExecutionOptionsAndPayloads/continue_as_new (0.00s)
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/schedule_activity/activityType
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/schedule_activity/seq
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/request_activity_cancel/seq
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/start_timer/seq
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/cancel_timer/seq
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/record_marker/name
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/record_marker/markerId
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/record_marker/seq
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/request_approval/approvalId
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/request_approval/source
+=== RUN   TestMatchCommandsComparesEveryIdentifyingField/request_approval/seq
+--- PASS: TestMatchCommandsComparesEveryIdentifyingField (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/schedule_activity/activityType (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/schedule_activity/seq (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/request_activity_cancel/seq (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/start_timer/seq (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/cancel_timer/seq (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/record_marker/name (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/record_marker/markerId (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/record_marker/seq (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/request_approval/approvalId (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/request_approval/source (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryIdentifyingField/request_approval/seq (0.00s)
+=== RUN   TestMatchCommandsComparesEveryCommandType
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/schedule_activity/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_activity_cancel/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/start_timer/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_timer/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/record_marker/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/request_approval/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/complete_run/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/cancel_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/fail_run/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/cancel_run/continue_as_new
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/schedule_activity
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/request_activity_cancel
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/start_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/cancel_timer
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/record_marker
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/request_approval
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/complete_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/fail_run
+=== RUN   TestMatchCommandsComparesEveryCommandType/continue_as_new/cancel_run
+--- PASS: TestMatchCommandsComparesEveryCommandType (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/schedule_activity/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_activity_cancel/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/start_timer/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_timer/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/record_marker/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/request_approval/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/complete_run/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/cancel_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/fail_run/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/cancel_run/continue_as_new (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/schedule_activity (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/request_activity_cancel (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/start_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/cancel_timer (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/record_marker (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/request_approval (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/complete_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/fail_run (0.00s)
+    --- PASS: TestMatchCommandsComparesEveryCommandType/continue_as_new/cancel_run (0.00s)
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/missing_first
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/missing_second
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/extra_first
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/extra_second
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/reordered
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/wrong_second
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/nil_command
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/empty_command
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/nil_event
+=== RUN   TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/noncommand_event
+--- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/missing_first (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/missing_second (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/extra_first (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/extra_second (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/reordered (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/wrong_second (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/nil_command (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/empty_command (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/nil_event (0.00s)
+    --- PASS: TestMatchCommandsReportsFirstMismatchAndCompletedAnchor/noncommand_event (0.00s)
+=== RUN   TestHistoryMismatchErrorDescribesPositionAndBothSides
+--- PASS: TestHistoryMismatchErrorDescribesPositionAndBothSides (0.00s)
+=== RUN   TestReplayRestartsFromHistory
+--- PASS: TestReplayRestartsFromHistory (0.00s)
+=== RUN   TestReplayRejectsUnknownAndDuplicateResults
+--- PASS: TestReplayRejectsUnknownAndDuplicateResults (0.00s)
+=== RUN   TestActivityCancelIsReferenceAndLateResultWins
+--- PASS: TestActivityCancelIsReferenceAndLateResultWins (0.00s)
+=== RUN   TestAllUsesCallOrderAndDisposesBlockedBranches
+--- PASS: TestAllUsesCallOrderAndDisposesBlockedBranches (0.00s)
+=== RUN   TestSideEffectFailureCannotBeCaught
+--- PASS: TestSideEffectFailureCannotBeCaught (0.00s)
+=== RUN   TestWorkflowFailureIsACommand
+--- PASS: TestWorkflowFailureIsACommand (0.00s)
+=== RUN   TestNowPreservesRecordedMicroseconds
+--- PASS: TestNowPreservesRecordedMicroseconds (0.00s)
+=== RUN   TestSideEffectEncodingPanicCannotBeCaught
+--- PASS: TestSideEffectEncodingPanicCannotBeCaught (0.00s)
+=== RUN   TestReplayDisposesWorkflowDefers
+=== RUN   TestReplayDisposesWorkflowDefers/marker
+=== RUN   TestReplayDisposesWorkflowDefers/sleep
+--- PASS: TestReplayDisposesWorkflowDefers (0.00s)
+    --- PASS: TestReplayDisposesWorkflowDefers/marker (0.00s)
+    --- PASS: TestReplayDisposesWorkflowDefers/sleep (0.00s)
+=== RUN   TestReplaySerializesDisposalDefers
+--- PASS: TestReplaySerializesDisposalDefers (0.00s)
+=== RUN   TestReplayCanBeKilledBetweenCommandsAndRestarted
+--- PASS: TestReplayCanBeKilledBetweenCommandsAndRestarted (0.00s)
+=== RUN   TestWorkerPollForwardsConfigurationAndResult
+=== RUN   TestWorkerPollForwardsConfigurationAndResult/task
+=== RUN   TestWorkerPollForwardsConfigurationAndResult/empty
+=== RUN   TestWorkerPollForwardsConfigurationAndResult/error
+--- PASS: TestWorkerPollForwardsConfigurationAndResult (0.00s)
+    --- PASS: TestWorkerPollForwardsConfigurationAndResult/task (0.00s)
+    --- PASS: TestWorkerPollForwardsConfigurationAndResult/empty (0.00s)
+    --- PASS: TestWorkerPollForwardsConfigurationAndResult/error (0.00s)
+=== RUN   TestWorkerExecuteReplaysFromHistoryWithoutResponding
+--- PASS: TestWorkerExecuteReplaysFromHistoryWithoutResponding (0.00s)
+=== RUN   TestWorkerExecuteClassifiesTaskFailures
+=== RUN   TestWorkerExecuteClassifiesTaskFailures/unknown_workflow
+=== RUN   TestWorkerExecuteClassifiesTaskFailures/nil_task
+=== RUN   TestWorkerExecuteClassifiesTaskFailures/invalid_history
+=== RUN   TestWorkerExecuteClassifiesTaskFailures/history_mismatch
+--- PASS: TestWorkerExecuteClassifiesTaskFailures (0.00s)
+    --- PASS: TestWorkerExecuteClassifiesTaskFailures/unknown_workflow (0.00s)
+    --- PASS: TestWorkerExecuteClassifiesTaskFailures/nil_task (0.00s)
+    --- PASS: TestWorkerExecuteClassifiesTaskFailures/invalid_history (0.00s)
+    --- PASS: TestWorkerExecuteClassifiesTaskFailures/history_mismatch (0.00s)
+=== RUN   TestWorkerExecuteScenarioErrorBecomesFailRun
+--- PASS: TestWorkerExecuteScenarioErrorBecomesFailRun (0.00s)
+=== RUN   TestWorkerRespondCompletesAndAllowsDuplicateSubmission
+--- PASS: TestWorkerRespondCompletesAndAllowsDuplicateSubmission (0.00s)
+=== RUN   TestWorkerRespondFailureForwardsCauseAndServiceError
+=== RUN   TestWorkerRespondFailureForwardsCauseAndServiceError/TASK_FAILED_CAUSE_HISTORY_MISMATCH
+=== RUN   TestWorkerRespondFailureForwardsCauseAndServiceError/TASK_FAILED_CAUSE_SDK_ERROR
+--- PASS: TestWorkerRespondFailureForwardsCauseAndServiceError (0.00s)
+    --- PASS: TestWorkerRespondFailureForwardsCauseAndServiceError/TASK_FAILED_CAUSE_HISTORY_MISMATCH (0.00s)
+    --- PASS: TestWorkerRespondFailureForwardsCauseAndServiceError/TASK_FAILED_CAUSE_SDK_ERROR (0.00s)
+=== RUN   TestConformance
+=== RUN   TestConformance/001-single-activity
+=== RUN   TestConformance/002-parallel-out-of-order
+=== RUN   TestConformance/003-failure-caught-retry
+=== RUN   TestConformance/004-sleep-starts
+=== RUN   TestConformance/005-sleep-fires
+=== RUN   TestConformance/006-race-activity-wins
+=== RUN   TestConformance/007-race-timer-wins
+=== RUN   TestConformance/008-condition-already-true
+=== RUN   TestConformance/009-condition-signal
+=== RUN   TestConformance/010-condition-timeout
+=== RUN   TestConformance/011-condition-cancels-timer
+=== RUN   TestConformance/012-signal-before-registration
+=== RUN   TestConformance/013-handler-history-order
+=== RUN   TestConformance/014-next-signal-fifo
+=== RUN   TestConformance/015-side-effect-recorded
+=== RUN   TestConformance/016-uuid-recorded
+=== RUN   TestConformance/017-patch-new
+=== RUN   TestConformance/018-patch-old
+=== RUN   TestConformance/019-deprecate-historical-patch
+=== RUN   TestConformance/020-deprecate-new
+=== RUN   TestConformance/021-random-stable
+=== RUN   TestConformance/022-activation-time
+=== RUN   TestConformance/023-cancel-pending-sleep
+=== RUN   TestConformance/024-continue-as-new
+=== RUN   TestConformance/025-discarded-activation
+=== RUN   TestConformance/026-blocked-resumed-patch
+=== RUN   TestConformance/027-stray-fired-after-cancel
+=== RUN   TestConformance/028-mismatch-activity-type
+=== RUN   TestConformance/029-mismatch-command-removed
+=== RUN   TestConformance/030-mismatch-command-added
+=== RUN   TestConformance/031-mismatch-seq-reordered
+=== RUN   TestConformance/032-mismatch-marker-name
+=== RUN   TestConformance/033-mismatch-marker-id
+=== RUN   TestConformance/034-mismatch-marker-seq
+=== RUN   TestConformance/035-mismatch-timer-seq
+=== RUN   TestConformance/036-mismatch-command-type
+=== RUN   TestConformance/037-approval-resolved
+=== RUN   TestConformance/038-mismatch-approval-id
+=== RUN   TestConformance/039-mismatch-approval-source
+=== RUN   TestConformance/040-mismatch-approval-seq
+=== RUN   TestConformance/041-activity-timeout
+=== RUN   TestConformance/042-activity-cancelled
+=== RUN   TestConformance/043-activity-failure-cause
+=== RUN   TestConformance/044-nested-promise-drain
+=== RUN   TestConformance/045-async-handler-drain
+=== RUN   TestConformance/046-input-duration-not-compared
+=== RUN   TestConformance/047-timer-duration-not-compared
+=== RUN   TestConformance/048-mismatch-command-missing
+=== RUN   TestConformance/049-mismatch-cancel-timer-seq
+=== RUN   TestConformance/050-discarded-task-timeout
+=== RUN   TestConformance/051-side-effect-new
+=== RUN   TestConformance/052-signal-handler-current-clock
+=== RUN   TestConformance/053-patch-false-memoized
+=== RUN   TestConformance/054-race-batched-native-order
+    conformance_test.go:65: fixture only applies to [ts] (D20)
+=== NAME  TestConformance
+    conformance_test.go:119: conformance fixtures: 54 total, 53 shared, 1 Go-skipped
+--- PASS: TestConformance (0.00s)
+    --- PASS: TestConformance/001-single-activity (0.00s)
+    --- PASS: TestConformance/002-parallel-out-of-order (0.00s)
+    --- PASS: TestConformance/003-failure-caught-retry (0.00s)
+    --- PASS: TestConformance/004-sleep-starts (0.00s)
+    --- PASS: TestConformance/005-sleep-fires (0.00s)
+    --- PASS: TestConformance/006-race-activity-wins (0.00s)
+    --- PASS: TestConformance/007-race-timer-wins (0.00s)
+    --- PASS: TestConformance/008-condition-already-true (0.00s)
+    --- PASS: TestConformance/009-condition-signal (0.00s)
+    --- PASS: TestConformance/010-condition-timeout (0.00s)
+    --- PASS: TestConformance/011-condition-cancels-timer (0.00s)
+    --- PASS: TestConformance/012-signal-before-registration (0.00s)
+    --- PASS: TestConformance/013-handler-history-order (0.00s)
+    --- PASS: TestConformance/014-next-signal-fifo (0.00s)
+    --- PASS: TestConformance/015-side-effect-recorded (0.00s)
+    --- PASS: TestConformance/016-uuid-recorded (0.00s)
+    --- PASS: TestConformance/017-patch-new (0.00s)
+    --- PASS: TestConformance/018-patch-old (0.00s)
+    --- PASS: TestConformance/019-deprecate-historical-patch (0.00s)
+    --- PASS: TestConformance/020-deprecate-new (0.00s)
+    --- PASS: TestConformance/021-random-stable (0.00s)
+    --- PASS: TestConformance/022-activation-time (0.00s)
+    --- PASS: TestConformance/023-cancel-pending-sleep (0.00s)
+    --- PASS: TestConformance/024-continue-as-new (0.00s)
+    --- PASS: TestConformance/025-discarded-activation (0.00s)
+    --- PASS: TestConformance/026-blocked-resumed-patch (0.00s)
+    --- PASS: TestConformance/027-stray-fired-after-cancel (0.00s)
+    --- PASS: TestConformance/028-mismatch-activity-type (0.00s)
+    --- PASS: TestConformance/029-mismatch-command-removed (0.00s)
+    --- PASS: TestConformance/030-mismatch-command-added (0.00s)
+    --- PASS: TestConformance/031-mismatch-seq-reordered (0.00s)
+    --- PASS: TestConformance/032-mismatch-marker-name (0.00s)
+    --- PASS: TestConformance/033-mismatch-marker-id (0.00s)
+    --- PASS: TestConformance/034-mismatch-marker-seq (0.00s)
+    --- PASS: TestConformance/035-mismatch-timer-seq (0.00s)
+    --- PASS: TestConformance/036-mismatch-command-type (0.00s)
+    --- PASS: TestConformance/037-approval-resolved (0.00s)
+    --- PASS: TestConformance/038-mismatch-approval-id (0.00s)
+    --- PASS: TestConformance/039-mismatch-approval-source (0.00s)
+    --- PASS: TestConformance/040-mismatch-approval-seq (0.00s)
+    --- PASS: TestConformance/041-activity-timeout (0.00s)
+    --- PASS: TestConformance/042-activity-cancelled (0.00s)
+    --- PASS: TestConformance/043-activity-failure-cause (0.00s)
+    --- PASS: TestConformance/044-nested-promise-drain (0.00s)
+    --- PASS: TestConformance/045-async-handler-drain (0.00s)
+    --- PASS: TestConformance/046-input-duration-not-compared (0.00s)
+    --- PASS: TestConformance/047-timer-duration-not-compared (0.00s)
+    --- PASS: TestConformance/048-mismatch-command-missing (0.00s)
+    --- PASS: TestConformance/049-mismatch-cancel-timer-seq (0.00s)
+    --- PASS: TestConformance/050-discarded-task-timeout (0.00s)
+    --- PASS: TestConformance/051-side-effect-new (0.00s)
+    --- PASS: TestConformance/052-signal-handler-current-clock (0.00s)
+    --- PASS: TestConformance/053-patch-false-memoized (0.00s)
+    --- SKIP: TestConformance/054-race-batched-native-order (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab/labworker	0.335s
+=== RUN   TestScenarioRegistryCoversWorkflowExports
+    conformance_test.go:33: checked 29 TypeScript workflow exports
+--- PASS: TestScenarioRegistryCoversWorkflowExports (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab/scenarios	0.174s

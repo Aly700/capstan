@@ -1,0 +1,11 @@
+Command: python3 docs/evidence/raw/scan-credentials.py docs/evidence/raw/historical
+Scanned 605 files (gzip decompressed; binary images and scanner source excluded).
+capstan_key: 0 matches
+anthropic_key: 0 matches
+aws_access_key: 0 matches
+aws_secret_assignment: 0 matches
+database_password: 0 matches
+private_key: 0 matches
+Allowed database credentials: capstan:capstan only.
+Exit: 0
+No redaction or exclusion was needed for the selected files.

@@ -1,0 +1,6 @@
+--- FAIL: TestPostgresTerminateAgainstTaskOperations (1.14s)
+    --- FAIL: TestPostgresTerminateAgainstTaskOperations/activity_completion/terminate_first (1.14s)
+        pg_poll_lock_test.go:155: PostgreSQL deadlock retries = 1, want zero
+FAIL
+FAIL	github.com/Aly700/capstan/internal/engine	1.383s
+FAIL

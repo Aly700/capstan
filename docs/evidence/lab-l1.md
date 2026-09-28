@@ -1,5 +1,9 @@
 # Go reference worker
 
+## Historical reference-worker report
+
+The fixture inventory can be read from the committed corpus; the final gate below checks the current code. Historical gate output is archived in [raw/historical/lab/](raw/historical/lab/).
+
 The L1 worker reconstructs a run from history on every task. `Replay` starts the
 scenario at its first line, feeds successful activations in order, compares their
 commands, and returns only the current activation's new commands. Failed and
@@ -69,3 +73,20 @@ GOTOOLCHAIN=go1.26.4 make verify
 
 This evidence covers the reference worker. Seed campaigns and engine defect
 counts belong to L2, which requires the engine lane to be merged first.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The checked corpus contains 39 shared command fixtures and 14 shared mismatch
+fixtures. The Go worker covers those 53 fixtures; fixture 054 is TypeScript-only
+under D20. All 29 TypeScript workflow exports have Go twins. The verifier derives
+these counts from the committed corpus and registration code.
+
+The final [merge gate](raw/904cb6c/verify.log) exercises the reference worker and
+the SDK. The [per-seed campaign](raw/904cb6c/lab-seeds.jsonl.gz) exercises the same
+reference worker across 200,000 seeds. Fixture coverage does not imply that the
+Go worker models V8 microtask scheduling.
+<!-- final-numbers:end -->

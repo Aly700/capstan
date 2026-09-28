@@ -1,0 +1,55 @@
+=== RUN   TestPostgresCampaign
+    pg_test.go:53: validated 10 PostgreSQL seeds; two shared-queue runs/seed; steps=975 duplicate_acks=149 database_errors=5 server_crashes=5 elapsed=6.313228125s
+--- PASS: TestPostgresCampaign (6.42s)
+=== RUN   TestPostgresTimerClockWindow
+--- PASS: TestPostgresTimerClockWindow (0.00s)
+=== RUN   TestCheckTimersAcceptsLegitimateStates
+=== RUN   TestCheckTimersAcceptsLegitimateStates/cancelled
+=== RUN   TestCheckTimersAcceptsLegitimateStates/buffered_fire_followed_by_cancellation
+=== RUN   TestCheckTimersAcceptsLegitimateStates/buffered
+=== RUN   TestCheckTimersAcceptsLegitimateStates/closed_cleanup
+=== RUN   TestCheckTimersAcceptsLegitimateStates/submicrosecond_truncation
+=== RUN   TestCheckTimersAcceptsLegitimateStates/pending
+=== RUN   TestCheckTimersAcceptsLegitimateStates/fired
+--- PASS: TestCheckTimersAcceptsLegitimateStates (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/cancelled (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/buffered_fire_followed_by_cancellation (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/buffered (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/closed_cleanup (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/submicrosecond_truncation (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/pending (0.00s)
+    --- PASS: TestCheckTimersAcceptsLegitimateStates/fired (0.00s)
+=== RUN   TestCheckTimersRejectsCorruption
+=== RUN   TestCheckTimersRejectsCorruption/wrong_reference
+=== RUN   TestCheckTimersRejectsCorruption/unknown_fire
+=== RUN   TestCheckTimersRejectsCorruption/wrong_due_time
+=== RUN   TestCheckTimersRejectsCorruption/orphan_row
+=== RUN   TestCheckTimersRejectsCorruption/inbox_without_task
+=== RUN   TestCheckTimersRejectsCorruption/lost
+=== RUN   TestCheckTimersRejectsCorruption/early
+=== RUN   TestCheckTimersRejectsCorruption/double_fire
+=== RUN   TestCheckTimersRejectsCorruption/double_cancel
+=== RUN   TestCheckTimersRejectsCorruption/duplicate_row
+=== RUN   TestCheckTimersRejectsCorruption/fired_row_retained
+=== RUN   TestCheckTimersRejectsCorruption/closed_row_retained
+=== RUN   TestCheckTimersRejectsCorruption/inbox_too_small
+--- PASS: TestCheckTimersRejectsCorruption (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/wrong_reference (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/unknown_fire (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/wrong_due_time (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/orphan_row (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/inbox_without_task (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/lost (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/early (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/double_fire (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/double_cancel (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/duplicate_row (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/fired_row_retained (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/closed_row_retained (0.00s)
+    --- PASS: TestCheckTimersRejectsCorruption/inbox_too_small (0.00s)
+=== RUN   TestCheckTimersWithDeadlinesRequiresObservedClock
+--- PASS: TestCheckTimersWithDeadlinesRequiresObservedClock (0.00s)
+=== RUN   TestCheckTimersInboxAllowanceIsBoundedByEventCount
+--- PASS: TestCheckTimersInboxAllowanceIsBoundedByEventCount (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab	6.697s

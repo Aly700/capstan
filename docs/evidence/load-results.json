@@ -2,7 +2,7 @@
   {
     "command": "scripts/run-load.sh 10 500 4",
     "date": "2026-09-28T15:31:17.630Z",
-    "raw_directory": ".lane/load_c10_w4-1790609476772",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c10_w4-1790609476772",
     "result": {
       "runs": 500,
       "concurrency": 10,
@@ -49,12 +49,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 137344
-    }
+    },
+    "original_raw_directory": ".lane/load_c10_w4-1790609476772"
   },
   {
     "command": "scripts/run-load.sh 25 1000 4",
     "date": "2026-09-28T15:30:54.556Z",
-    "raw_directory": ".lane/load_c25_w4-1790609453698",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c25_w4-1790609453698",
     "result": {
       "runs": 1000,
       "concurrency": 25,
@@ -101,12 +102,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 135636
-    }
+    },
+    "original_raw_directory": ".lane/load_c25_w4-1790609453698"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T15:26:41.951Z",
-    "raw_directory": ".lane/load_c50_w4-1790609200884",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790609200884",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -153,12 +155,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 50447
-    }
+    },
+    "original_raw_directory": ".lane/load_c50_w4-1790609200884"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T15:32:28.200Z",
-    "raw_directory": ".lane/load_c50_w4-1790609547449",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790609547449",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -205,12 +208,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 46144
-    }
+    },
+    "original_raw_directory": ".lane/load_c50_w4-1790609547449"
   },
   {
     "command": "scripts/run-load.sh 100 1000 4",
     "date": "2026-09-28T15:32:13.920Z",
-    "raw_directory": ".lane/load_c100_w4-1790609533069",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c100_w4-1790609533069",
     "result": {
       "runs": 1000,
       "concurrency": 100,
@@ -258,12 +262,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 39600
-    }
+    },
+    "original_raw_directory": ".lane/load_c100_w4-1790609533069"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T15:27:20.608Z",
-    "raw_directory": ".lane/load_c200_w4-1790609239829",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790609239829",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -309,12 +314,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 45716
-    }
+    },
+    "original_raw_directory": ".lane/load_c200_w4-1790609239829"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T15:34:00.470Z",
-    "raw_directory": ".lane/load_c200_w4-1790609639713",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790609639713",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -360,12 +366,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 43995
-    }
+    },
+    "original_raw_directory": ".lane/load_c200_w4-1790609639713"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T15:28:13.518Z",
-    "raw_directory": ".lane/load_c800_w4-1790609292528",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790609292528",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -415,12 +422,13 @@
       ],
       "deadlocks_delta": 0,
       "transactions_delta": 205005
-    }
+    },
+    "original_raw_directory": ".lane/load_c800_w4-1790609292528"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T15:34:47.865Z",
-    "raw_directory": ".lane/load_c800_w4-1790609687010",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790609687010",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -467,12 +475,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 172200
-    }
+    },
+    "original_raw_directory": ".lane/load_c800_w4-1790609687010"
   },
   {
     "command": "scripts/run-load.sh 50 1000 1",
     "date": "2026-09-28T15:29:23.902Z",
-    "raw_directory": ".lane/load_c50_w1-1790609363136",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w1-1790609363136",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -516,12 +525,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 45865
-    }
+    },
+    "original_raw_directory": ".lane/load_c50_w1-1790609363136"
   },
   {
     "command": "scripts/run-load.sh 50 1000 8",
     "date": "2026-09-28T15:30:35.780Z",
-    "raw_directory": ".lane/load_c50_w8-1790609434922",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w8-1790609434922",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -573,12 +583,13 @@
       "other_active_databases": [],
       "deadlocks_delta": 0,
       "transactions_delta": 79479
-    }
+    },
+    "original_raw_directory": ".lane/load_c50_w8-1790609434922"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:00:17.643Z",
-    "raw_directory": ".lane/load_c50_w4-1790611216088",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611216088",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -629,12 +640,13 @@
     },
     "phase": "baseline",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611216088"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:00:49.012Z",
-    "raw_directory": ".lane/load_c200_w4-1790611248159",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611248159",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -683,12 +695,13 @@
     },
     "phase": "baseline",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611248159"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:01:10.319Z",
-    "raw_directory": ".lane/load_c800_w4-1790611269464",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790611269464",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -738,12 +751,13 @@
     },
     "phase": "baseline",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790611269464"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:04:07.729Z",
-    "raw_directory": ".lane/load_c50_w4-1790611446349",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611446349",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -798,12 +812,13 @@
     },
     "phase": "d30",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611446349"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:04:23.180Z",
-    "raw_directory": ".lane/load_c200_w4-1790611462338",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611462338",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -864,12 +879,13 @@
     },
     "phase": "d30",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611462338"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:04:52.334Z",
-    "raw_directory": ".lane/load_c50_w4-1790611491444",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611491444",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -929,12 +945,13 @@
     },
     "phase": "d30-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611491444"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:05:07.870Z",
-    "raw_directory": ".lane/load_c200_w4-1790611507005",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611507005",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -986,12 +1003,13 @@
     },
     "phase": "d30-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611507005"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:05:39.456Z",
-    "raw_directory": ".lane/load_c50_w4-1790611538020",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611538020",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1042,12 +1060,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "20",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611538020"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:05:55.021Z",
-    "raw_directory": ".lane/load_c200_w4-1790611554141",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611554141",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1097,12 +1116,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "20",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611554141"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:06:10.684Z",
-    "raw_directory": ".lane/load_c50_w4-1790611569703",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611569703",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1152,12 +1172,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611569703"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:06:24.097Z",
-    "raw_directory": ".lane/load_c200_w4-1790611583224",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611583224",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1209,12 +1230,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611583224"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:06:38.002Z",
-    "raw_directory": ".lane/load_c50_w4-1790611596556",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611596556",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1269,12 +1291,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "60",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611596556"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:06:53.595Z",
-    "raw_directory": ".lane/load_c200_w4-1790611612705",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611612705",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1326,12 +1349,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "60",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611612705"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:07:08.094Z",
-    "raw_directory": ".lane/load_c50_w4-1790611627232",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611627232",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1386,12 +1410,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "10",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611627232"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:07:30.223Z",
-    "raw_directory": ".lane/load_c200_w4-1790611649339",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611649339",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1440,12 +1465,13 @@
     },
     "phase": "pool",
     "dbMaxConns": "10",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611649339"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:08:03.135Z",
-    "raw_directory": ".lane/load_c50_w4-1790611682282",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611682282",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1498,12 +1524,13 @@
     },
     "phase": "pool-repeat",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611682282"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:08:18.905Z",
-    "raw_directory": ".lane/load_c200_w4-1790611697814",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611697814",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1570,12 +1597,13 @@
     },
     "phase": "pool-repeat",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611697814"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:08:33.408Z",
-    "raw_directory": ".lane/load_c50_w4-1790611712533",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611712533",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1649,12 +1677,13 @@
     },
     "phase": "pool-repeat",
     "dbMaxConns": "20",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611712533"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:08:51.296Z",
-    "raw_directory": ".lane/load_c200_w4-1790611730301",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611730301",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1727,12 +1756,13 @@
     },
     "phase": "pool-repeat",
     "dbMaxConns": "20",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611730301"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:09:09.206Z",
-    "raw_directory": ".lane/load_c50_w4-1790611748199",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611748199",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1801,12 +1831,13 @@
     },
     "phase": "pool-repeat",
     "dbMaxConns": "10",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611748199"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:11:17.439Z",
-    "raw_directory": ".lane/load_c50_w4-1790611876194",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790611876194",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1866,12 +1897,13 @@
     },
     "phase": "pool-default",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790611876194"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:11:31.998Z",
-    "raw_directory": ".lane/load_c200_w4-1790611891008",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790611891008",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -1931,12 +1963,13 @@
     },
     "phase": "pool-default",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790611891008"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:20:38.175Z",
-    "raw_directory": ".lane/load_c50_w4-1790612436951",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790612436951",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -1986,12 +2019,13 @@
     },
     "phase": "targeted",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790612436951"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:20:50.301Z",
-    "raw_directory": ".lane/load_c200_w4-1790612449461",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790612449461",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -2045,12 +2079,13 @@
     },
     "phase": "targeted",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790612449461"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:21:03.586Z",
-    "raw_directory": ".lane/load_c800_w4-1790612462741",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790612462741",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -2103,12 +2138,13 @@
     },
     "phase": "targeted",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790612462741"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:24:16.743Z",
-    "raw_directory": ".lane/load_c50_w4-1790612655406",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790612655406",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2157,12 +2193,13 @@
     },
     "phase": "lock-order",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790612655406"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:24:27.729Z",
-    "raw_directory": ".lane/load_c200_w4-1790612666890",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790612666890",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -2218,12 +2255,13 @@
     },
     "phase": "lock-order",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790612666890"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:24:38.760Z",
-    "raw_directory": ".lane/load_c800_w4-1790612677914",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790612677914",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -2276,12 +2314,13 @@
     },
     "phase": "lock-order",
     "dbMaxConns": "40",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790612677914"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:30:53.912Z",
-    "raw_directory": ".lane/load_c50_w4-1790613053051",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790613053051",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2336,12 +2375,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790613053051"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:31:06.056Z",
-    "raw_directory": ".lane/load_c200_w4-1790613065201",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790613065201",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -2397,12 +2437,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790613065201"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:31:18.234Z",
-    "raw_directory": ".lane/load_c800_w4-1790613077372",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790613077372",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -2457,12 +2498,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790613077372"
   },
   {
     "command": "scripts/run-load.sh 50 1000 1",
     "date": "2026-09-28T16:31:35.822Z",
-    "raw_directory": ".lane/load_c50_w1-1790613095087",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w1-1790613095087",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2512,12 +2554,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w1-1790613095087"
   },
   {
     "command": "scripts/run-load.sh 50 1000 8",
     "date": "2026-09-28T16:31:52.394Z",
-    "raw_directory": ".lane/load_c50_w8-1790613111442",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w8-1790613111442",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2578,12 +2621,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w8-1790613111442"
   },
   {
     "command": "scripts/run-load.sh 25 1000 4",
     "date": "2026-09-28T16:32:04.525Z",
-    "raw_directory": ".lane/load_c25_w4-1790613123657",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c25_w4-1790613123657",
     "result": {
       "runs": 1000,
       "concurrency": 25,
@@ -2636,12 +2680,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c25_w4-1790613123657"
   },
   {
     "command": "scripts/run-load.sh 10 500 4",
     "date": "2026-09-28T16:32:17.738Z",
-    "raw_directory": ".lane/load_c10_w4-1790613136871",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c10_w4-1790613136871",
     "result": {
       "runs": 500,
       "concurrency": 10,
@@ -2693,12 +2738,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c10_w4-1790613136871"
   },
   {
     "command": "scripts/run-load.sh 100 1000 4",
     "date": "2026-09-28T16:32:28.693Z",
-    "raw_directory": ".lane/load_c100_w4-1790613147839",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c100_w4-1790613147839",
     "result": {
       "runs": 1000,
       "concurrency": 100,
@@ -2752,12 +2798,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c100_w4-1790613147839"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:32:39.724Z",
-    "raw_directory": ".lane/load_c50_w4-1790613158860",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790613158860",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2811,12 +2858,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790613158860"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:32:51.964Z",
-    "raw_directory": ".lane/load_c200_w4-1790613171078",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790613171078",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -2871,12 +2919,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790613171078"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:33:04.103Z",
-    "raw_directory": ".lane/load_c800_w4-1790613183241",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790613183241",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -2929,12 +2978,13 @@
     },
     "phase": "after",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790613183241"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:37:05.500Z",
-    "raw_directory": ".lane/load_c50_w4-1790613424388",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790613424388",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -2986,12 +3036,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790613424388"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:37:23.445Z",
-    "raw_directory": ".lane/load_c200_w4-1790613442323",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790613442323",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -3054,12 +3105,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790613442323"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:37:40.431Z",
-    "raw_directory": ".lane/load_c800_w4-1790613459313",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790613459313",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -3134,12 +3186,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790613459313"
   },
   {
     "command": "scripts/run-load.sh 50 1000 1",
     "date": "2026-09-28T16:38:08.251Z",
-    "raw_directory": ".lane/load_c50_w1-1790613487341",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w1-1790613487341",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -3207,12 +3260,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w1-1790613487341"
   },
   {
     "command": "scripts/run-load.sh 50 1000 8",
     "date": "2026-09-28T16:38:35.074Z",
-    "raw_directory": ".lane/load_c50_w8-1790613513948",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w8-1790613513948",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -3280,12 +3334,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w8-1790613513948"
   },
   {
     "command": "scripts/run-load.sh 25 1000 4",
     "date": "2026-09-28T16:38:53.214Z",
-    "raw_directory": ".lane/load_c25_w4-1790613532213",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c25_w4-1790613532213",
     "result": {
       "runs": 1000,
       "concurrency": 25,
@@ -3344,12 +3399,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c25_w4-1790613532213"
   },
   {
     "command": "scripts/run-load.sh 10 500 4",
     "date": "2026-09-28T16:39:13.230Z",
-    "raw_directory": ".lane/load_c10_w4-1790613552217",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c10_w4-1790613552217",
     "result": {
       "runs": 500,
       "concurrency": 10,
@@ -3404,12 +3460,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c10_w4-1790613552217"
   },
   {
     "command": "scripts/run-load.sh 100 1000 4",
     "date": "2026-09-28T16:39:28.968Z",
-    "raw_directory": ".lane/load_c100_w4-1790613567965",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c100_w4-1790613567965",
     "result": {
       "runs": 1000,
       "concurrency": 100,
@@ -3463,12 +3520,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c100_w4-1790613567965"
   },
   {
     "command": "scripts/run-load.sh 50 1000 4",
     "date": "2026-09-28T16:39:43.409Z",
-    "raw_directory": ".lane/load_c50_w4-1790613582511",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c50_w4-1790613582511",
     "result": {
       "runs": 1000,
       "concurrency": 50,
@@ -3523,12 +3581,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c50_w4-1790613582511"
   },
   {
     "command": "scripts/run-load.sh 200 1000 4",
     "date": "2026-09-28T16:39:58.987Z",
-    "raw_directory": ".lane/load_c200_w4-1790613597995",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c200_w4-1790613597995",
     "result": {
       "runs": 1000,
       "concurrency": 200,
@@ -3587,12 +3646,13 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c200_w4-1790613597995"
   },
   {
     "command": "scripts/run-load.sh 800 1600 4",
     "date": "2026-09-28T16:40:14.475Z",
-    "raw_directory": ".lane/load_c800_w4-1790613613586",
+    "raw_directory": "docs/evidence/raw/historical/load/load_c800_w4-1790613613586",
     "result": {
       "runs": 1600,
       "concurrency": 800,
@@ -3646,6 +3706,7 @@
     },
     "phase": "after-repeat",
     "dbMaxConns": "default",
-    "port": 7401
+    "port": 7401,
+    "original_raw_directory": ".lane/load_c800_w4-1790613613586"
   }
 ]

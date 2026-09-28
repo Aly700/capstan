@@ -1,0 +1,8 @@
+Measured source SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Checkout SHA: 904cb6c41da4f57ac0399d1524989288e3ededb1
+Command: ["node", "/Users/affan/Projects/capstan--final/.lane/final-scripts/run-load.mjs", "100", "1000", "4"]
+$ CAPSTAN_API_KEY=<ephemeral key> .lane/bin/capstan-load -address http://127.0.0.1:7701 -queue evidence-load_c100_w4 -concurrency 100 -n 1000 -samples .lane/<this-run>/runs.jsonl
+{"runs":1000,"concurrency":100,"completed":1000,"errors":0,"activities":5000,"elapsed_seconds":10.482288916,"runs_per_second":95.39901141950169,"activities_per_second":476.99505709750844,"p50_ms":1027.24125,"p99_ms":1222.515917}
+SQL audit: {"runs" : 1000, "completed" : 1000, "other" : 0, "activity_completions" : 5000, "task_failures" : 0, "remaining_tasks" : 0}
+Raw logs: .lane/load_c100_w4-1790626930105
+Exit: 0

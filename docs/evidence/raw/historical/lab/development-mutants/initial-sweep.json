@@ -1,0 +1,44 @@
+[
+  {
+    "id": "M001",
+    "status": "caught",
+    "first_seed": 0,
+    "seconds": 0.32,
+    "output": "--- FAIL: TestLab (0.00s)\n    lab_test.go:39: seed 0 baseline pipeline: P3: run \"lab\": timer 2 fired twice\n        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.161s\nFAIL"
+  },
+  {
+    "id": "M002",
+    "status": "caught",
+    "first_seed": 0,
+    "seconds": 0.33,
+    "output": "--- FAIL: TestLab (0.01s)\n    lab_test.go:39: seed 0 scenario pipeline: worker replay failed: history mismatch at event 4: history has <none>, code emitted scheduleActivity {\"seq\":\"1\",\"activityType\":\"effect\",\"input\":{\"contentType\":\"application/json\",\"data\":\"MQ==\"},\"startToCloseTimeout\":\"0.020s\"}\n        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.169s\nFAIL"
+  },
+  {
+    "id": "M003",
+    "status": "survived",
+    "first_seed": null,
+    "seconds": 16.09,
+    "output": "ok  \tgithub.com/Aly700/capstan/internal/lab\t15.922s"
+  },
+  {
+    "id": "M004",
+    "status": "caught",
+    "first_seed": 9,
+    "seconds": 0.42,
+    "output": "--- FAIL: TestLab (0.09s)\n    lab_test.go:39: seed 9 baseline retry: did not finish in 1000 steps\n        reproduce: go test ./internal/lab -run TestLab -seed 9 -lab.known=false\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.250s\nFAIL"
+  },
+  {
+    "id": "M005",
+    "status": "survived",
+    "first_seed": null,
+    "seconds": 15.79,
+    "output": "ok  \tgithub.com/Aly700/capstan/internal/lab\t15.628s"
+  },
+  {
+    "id": "M006",
+    "status": "caught",
+    "first_seed": 0,
+    "seconds": 0.39,
+    "output": "--- FAIL: TestLab (0.01s)\n    lab_test.go:39: seed 0 scenario pipeline: signal lab/inflight-10: got 0 deliveries, want one\n        reproduce: go test ./internal/lab -run TestLab -seed 0 -lab.known=false\nFAIL\nFAIL\tgithub.com/Aly700/capstan/internal/lab\t0.231s\nFAIL"
+  }
+]

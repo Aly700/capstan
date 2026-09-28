@@ -1,0 +1,24 @@
+--- FAIL: TestProtocolProbes (0.00s)
+    --- FAIL: TestProtocolProbes/heartbeat-renewal (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/retry-deadline (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/cancel-before-start (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/failed-workflow-release (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/approval-once (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/signal-order (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/retry-attempt (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/workflow-token-fields (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/closed-inbox (0.00s)
+        probes_test.go:11: protocol probe not implemented
+    --- FAIL: TestProtocolProbes/exclusive-claim (0.00s)
+        probes_test.go:11: protocol probe not implemented
+FAIL
+FAIL	github.com/Aly700/capstan/internal/lab	0.286s
+FAIL
