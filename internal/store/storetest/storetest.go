@@ -49,6 +49,7 @@ func Run(t *testing.T, open func(t *testing.T) store.Store) {
 		{"Ledger/SpentSinceCountsReservedAtEstimate", ledgerSpent},
 		{"Ledger/RunCost", ledgerRunCost},
 		{"Ledger/InsertGetUpdate", ledgerUpdate},
+		{"Ledger/BoundedRoundTrip", ledgerBounded},
 		{"Ledger/LockBudgetSerialises", ledgerLock},
 		{"Tx/RollbackDiscardsEverything", txRollback},
 		{"Tx/ErrorIsReturnedUnchanged", txErrors},

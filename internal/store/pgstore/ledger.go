@@ -6,18 +6,18 @@ import (
 	"github.com/Aly700/capstan/internal/store"
 )
 
-const callFields = `run_id,activity_seq,model,status,estimate_usd,cost_usd,input_tokens,output_tokens,cache_read_tokens,cache_write_tokens,error_code,at,finished_at`
+const callFields = `run_id,activity_seq,model,status,estimate_usd,cost_usd,input_tokens,output_tokens,cache_read_tokens,cache_write_tokens,error_code,at,finished_at,bounded`
 const callColumns = `id,` + callFields
 
 var callInsert = insertSQL("ai_call", callFields) + " returning id"
 var callUpdate = updateSQL("ai_call", callColumns, 1)
 
 func callArgs(c *store.AICall) []any {
-	return []any{c.ID, c.RunID, c.ActivitySeq, c.Model, c.Status, c.EstimateUSD, c.CostUSD, c.InputTokens, c.OutputTokens, c.CacheReadTokens, c.CacheWriteTokens, c.ErrorCode, nullTime(c.At), nullTime(c.FinishedAt)}
+	return []any{c.ID, c.RunID, c.ActivitySeq, c.Model, c.Status, c.EstimateUSD, c.CostUSD, c.InputTokens, c.OutputTokens, c.CacheReadTokens, c.CacheWriteTokens, c.ErrorCode, nullTime(c.At), nullTime(c.FinishedAt), c.Bounded}
 }
 func scanCall(row scanner) (*store.AICall, error) {
 	c := new(store.AICall)
-	if err := row.Scan(&c.ID, &c.RunID, &c.ActivitySeq, &c.Model, &c.Status, &c.EstimateUSD, &c.CostUSD, &c.InputTokens, &c.OutputTokens, &c.CacheReadTokens, &c.CacheWriteTokens, &c.ErrorCode, utcTime{&c.At}, utcTime{&c.FinishedAt}); err != nil {
+	if err := row.Scan(&c.ID, &c.RunID, &c.ActivitySeq, &c.Model, &c.Status, &c.EstimateUSD, &c.CostUSD, &c.InputTokens, &c.OutputTokens, &c.CacheReadTokens, &c.CacheWriteTokens, &c.ErrorCode, utcTime{&c.At}, utcTime{&c.FinishedAt}, &c.Bounded); err != nil {
 		return nil, dbError(err)
 	}
 	return c, nil
