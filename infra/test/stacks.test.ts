@@ -92,9 +92,10 @@ test('budget is account-wide $10 with 50/90/100 percent actual email alerts', as
   });
 });
 
-test('GitHub trust permits only main and permissions cannot mutate its own foundation', async () => {
+test('GitHub trust binds the immutable repository identity to main and cannot mutate its foundation', async () => {
   const { oidc } = await synth();
-  oidc.hasResourceProperties('AWS::IAM::Role', { RoleName: 'capstan-github-deploy', AssumeRolePolicyDocument: { Version: '2012-10-17', Statement: [Match.objectLike({ Action: 'sts:AssumeRoleWithWebIdentity', Condition: { StringEquals: { 'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com', 'token.actions.githubusercontent.com:sub': 'repo:Aly700/capstan:ref:refs/heads/main' } } })] } });
+  // Captured from this repository's OIDC customization API during the live deployment.
+  oidc.hasResourceProperties('AWS::IAM::Role', { RoleName: 'capstan-github-deploy', AssumeRolePolicyDocument: { Version: '2012-10-17', Statement: [Match.objectLike({ Action: 'sts:AssumeRoleWithWebIdentity', Condition: { StringEquals: { 'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com', 'token.actions.githubusercontent.com:sub': 'repo:Aly700@112176329/capstan@1392801248:ref:refs/heads/main' } } })] } });
   const roles = oidc.findResources('AWS::IAM::Role');
   const githubID = Object.keys(roles).find(id => roles[id].Properties.RoleName === 'capstan-github-deploy')!;
   const policies = Object.values(oidc.findResources('AWS::IAM::Policy')).filter((p: any) => JSON.stringify(p.Properties.Roles).includes(githubID));
