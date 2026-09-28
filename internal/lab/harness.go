@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"strings"
+	"sync"
 
 	v1 "github.com/Aly700/capstan/gen/capstan/v1"
 	"github.com/Aly700/capstan/internal/engine"
@@ -50,11 +52,14 @@ type FaultRecord struct {
 	Detail string
 }
 type Result struct {
-	Seed     int64
-	Scenario string
-	Steps    int
-	Faults   []FaultRecord
-	Trace    []string
+	Seed             int64
+	Scenario         string
+	Steps            int
+	Faults           []FaultRecord
+	Trace            []string
+	RootRuns         int
+	TransactionSteps int
+	GateResponses    []string
 }
 
 // Run checks a fault-free oracle, then runs the same scenario with seeded faults.
@@ -108,6 +113,9 @@ func Run(ctx context.Context, seed int64, opts Options) (Result, error) {
 		return baseline, fmt.Errorf("seed %d baseline %s: %w", seed, chosen.name, err)
 	}
 	if opts.NoFaults {
+		if err := runProtocolProbes(ctx, seed); err != nil {
+			return baseline, fmt.Errorf("seed %d: %w", seed, err)
+		}
 		return baseline, nil
 	}
 	result, snapshot, err := runScenario(ctx, seed, chosen, opts)
@@ -116,6 +124,9 @@ func Run(ctx context.Context, seed int64, opts Options) (Result, error) {
 	}
 	if err != nil {
 		return result, fmt.Errorf("seed %d scenario %s: %w", seed, chosen.name, err)
+	}
+	if err := runProtocolProbes(ctx, seed); err != nil {
+		return result, fmt.Errorf("seed %d: %w", seed, err)
 	}
 	return result, nil
 }
@@ -132,16 +143,13 @@ func validFault(kind FaultKind) bool {
 	return false
 }
 
-type logicalClock struct{ at time.Time }
-
-func (c *logicalClock) Now() time.Time          { return c.at }
-func (c *logicalClock) advance(d time.Duration) { c.at = c.at.Add(d) }
-
-type approvedGate struct{}
-
-func (approvedGate) ApprovalStatus(context.Context, string) (engine.GateApproval, error) {
-	return engine.GateApproval{Status: "APPROVED", DecidedBy: "lab-gate"}, nil
+type logicalClock struct {
+	at time.Time
+	mu sync.Mutex
 }
+
+func (c *logicalClock) Now() time.Time          { c.mu.Lock(); defer c.mu.Unlock(); return c.at }
+func (c *logicalClock) advance(d time.Duration) { c.mu.Lock(); defer c.mu.Unlock(); c.at = c.at.Add(d) }
 
 type actor struct {
 	work   chan func() error
@@ -176,6 +184,9 @@ type harness struct {
 	ctx                   context.Context
 	opts                  Options
 	scenario              scenario
+	roots                 []scenarioRoot
+	scheduler             *scheduledStore
+	gate                  *scriptedGate
 	rng                   *rand.Rand
 	store                 store.Store
 	faults                *FaultStore
@@ -190,7 +201,7 @@ type harness struct {
 	selected              FaultKind
 	budget                int
 	seenFaults            map[FaultKind]bool
-	sentSignal, cancelled bool
+	sentSignal, cancelled map[string]bool
 	generation            int
 	expectedSignals       []signalExpectation
 }
@@ -199,11 +210,18 @@ func runScenario(ctx context.Context, seed int64, s scenario, opts Options) (res
 	h := &harness{ctx: ctx, opts: opts, scenario: s, rng: rand.New(rand.NewSource(seed)), store: memstore.New(), sink: NewEffectSink(), result: Result{Seed: seed, Scenario: s.name}, budget: 6}
 	defer h.store.Close()
 	h.faults = NewFaultStore(h.store)
+	h.scheduler = &scheduledStore{Store: h.faults}
+	h.sentSignal = make(map[string]bool)
+	h.cancelled = make(map[string]bool)
+	peer := peerScenario()
+	h.roots = []scenarioRoot{{id: "lab", scenario: s}, {id: "peer", scenario: peer}}
+	h.result.RootRuns = len(h.roots)
 	h.clock, h.advance = opts.Clock, opts.Advance
 	if h.clock == nil {
 		clock := &logicalClock{at: time.Date(2026, 9, 28, 12, 0, 0, 0, time.UTC)}
 		h.clock, h.advance = clock, clock.advance
 	}
+	h.gate = &scriptedGate{advance: h.advance}
 	if err := h.restartEngine(); err != nil {
 		return h.result, Snapshot{}, err
 	}
@@ -220,16 +238,18 @@ func runScenario(ctx context.Context, seed int64, s scenario, opts Options) (res
 			a.close()
 		}
 	}()
-	input, err := payload(s.input)
-	if err != nil {
-		return h.result, Snapshot{}, err
-	}
-	request := &v1.StartRunRequest{RunId: "lab", WorkflowType: s.name, TaskQueue: "lab", Input: input, TaskTimeout: durationpb.New(25 * time.Millisecond)}
-	if s.timeout > 0 {
-		request.RunTimeout = durationpb.New(s.timeout)
-	}
-	if _, err := h.engine.StartRun(ctx, "lab", request); err != nil {
-		return h.result, Snapshot{}, err
+	for _, root := range h.roots {
+		input, inputErr := payload(root.scenario.input)
+		if inputErr != nil {
+			return h.result, Snapshot{}, inputErr
+		}
+		request := &v1.StartRunRequest{RunId: root.id, WorkflowType: root.scenario.name, TaskQueue: "lab", Input: input, TaskTimeout: durationpb.New(25 * time.Millisecond)}
+		if root.scenario.timeout > 0 {
+			request.RunTimeout = durationpb.New(root.scenario.timeout)
+		}
+		if _, startErr := h.engine.StartRun(ctx, "lab", request); startErr != nil {
+			return h.result, Snapshot{}, startErr
+		}
 	}
 	h.snapshot, err = Capture(ctx, h.store)
 	if err != nil {
@@ -239,11 +259,14 @@ func runScenario(ctx context.Context, seed int64, s scenario, opts Options) (res
 		if err := ctx.Err(); err != nil {
 			return h.result, h.snapshot, err
 		}
+		transactionsBefore := h.scheduler.transactions.Load()
 		h.result.Steps = step + 1
 		h.selected = h.chooseFault()
-		index := h.rng.Intn(len(h.actors) + 1)
+		index := h.rng.Intn(len(h.actors) + 2)
 		var actionErr error
-		if index == len(h.actors) {
+		if index == len(h.actors)+1 {
+			actionErr = h.interleavedStep()
+		} else if index == len(h.actors) {
 			duration := h.clockStep()
 			h.result.Trace = append(h.result.Trace, "clock +"+duration.String())
 			h.advance(duration)
@@ -269,9 +292,16 @@ func runScenario(ctx context.Context, seed int64, s scenario, opts Options) (res
 		if actionErr != nil && !errors.Is(actionErr, ErrInjected) && !errors.Is(actionErr, ErrServerCrash) {
 			return h.result, h.snapshot, actionErr
 		}
-		current, captureErr := Capture(ctx, h.store)
-		if captureErr != nil {
-			return h.result, h.snapshot, captureErr
+		if h.scheduler.transactions.Load() == transactionsBefore {
+			continue
+		}
+		current := h.snapshot
+		if index != len(h.actors)+1 {
+			var captureErr error
+			current, captureErr = Capture(ctx, h.store)
+			if captureErr != nil {
+				return h.result, h.snapshot, captureErr
+			}
 		}
 		if err := CheckHistory(h.snapshot, current); err != nil {
 			return h.result, current, err
@@ -281,13 +311,17 @@ func runScenario(ctx context.Context, seed int64, s scenario, opts Options) (res
 		}
 		h.snapshot = current
 		if finished(current) {
-			if err := checkScenario(current, s.name); err != nil {
+			if err := checkConcurrentScenarios(current, h.roots); err != nil {
 				return h.result, current, err
 			}
 			if err := checkSignals(current, h.expectedSignals); err != nil {
 				return h.result, current, err
 			}
 			if err := CheckEffects(current, h.sink); err != nil {
+				return h.result, current, err
+			}
+			h.result.GateResponses = h.gate.observed()
+			if err := checkGateResponses(s.name, h.result.GateResponses); err != nil {
 				return h.result, current, err
 			}
 			return h.result, current, nil
@@ -307,7 +341,7 @@ func finished(s Snapshot) bool {
 	return true
 }
 func (h *harness) restartEngine() error {
-	e, err := engine.New(engine.Deps{Store: h.faults, Clock: h.clock, Gate: approvedGate{}}, engine.Config{TaskRetryInitial: time.Millisecond, TaskRetryMax: 4 * time.Millisecond, DefaultRetry: &v1.RetryPolicy{InitialInterval: durationpb.New(time.Millisecond), MaximumInterval: durationpb.New(4 * time.Millisecond), BackoffCoefficient: 2}, GatePollInitial: 2 * time.Millisecond, GatePollMax: 8 * time.Millisecond})
+	e, err := engine.New(engine.Deps{Store: h.scheduler, Clock: h.clock, Gate: h.gate}, engine.Config{TaskRetryInitial: time.Millisecond, TaskRetryMax: 4 * time.Millisecond, DefaultRetry: &v1.RetryPolicy{InitialInterval: durationpb.New(time.Millisecond), MaximumInterval: durationpb.New(4 * time.Millisecond), BackoffCoefficient: 2}, GatePollInitial: 2 * time.Millisecond, GatePollMax: 8 * time.Millisecond})
 	if err == nil {
 		h.engine = e
 		h.generation++
@@ -315,7 +349,7 @@ func (h *harness) restartEngine() error {
 	return err
 }
 func (h *harness) adapter(w *workerState) *labworker.Worker {
-	return labworker.NewWorker(h.engine, "lab", w.identity, "lab-v1", map[string]labworker.Workflow{h.scenario.name: h.scenario.workflow})
+	return labworker.NewWorker(h.engine, "lab", w.identity, "lab-v1", h.registry())
 }
 func (h *harness) chooseFault() FaultKind {
 	if h.opts.NoFaults || h.budget == 0 || h.rng.Intn(3) != 0 {
@@ -414,7 +448,7 @@ func (h *harness) workflowStep(w *workerState) error {
 	if w.commands == nil {
 		if h.selected == KillWorkflow {
 			boundary := h.rng.Intn(3)
-			commands, err := labworker.ReplayWithOptions(w.workflow.RunId, w.workflow.History, h.scenario.workflow, labworker.ReplayOptions{BeforeCommand: func(index int, _ *v1.Command) error {
+			commands, err := labworker.ReplayWithOptions(w.workflow.RunId, w.workflow.History, h.registry()[w.workflow.WorkflowType], labworker.ReplayOptions{BeforeCommand: func(index int, _ *v1.Command) error {
 				if index == boundary {
 					return errWorkerKilled
 				}
@@ -484,7 +518,7 @@ func (h *harness) activityStep(w *workerState) error {
 		})
 	}
 	if w.effect == nil {
-		if h.scenario.name == "retry" && w.activity.Attempt == 1 {
+		if w.activity.WorkflowType == "retry" && w.activity.Attempt == 1 {
 			err := h.call(func() error {
 				_, err := h.engine.FailActivityTask(h.ctx, &v1.FailActivityTaskRequest{TaskToken: w.activity.TaskToken, Identity: w.identity, Failure: &v1.Failure{Type: "Transient", Message: "scripted first attempt"}})
 				return err
@@ -597,7 +631,7 @@ func (h *harness) clientStep() error {
 			// open. Later closing activations may legally discard the inbox.
 			if run.InFlight && firstActivation(h.snapshot.Histories[run.RunID]) {
 				name := "noise"
-				if h.scenario.name == "signal" && !h.sentSignal {
+				if run.WorkflowType == "signal" && !h.sentSignal[run.RunID] {
 					name = "go"
 				}
 				requestID := fmt.Sprintf("inflight-%d", h.result.Steps)
@@ -608,7 +642,7 @@ func (h *harness) clientStep() error {
 				if err == nil {
 					h.expectedSignals = append(h.expectedSignals, signalExpectation{run.RunID, requestID, name})
 					if name == "go" {
-						h.sentSignal = true
+						h.sentSignal[run.RunID] = true
 					}
 					h.record(SignalInFlight, "signal buffered while a workflow task is leased; delivery checked")
 				}
@@ -620,28 +654,28 @@ func (h *harness) clientStep() error {
 		if !run.Open() {
 			continue
 		}
-		if h.scenario.name == "signal" && !h.sentSignal {
+		if run.WorkflowType == "signal" && !h.sentSignal[run.RunID] {
 			err := h.call(func() error {
 				_, err := h.engine.SignalRun(h.ctx, "lab", &v1.SignalRunRequest{RunId: run.RunID, Name: "go", Input: &v1.Payload{ContentType: "application/json", Data: []byte("7")}, RequestId: "logical-input"})
 				return err
 			})
 			if err == nil {
-				h.sentSignal = true
+				h.sentSignal[run.RunID] = true
 				h.expectedSignals = append(h.expectedSignals, signalExpectation{run.RunID, "logical-input", "go"})
 			}
 			return err
 		}
-		if h.scenario.name == "cancel" && !h.cancelled && len(h.snapshot.Timers[run.RunID]) > 0 {
+		if run.WorkflowType == "cancel" && !h.cancelled[run.RunID] && len(h.snapshot.Timers[run.RunID]) > 0 {
 			err := h.call(func() error {
 				_, err := h.engine.CancelRun(h.ctx, "lab", &v1.CancelRunRequest{RunId: run.RunID, Reason: "scenario"})
 				return err
 			})
 			if err == nil {
-				h.cancelled = true
+				h.cancelled[run.RunID] = true
 			}
 			return err
 		}
-		if h.scenario.name == "human" {
+		if run.WorkflowType == "human" {
 			for _, approval := range h.snapshot.Approvals[run.RunID] {
 				if approval.Status == store.ApprovalPending {
 					return h.call(func() error {
@@ -673,7 +707,7 @@ func payload(value any) (*v1.Payload, error) {
 // A Gate poll crash may leave a persisted minute-long lease. Once no task can
 // act, jump to the next poll instead of spending the step budget on empty ticks.
 func (h *harness) clockStep() time.Duration {
-	if h.scenario.name != "gate" {
+	if !strings.HasPrefix(h.scenario.name, "gate") {
 		return time.Millisecond
 	}
 	for _, tasks := range h.snapshot.Tasks {

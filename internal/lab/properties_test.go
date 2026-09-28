@@ -190,6 +190,26 @@ func TestCheckTimersRejectsCorruption(t *testing.T) {
 	}
 }
 
+func TestCheckTimersWithDeadlinesRequiresObservedClock(t *testing.T) {
+	s := propertyTimerSnapshot()
+	due := propertyTime.Add(time.Second - time.Microsecond)
+	s.Timers["r"][0].DueAt = due
+	deadlines := map[string]map[int64]time.Time{"r": {1: due}}
+	if err := CheckTimersWithDeadlines(s, deadlines); err != nil {
+		t.Fatalf("rejected a separately validated timer deadline: %v", err)
+	}
+	if err := CheckTimersWithDeadlines(s, nil); err == nil {
+		t.Fatal("accepted a timer without an observed deadline")
+	}
+	propertyFire(&s, due.Add(-time.Microsecond))
+	if err := CheckTimersWithDeadlines(s, deadlines); err == nil {
+		t.Fatal("accepted fire before the observed deadline")
+	}
+	if !s.Histories["r"][1].Time.AsTime().Equal(propertyTime) {
+		t.Fatal("timer validation rewrote the history timestamp")
+	}
+}
+
 func propertyEffectSnapshot() Snapshot {
 	s := propertySnapshot()
 	s.Runs[0].Status = v1.RunStatus_RUN_STATUS_COMPLETED

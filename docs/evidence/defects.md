@@ -4,6 +4,16 @@ Confirmed seed-reproduced engine/store defects: **0**.
 
 All 200,000 seeds (0–199999) passed with every fault type exercised.
 
+That is the original campaign. Delta 1 adds shared-queue runs, overlapping background
+transactions, Gate pending/error/deadline responses, and API protocol probes. Its
+bounded results are in [the concurrent campaign](lab-delta1-2026-09-28.md); the
+separate real-clock PostgreSQL results are in [the PG campaign](lab-pg.md).
+All 148,554 seeds in the expanded memstore campaign passed in 19m50.041s, with no
+known exclusions or new seed-reproduced engine/store defect.
+The [mutation campaign](lab-mutation.md) introduces production bugs only in isolated
+scratch worktrees. Killed mutants establish fault-detection evidence; they are not
+defects found in the unmodified engine.
+
 The lab has no known-defect exclusions: `lab.KnownFailure` returns false for every
 seed. `-lab.known=false` therefore runs the same assertions as the default. If a real
 defect is added later, record its exact reproducing seed and symptom here, retain a
@@ -33,8 +43,18 @@ These are not counted as Capstan defects:
   harness's step budget.
 - CLI invalid-scenario classification, lost diagnostics after report-write failure,
   and TestLab's maximum-seed overflow/zero-count false success were corrected.
+- Mutation probes now check lifecycle obligations that terminal results alone missed:
+  heartbeat renewal, retry deadlines and attempts, pre-start cancellation, failed
+  workflow lease release, closed inbox cleanup, and signal order. These changes catch
+  actual patched production behavior, not just synthetic snapshots.
+- The real-clock PG timer oracle originally assumed that timer creation and event
+  recording read the same instant. The corrected oracle bounds the persisted deadline
+  by the workflow acknowledgement's observed start/end times plus the requested
+  duration, and tracks that deadline through delivery and cleanup.
+- PG result comparison now independently rejects retained terminal work, pending
+  approvals, live workflow leases, and a non-nil failure on a successful result.
 
-## Unseeded follow-up for the owning lane
+## Earlier unseeded follow-up, resolved upstream
 
 While checking the unarmed wrapper against the shared store conformance suite,
 `Time/ZeroTimesRoundTrip` and `Time/UTCPreserved` reported that memstore preserved a
@@ -42,8 +62,8 @@ caller's non-UTC location, whereas the shared suite expects UTC. The lab's clock
 UTC, so this observation is **not** a seed-reproduced P1–P4 defect and is excluded from
 the headline count and known list.
 
-Evidence is preserved in `.lane/l2-fault-red-behavior.log`. Inspect
-`internal/store/memstore/memstore.go:198` (run cloning) against
-`internal/store/storetest/time.go:15` (non-UTC input and UTC round-trip expectation).
-The lead should route full shared memstore-conformance coverage and time normalization
-to the owning lane. No store changes or tests were hidden behind a skip in this lane.
+Evidence is preserved in `.lane/l2-fault-red-behavior.log`. Main now normalizes cloned
+run/task/timer/approval/audit times to UTC and runs the full shared memstore conformance
+suite (`internal/store/memstore/conformance_test.go`). Delta 1 received those changes
+through its initial merge of main. This lane did not alter the store or hide tests
+behind a skip.
