@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Aly700/capstan/internal/store"
+	"github.com/Aly700/capstan/internal/store/subscriptions"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -20,7 +21,7 @@ type pgStore struct {
 	stop           context.CancelFunc
 	done           chan struct{}
 	mu             sync.Mutex
-	subs           map[string]map[chan struct{}]struct{}
+	subs           map[string]*subscriptions.Group
 	closed         bool
 	closeOnce      sync.Once
 }
@@ -56,7 +57,7 @@ func OpenWithMaxConns(ctx context.Context, dsn string, maxConns int32) (store.St
 		return nil, err
 	}
 	listenCtx, stop := context.WithCancel(context.Background())
-	s := &pgStore{pool: pool, listenerConfig: cfg.ConnConfig.Copy(), listenCtx: listenCtx, stop: stop, done: make(chan struct{}), subs: make(map[string]map[chan struct{}]struct{})}
+	s := &pgStore{pool: pool, listenerConfig: cfg.ConnConfig.Copy(), listenCtx: listenCtx, stop: stop, done: make(chan struct{}), subs: make(map[string]*subscriptions.Group)}
 	s.listenerConfig.RuntimeParams["application_name"] = "capstan-listener"
 	conn, err := s.connectListener(ctx)
 	if err != nil {
@@ -73,9 +74,7 @@ func (s *pgStore) Close() error {
 		s.mu.Lock()
 		s.closed = true
 		for _, subscribers := range s.subs {
-			for ch := range subscribers {
-				closeSubscription(ch)
-			}
+			subscribers.Close()
 		}
 		s.subs = nil
 		s.mu.Unlock()

@@ -16,6 +16,7 @@ type transaction struct {
 	ctx       context.Context
 	tx        pgx.Tx
 	notifyErr error
+	notifySeq uint64
 }
 
 var _ store.Tx = (*transaction)(nil)
