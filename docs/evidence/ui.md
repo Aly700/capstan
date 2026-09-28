@@ -1,5 +1,9 @@
 # Run viewer
 
+## Historical full viewer check
+
+The original screenshots and audit browser evidence remain historical. The final-code quickstart viewer check is recorded separately below.
+
 Verified 2026-09-28 against the real Go server and SDK worker processes on PostgreSQL
 16.15. Browser: Chrome 148.0.7778.168 via Playwright 1.64.0-alpha-1789764292000
 (the ephemeral `@playwright/cli@0.1.21` npx package). No SDK dependencies changed.
@@ -42,3 +46,16 @@ and decoded JSON, never `innerHTML`; the current key is redacted from displayed 
 These checks cover the viewer's own paths, not a guarantee against a compromised
 browser, extensions, or other scripts served by the same origin. Keep real credentials
 out of workflow inputs: the viewer cannot remove secrets already persisted by callers.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The clean-shell quickstart completed `quickstart-1` and the real browser displayed
+its completed history and result 5. [Browser transcript](raw/904cb6c/quickstart-ui.log),
+[inspected screenshot](raw/904cb6c/quickstart-ui.png). This checks the README path
+on the final code; the wider historical filter, paging, mobile and privacy
+campaign above was not repeated by this lane.
+<!-- final-numbers:end -->

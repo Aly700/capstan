@@ -1,11 +1,9 @@
 # Load measurements
 
-Audit traceability note (2026-09-28): the tables below match the committed
-`load-results.json`, but all 61 referenced raw run directories are absent from this
-worktree. The historical latency/CPU/lock measurements therefore **FAIL independent
-raw-data traceability**. They are retained as reported measurements, not replaced or
-reconstructed. Fresh audit runs with committed raw samples are linked in the
-[audit](audit-2026-09-28.md).
+## Historical load measurements
+
+The original load samples are now archived under [raw/historical/load/](raw/historical/load/). The [manifest](raw/historical/manifest.json) preserves their source paths and hashes. Percentiles, CPU and lock statistics are recomputed from those samples; the final-code section below supersedes historical performance claims.
+
 
 Verified on 2026-09-28. This is the complete set of **11 measured runs**: 11,700
 workflows and 58,500 persisted activity completions, with zero failed runs. The best
@@ -27,7 +25,7 @@ reported 8,307,109,888 usable bytes. Other lanes shared this machine and Postgre
 - Colima 0.10.3; Docker client 29.4.1, server 29.5.2.
 - Base engine/store/SDK: `73804f2`; viewer: `48ad5b6`. Load sources are in this commit.
 
-Versions were read with `scripts/evidence-versions.sh` (raw output `.lane/versions.log`).
+Versions were read with `scripts/evidence-versions.sh` (raw output [archived versions.log](raw/historical/evidence/versions.log)).
 No engine, store, SDK, schema, PostgreSQL settings or connection-pool settings were changed.
 
 ## Reproduce
@@ -258,7 +256,7 @@ are shortened to their basenames):
 ```
 
 
-## After the performance lane
+## Historical performance-lane measurements
 
 Measured on 2026-09-28, with the same machine, versions, workload, driver, worker
 slots, transports, sampling SQL and timing boundaries described above. The before
@@ -291,10 +289,11 @@ unset CAPSTAN_DB_MAX_CONNS  # measured default: 40
 The harness changes only add a safe database-prefix option, performance-lane ports,
 and phase/pool metadata. Its defaults remain `capstan_evidence_*` and 7301.
 The performance lane used only port 7401 and its own `capstan_perf_*` load databases.
-Raw logs are `.lane/after-1.log` through `after-11.log`, and
+Archived controls and gates are in [raw/historical/perf/](raw/historical/perf/).
+Raw logs were `.lane/after-1.log` through `after-11.log`, and
 `.lane/after-repeat-1.log` through `after-repeat-11.log`. Each points to an unchanged
 per-run directory containing samples, driver output, worker/server logs and SQL audit.
-Versions are in `.lane/after-versions.log`. `dbMaxConns: "default"` means 20 for the
+Versions are in [archived after-versions.log](raw/historical/perf/after-versions.log). `dbMaxConns: "default"` means 20 for the
 fresh `baseline`/`d30`/`d30-repeat` phases and 40 for `pool-default`/`after`/`after-repeat`.
 
 ### Changes measured separately
@@ -350,8 +349,8 @@ For a controlled 40-waiter/one-task test, `pg_stat_database.xact_commit` changed
 from 9 to 50 before (delta 41) and 9 to 11 after (delta 2). The matched no-claim
 control changed from 8 to 9 (delta 1), leaving **40 versus 1 claim transactions**.
 Direct claim-attempt counters independently measured 40 versus 1, with one task
-claimed in both cases. See `.lane/targeted-before.log` and
-`.lane/targeted-after-reviewed.log`. The insert and LISTEN delivery precede this
+claimed in both cases. See [archived targeted-before.log](raw/historical/perf/targeted-before.log) and
+[archived targeted-after-reviewed.log](raw/historical/perf/targeted-after-reviewed.log). The insert and LISTEN delivery precede this
 window; both final isolated control and workload residuals are zero. Database-wide
 counters can include background work and delayed flushes, so the regression asserts
 actual attempts and claims and logs counter residuals. Whole-load commit deltas in
@@ -475,11 +474,84 @@ to latency; the samples do not establish row locking as the throughput ceiling.
 
 Every performance commit passed `make verify`: generation drift checks, buf lint,
 gofmt, go vet, Go race tests, both store suites, pgengine engine tests, SDK typecheck
-and tests, and the real-server e2e. Logs are `.lane/d30-verify.log`,
-`.lane/pool-verify.log`, `.lane/targeted-verify.log`, and `.lane/lock-verify.log`.
+and tests, and the real-server e2e. Logs are [archived d30-verify.log](raw/historical/perf/d30-verify.log),
+[archived pool-verify.log](raw/historical/perf/pool-verify.log), [archived targeted-verify.log](raw/historical/perf/targeted-verify.log), and [archived lock-verify.log](raw/historical/perf/lock-verify.log).
 After merging main and adapting its fault wrapper to D30, the final merged gate
-passed (`.lane/merged-verify-reviewed.log`). It includes the lab at 50 seeds under
+passed ([archived merged-verify-reviewed.log](raw/historical/perf/merged-verify-reviewed.log)). It includes the lab at 50 seeds under
 race and 2,000 without; an additional `go test -count=1 -v ./internal/lab/...`
-passed its default 2,000 seeds (`.lane/lab-default-reviewed.log`). Database tests
+passed its default 2,000 seeds ([archived lab-default-reviewed.log](raw/historical/perf/lab-default-reviewed.log)). Database tests
 were never skipped. SDK output: 18 files passed, 2 opt-in files skipped;
 369 tests passed, 5 skipped. The performance lane made no SDK source changes.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The prescribed 11 runs completed **11,700 workflows and 58,500
+activity completions, with zero failed runs**. Every SQL audit reports zero task
+failures and zero remaining tasks. The order, worker counts and untimed warmup are
+unchanged. The server used its default connection pool, port 7701,
+`CAPSTAN_LOAD_PHASE=final` and a fresh `capstan_final_*` database for every run.
+
+| Run | Concurrency | Runs | Workers | Runs/s | Activities/s | p50 ms | p99 ms | Errors |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [1](raw/904cb6c/load-01.log) | 50 | 1000 | 4 | 96.7596 | 483.7980 | 511.7766 | 609.4396 | 0 |
+| [2](raw/904cb6c/load-02.log) | 200 | 1000 | 4 | 95.5274 | 477.6374 | 2060.8009 | 2363.9277 | 0 |
+| [3](raw/904cb6c/load-03.log) | 800 | 1600 | 4 | 84.5360 | 422.6800 | 9181.9240 | 9909.9627 | 0 |
+| [4](raw/904cb6c/load-04.log) | 50 | 1000 | 1 | 60.2563 | 301.2818 | 825.4301 | 1026.4371 | 0 |
+| [5](raw/904cb6c/load-05.log) | 50 | 1000 | 8 | 88.9244 | 444.6220 | 553.7171 | 671.7268 | 0 |
+| [6](raw/904cb6c/load-06.log) | 25 | 1000 | 4 | 73.7525 | 368.7625 | 331.3333 | 426.4686 | 0 |
+| [7](raw/904cb6c/load-07.log) | 10 | 500 | 4 | 47.4597 | 237.2989 | 209.4845 | 255.4377 | 0 |
+| [8](raw/904cb6c/load-08.log) | 100 | 1000 | 4 | 95.3990 | 476.9950 | 1027.2412 | 1222.5159 | 0 |
+| [9](raw/904cb6c/load-09.log) | 50 | 1000 | 4 | 91.5157 | 457.5787 | 543.8870 | 633.9914 | 0 |
+| [10](raw/904cb6c/load-10.log) | 200 | 1000 | 4 | 93.4880 | 467.4403 | 2098.0417 | 2388.8757 | 0 |
+| [11](raw/904cb6c/load-11.log) | 800 | 1600 | 4 | 87.7664 | 438.8323 | 8947.5163 | 9451.8642 | 0 |
+
+Rates and percentiles are truncated downward to four decimal places. The
+[derived JSON](raw/904cb6c/numbers.json) retains full precision. Each linked command
+log identifies its [raw directory](raw/904cb6c/load/), containing every latency,
+system sample, metadata, driver result, SQL audit and sampler SQL. JSONL is gzip
+compressed. The elapsed interval is emitted by the load driver; rates are computed
+from it and verified successful samples. It cannot be recovered by summing
+overlapping run latencies.
+
+The highest observation was **96.7596 runs/s** at
+concurrency 50 with 4 workers.
+This is a measured point on a shared host, not a service capacity guarantee.
+Increasing concurrency does not produce proportional throughput. These results
+include the audit's busy-parent polling fix and supersede the earlier throughput
+claims for this source revision.
+
+The observed ceiling in the four-worker runs was
+91.5157–96.7596 runs/s at concurrency 50–200.
+At concurrency 800, rates fell to
+84.5360–87.7664 runs/s,
+with p99 latency 9451.8642–9909.9627 ms.
+These points establish the observed operating range, not a confidence interval or
+a causal estimate of the audit fix's performance cost.
+
+| Run | Samples | PG CPU % | Server CPU % | Worker CPU % | Max active/transaction | Max ready | Max ungranted locks | Deadlocks | Other active DB |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 11 | 178.1955 | 180.3323 | 150.1861 | 39 | 35 | 1 | 0 | no |
+| 2 | 11 | 184.5295 | 178.2636 | 151.8642 | 39 | 165 | 0 | 0 | no |
+| 3 | 19 | 186.8298 | 175.7663 | 144.2095 | 40 | 774 | 2 | 0 | no |
+| 4 | 17 | 105.7920 | 106.2314 | 61.3465 | 20 | 50 | 0 | 0 | no |
+| 5 | 12 | 176.8406 | 171.7337 | 176.4995 | 40 | 33 | 0 | 0 | no |
+| 6 | 14 | 161.7579 | 142.4293 | 128.0819 | 28 | 13 | 1 | 0 | no |
+| 7 | 11 | 96.2781 | 94.3533 | 86.9763 | 10 | 7 | 0 | 0 | no |
+| 8 | 11 | 181.3124 | 178.9053 | 156.7577 | 39 | 60 | 1 | 0 | no |
+| 9 | 12 | 185.8290 | 181.8100 | 152.3929 | 40 | 33 | 3 | 0 | no |
+| 10 | 11 | 190.2656 | 179.6195 | 153.3514 | 40 | 163 | 2 | 0 | no |
+| 11 | 18 | 188.5199 | 183.0521 | 147.0165 | 39 | 767 | 1 | 0 | no |
+
+Other active databases were sampled in **0 of 11** runs. CPU
+percentages use accumulated-time deltas; PostgreSQL CPU covers the shared container.
+One core is 100%. These observations combine pool waiting, statement round trips
+and application scheduling. They do not identify a universal row-lock or CPU ceiling.
+
+Reproduce the exact sequence with `python3 docs/evidence/raw/reproduce.py load`.
+The [harness notes](raw/README.md) identify resource and metrics-authentication
+changes; engine, SDK and workload assertions are unchanged.
+<!-- final-numbers:end -->

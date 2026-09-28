@@ -1,5 +1,9 @@
 # Fault-lab defect register
 
+## Historical defect register
+
+The historical campaign and gate logs are archived in [raw/historical/lab/](raw/historical/lab/). New current-code results appear below.
+
 Confirmed seed-reproduced engine/store defects: **0**.
 
 All 200,000 seeds (0–199999) passed with every fault type exercised.
@@ -62,8 +66,22 @@ caller's non-UTC location, whereas the shared suite expects UTC. The lab's clock
 UTC, so this observation is **not** a seed-reproduced P1–P4 defect and is excluded from
 the headline count and known list.
 
-Evidence is preserved in `.lane/l2-fault-red-behavior.log`. Main now normalizes cloned
+Evidence is preserved in [archived l2-fault-red-behavior.log](raw/historical/lab/l2-fault-red-behavior.log). Main now normalizes cloned
 run/task/timer/approval/audit times to UTC and runs the full shared memstore conformance
 suite (`internal/store/memstore/conformance_test.go`). Delta 1 received those changes
 through its initial merge of main. This lane did not alter the store or hide tests
 behind a skip.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+No new seed-reproduced engine/store defect appeared in the 200,000-seed
+current memory campaign or the 500-seed PostgreSQL campaign. Known-failure
+exclusions remain zero. This does not erase defects independently found by the
+[audit](audit-2026-09-28.md), and planted mutation kills are not production defects.
+See [per-seed memory data](raw/904cb6c/lab-seeds.jsonl.gz) and
+[PostgreSQL data](raw/904cb6c/pg.log).
+<!-- final-numbers:end -->

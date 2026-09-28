@@ -1,10 +1,9 @@
 # PostgreSQL fault-lab campaign
 
-Audit provenance note: this historical report's referenced `.lane/` raw logs are
-absent from the audit worktree. Its original timing/provenance claims remain FAILED
-where they cannot be traced. Fresh bounded reruns and raw output are preserved in the
-[independent audit](audit-2026-09-28.md); the PostgreSQL rerun reproduces its seed and
-fault counts, while the large historical memstore seed ranges were not rerun in full.
+## Historical PostgreSQL campaigns
+
+The [original successful run](raw/historical/lab/delta-pg-500-uncontended.log), [earlier run](raw/historical/lab/delta-pg-500.log), [time-limited failure](raw/historical/lab/delta-pg-500-final.log) and [development probes](raw/historical/lab/) are archived. Their old elapsed times describe those runs, not final-code performance.
+
 
 A small real-clock campaign is practical on the shared PostgreSQL: **500 seeds
 passed in 5 minutes 22.945 seconds** on the final sources, with zero reproduced
@@ -81,7 +80,7 @@ The original memstore driver was first tested against `pgstore` through a
 temporary Go source overlay, retaining its real 20–25 ms leases and per-step
 snapshots. Seed 0 failed to finish after 1,000 steps in 3.772 seconds even with no
 injected faults. Repeated network round trips consumed the short leases. That
-probe is preserved in `.lane/delta-pg-unscaled-probe.log`.
+probe is preserved in [archived delta-pg-unscaled-probe.log](raw/historical/lab/delta-pg-unscaled-probe.log).
 
 An initial real-clock P3 assertion also exposed a lab assumption: it required
 `DueAt == TimerStarted.Time + FireAfter`. The normative plan permits separate
@@ -89,8 +88,8 @@ An initial real-clock P3 assertion also exposed a lab assumption: it required
 can differ under a real clock, so this was an oracle correction, not an engine
 defect. The clock-window checks above retain a bounded deadline check and reject
 missing deadlines, deadline changes, and early fires. Red/green evidence is in
-`.lane/delta-pg-timer-red.log`, `.lane/delta-pg-deadline-red.log`, and
-`.lane/delta-pg-green.log`.
+[archived delta-pg-timer-red.log](raw/historical/lab/delta-pg-timer-red.log), [archived delta-pg-deadline-red.log](raw/historical/lab/delta-pg-deadline-red.log), and
+[archived delta-pg-green.log](raw/historical/lab/delta-pg-green.log).
 
 The first ten seeds passed in 6.313 seconds, executing 975 actor steps, rejecting
 149 duplicate acknowledgements, and recovering five database errors and five
@@ -98,14 +97,14 @@ server crashes. The first 500-seed campaign passed in 9 minutes 12.647 seconds,
 executing 53,835 actor steps, rejecting 7,589 duplicate acknowledgements, and
 recovering 250 database errors and 250 server crashes. That run preceded the
 additional terminal-cleanup and nil-failure checks requested in review; it is
-preserved in `.lane/delta-pg-500.log`.
+preserved in [archived delta-pg-500.log](raw/historical/lab/delta-pg-500.log).
 
 The first final-source attempt ran concurrently with the eight-worker memstore
 campaign and other verification work. Seeds 0–376 passed every check; seed 377's
 baseline reached the driver's ten-minute context before finishing. The command
 failed in 600.208 seconds with `context deadline exceeded`, then cleaned up its
 temporary databases. This is a measured campaign time bound, not an engine or
-store defect. Its log is `.lane/delta-pg-500-final.log`.
+store defect. Its log is [archived delta-pg-500-final.log](raw/historical/lab/delta-pg-500-final.log).
 
 After the root memstore campaign and verification jobs finished, the unchanged
 final sources passed all 500 seeds (0–499):
@@ -119,8 +118,31 @@ ok   github.com/Aly700/capstan/internal/lab   323.388s
 
 That is 2,000 completed run executions across baseline and faulted variants,
 with every final cleanup check enabled. The log is
-`.lane/delta-pg-500-uncontended.log`; despite its filename, the host was still
+[archived delta-pg-500-uncontended.log](raw/historical/lab/delta-pg-500-uncontended.log); despite its filename, the host was still
 shared with other lanes. Only this lane's CPU-heavy jobs had ended. The databases
 were removed by normal test cleanup. No lease duration, scheduler behavior,
 source assertion, or property was changed between the bounded final-source
 attempt and this successful rerun.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The real-clock PostgreSQL campaign passed **500 seeds** in
+**5m34.384440667s**, with **53,835 actor steps**,
+**7,589 rejected duplicate acknowledgements**,
+**250 injected database errors** and
+**250 injected server crashes**.
+The two variants and two roots per seed give **2,000 completed run executions**.
+
+The [raw command output](raw/904cb6c/pg.log) includes every seed's counters.
+The verifier sums them and checks the emitted aggregate. The overlay only prints
+those counters; the real clock, 500 ms leases, fault injection, transaction
+assertions and cleanup are unchanged. Both campaign databases were created and
+dropped by the test. The shared PostgreSQL was left running.
+
+Reproduce: `python3 docs/evidence/raw/reproduce.py pg`. The narrower scope and
+real-clock limitations described above still apply.
+<!-- final-numbers:end -->

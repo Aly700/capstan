@@ -1,67 +1,72 @@
 # Evidence index
 
-The [independent audit](audit-2026-09-28.md) is the current verification ledger.
-Rows below describe the original evidence lane's measurements, which the audit checks
-separately. Historical load and large lab campaigns lack their referenced raw logs;
-those traceability claims are FAILED in the audit. Fresh commands and raw measurements
-are preserved under [audit-2026-09-28/](audit-2026-09-28/).
+Final production source: **`904cb6c41da4f57ac0399d1524989288e3ededb1`**, measured
+**2026-09-28**. Final-lane commits add evidence and documentation; the engine and SDK
+remain at that revision. [Raw data and reproduction](raw/README.md),
+[historical archive manifest](raw/historical/manifest.json),
+[numeric verifier](raw/verify-numbers.py).
 
-Measurements and demonstrations run on **2026-09-28** in `lane/evidence`, starting
-from integration commit `73804f2`. Every VERIFIED row below has been executed against
-the real binaries. Pending rows are explicit gaps, not claims established by these demos.
-The root README is owned by integration and was not edited.
+The [independent audit](audit-2026-09-28.md) is preserved. Its appended resolution
+records what the recovered data and final reruns establish. A passing finite test
+supports its stated scope; it does not establish every possible execution.
 
-| Spec §13 claim | Evidence file | Command to reproduce | Status |
+<!-- final-evidence:start -->
+| Claim | How it is shown | Evidence | Status |
 | --- | --- | --- | --- |
-| A run survives a crash | [crash.md](crash.md), [session](demo-crash.cast), [GIF](demo-crash.gif) | `scripts/demo-crash.sh` | **VERIFIED — 2026-09-28.** Real server SIGKILL/restart; result `[1,2,3,4]`; original 10 events remain an exact prefix. |
-| Effects apply once when the destination honors the idempotency key (D3) | [lab-2026-09-28.md](lab-2026-09-28.md), [concurrent campaign](lab-delta1-2026-09-28.md), [mutation score](lab-mutation.md), [PostgreSQL campaign](lab-pg.md), [defects.md](defects.md), [fault model](lab-l2.md) | `go run ./cmd/capstan-lab -seeds 200000 -parallel 8 -workers 3 -max-steps 1000 -faults all`; `go run ./cmd/capstan-lab mutate -catalogue 'internal/lab/mutants/*.patch' -seeds 2000` | **VERIFIED within the lab's fault model — 2026-09-28.** 200,000 + 148,554 seeds (concurrent runs, interleaved transactions, Gate faults) and 500 real-clock seeds on PostgreSQL, 0 failures; the lab catches 25 of 26 planted engine bugs (1 argued equivalent). |
-| A workflow can wait days | [idle-wait.md](idle-wait.md), [session](demo-idle-wait.cast); clock-jump evidence pending | `scripts/demo-idle-wait.sh` reproduces the verified idle portion | **PENDING — full multi-day approval claim.** Zero demo workers/leases and later signal resume **verified 2026-09-28**; agent/lab approval plus clock-jump proof remains. |
-| Code changes do not corrupt live runs | [blocked.md](blocked.md), [session](demo-blocked.cast) | `scripts/demo-blocked.sh` | **VERIFIED — 2026-09-28.** Incompatible V2 blocks; explicit resume with `patched()` preserves the old result; new runs take the new branch. |
-| Throughput, with its ceiling named | [load.md](load.md), [full numbers](load-results.json) | `scripts/run-load.sh 50 1000 4`; `scripts/run-load.sh 200 1000 4`; `scripts/run-load.sh 800 1600 4` | **VERIFIED — 2026-09-28.** Eleven measurements including repeats and worker controls; 11,700 runs, 58,500 activity completions, zero failed runs. |
-| Cost of a real agent run | [cost.md](cost.md), [session](demo-cost.cast) | `CAPSTAN_ANTHROPIC_ENV_FILE=<file> scripts/demo-cost.sh` | **VERIFIED — 2026-09-28.** One real claude-haiku-4-5 call: 14 in / 4 out tokens, $0.000034, one ledger row after a second worker replayed the run. |
+| Crash recovery | Kill and restart the server; unchanged history prefix | [Crash](crash.md) | VERIFIED — 2026-09-28, 904cb6c |
+| Key-honouring effects | 200,000 memory seeds; 500 PostgreSQL seeds; 25/26 mutants caught, 1 equivalent | [Lab](lab-delta1-2026-09-28.md) | VERIFIED within the fault model — 2026-09-28, 904cb6c |
+| Durable waits | Worker-free signal wait; human approval after an engine-clock jump | [Waits](idle-wait.md) | VERIFIED locally — 2026-09-28, 904cb6c |
+| Incompatible code blocks | Changed worker, explicit resume and patched old/new branches | [Replay](blocked.md) | VERIFIED — 2026-09-28, 904cb6c |
+| Observed throughput | 11,700 workflows; 58,500 activity completions; 0 errors | [Load](load.md) | VERIFIED on the measured host — 2026-09-28, 904cb6c |
+| Recorded model cost | Retained paid-call recording and ledger arithmetic | [Cost](cost.md) | VERIFIED historical arithmetic; no paid rerun — arithmetic checked 2026-09-28, 904cb6c |
+| Bounded model cap | SDK/server bounds, concurrent reservations, pricing and unknown usage | [Accounting and D32](audit-2026-09-28.md#post-audit-resolution-2026-09-28) | VERIFIED by final gate — 2026-09-28, 904cb6c |
+| Quickstart and viewer | Clean shell, example worker, completed run and authenticated viewer | [Transcript](raw/904cb6c/quickstart.log), [browser](raw/904cb6c/quickstart-ui.log) | VERIFIED — 2026-09-28, 904cb6c |
+<!-- final-evidence:end -->
 
-The [run viewer evidence](ui.md) includes inspected [list](ui-list.png),
-[completed](ui-completed.png), [blocked](ui-blocked.png), and [mobile](ui-mobile.png)
-screenshots. Reproduce with `scripts/check-ui.sh`; Playwright comes from npx and
-does not modify SDK dependencies. The UI is public static content; data is fetched
-from the authenticated ClientService over same-origin JSON Connect.
+The final [quickstart transcript](raw/904cb6c/quickstart.log) runs from a clean shell.
+Its [browser transcript](raw/904cb6c/quickstart-ui.log) shows the completed run in the
+viewer. The original full viewer checks and screenshots remain [historical](ui.md).
+The seven-day human test advances the engine Clock over PostgreSQL RPCs. It does
+not substitute for a live multi-day Gate deployment.
 
-All `.cast` recordings preserve wall-clock timing. The crash GIF is a VHS rendering
-of the same cast at playback speed 1. Scripts build the real server, create their own
-databases on the shared PostgreSQL, and clean up owned processes/databases. Each SDK
-worker is one Node process in its own process group. Logs remain under `.lane/`.
-No public deployment or push was performed.
+## Historical provenance
 
-The observed throughput range and limits are in [load.md](load.md). CPU, task counts,
-`pg_stat_activity`, `pg_locks`, and worker-count controls point to the server's
-transaction/polling path to PostgreSQL. They do not establish a row-lock-bound
-`SKIP LOCKED` ceiling. All repeats and the sample that observed another lane's
-activity are retained.
+All historical load directories now contain the individual latencies, system
+snapshots, metadata, driver results, SQL audits and sampling SQL used by the tables.
+The original paths remain in [load-results.json](load-results.json). JSONL is
+compressed with gzip. Historical campaign summaries, mutation traces, gate logs,
+queue controls and PostgreSQL attempts are archived with source and stored hashes.
+The [credential scan](raw/historical-scan.log) found no credential-shaped values in
+that selection.
 
-## Integrated implementation and remaining evidence gaps
+The old large memory campaigns never emitted per-seed records. Their stdout proves
+the reported seed totals and elapsed times; their original reports retain aggregate
+fault and step counters. Those historical counters cannot now be independently
+summed from individual observations. This limitation is retained in the audit
+resolution. The final memory campaign includes every seed and supersedes those
+aggregate claims for the current code.
 
-The lab and `human()` implementations are now integrated. The original idle recording
-still demonstrates a five-second signal wait; it does not become a human-approval or
-multi-day recording retroactively. The audit adds an authenticated PostgreSQL RPC test
-that advances the engine clock seven days with no worker and no task lease, then approves
-and completes the run. A live multi-day Gate deployment remains outside that proof.
+The cost recording is retained and its arithmetic checked. No paid model request,
+provider invoice check, AWS operation, push or deployment was part of this lane.
+The static viewer is public; its data comes from authenticated same-origin RPCs.
+Workflow payloads are opaque and can contain caller-supplied secrets (D33).
 
 ## Verification
 
 ```sh
-CAPSTAN_E2E=1 CAPSTAN_E2E_PORT=7399 make verify
-GOTOOLCHAIN=go1.26.4 go test ./internal/server/ui ./internal/server
-scripts/check-ui.sh
-node --test scripts/evidence-lib.test.mjs
+PATH="$HOME/.local/bin:$PATH" GOTOOLCHAIN=go1.26.4 CAPSTAN_E2E_PORT=7799 make verify
+python3 docs/evidence/raw/verify-numbers.py
 ```
 
-The merge gate passed, including generated-code drift checks, buf lint, gofmt,
-Go vet, all Go tests with the race detector and real PostgreSQL tests, SDK typecheck,
-and **295 SDK tests in 13 files**, including both real-server e2e cases. Those counts describe the evidence lane's original revision. The integrated Makefile
-sets `CAPSTAN_E2E=1` itself and includes the lab. Current gate output and audit ports
-are recorded in the independent audit.
+The [merge-gate output](raw/904cb6c/verify.log) records generation checks, buf lint,
+gofmt, Go vet, Go race tests, mandatory PostgreSQL tests, SDK typecheck and SDK tests.
+The [number-gate output](raw/904cb6c/verify-numbers.log) records recomputation from
+raw observations and comparison with all final numeric sections. The verifier also
+checks historical load tables, mutation seeds, recorded arithmetic, source inventories,
+archive integrity and historical test/timing logs. It does not relabel absent
+historical per-seed observations as verified.
 
-Three harness regression tests also passed. A real SIGTERM interruption during the
-crash demo exited 130 and left no owned process groups or evidence databases.
-Cleanup closes resource registration before waiting for processes to stop, so an
-interrupted script cannot restart a server or worker after cleanup begins.
+The shared PostgreSQL was never stopped, reset or restarted. Measurement commands
+clean up their owned processes and databases. The ordinary test suite retains its
+existing isolated test database prefixes and audit ports; the load and demo campaigns
+use only final-lane databases and ports. [Final cleanup](raw/904cb6c/cleanup.log).

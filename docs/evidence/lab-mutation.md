@@ -1,5 +1,9 @@
 # Fault-lab mutation score
 
+## Historical mutation campaign
+
+Every historical mutant and baseline log, plus the machine report, is archived in [raw/historical/lab/mutations/](raw/historical/lab/mutations/). The final-code section repeats the catalogue on the current source.
+
 Caught **25/26 valid mutants (96.15%)**; equivalent survivors: **1**.
 
 Excluding explicitly justified equivalent survivors: **25/25 (100.00%)**.
@@ -52,7 +56,7 @@ PATH=$HOME/.local/bin:$PATH GOTOOLCHAIN=go1.26.4 go run ./cmd/capstan-lab mutate
 ## Evidence
 
 Full per-mutant output, the baseline, patch SHA-256 values and machine-readable
-results are stored in `.lane/delta-mutation-final`. The patch catalogue describes the intended bug;
+results are stored in [archived delta-mutation-final](raw/historical/lab/mutations/). The patch catalogue describes the intended bug;
 the kill table records the observed check. A survived mutant without a proved
 equivalence remains a lab coverage gap. The score concerns this catalogue and
 these seeds; it is not a proof that production contains no defects.
@@ -76,7 +80,7 @@ Ten protocol probes add independent lifecycle assertions that successful workflo
 results alone cannot establish. Red/green mutation runs cover closed inbox cleanup,
 failed-workflow lease release, heartbeat renewal, retry deadlines, cancellation
 before start, one-time approval resolution, and FIFO inbox delivery. Full development
-evidence is retained under `.lane/delta-mutants/`; final kills use the ordinary
+evidence is retained under [archived delta-mutants](raw/historical/lab/development-mutants/); final kills use the ordinary
 `TestLab` entry point, with no mutant-specific branch in the harness.
 
 M003's equivalence depends on the single-mutant, engine-reachable-state premise.
@@ -89,3 +93,53 @@ by the protocol probe; passing that test alone is not the equivalence proof.
 The suggested "continue-as-new loses inbox" mutation is deliberately absent: the
 closing-command contract discards the predecessor's buffered events. M012 instead
 loses the requested successor input, which is an observable contract violation.
+
+<!-- final-numbers:start -->
+## Final code (904cb6c)
+
+Measured on 2026-09-28. These numbers are recomputed by
+[verify-numbers.py](raw/verify-numbers.py) from the committed observations.
+
+The ordinary mutation command ran a 2,000-seed baseline and all
+26 catalogue entries: **25 caught, 1 equivalent,
+0 invalid and 0 unexplained survivors**. Score: 96.15%;
+excluding the justified equivalent survivor: 100.00%.
+The baseline and M003 each passed all 2,000 seeds. Each caught
+mutant stopped at the first failing seed below.
+
+| ID | Result | First seed | Observed check |
+| --- | --- | --- | --- |
+| M001 | caught | 0 | baseline pipeline: P3: run "lab": timer row 2 is duplicated or retained after settling |
+| M002 | caught | 2 | protocol cancel-before-start: cancel-before-start emitted 0 cancellation events |
+| M003 | equivalent | — | The remaining run.LastEventID != tok.StartedEventId guard rejects every differing started ID on engine-reachable states: PollWorkflowTask writes TaskStarted last and stores that same ID in task.StartedEventID; while InFlight, external events only enter the inbox; complete, fail, and timeout clear or replace the task. This mutant removes a redundant guard only, assuming state was produced through the engine. |
+| M004 | caught | 6 | protocol retry-attempt: activity retry attempt = 1 after 1 |
+| M005 | caught | 8 | protocol closed-inbox: closed run retains 1 buffered events |
+| M006 | caught | 0 | scenario pipeline: signal peer/inflight-40: got 0 deliveries, want one |
+| M007 | caught | 3 | protocol failed-workflow-release: failed workflow task still owns InFlight |
+| M008 | caught | 0 | baseline pipeline: store: conflict |
+| M009 | caught | 0 | protocol heartbeat-renewal: renewed heartbeat task expired early: processed 1 |
+| M010 | caught | 1 | protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2 |
+| M011 | caught | 2 | protocol cancel-before-start: cancelled unstarted activity was delivered |
+| M012 | caught | 7 | baseline continuation: did not finish in 1000 steps |
+| M013 | caught | 4 | protocol approval-once: duplicate approval resolution must be rejected: <nil> |
+| M014 | caught | 0 | baseline pipeline: P3: run "lab": 1 timer(s) lost: no row, terminal event, or sufficient inbox entries |
+| M015 | caught | 0 | baseline pipeline: worker replay failed: invalid history after TaskStarted event 3 |
+| M016 | caught | 0 | scenario pipeline: late workflow completion accepted: <nil> |
+| M017 | caught | 2 | scenario signal: late activity completion accepted: <nil> |
+| M018 | caught | 7 | scenario continuation: did not finish in 1000 steps |
+| M019 | caught | 5 | protocol signal-order: accepted signal order[0] = "third" |
+| M020 | caught | 0 | scenario pipeline: P3: run "lab": timer 2 fired before its deadline 2000-01-01T00:00:00.081Z |
+| M021 | caught | 0 | baseline pipeline: P3: run "lab": timer row 2 references an unknown start |
+| M022 | caught | 0 | baseline pipeline: root peer: scenario pipeline-peer: unexpected result content_type:"application/json" data:"[1,\"done\"]" or failure <nil> |
+| M023 | caught | 6 | baseline gate-late: root lab: scenario gate-late: unexpected result content_type:"application/json"  data:"{\"choice\":\"\",\"note\":\"\",\"outcome\":\"approved\",\"resolver\":\"lab-gate\"}" or failure <nil> |
+| M024 | caught | 5 | baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:"application/json" data:"{\"choice\":\"\",\"note\":\"\",\"outcome\":\"approved\",\"resolver\":\"\"}" or failure <nil> |
+| M025 | caught | 5 | baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:"application/json"  data:"{\"choice\":\"\",\"note\":\"\",\"outcome\":\"denied\",\"resolver\":\"gate-error\"}" or failure <nil> |
+| M026 | caught | 0 | baseline pipeline: did not finish in 1000 steps |
+
+The verifier reads every [raw mutant log](raw/904cb6c/mutations/), derives each first
+failing seed and outcome, and checks the [machine report](raw/904cb6c/mutations/results.json).
+Patch hashes are checked against the committed catalogue. The M003 invariant
+argument above still applies; surviving an execution alone is not that argument.
+
+Reproduce: `python3 docs/evidence/raw/reproduce.py mutate`.
+<!-- final-numbers:end -->
