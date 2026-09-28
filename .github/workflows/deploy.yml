@@ -45,7 +45,6 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.CAPSTAN_DEPLOY_ROLE_ARN }}
-          allowed-account-ids: ${{ vars.CAPSTAN_AWS_ACCOUNT_ID }}
           aws-region: us-east-1
           role-session-name: capstan-${{ github.run_id }}
           role-duration-seconds: 3600
