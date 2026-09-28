@@ -59,3 +59,18 @@ are serialised with an advisory lock so concurrent workers cannot overspend the 
 
 Connect over HTTP/2 cleartext using the Go standard library's unencrypted HTTP/2 support
 (no golang.org/x/net). The server listens on 7233.
+
+## D10 — 2026-09-28 — Long polls default to 20 seconds; HTTPS through API Gateway
+
+The deployed server sits behind an API Gateway HTTP API with a VPC link to Fargate through
+Cloud Map: HTTPS on the default execute-api domain, no load balancer, no NAT. API Gateway's
+integration timeout is 30 s, so long polls default to 20 s (`CAPSTAN_POLL_TIMEOUT`). Every
+RPC is unary, so the Connect protocol works over HTTP/1.1 through the gateway; the SDK uses
+HTTP/2 cleartext for `http://` addresses and HTTP/1.1 for `https://`. Proto comments that say
+"up to 30 seconds" describe the ceiling, not the default.
+
+## D11 — 2026-09-28 — Compile-time stubs for every cross-lane symbol
+
+`engine.New`, `memstore.New`, `pgstore.Open`, `pgstore.Migrate` and `cmd/capstan-server`
+exist as stubs from wave 0 so each lane compiles against real symbols. The owning lane
+replaces the stub; no other lane edits it.
