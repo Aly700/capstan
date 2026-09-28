@@ -10,7 +10,24 @@ const defaults: Record<string, { input: number; output: number }> = {
   "claude-fable-5-1": { input: 10, output: 50 },
 };
 
-export function estimateCost(request: MessageCreateParamsNonStreaming, explicit?: number): number {
+type TextModelRequest = Pick<MessageCreateParamsNonStreaming, "model" | "max_tokens" | "output_config"> & {
+  system?: string;
+  messages: { content: string }[];
+};
+
+export function inputTokensUpperBound(request: TextModelRequest): number {
+  // The text-only workflow API sends no images, tools, or cache controls. Count
+  // one token per UTF-8 content byte, including the prepared schema's JSON.
+  // The installed provider types describe hidden request formatting but give no
+  // fixed token count; allow a generous 64 base tokens plus 64 per message for it.
+  let bound = 64 + Buffer.byteLength(request.system ?? "", "utf8");
+  for (const message of request.messages) bound += 64 + Buffer.byteLength(message.content, "utf8");
+  const schema = request.output_config?.format?.schema;
+  if (schema !== undefined) bound += Buffer.byteLength(JSON.stringify(schema), "utf8");
+  return bound;
+}
+
+export function estimateCost(request: TextModelRequest, explicit?: number): number {
   if (explicit !== undefined) {
     if (!Number.isFinite(explicit) || explicit < 0) throw new ApplicationFailure("Model estimate must be finite and non-negative", { type: "ModelRequestInvalid", nonRetryable: true });
     return Math.ceil(explicit * 1e6) / 1e6;
@@ -29,16 +46,9 @@ export function estimateCost(request: MessageCreateParamsNonStreaming, explicit?
   const family = Object.keys(prices).sort((a, b) => b.length - a.length).find((name) => request.model === name || request.model.startsWith(`${name}-`));
   if (!family) throw new ApplicationFailure("An explicit estimate is required for this model", { type: "ModelEstimateRequired", nonRetryable: true });
   const price = prices[family]!;
-  const input = {
-    messages: request.messages,
-    ...(request.system === undefined ? {} : { system: request.system }),
-    ...(request.output_config === undefined ? {} : { output_config: request.output_config }),
-  };
-  // For this text-only API, count one token per serialized UTF-8 byte (including
-  // schema), plus 1,024 framing tokens and 64 per message. Reserve ALL max_tokens
-  // at the output rate. No cache discount; this request never enables caching.
-  const inputBound = Buffer.byteLength(JSON.stringify(input), "utf8") + 1024 + 64 * request.messages.length;
-  const microdollars = inputBound * price.input + request.max_tokens * price.output;
+  // Reserve ALL max_tokens at the output rate. No cache discount; this request
+  // never enables caching. Use the same input bound that accompanies Reserve.
+  const microdollars = inputTokensUpperBound(request) * price.input + request.max_tokens * price.output;
   if (!Number.isFinite(microdollars)) throw new ApplicationFailure("Model estimate is out of range", { type: "ModelRequestInvalid", nonRetryable: true });
   return Math.ceil(microdollars) / 1e6;
 }

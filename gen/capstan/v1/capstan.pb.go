@@ -4790,12 +4790,18 @@ func (x *HeartbeatActivityTaskResponse) GetCancelRequested() bool {
 }
 
 type ReserveAICallRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TaskToken     []byte                 `protobuf:"bytes,1,opt,name=task_token,json=taskToken,proto3" json:"task_token,omitempty"` // the activity task making the model call
-	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
-	EstimateUsd   float64                `protobuf:"fixed64,3,opt,name=estimate_usd,json=estimateUsd,proto3" json:"estimate_usd,omitempty"` // upper bound for this call
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	TaskToken   []byte                 `protobuf:"bytes,1,opt,name=task_token,json=taskToken,proto3" json:"task_token,omitempty"` // the activity task making the model call
+	Model       string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
+	EstimateUsd float64                `protobuf:"fixed64,3,opt,name=estimate_usd,json=estimateUsd,proto3" json:"estimate_usd,omitempty"` // worker's estimate; the server may reserve a larger bound
+	// Provider-enforced output limit. Both token bounds must be positive for a
+	// server-priced bound; zero in either field retains legacy estimate-only behavior.
+	MaxOutputTokens int64 `protobuf:"varint,4,opt,name=max_output_tokens,json=maxOutputTokens,proto3" json:"max_output_tokens,omitempty"`
+	// Conservative input bound including system prompt, messages, framing, and schema.
+	// Negative token bounds are invalid. Unknown models still use the worker estimate.
+	InputTokensUpperBound int64 `protobuf:"varint,5,opt,name=input_tokens_upper_bound,json=inputTokensUpperBound,proto3" json:"input_tokens_upper_bound,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *ReserveAICallRequest) Reset() {
@@ -4845,6 +4851,20 @@ func (x *ReserveAICallRequest) GetModel() string {
 func (x *ReserveAICallRequest) GetEstimateUsd() float64 {
 	if x != nil {
 		return x.EstimateUsd
+	}
+	return 0
+}
+
+func (x *ReserveAICallRequest) GetMaxOutputTokens() int64 {
+	if x != nil {
+		return x.MaxOutputTokens
+	}
+	return 0
+}
+
+func (x *ReserveAICallRequest) GetInputTokensUpperBound() int64 {
+	if x != nil {
+		return x.InputTokensUpperBound
 	}
 	return 0
 }
@@ -6574,12 +6594,14 @@ const file_capstan_v1_capstan_proto_rawDesc = "" +
 	"task_token\x18\x01 \x01(\fR\ttaskToken\x12-\n" +
 	"\adetails\x18\x02 \x01(\v2\x13.capstan.v1.PayloadR\adetails\"J\n" +
 	"\x1dHeartbeatActivityTaskResponse\x12)\n" +
-	"\x10cancel_requested\x18\x01 \x01(\bR\x0fcancelRequested\"n\n" +
+	"\x10cancel_requested\x18\x01 \x01(\bR\x0fcancelRequested\"\xd3\x01\n" +
 	"\x14ReserveAICallRequest\x12\x1d\n" +
 	"\n" +
 	"task_token\x18\x01 \x01(\fR\ttaskToken\x12\x14\n" +
 	"\x05model\x18\x02 \x01(\tR\x05model\x12!\n" +
-	"\festimate_usd\x18\x03 \x01(\x01R\vestimateUsd\"\x7f\n" +
+	"\festimate_usd\x18\x03 \x01(\x01R\vestimateUsd\x12*\n" +
+	"\x11max_output_tokens\x18\x04 \x01(\x03R\x0fmaxOutputTokens\x127\n" +
+	"\x18input_tokens_upper_bound\x18\x05 \x01(\x03R\x15inputTokensUpperBound\"\x7f\n" +
 	"\x15ReserveAICallResponse\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\x12&\n" +
 	"\x0fspent_today_usd\x18\x02 \x01(\x01R\rspentTodayUsd\x12\x17\n" +
