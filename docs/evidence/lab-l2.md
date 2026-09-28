@@ -35,7 +35,7 @@ from their first line for every task; no saved coroutine stack survives a replay
 Fault kinds are selectable and accept integer weights through `lab.Options`. A seed
 injects at most six faults, at most one of each kind. Store injection selects the
 first or second transaction of an engine call and a boundary after 1–12 successful
-operations, falling back to the selected transaction's commit boundary. All 34 Tx
+operations, falling back to the selected transaction's commit boundary. All 35 Tx
 methods are intercepted. This includes the transaction after the Gate call. An idle
 Gate scenario jumps to its next persisted poll deadline after a crash leaves a lease.
 
