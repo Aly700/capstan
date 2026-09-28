@@ -26,10 +26,13 @@ func TestAuditPostgresFourWayTerminalRace(t *testing.T) {
 	completed, terminated, fired, discarded := 0, 0, 0, 0
 	for iteration := range 20 {
 		t.Run(fmt.Sprint(iteration), func(t *testing.T) {
-			ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+			// Slow CI runners need longer to show all three RPCs waiting on the lock.
+			ctx, cancel := context.WithTimeout(t.Context(), 30*time.Second)
 			defer cancel()
 			runID := fmt.Sprintf("four-way-%d", iteration)
-			const queue = "audit-four-way"
+			// One queue per iteration: a failed iteration must not leave tasks or timers
+			// that a later iteration then polls and misattributes.
+			queue := fmt.Sprintf("audit-four-way-%d", iteration)
 			if _, err := s.client.StartRun(ctx, connect.NewRequest(&v1.StartRunRequest{RunId: runID, WorkflowType: "four-way", TaskQueue: queue})); err != nil {
 				t.Fatal(err)
 			}
