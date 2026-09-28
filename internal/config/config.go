@@ -20,6 +20,7 @@ import (
 
 type Config struct {
 	Addr, DatabaseURL   string
+	DBMaxConns          int32
 	APIKeyHashes        map[string][32]byte
 	DailyCapUSD         float64
 	Migrate             bool
@@ -33,7 +34,7 @@ type Config struct {
 }
 
 func Load(getenv func(string) string) (Config, error) {
-	c := Config{Addr: ":7233", DailyCapUSD: 2, Migrate: true, LogLevel: slog.LevelInfo, Address: "http://127.0.0.1:7233", PollTimeout: 20 * time.Second, MaxMessageBytes: 4 << 20, ModelPrices: maps.Clone(engine.DefaultModelPrices)}
+	c := Config{DBMaxConns: 40, Addr: ":7233", DailyCapUSD: 2, Migrate: true, LogLevel: slog.LevelInfo, Address: "http://127.0.0.1:7233", PollTimeout: 20 * time.Second, MaxMessageBytes: 4 << 20, ModelPrices: maps.Clone(engine.DefaultModelPrices)}
 	var problems []string
 	invalid := func(name, reason string) { problems = append(problems, name+": "+reason) }
 	c.DatabaseURL = getenv("CAPSTAN_DATABASE_URL")
@@ -57,6 +58,14 @@ func Load(getenv func(string) string) (Config, error) {
 	p, parseErr := strconv.Atoi(port)
 	if err != nil || parseErr != nil || p < 0 || p > 65535 {
 		invalid("CAPSTAN_ADDR", "expected host:port with port between 0 and 65535")
+	}
+	if v := getenv("CAPSTAN_DB_MAX_CONNS"); v != "" {
+		n, err := strconv.ParseInt(v, 10, 32)
+		if err != nil || n <= 0 {
+			invalid("CAPSTAN_DB_MAX_CONNS", "must be a positive 32-bit integer")
+		} else {
+			c.DBMaxConns = int32(n)
+		}
 	}
 	if v := getenv("CAPSTAN_POLL_TIMEOUT"); v != "" {
 		c.PollTimeout, err = time.ParseDuration(v)
