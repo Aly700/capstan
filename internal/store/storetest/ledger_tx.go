@@ -102,6 +102,16 @@ func ledgerUpdate(t *testing.T, s store.Store) {
 		equal(t, got, c)
 		return nil
 	})
+	c = &store.AICall{ID: c.ID, RunID: "r", Status: store.AICallReserved, At: epoch}
+	mustTx(t, s, func(tx store.Tx) error { return tx.UpdateAICall(c) })
+	mustTx(t, s, func(tx store.Tx) error {
+		got, err := tx.GetAICall(c.ID, false)
+		if err != nil {
+			return err
+		}
+		equal(t, got, c)
+		return nil
+	})
 	isError(t, s.InTx(t.Context(), func(tx store.Tx) error { _, err := tx.GetAICall(c.ID+1000, true); return err }), store.ErrNotFound)
 }
 

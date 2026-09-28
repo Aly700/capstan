@@ -66,6 +66,17 @@ func runsInsertGetUpdate(t *testing.T, s store.Store) {
 		equalProto(t, got.Result, payload())
 		return nil
 	})
+	// D23: replacement also clears old values, including optional fields.
+	r = sampleRun("r")
+	mustTx(t, s, func(tx store.Tx) error { return tx.UpdateRun(r) })
+	mustTx(t, s, func(tx store.Tx) error {
+		got, err := tx.GetRun("r", false)
+		if err != nil {
+			return err
+		}
+		equalRun(t, got, r)
+		return nil
+	})
 }
 
 func runsDuplicate(t *testing.T, s store.Store) {
@@ -110,6 +121,8 @@ func runsList(t *testing.T, s store.Store) {
 		ids    []string
 	}{
 		{store.RunFilter{Limit: 10}, []string{"a", "b", "c", "d", "e"}},
+		{store.RunFilter{Limit: 0}, []string{"a", "b", "c", "d", "e"}},
+		{store.RunFilter{AfterRunID: "b", Limit: -1}, []string{"c", "d", "e"}},
 		{store.RunFilter{Status: capstanv1.RunStatus_RUN_STATUS_RUNNING, WorkflowType: "wf", Limit: 2}, []string{"a", "d"}},
 		{store.RunFilter{Status: capstanv1.RunStatus_RUN_STATUS_RUNNING, WorkflowType: "wf", AfterRunID: "d", Limit: 2}, []string{"e"}},
 		{store.RunFilter{WorkflowType: "other", Limit: 10}, []string{"b"}},
@@ -155,7 +168,7 @@ func runsDue(t *testing.T, s store.Store) {
 		}
 		return nil
 	})
-	for _, limit := range []int{2, 10} {
+	for _, limit := range []int{-1, 0, 2, 10} {
 		mustTx(t, s, func(tx store.Tx) error {
 			rs, err := tx.RunsPastDeadline(epoch, limit)
 			if err != nil {
@@ -166,9 +179,7 @@ func runsDue(t *testing.T, s store.Store) {
 				ids = append(ids, r.RunID)
 			}
 			want := []string{"early", "late", "boundary"}
-			if limit == 2 {
-				want = want[:2]
-			}
+			want = want[:min(max(limit, 0), len(want))]
 			equal(t, ids, want)
 			return nil
 		})
