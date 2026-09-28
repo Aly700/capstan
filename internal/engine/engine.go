@@ -64,22 +64,6 @@ func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *caps
 	return nil, errNotImplemented
 }
 
-func (e *Engine) PollActivityTask(ctx context.Context, req *capstanv1.PollActivityTaskRequest) (resp *capstanv1.PollActivityTaskResponse, found bool, err error) {
-	return nil, false, errNotImplemented
-}
-
-func (e *Engine) CompleteActivityTask(ctx context.Context, req *capstanv1.CompleteActivityTaskRequest) (*capstanv1.CompleteActivityTaskResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) FailActivityTask(ctx context.Context, req *capstanv1.FailActivityTaskRequest) (*capstanv1.FailActivityTaskResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) HeartbeatActivityTask(ctx context.Context, req *capstanv1.HeartbeatActivityTaskRequest) (*capstanv1.HeartbeatActivityTaskResponse, error) {
-	return nil, errNotImplemented
-}
-
 func (e *Engine) ReserveAICall(ctx context.Context, req *capstanv1.ReserveAICallRequest) (*capstanv1.ReserveAICallResponse, error) {
 	return nil, errNotImplemented
 }
