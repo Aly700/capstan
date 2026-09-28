@@ -9,6 +9,14 @@ set -euo pipefail
 [[ "$COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]]
 [[ "$AWS_REGION" == us-east-1 ]]
 
+# The pinned credentials action does not support allowed-account-ids. Check the
+# assumed identity before any ECR, Docker, or CloudFormation operation.
+deployment_account=$(aws sts get-caller-identity --query Account --output text)
+if [[ "$deployment_account" != "$AWS_ACCOUNT_ID" ]]; then
+  echo "Refusing deployment: assumed AWS account does not match AWS_ACCOUNT_ID" >&2
+  exit 1
+fi
+
 deployment_tmp=$(mktemp -d)
 trap 'rm -rf "$deployment_tmp"' EXIT
 registry="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
