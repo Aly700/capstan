@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"math"
+	"strings"
 	"time"
 
 	v1 "github.com/Aly700/capstan/gen/capstan/v1"
@@ -15,7 +16,8 @@ func (e *Engine) ReserveAICall(ctx context.Context, req *v1.ReserveAICallRequest
 		return nil, Invalid("AI call reservation is required")
 	}
 	var response *v1.ReserveAICallResponse
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response = nil
 		task, run, err := e.activityToken(tx, req.TaskToken)
 		if err != nil {
 			return err
@@ -57,7 +59,8 @@ func (e *Engine) FinishAICall(ctx context.Context, req *v1.FinishAICallRequest) 
 		return nil, Invalid("AI call result is required")
 	}
 	var response *v1.FinishAICallResponse
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response = nil
 		call, err := tx.GetAICall(req.ReservationId, true)
 		if errors.Is(err, store.ErrNotFound) {
 			return ErrNotFound
@@ -73,7 +76,7 @@ func (e *Engine) FinishAICall(ctx context.Context, req *v1.FinishAICallRequest) 
 			return Invalid("token counts must not be negative")
 		}
 		cost := call.EstimateUSD
-		if price, ok := e.cfg.ModelPrices[call.Model]; ok {
+		if price, ok := e.modelPrice(call.Model); ok {
 			cost = (float64(req.InputTokens)*price.Input + float64(req.OutputTokens)*price.Output + float64(req.CacheReadTokens)*price.CacheRead + float64(req.CacheWriteTokens)*price.CacheWrite) / 1_000_000
 		}
 		if !req.Ok && req.InputTokens == 0 && req.OutputTokens == 0 && req.CacheReadTokens == 0 && req.CacheWriteTokens == 0 {
@@ -100,4 +103,19 @@ func (e *Engine) FinishAICall(ctx context.Context, req *v1.FinishAICallRequest) 
 		return nil, err
 	}
 	return response, nil
+}
+
+// modelPrice checks the exact id, then successively shorter family prefixes at
+// hyphen boundaries. The first match is the longest one, including a zero price.
+func (e *Engine) modelPrice(model string) (ModelPrice, bool) {
+	for {
+		if price, ok := e.cfg.ModelPrices[model]; ok {
+			return price, true
+		}
+		boundary := strings.LastIndexByte(model, '-')
+		if boundary < 0 {
+			return ModelPrice{}, false
+		}
+		model = model[:boundary]
+	}
 }

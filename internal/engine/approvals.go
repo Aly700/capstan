@@ -16,7 +16,7 @@ func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *v1.R
 	if req == nil {
 		return nil, Invalid("approval resolution is required")
 	}
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		r, err := tx.GetRun(req.RunId, true)
 		if errors.Is(err, store.ErrNotFound) {
 			return ErrNotFound
@@ -109,7 +109,8 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 	for processed < limit {
 		var leased *store.Approval
 		found := false
-		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+		err := e.inTx(ctx, func(tx store.Tx) error {
+			leased, found = nil, false
 			now := e.now()
 			due, err := tx.DueApprovals(now, 1)
 			if err != nil || len(due) == 0 {
@@ -156,7 +157,7 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
 		}
 		if leased != nil {
 			decision, gateErr := e.deps.Gate.ApprovalStatus(ctx, leased.ApprovalID)
-			err = e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+			err = e.inTx(ctx, func(tx store.Tx) error {
 				a, err := tx.GetApproval(leased.RunID, leased.ApprovalID, true)
 				if errors.Is(err, store.ErrNotFound) {
 					return nil

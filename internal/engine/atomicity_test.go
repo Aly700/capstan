@@ -123,7 +123,10 @@ func TestTimerDeleteAndDeliveryRollBackTogether(t *testing.T) {
 
 func TestTaskExpiryRollbackRestoresLeaseAndInbox(t *testing.T) {
 	e, c, s := newTestEngine(t)
+	ch, cancel := s.Subscribe(store.TaskWorkflow, "q")
+	defer cancel()
 	mustStart(t, e, "r")
+	awaitNotification(t, ch)
 	p := mustPoll(t, e)
 	if _, err := e.SignalRun(context.Background(), "", &v1.SignalRunRequest{RunId: "r", Name: "s"}); err != nil {
 		t.Fatal(err)
@@ -132,8 +135,6 @@ func TestTaskExpiryRollbackRestoresLeaseAndInbox(t *testing.T) {
 	c.Advance(10 * time.Second)
 	fault := errors.New("reschedule failed")
 	e.deps.Store = &observedStore{Store: s, failAppend: 3, failure: fault}
-	ch, cancel := s.Subscribe(store.TaskWorkflow, "q")
-	defer cancel()
 	if n, err := e.ProcessDueTasks(context.Background(), 1); n != 0 || !errors.Is(err, fault) {
 		t.Fatalf("expiry %d %v", n, err)
 	}

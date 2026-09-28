@@ -16,7 +16,8 @@ func (e *Engine) PollActivityTask(ctx context.Context, req *v1.PollActivityTaskR
 	}
 	response := &v1.PollActivityTaskResponse{}
 	found := false
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response, found = &v1.PollActivityTaskResponse{}, false
 		now := e.now()
 		task, err := tx.ClaimTask(store.TaskActivity, req.TaskQueue, now, e.cfg.DefaultTaskTimeout, req.Identity)
 		if err != nil || task == nil {
@@ -103,7 +104,7 @@ func (e *Engine) CompleteActivityTask(ctx context.Context, req *v1.CompleteActiv
 	if req == nil {
 		return nil, Invalid("request is required")
 	}
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		task, run, err := e.activityToken(tx, req.TaskToken)
 		if err != nil {
 			return err
@@ -126,7 +127,7 @@ func (e *Engine) FailActivityTask(ctx context.Context, req *v1.FailActivityTaskR
 	if req == nil || req.Failure == nil {
 		return nil, Invalid("failure is required")
 	}
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		task, run, err := e.activityToken(tx, req.TaskToken)
 		if err != nil {
 			return err
@@ -158,7 +159,8 @@ func (e *Engine) HeartbeatActivityTask(ctx context.Context, req *v1.HeartbeatAct
 		return nil, Invalid("request is required")
 	}
 	response := &v1.HeartbeatActivityTaskResponse{}
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		response = &v1.HeartbeatActivityTaskResponse{}
 		task, _, err := e.activityToken(tx, req.TaskToken)
 		if err != nil {
 			return err

@@ -82,6 +82,9 @@ const (
 	ClientServiceSignalRunProcedure = "/capstan.v1.ClientService/SignalRun"
 	// ClientServiceCancelRunProcedure is the fully-qualified name of the ClientService's CancelRun RPC.
 	ClientServiceCancelRunProcedure = "/capstan.v1.ClientService/CancelRun"
+	// ClientServiceTerminateRunProcedure is the fully-qualified name of the ClientService's
+	// TerminateRun RPC.
+	ClientServiceTerminateRunProcedure = "/capstan.v1.ClientService/TerminateRun"
 	// ClientServiceResumeRunProcedure is the fully-qualified name of the ClientService's ResumeRun RPC.
 	ClientServiceResumeRunProcedure = "/capstan.v1.ClientService/ResumeRun"
 	// ClientServiceDescribeRunProcedure is the fully-qualified name of the ClientService's DescribeRun
@@ -392,6 +395,8 @@ type ClientServiceClient interface {
 	StartRun(context.Context, *connect.Request[v1.StartRunRequest]) (*connect.Response[v1.StartRunResponse], error)
 	SignalRun(context.Context, *connect.Request[v1.SignalRunRequest]) (*connect.Response[v1.SignalRunResponse], error)
 	CancelRun(context.Context, *connect.Request[v1.CancelRunRequest]) (*connect.Response[v1.CancelRunResponse], error)
+	// Flushes the inbox and fails a RUNNING or BLOCKED run immediately (D18).
+	TerminateRun(context.Context, *connect.Request[v1.TerminateRunRequest]) (*connect.Response[v1.TerminateRunResponse], error)
 	// Moves a BLOCKED run back to RUNNING and schedules a workflow task.
 	ResumeRun(context.Context, *connect.Request[v1.ResumeRunRequest]) (*connect.Response[v1.ResumeRunResponse], error)
 	DescribeRun(context.Context, *connect.Request[v1.DescribeRunRequest]) (*connect.Response[v1.DescribeRunResponse], error)
@@ -429,6 +434,12 @@ func NewClientServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+ClientServiceCancelRunProcedure,
 			connect.WithSchema(clientServiceMethods.ByName("CancelRun")),
+			connect.WithClientOptions(opts...),
+		),
+		terminateRun: connect.NewClient[v1.TerminateRunRequest, v1.TerminateRunResponse](
+			httpClient,
+			baseURL+ClientServiceTerminateRunProcedure,
+			connect.WithSchema(clientServiceMethods.ByName("TerminateRun")),
 			connect.WithClientOptions(opts...),
 		),
 		resumeRun: connect.NewClient[v1.ResumeRunRequest, v1.ResumeRunResponse](
@@ -475,6 +486,7 @@ type clientServiceClient struct {
 	startRun        *connect.Client[v1.StartRunRequest, v1.StartRunResponse]
 	signalRun       *connect.Client[v1.SignalRunRequest, v1.SignalRunResponse]
 	cancelRun       *connect.Client[v1.CancelRunRequest, v1.CancelRunResponse]
+	terminateRun    *connect.Client[v1.TerminateRunRequest, v1.TerminateRunResponse]
 	resumeRun       *connect.Client[v1.ResumeRunRequest, v1.ResumeRunResponse]
 	describeRun     *connect.Client[v1.DescribeRunRequest, v1.DescribeRunResponse]
 	awaitRun        *connect.Client[v1.AwaitRunRequest, v1.AwaitRunResponse]
@@ -496,6 +508,11 @@ func (c *clientServiceClient) SignalRun(ctx context.Context, req *connect.Reques
 // CancelRun calls capstan.v1.ClientService.CancelRun.
 func (c *clientServiceClient) CancelRun(ctx context.Context, req *connect.Request[v1.CancelRunRequest]) (*connect.Response[v1.CancelRunResponse], error) {
 	return c.cancelRun.CallUnary(ctx, req)
+}
+
+// TerminateRun calls capstan.v1.ClientService.TerminateRun.
+func (c *clientServiceClient) TerminateRun(ctx context.Context, req *connect.Request[v1.TerminateRunRequest]) (*connect.Response[v1.TerminateRunResponse], error) {
+	return c.terminateRun.CallUnary(ctx, req)
 }
 
 // ResumeRun calls capstan.v1.ClientService.ResumeRun.
@@ -535,6 +552,8 @@ type ClientServiceHandler interface {
 	StartRun(context.Context, *connect.Request[v1.StartRunRequest]) (*connect.Response[v1.StartRunResponse], error)
 	SignalRun(context.Context, *connect.Request[v1.SignalRunRequest]) (*connect.Response[v1.SignalRunResponse], error)
 	CancelRun(context.Context, *connect.Request[v1.CancelRunRequest]) (*connect.Response[v1.CancelRunResponse], error)
+	// Flushes the inbox and fails a RUNNING or BLOCKED run immediately (D18).
+	TerminateRun(context.Context, *connect.Request[v1.TerminateRunRequest]) (*connect.Response[v1.TerminateRunResponse], error)
 	// Moves a BLOCKED run back to RUNNING and schedules a workflow task.
 	ResumeRun(context.Context, *connect.Request[v1.ResumeRunRequest]) (*connect.Response[v1.ResumeRunResponse], error)
 	DescribeRun(context.Context, *connect.Request[v1.DescribeRunRequest]) (*connect.Response[v1.DescribeRunResponse], error)
@@ -568,6 +587,12 @@ func NewClientServiceHandler(svc ClientServiceHandler, opts ...connect.HandlerOp
 		ClientServiceCancelRunProcedure,
 		svc.CancelRun,
 		connect.WithSchema(clientServiceMethods.ByName("CancelRun")),
+		connect.WithHandlerOptions(opts...),
+	)
+	clientServiceTerminateRunHandler := connect.NewUnaryHandler(
+		ClientServiceTerminateRunProcedure,
+		svc.TerminateRun,
+		connect.WithSchema(clientServiceMethods.ByName("TerminateRun")),
 		connect.WithHandlerOptions(opts...),
 	)
 	clientServiceResumeRunHandler := connect.NewUnaryHandler(
@@ -614,6 +639,8 @@ func NewClientServiceHandler(svc ClientServiceHandler, opts ...connect.HandlerOp
 			clientServiceSignalRunHandler.ServeHTTP(w, r)
 		case ClientServiceCancelRunProcedure:
 			clientServiceCancelRunHandler.ServeHTTP(w, r)
+		case ClientServiceTerminateRunProcedure:
+			clientServiceTerminateRunHandler.ServeHTTP(w, r)
 		case ClientServiceResumeRunProcedure:
 			clientServiceResumeRunHandler.ServeHTTP(w, r)
 		case ClientServiceDescribeRunProcedure:
@@ -645,6 +672,10 @@ func (UnimplementedClientServiceHandler) SignalRun(context.Context, *connect.Req
 
 func (UnimplementedClientServiceHandler) CancelRun(context.Context, *connect.Request[v1.CancelRunRequest]) (*connect.Response[v1.CancelRunResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("capstan.v1.ClientService.CancelRun is not implemented"))
+}
+
+func (UnimplementedClientServiceHandler) TerminateRun(context.Context, *connect.Request[v1.TerminateRunRequest]) (*connect.Response[v1.TerminateRunResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("capstan.v1.ClientService.TerminateRun is not implemented"))
 }
 
 func (UnimplementedClientServiceHandler) ResumeRun(context.Context, *connect.Request[v1.ResumeRunRequest]) (*connect.Response[v1.ResumeRunResponse], error) {

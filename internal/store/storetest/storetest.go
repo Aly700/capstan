@@ -60,6 +60,8 @@ func Run(t *testing.T, open func(t *testing.T) store.Store) {
 		{"Concurrency/ClaimSkipsLockedRows", claimLock},
 		{"Time/ZeroTimesRoundTrip", timeZero},
 		{"Time/UTCPreserved", timeUTC},
+		{"Time/UpdateUTCPreserved", timeUpdateUTC},
+		{"Time/ClaimUTCPreserved", timeClaimUTC},
 	} {
 		t.Run(tc.name, func(t *testing.T) { tc.run(t, open(t)) })
 	}

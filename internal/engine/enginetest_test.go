@@ -8,7 +8,6 @@ import (
 
 	v1 "github.com/Aly700/capstan/gen/capstan/v1"
 	"github.com/Aly700/capstan/internal/store"
-	"github.com/Aly700/capstan/internal/store/memstore"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 )
@@ -21,14 +20,20 @@ type manualClock struct {
 func (c *manualClock) Now() time.Time          { c.mu.Lock(); defer c.mu.Unlock(); return c.at }
 func (c *manualClock) Advance(d time.Duration) { c.mu.Lock(); defer c.mu.Unlock(); c.at = c.at.Add(d) }
 
-func newTestEngine(t *testing.T) (*Engine, *manualClock, store.Store) {
+func newTestStore(t *testing.T) store.Store {
 	t.Helper()
-	s := memstore.New()
+	s := openTestStore(t)
 	t.Cleanup(func() {
 		if err := s.Close(); err != nil {
 			t.Error(err)
 		}
 	})
+	return s
+}
+
+func newTestEngine(t *testing.T) (*Engine, *manualClock, store.Store) {
+	t.Helper()
+	s := newTestStore(t)
 	c := &manualClock{at: time.Date(2026, 9, 28, 12, 0, 0, 0, time.UTC)}
 	e, err := New(Deps{Store: s, Clock: c}, Config{})
 	if err != nil {
@@ -98,6 +103,18 @@ func historyBytes(t *testing.T, e *Engine, id string) []byte {
 		t.Fatal(err)
 	}
 	return b
+}
+
+func awaitNotification(t *testing.T, ch <-chan struct{}) {
+	t.Helper()
+	select {
+	case _, ok := <-ch:
+		if !ok {
+			t.Fatal("subscription closed before notification")
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("committed notification did not arrive")
+	}
 }
 func activityCmd(seq int64) *v1.Command {
 	return &v1.Command{Attributes: &v1.Command_ScheduleActivity{ScheduleActivity: &v1.ScheduleActivityCommand{Seq: seq, ActivityType: "act", StartToCloseTimeout: durationpb.New(10 * time.Second)}}}

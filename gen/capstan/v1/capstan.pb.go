@@ -717,6 +717,8 @@ func (x *Failure) GetCause() *Failure {
 // External events never appear between TaskStarted and the end of that task's command
 // events: while a workflow task is in flight they wait in the run's inbox and are flushed
 // after the task's command events, in arrival order.
+// A server-side timeout or termination aborts an in-flight task by flushing its inbox
+// before the terminal event, without a TaskCompleted.
 type HistoryEvent struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	EventId int64                  `protobuf:"varint,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
@@ -1370,7 +1372,7 @@ func (x *RunCompletedAttributes) GetTaskCompletedEventId() int64 {
 type RunFailedAttributes struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
 	Failure              *Failure               `protobuf:"bytes,1,opt,name=failure,proto3" json:"failure,omitempty"`
-	TaskCompletedEventId int64                  `protobuf:"varint,2,opt,name=task_completed_event_id,json=taskCompletedEventId,proto3" json:"task_completed_event_id,omitempty"`
+	TaskCompletedEventId int64                  `protobuf:"varint,2,opt,name=task_completed_event_id,json=taskCompletedEventId,proto3" json:"task_completed_event_id,omitempty"` // 0 for a server-originated failure, including termination
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -5371,6 +5373,94 @@ func (*CancelRunResponse) Descriptor() ([]byte, []int) {
 	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{66}
 }
 
+type TerminateRunRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RunId         string                 `protobuf:"bytes,1,opt,name=run_id,json=runId,proto3" json:"run_id,omitempty"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"` // empty means "terminated"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TerminateRunRequest) Reset() {
+	*x = TerminateRunRequest{}
+	mi := &file_capstan_v1_capstan_proto_msgTypes[67]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TerminateRunRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TerminateRunRequest) ProtoMessage() {}
+
+func (x *TerminateRunRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_capstan_v1_capstan_proto_msgTypes[67]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TerminateRunRequest.ProtoReflect.Descriptor instead.
+func (*TerminateRunRequest) Descriptor() ([]byte, []int) {
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{67}
+}
+
+func (x *TerminateRunRequest) GetRunId() string {
+	if x != nil {
+		return x.RunId
+	}
+	return ""
+}
+
+func (x *TerminateRunRequest) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+type TerminateRunResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TerminateRunResponse) Reset() {
+	*x = TerminateRunResponse{}
+	mi := &file_capstan_v1_capstan_proto_msgTypes[68]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TerminateRunResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TerminateRunResponse) ProtoMessage() {}
+
+func (x *TerminateRunResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_capstan_v1_capstan_proto_msgTypes[68]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TerminateRunResponse.ProtoReflect.Descriptor instead.
+func (*TerminateRunResponse) Descriptor() ([]byte, []int) {
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{68}
+}
+
 type ResumeRunRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RunId         string                 `protobuf:"bytes,1,opt,name=run_id,json=runId,proto3" json:"run_id,omitempty"`
@@ -5381,7 +5471,7 @@ type ResumeRunRequest struct {
 
 func (x *ResumeRunRequest) Reset() {
 	*x = ResumeRunRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[67]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5393,7 +5483,7 @@ func (x *ResumeRunRequest) String() string {
 func (*ResumeRunRequest) ProtoMessage() {}
 
 func (x *ResumeRunRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[67]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5406,7 +5496,7 @@ func (x *ResumeRunRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeRunRequest.ProtoReflect.Descriptor instead.
 func (*ResumeRunRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{67}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *ResumeRunRequest) GetRunId() string {
@@ -5431,7 +5521,7 @@ type ResumeRunResponse struct {
 
 func (x *ResumeRunResponse) Reset() {
 	*x = ResumeRunResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[68]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5443,7 +5533,7 @@ func (x *ResumeRunResponse) String() string {
 func (*ResumeRunResponse) ProtoMessage() {}
 
 func (x *ResumeRunResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[68]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5456,7 +5546,7 @@ func (x *ResumeRunResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeRunResponse.ProtoReflect.Descriptor instead.
 func (*ResumeRunResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{68}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{70}
 }
 
 type DescribeRunRequest struct {
@@ -5468,7 +5558,7 @@ type DescribeRunRequest struct {
 
 func (x *DescribeRunRequest) Reset() {
 	*x = DescribeRunRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[69]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5480,7 +5570,7 @@ func (x *DescribeRunRequest) String() string {
 func (*DescribeRunRequest) ProtoMessage() {}
 
 func (x *DescribeRunRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[69]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5493,7 +5583,7 @@ func (x *DescribeRunRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeRunRequest.ProtoReflect.Descriptor instead.
 func (*DescribeRunRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{69}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *DescribeRunRequest) GetRunId() string {
@@ -5512,7 +5602,7 @@ type DescribeRunResponse struct {
 
 func (x *DescribeRunResponse) Reset() {
 	*x = DescribeRunResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[70]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5524,7 +5614,7 @@ func (x *DescribeRunResponse) String() string {
 func (*DescribeRunResponse) ProtoMessage() {}
 
 func (x *DescribeRunResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[70]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5537,7 +5627,7 @@ func (x *DescribeRunResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeRunResponse.ProtoReflect.Descriptor instead.
 func (*DescribeRunResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{70}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *DescribeRunResponse) GetRun() *RunInfo {
@@ -5556,7 +5646,7 @@ type AwaitRunRequest struct {
 
 func (x *AwaitRunRequest) Reset() {
 	*x = AwaitRunRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[71]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5568,7 +5658,7 @@ func (x *AwaitRunRequest) String() string {
 func (*AwaitRunRequest) ProtoMessage() {}
 
 func (x *AwaitRunRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[71]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5581,7 +5671,7 @@ func (x *AwaitRunRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AwaitRunRequest.ProtoReflect.Descriptor instead.
 func (*AwaitRunRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{71}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *AwaitRunRequest) GetRunId() string {
@@ -5601,7 +5691,7 @@ type AwaitRunResponse struct {
 
 func (x *AwaitRunResponse) Reset() {
 	*x = AwaitRunResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[72]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5613,7 +5703,7 @@ func (x *AwaitRunResponse) String() string {
 func (*AwaitRunResponse) ProtoMessage() {}
 
 func (x *AwaitRunResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[72]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5626,7 +5716,7 @@ func (x *AwaitRunResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AwaitRunResponse.ProtoReflect.Descriptor instead.
 func (*AwaitRunResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{72}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *AwaitRunResponse) GetRun() *RunInfo {
@@ -5655,7 +5745,7 @@ type ListRunsRequest struct {
 
 func (x *ListRunsRequest) Reset() {
 	*x = ListRunsRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[73]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5667,7 +5757,7 @@ func (x *ListRunsRequest) String() string {
 func (*ListRunsRequest) ProtoMessage() {}
 
 func (x *ListRunsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[73]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5680,7 +5770,7 @@ func (x *ListRunsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRunsRequest.ProtoReflect.Descriptor instead.
 func (*ListRunsRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{73}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *ListRunsRequest) GetStatus() RunStatus {
@@ -5721,7 +5811,7 @@ type ListRunsResponse struct {
 
 func (x *ListRunsResponse) Reset() {
 	*x = ListRunsResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[74]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5733,7 +5823,7 @@ func (x *ListRunsResponse) String() string {
 func (*ListRunsResponse) ProtoMessage() {}
 
 func (x *ListRunsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[74]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5746,7 +5836,7 @@ func (x *ListRunsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRunsResponse.ProtoReflect.Descriptor instead.
 func (*ListRunsResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{74}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *ListRunsResponse) GetRuns() []*RunInfo {
@@ -5774,7 +5864,7 @@ type GetHistoryRequest struct {
 
 func (x *GetHistoryRequest) Reset() {
 	*x = GetHistoryRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[75]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5786,7 +5876,7 @@ func (x *GetHistoryRequest) String() string {
 func (*GetHistoryRequest) ProtoMessage() {}
 
 func (x *GetHistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[75]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5799,7 +5889,7 @@ func (x *GetHistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoryRequest.ProtoReflect.Descriptor instead.
 func (*GetHistoryRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{75}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *GetHistoryRequest) GetRunId() string {
@@ -5833,7 +5923,7 @@ type GetHistoryResponse struct {
 
 func (x *GetHistoryResponse) Reset() {
 	*x = GetHistoryResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[76]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5845,7 +5935,7 @@ func (x *GetHistoryResponse) String() string {
 func (*GetHistoryResponse) ProtoMessage() {}
 
 func (x *GetHistoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[76]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5858,7 +5948,7 @@ func (x *GetHistoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoryResponse.ProtoReflect.Descriptor instead.
 func (*GetHistoryResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{76}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *GetHistoryResponse) GetEvents() []*HistoryEvent {
@@ -5889,7 +5979,7 @@ type ResolveApprovalRequest struct {
 
 func (x *ResolveApprovalRequest) Reset() {
 	*x = ResolveApprovalRequest{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[77]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5901,7 +5991,7 @@ func (x *ResolveApprovalRequest) String() string {
 func (*ResolveApprovalRequest) ProtoMessage() {}
 
 func (x *ResolveApprovalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[77]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5914,7 +6004,7 @@ func (x *ResolveApprovalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveApprovalRequest.ProtoReflect.Descriptor instead.
 func (*ResolveApprovalRequest) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{77}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *ResolveApprovalRequest) GetRunId() string {
@@ -5967,7 +6057,7 @@ type ResolveApprovalResponse struct {
 
 func (x *ResolveApprovalResponse) Reset() {
 	*x = ResolveApprovalResponse{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[78]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5979,7 +6069,7 @@ func (x *ResolveApprovalResponse) String() string {
 func (*ResolveApprovalResponse) ProtoMessage() {}
 
 func (x *ResolveApprovalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[78]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5992,7 +6082,7 @@ func (x *ResolveApprovalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveApprovalResponse.ProtoReflect.Descriptor instead.
 func (*ResolveApprovalResponse) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{78}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{80}
 }
 
 type RunInfo struct {
@@ -6016,7 +6106,7 @@ type RunInfo struct {
 
 func (x *RunInfo) Reset() {
 	*x = RunInfo{}
-	mi := &file_capstan_v1_capstan_proto_msgTypes[79]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6028,7 +6118,7 @@ func (x *RunInfo) String() string {
 func (*RunInfo) ProtoMessage() {}
 
 func (x *RunInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_capstan_v1_capstan_proto_msgTypes[79]
+	mi := &file_capstan_v1_capstan_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6041,7 +6131,7 @@ func (x *RunInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunInfo.ProtoReflect.Descriptor instead.
 func (*RunInfo) Descriptor() ([]byte, []int) {
-	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{79}
+	return file_capstan_v1_capstan_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *RunInfo) GetRunId() string {
@@ -6517,7 +6607,11 @@ const file_capstan_v1_capstan_proto_rawDesc = "" +
 	"\x10CancelRunRequest\x12\x15\n" +
 	"\x06run_id\x18\x01 \x01(\tR\x05runId\x12\x16\n" +
 	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x13\n" +
-	"\x11CancelRunResponse\"A\n" +
+	"\x11CancelRunResponse\"D\n" +
+	"\x13TerminateRunRequest\x12\x15\n" +
+	"\x06run_id\x18\x01 \x01(\tR\x05runId\x12\x16\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x16\n" +
+	"\x14TerminateRunResponse\"A\n" +
 	"\x10ResumeRunRequest\x12\x15\n" +
 	"\x06run_id\x18\x01 \x01(\tR\x05runId\x12\x16\n" +
 	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x13\n" +
@@ -6644,11 +6738,12 @@ const file_capstan_v1_capstan_proto_rawDesc = "" +
 	"\x10FailActivityTask\x12#.capstan.v1.FailActivityTaskRequest\x1a$.capstan.v1.FailActivityTaskResponse\x12l\n" +
 	"\x15HeartbeatActivityTask\x12(.capstan.v1.HeartbeatActivityTaskRequest\x1a).capstan.v1.HeartbeatActivityTaskResponse\x12T\n" +
 	"\rReserveAICall\x12 .capstan.v1.ReserveAICallRequest\x1a!.capstan.v1.ReserveAICallResponse\x12Q\n" +
-	"\fFinishAICall\x12\x1f.capstan.v1.FinishAICallRequest\x1a .capstan.v1.FinishAICallResponse2\xbb\x05\n" +
+	"\fFinishAICall\x12\x1f.capstan.v1.FinishAICallRequest\x1a .capstan.v1.FinishAICallResponse2\x8e\x06\n" +
 	"\rClientService\x12E\n" +
 	"\bStartRun\x12\x1b.capstan.v1.StartRunRequest\x1a\x1c.capstan.v1.StartRunResponse\x12H\n" +
 	"\tSignalRun\x12\x1c.capstan.v1.SignalRunRequest\x1a\x1d.capstan.v1.SignalRunResponse\x12H\n" +
-	"\tCancelRun\x12\x1c.capstan.v1.CancelRunRequest\x1a\x1d.capstan.v1.CancelRunResponse\x12H\n" +
+	"\tCancelRun\x12\x1c.capstan.v1.CancelRunRequest\x1a\x1d.capstan.v1.CancelRunResponse\x12Q\n" +
+	"\fTerminateRun\x12\x1f.capstan.v1.TerminateRunRequest\x1a .capstan.v1.TerminateRunResponse\x12H\n" +
 	"\tResumeRun\x12\x1c.capstan.v1.ResumeRunRequest\x1a\x1d.capstan.v1.ResumeRunResponse\x12N\n" +
 	"\vDescribeRun\x12\x1e.capstan.v1.DescribeRunRequest\x1a\x1f.capstan.v1.DescribeRunResponse\x12E\n" +
 	"\bAwaitRun\x12\x1b.capstan.v1.AwaitRunRequest\x1a\x1c.capstan.v1.AwaitRunResponse\x12E\n" +
@@ -6670,7 +6765,7 @@ func file_capstan_v1_capstan_proto_rawDescGZIP() []byte {
 }
 
 var file_capstan_v1_capstan_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_capstan_v1_capstan_proto_msgTypes = make([]protoimpl.MessageInfo, 80)
+var file_capstan_v1_capstan_proto_msgTypes = make([]protoimpl.MessageInfo, 82)
 var file_capstan_v1_capstan_proto_goTypes = []any{
 	(RunStatus)(0),                            // 0: capstan.v1.RunStatus
 	(TimeoutType)(0),                          // 1: capstan.v1.TimeoutType
@@ -6746,29 +6841,31 @@ var file_capstan_v1_capstan_proto_goTypes = []any{
 	(*SignalRunResponse)(nil),                 // 71: capstan.v1.SignalRunResponse
 	(*CancelRunRequest)(nil),                  // 72: capstan.v1.CancelRunRequest
 	(*CancelRunResponse)(nil),                 // 73: capstan.v1.CancelRunResponse
-	(*ResumeRunRequest)(nil),                  // 74: capstan.v1.ResumeRunRequest
-	(*ResumeRunResponse)(nil),                 // 75: capstan.v1.ResumeRunResponse
-	(*DescribeRunRequest)(nil),                // 76: capstan.v1.DescribeRunRequest
-	(*DescribeRunResponse)(nil),               // 77: capstan.v1.DescribeRunResponse
-	(*AwaitRunRequest)(nil),                   // 78: capstan.v1.AwaitRunRequest
-	(*AwaitRunResponse)(nil),                  // 79: capstan.v1.AwaitRunResponse
-	(*ListRunsRequest)(nil),                   // 80: capstan.v1.ListRunsRequest
-	(*ListRunsResponse)(nil),                  // 81: capstan.v1.ListRunsResponse
-	(*GetHistoryRequest)(nil),                 // 82: capstan.v1.GetHistoryRequest
-	(*GetHistoryResponse)(nil),                // 83: capstan.v1.GetHistoryResponse
-	(*ResolveApprovalRequest)(nil),            // 84: capstan.v1.ResolveApprovalRequest
-	(*ResolveApprovalResponse)(nil),           // 85: capstan.v1.ResolveApprovalResponse
-	(*RunInfo)(nil),                           // 86: capstan.v1.RunInfo
-	(*durationpb.Duration)(nil),               // 87: google.protobuf.Duration
-	(*timestamppb.Timestamp)(nil),             // 88: google.protobuf.Timestamp
+	(*TerminateRunRequest)(nil),               // 74: capstan.v1.TerminateRunRequest
+	(*TerminateRunResponse)(nil),              // 75: capstan.v1.TerminateRunResponse
+	(*ResumeRunRequest)(nil),                  // 76: capstan.v1.ResumeRunRequest
+	(*ResumeRunResponse)(nil),                 // 77: capstan.v1.ResumeRunResponse
+	(*DescribeRunRequest)(nil),                // 78: capstan.v1.DescribeRunRequest
+	(*DescribeRunResponse)(nil),               // 79: capstan.v1.DescribeRunResponse
+	(*AwaitRunRequest)(nil),                   // 80: capstan.v1.AwaitRunRequest
+	(*AwaitRunResponse)(nil),                  // 81: capstan.v1.AwaitRunResponse
+	(*ListRunsRequest)(nil),                   // 82: capstan.v1.ListRunsRequest
+	(*ListRunsResponse)(nil),                  // 83: capstan.v1.ListRunsResponse
+	(*GetHistoryRequest)(nil),                 // 84: capstan.v1.GetHistoryRequest
+	(*GetHistoryResponse)(nil),                // 85: capstan.v1.GetHistoryResponse
+	(*ResolveApprovalRequest)(nil),            // 86: capstan.v1.ResolveApprovalRequest
+	(*ResolveApprovalResponse)(nil),           // 87: capstan.v1.ResolveApprovalResponse
+	(*RunInfo)(nil),                           // 88: capstan.v1.RunInfo
+	(*durationpb.Duration)(nil),               // 89: google.protobuf.Duration
+	(*timestamppb.Timestamp)(nil),             // 90: google.protobuf.Timestamp
 }
 var file_capstan_v1_capstan_proto_depIdxs = []int32{
-	87,  // 0: capstan.v1.RetryPolicy.initial_interval:type_name -> google.protobuf.Duration
-	87,  // 1: capstan.v1.RetryPolicy.maximum_interval:type_name -> google.protobuf.Duration
+	89,  // 0: capstan.v1.RetryPolicy.initial_interval:type_name -> google.protobuf.Duration
+	89,  // 1: capstan.v1.RetryPolicy.maximum_interval:type_name -> google.protobuf.Duration
 	7,   // 2: capstan.v1.Failure.details:type_name -> capstan.v1.Payload
 	9,   // 3: capstan.v1.Failure.cause:type_name -> capstan.v1.Failure
 	5,   // 4: capstan.v1.HistoryEvent.type:type_name -> capstan.v1.EventType
-	88,  // 5: capstan.v1.HistoryEvent.time:type_name -> google.protobuf.Timestamp
+	90,  // 5: capstan.v1.HistoryEvent.time:type_name -> google.protobuf.Timestamp
 	11,  // 6: capstan.v1.HistoryEvent.run_started:type_name -> capstan.v1.RunStartedAttributes
 	12,  // 7: capstan.v1.HistoryEvent.run_completed:type_name -> capstan.v1.RunCompletedAttributes
 	13,  // 8: capstan.v1.HistoryEvent.run_failed:type_name -> capstan.v1.RunFailedAttributes
@@ -6797,33 +6894,33 @@ var file_capstan_v1_capstan_proto_depIdxs = []int32{
 	36,  // 31: capstan.v1.HistoryEvent.approval_requested:type_name -> capstan.v1.ApprovalRequestedAttributes
 	37,  // 32: capstan.v1.HistoryEvent.approval_resolved:type_name -> capstan.v1.ApprovalResolvedAttributes
 	7,   // 33: capstan.v1.RunStartedAttributes.input:type_name -> capstan.v1.Payload
-	87,  // 34: capstan.v1.RunStartedAttributes.run_timeout:type_name -> google.protobuf.Duration
-	87,  // 35: capstan.v1.RunStartedAttributes.task_timeout:type_name -> google.protobuf.Duration
+	89,  // 34: capstan.v1.RunStartedAttributes.run_timeout:type_name -> google.protobuf.Duration
+	89,  // 35: capstan.v1.RunStartedAttributes.task_timeout:type_name -> google.protobuf.Duration
 	7,   // 36: capstan.v1.RunCompletedAttributes.result:type_name -> capstan.v1.Payload
 	9,   // 37: capstan.v1.RunFailedAttributes.failure:type_name -> capstan.v1.Failure
 	7,   // 38: capstan.v1.RunCancelledAttributes.details:type_name -> capstan.v1.Payload
 	7,   // 39: capstan.v1.RunContinuedAsNewAttributes.input:type_name -> capstan.v1.Payload
 	9,   // 40: capstan.v1.RunBlockedAttributes.failure:type_name -> capstan.v1.Failure
-	87,  // 41: capstan.v1.TaskScheduledAttributes.start_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 41: capstan.v1.TaskScheduledAttributes.start_to_close_timeout:type_name -> google.protobuf.Duration
 	2,   // 42: capstan.v1.TaskFailedAttributes.cause:type_name -> capstan.v1.TaskFailedCause
 	9,   // 43: capstan.v1.TaskFailedAttributes.failure:type_name -> capstan.v1.Failure
 	7,   // 44: capstan.v1.ActivityScheduledAttributes.input:type_name -> capstan.v1.Payload
-	87,  // 45: capstan.v1.ActivityScheduledAttributes.schedule_to_close_timeout:type_name -> google.protobuf.Duration
-	87,  // 46: capstan.v1.ActivityScheduledAttributes.schedule_to_start_timeout:type_name -> google.protobuf.Duration
-	87,  // 47: capstan.v1.ActivityScheduledAttributes.start_to_close_timeout:type_name -> google.protobuf.Duration
-	87,  // 48: capstan.v1.ActivityScheduledAttributes.heartbeat_timeout:type_name -> google.protobuf.Duration
+	89,  // 45: capstan.v1.ActivityScheduledAttributes.schedule_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 46: capstan.v1.ActivityScheduledAttributes.schedule_to_start_timeout:type_name -> google.protobuf.Duration
+	89,  // 47: capstan.v1.ActivityScheduledAttributes.start_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 48: capstan.v1.ActivityScheduledAttributes.heartbeat_timeout:type_name -> google.protobuf.Duration
 	8,   // 49: capstan.v1.ActivityScheduledAttributes.retry_policy:type_name -> capstan.v1.RetryPolicy
 	7,   // 50: capstan.v1.ActivityCompletedAttributes.result:type_name -> capstan.v1.Payload
 	9,   // 51: capstan.v1.ActivityFailedAttributes.failure:type_name -> capstan.v1.Failure
 	1,   // 52: capstan.v1.ActivityTimedOutAttributes.timeout_type:type_name -> capstan.v1.TimeoutType
 	9,   // 53: capstan.v1.ActivityTimedOutAttributes.last_failure:type_name -> capstan.v1.Failure
 	7,   // 54: capstan.v1.ActivityCancelledAttributes.details:type_name -> capstan.v1.Payload
-	87,  // 55: capstan.v1.TimerStartedAttributes.fire_after:type_name -> google.protobuf.Duration
+	89,  // 55: capstan.v1.TimerStartedAttributes.fire_after:type_name -> google.protobuf.Duration
 	7,   // 56: capstan.v1.SignalReceivedAttributes.input:type_name -> capstan.v1.Payload
 	7,   // 57: capstan.v1.MarkerRecordedAttributes.details:type_name -> capstan.v1.Payload
 	3,   // 58: capstan.v1.ApprovalRequestedAttributes.source:type_name -> capstan.v1.ApprovalSource
 	7,   // 59: capstan.v1.ApprovalRequestedAttributes.arguments:type_name -> capstan.v1.Payload
-	87,  // 60: capstan.v1.ApprovalRequestedAttributes.timeout:type_name -> google.protobuf.Duration
+	89,  // 60: capstan.v1.ApprovalRequestedAttributes.timeout:type_name -> google.protobuf.Duration
 	4,   // 61: capstan.v1.ApprovalResolvedAttributes.outcome:type_name -> capstan.v1.ApprovalOutcome
 	39,  // 62: capstan.v1.Command.schedule_activity:type_name -> capstan.v1.ScheduleActivityCommand
 	40,  // 63: capstan.v1.Command.request_activity_cancel:type_name -> capstan.v1.RequestActivityCancelCommand
@@ -6836,16 +6933,16 @@ var file_capstan_v1_capstan_proto_depIdxs = []int32{
 	47,  // 70: capstan.v1.Command.cancel_run:type_name -> capstan.v1.CancelRunCommand
 	48,  // 71: capstan.v1.Command.continue_as_new:type_name -> capstan.v1.ContinueAsNewCommand
 	7,   // 72: capstan.v1.ScheduleActivityCommand.input:type_name -> capstan.v1.Payload
-	87,  // 73: capstan.v1.ScheduleActivityCommand.schedule_to_close_timeout:type_name -> google.protobuf.Duration
-	87,  // 74: capstan.v1.ScheduleActivityCommand.schedule_to_start_timeout:type_name -> google.protobuf.Duration
-	87,  // 75: capstan.v1.ScheduleActivityCommand.start_to_close_timeout:type_name -> google.protobuf.Duration
-	87,  // 76: capstan.v1.ScheduleActivityCommand.heartbeat_timeout:type_name -> google.protobuf.Duration
+	89,  // 73: capstan.v1.ScheduleActivityCommand.schedule_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 74: capstan.v1.ScheduleActivityCommand.schedule_to_start_timeout:type_name -> google.protobuf.Duration
+	89,  // 75: capstan.v1.ScheduleActivityCommand.start_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 76: capstan.v1.ScheduleActivityCommand.heartbeat_timeout:type_name -> google.protobuf.Duration
 	8,   // 77: capstan.v1.ScheduleActivityCommand.retry_policy:type_name -> capstan.v1.RetryPolicy
-	87,  // 78: capstan.v1.StartTimerCommand.fire_after:type_name -> google.protobuf.Duration
+	89,  // 78: capstan.v1.StartTimerCommand.fire_after:type_name -> google.protobuf.Duration
 	7,   // 79: capstan.v1.RecordMarkerCommand.details:type_name -> capstan.v1.Payload
 	3,   // 80: capstan.v1.RequestApprovalCommand.source:type_name -> capstan.v1.ApprovalSource
 	7,   // 81: capstan.v1.RequestApprovalCommand.arguments:type_name -> capstan.v1.Payload
-	87,  // 82: capstan.v1.RequestApprovalCommand.timeout:type_name -> google.protobuf.Duration
+	89,  // 82: capstan.v1.RequestApprovalCommand.timeout:type_name -> google.protobuf.Duration
 	7,   // 83: capstan.v1.CompleteRunCommand.result:type_name -> capstan.v1.Payload
 	9,   // 84: capstan.v1.FailRunCommand.failure:type_name -> capstan.v1.Failure
 	7,   // 85: capstan.v1.CancelRunCommand.details:type_name -> capstan.v1.Payload
@@ -6856,28 +6953,28 @@ var file_capstan_v1_capstan_proto_depIdxs = []int32{
 	2,   // 90: capstan.v1.FailWorkflowTaskRequest.cause:type_name -> capstan.v1.TaskFailedCause
 	9,   // 91: capstan.v1.FailWorkflowTaskRequest.failure:type_name -> capstan.v1.Failure
 	7,   // 92: capstan.v1.PollActivityTaskResponse.input:type_name -> capstan.v1.Payload
-	88,  // 93: capstan.v1.PollActivityTaskResponse.scheduled_time:type_name -> google.protobuf.Timestamp
-	88,  // 94: capstan.v1.PollActivityTaskResponse.started_time:type_name -> google.protobuf.Timestamp
-	87,  // 95: capstan.v1.PollActivityTaskResponse.start_to_close_timeout:type_name -> google.protobuf.Duration
-	87,  // 96: capstan.v1.PollActivityTaskResponse.heartbeat_timeout:type_name -> google.protobuf.Duration
+	90,  // 93: capstan.v1.PollActivityTaskResponse.scheduled_time:type_name -> google.protobuf.Timestamp
+	90,  // 94: capstan.v1.PollActivityTaskResponse.started_time:type_name -> google.protobuf.Timestamp
+	89,  // 95: capstan.v1.PollActivityTaskResponse.start_to_close_timeout:type_name -> google.protobuf.Duration
+	89,  // 96: capstan.v1.PollActivityTaskResponse.heartbeat_timeout:type_name -> google.protobuf.Duration
 	7,   // 97: capstan.v1.PollActivityTaskResponse.heartbeat_details:type_name -> capstan.v1.Payload
 	7,   // 98: capstan.v1.CompleteActivityTaskRequest.result:type_name -> capstan.v1.Payload
 	9,   // 99: capstan.v1.FailActivityTaskRequest.failure:type_name -> capstan.v1.Failure
 	7,   // 100: capstan.v1.HeartbeatActivityTaskRequest.details:type_name -> capstan.v1.Payload
 	7,   // 101: capstan.v1.StartRunRequest.input:type_name -> capstan.v1.Payload
-	87,  // 102: capstan.v1.StartRunRequest.run_timeout:type_name -> google.protobuf.Duration
-	87,  // 103: capstan.v1.StartRunRequest.task_timeout:type_name -> google.protobuf.Duration
-	86,  // 104: capstan.v1.StartRunResponse.run:type_name -> capstan.v1.RunInfo
+	89,  // 102: capstan.v1.StartRunRequest.run_timeout:type_name -> google.protobuf.Duration
+	89,  // 103: capstan.v1.StartRunRequest.task_timeout:type_name -> google.protobuf.Duration
+	88,  // 104: capstan.v1.StartRunResponse.run:type_name -> capstan.v1.RunInfo
 	7,   // 105: capstan.v1.SignalRunRequest.input:type_name -> capstan.v1.Payload
-	86,  // 106: capstan.v1.DescribeRunResponse.run:type_name -> capstan.v1.RunInfo
-	86,  // 107: capstan.v1.AwaitRunResponse.run:type_name -> capstan.v1.RunInfo
+	88,  // 106: capstan.v1.DescribeRunResponse.run:type_name -> capstan.v1.RunInfo
+	88,  // 107: capstan.v1.AwaitRunResponse.run:type_name -> capstan.v1.RunInfo
 	0,   // 108: capstan.v1.ListRunsRequest.status:type_name -> capstan.v1.RunStatus
-	86,  // 109: capstan.v1.ListRunsResponse.runs:type_name -> capstan.v1.RunInfo
+	88,  // 109: capstan.v1.ListRunsResponse.runs:type_name -> capstan.v1.RunInfo
 	10,  // 110: capstan.v1.GetHistoryResponse.events:type_name -> capstan.v1.HistoryEvent
 	4,   // 111: capstan.v1.ResolveApprovalRequest.outcome:type_name -> capstan.v1.ApprovalOutcome
 	0,   // 112: capstan.v1.RunInfo.status:type_name -> capstan.v1.RunStatus
-	88,  // 113: capstan.v1.RunInfo.started_at:type_name -> google.protobuf.Timestamp
-	88,  // 114: capstan.v1.RunInfo.closed_at:type_name -> google.protobuf.Timestamp
+	90,  // 113: capstan.v1.RunInfo.started_at:type_name -> google.protobuf.Timestamp
+	90,  // 114: capstan.v1.RunInfo.closed_at:type_name -> google.protobuf.Timestamp
 	7,   // 115: capstan.v1.RunInfo.result:type_name -> capstan.v1.Payload
 	9,   // 116: capstan.v1.RunInfo.failure:type_name -> capstan.v1.Failure
 	50,  // 117: capstan.v1.WorkerService.PollWorkflowTask:input_type -> capstan.v1.PollWorkflowTaskRequest
@@ -6892,32 +6989,34 @@ var file_capstan_v1_capstan_proto_depIdxs = []int32{
 	68,  // 126: capstan.v1.ClientService.StartRun:input_type -> capstan.v1.StartRunRequest
 	70,  // 127: capstan.v1.ClientService.SignalRun:input_type -> capstan.v1.SignalRunRequest
 	72,  // 128: capstan.v1.ClientService.CancelRun:input_type -> capstan.v1.CancelRunRequest
-	74,  // 129: capstan.v1.ClientService.ResumeRun:input_type -> capstan.v1.ResumeRunRequest
-	76,  // 130: capstan.v1.ClientService.DescribeRun:input_type -> capstan.v1.DescribeRunRequest
-	78,  // 131: capstan.v1.ClientService.AwaitRun:input_type -> capstan.v1.AwaitRunRequest
-	80,  // 132: capstan.v1.ClientService.ListRuns:input_type -> capstan.v1.ListRunsRequest
-	82,  // 133: capstan.v1.ClientService.GetHistory:input_type -> capstan.v1.GetHistoryRequest
-	84,  // 134: capstan.v1.ClientService.ResolveApproval:input_type -> capstan.v1.ResolveApprovalRequest
-	51,  // 135: capstan.v1.WorkerService.PollWorkflowTask:output_type -> capstan.v1.PollWorkflowTaskResponse
-	53,  // 136: capstan.v1.WorkerService.CompleteWorkflowTask:output_type -> capstan.v1.CompleteWorkflowTaskResponse
-	55,  // 137: capstan.v1.WorkerService.FailWorkflowTask:output_type -> capstan.v1.FailWorkflowTaskResponse
-	57,  // 138: capstan.v1.WorkerService.PollActivityTask:output_type -> capstan.v1.PollActivityTaskResponse
-	59,  // 139: capstan.v1.WorkerService.CompleteActivityTask:output_type -> capstan.v1.CompleteActivityTaskResponse
-	61,  // 140: capstan.v1.WorkerService.FailActivityTask:output_type -> capstan.v1.FailActivityTaskResponse
-	63,  // 141: capstan.v1.WorkerService.HeartbeatActivityTask:output_type -> capstan.v1.HeartbeatActivityTaskResponse
-	65,  // 142: capstan.v1.WorkerService.ReserveAICall:output_type -> capstan.v1.ReserveAICallResponse
-	67,  // 143: capstan.v1.WorkerService.FinishAICall:output_type -> capstan.v1.FinishAICallResponse
-	69,  // 144: capstan.v1.ClientService.StartRun:output_type -> capstan.v1.StartRunResponse
-	71,  // 145: capstan.v1.ClientService.SignalRun:output_type -> capstan.v1.SignalRunResponse
-	73,  // 146: capstan.v1.ClientService.CancelRun:output_type -> capstan.v1.CancelRunResponse
-	75,  // 147: capstan.v1.ClientService.ResumeRun:output_type -> capstan.v1.ResumeRunResponse
-	77,  // 148: capstan.v1.ClientService.DescribeRun:output_type -> capstan.v1.DescribeRunResponse
-	79,  // 149: capstan.v1.ClientService.AwaitRun:output_type -> capstan.v1.AwaitRunResponse
-	81,  // 150: capstan.v1.ClientService.ListRuns:output_type -> capstan.v1.ListRunsResponse
-	83,  // 151: capstan.v1.ClientService.GetHistory:output_type -> capstan.v1.GetHistoryResponse
-	85,  // 152: capstan.v1.ClientService.ResolveApproval:output_type -> capstan.v1.ResolveApprovalResponse
-	135, // [135:153] is the sub-list for method output_type
-	117, // [117:135] is the sub-list for method input_type
+	74,  // 129: capstan.v1.ClientService.TerminateRun:input_type -> capstan.v1.TerminateRunRequest
+	76,  // 130: capstan.v1.ClientService.ResumeRun:input_type -> capstan.v1.ResumeRunRequest
+	78,  // 131: capstan.v1.ClientService.DescribeRun:input_type -> capstan.v1.DescribeRunRequest
+	80,  // 132: capstan.v1.ClientService.AwaitRun:input_type -> capstan.v1.AwaitRunRequest
+	82,  // 133: capstan.v1.ClientService.ListRuns:input_type -> capstan.v1.ListRunsRequest
+	84,  // 134: capstan.v1.ClientService.GetHistory:input_type -> capstan.v1.GetHistoryRequest
+	86,  // 135: capstan.v1.ClientService.ResolveApproval:input_type -> capstan.v1.ResolveApprovalRequest
+	51,  // 136: capstan.v1.WorkerService.PollWorkflowTask:output_type -> capstan.v1.PollWorkflowTaskResponse
+	53,  // 137: capstan.v1.WorkerService.CompleteWorkflowTask:output_type -> capstan.v1.CompleteWorkflowTaskResponse
+	55,  // 138: capstan.v1.WorkerService.FailWorkflowTask:output_type -> capstan.v1.FailWorkflowTaskResponse
+	57,  // 139: capstan.v1.WorkerService.PollActivityTask:output_type -> capstan.v1.PollActivityTaskResponse
+	59,  // 140: capstan.v1.WorkerService.CompleteActivityTask:output_type -> capstan.v1.CompleteActivityTaskResponse
+	61,  // 141: capstan.v1.WorkerService.FailActivityTask:output_type -> capstan.v1.FailActivityTaskResponse
+	63,  // 142: capstan.v1.WorkerService.HeartbeatActivityTask:output_type -> capstan.v1.HeartbeatActivityTaskResponse
+	65,  // 143: capstan.v1.WorkerService.ReserveAICall:output_type -> capstan.v1.ReserveAICallResponse
+	67,  // 144: capstan.v1.WorkerService.FinishAICall:output_type -> capstan.v1.FinishAICallResponse
+	69,  // 145: capstan.v1.ClientService.StartRun:output_type -> capstan.v1.StartRunResponse
+	71,  // 146: capstan.v1.ClientService.SignalRun:output_type -> capstan.v1.SignalRunResponse
+	73,  // 147: capstan.v1.ClientService.CancelRun:output_type -> capstan.v1.CancelRunResponse
+	75,  // 148: capstan.v1.ClientService.TerminateRun:output_type -> capstan.v1.TerminateRunResponse
+	77,  // 149: capstan.v1.ClientService.ResumeRun:output_type -> capstan.v1.ResumeRunResponse
+	79,  // 150: capstan.v1.ClientService.DescribeRun:output_type -> capstan.v1.DescribeRunResponse
+	81,  // 151: capstan.v1.ClientService.AwaitRun:output_type -> capstan.v1.AwaitRunResponse
+	83,  // 152: capstan.v1.ClientService.ListRuns:output_type -> capstan.v1.ListRunsResponse
+	85,  // 153: capstan.v1.ClientService.GetHistory:output_type -> capstan.v1.GetHistoryResponse
+	87,  // 154: capstan.v1.ClientService.ResolveApproval:output_type -> capstan.v1.ResolveApprovalResponse
+	136, // [136:155] is the sub-list for method output_type
+	117, // [117:136] is the sub-list for method input_type
 	117, // [117:117] is the sub-list for extension type_name
 	117, // [117:117] is the sub-list for extension extendee
 	0,   // [0:117] is the sub-list for field type_name
@@ -6975,7 +7074,7 @@ func file_capstan_v1_capstan_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_capstan_v1_capstan_proto_rawDesc), len(file_capstan_v1_capstan_proto_rawDesc)),
 			NumEnums:      7,
-			NumMessages:   80,
+			NumMessages:   82,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

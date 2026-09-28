@@ -122,6 +122,14 @@ func (f *fakeAPI) CancelRun(ctx context.Context, identity string, req *v1.Cancel
 	}
 	return msg.(*v1.CancelRunResponse), err
 }
+func (f *fakeAPI) TerminateRun(ctx context.Context, identity string, req *v1.TerminateRunRequest) (*v1.TerminateRunResponse, error) {
+	msg, found, err := f.call(ctx, "TerminateRun", identity, req)
+	_ = found
+	if msg == nil {
+		return nil, err
+	}
+	return msg.(*v1.TerminateRunResponse), err
+}
 func (f *fakeAPI) ResumeRun(ctx context.Context, identity string, req *v1.ResumeRunRequest) (*v1.ResumeRunResponse, error) {
 	msg, found, err := f.call(ctx, "ResumeRun", identity, req)
 	_ = found
@@ -222,6 +230,7 @@ func allRPCs(hc *http.Client, url string) []rpcCase {
 		rpcTestCase("StartRun", &v1.StartRunRequest{RunId: "r", WorkflowType: "wf", TaskQueue: "q", Input: opaque()}, &v1.StartRunResponse{Run: closedRun(), Started: true}, c.StartRun),
 		rpcTestCase("SignalRun", &v1.SignalRunRequest{RunId: "r", Name: "signal", RequestId: "dedupe", Input: opaque()}, &v1.SignalRunResponse{}, c.SignalRun),
 		rpcTestCase("CancelRun", &v1.CancelRunRequest{RunId: "r", Reason: "cancel"}, &v1.CancelRunResponse{}, c.CancelRun),
+		rpcTestCase("TerminateRun", &v1.TerminateRunRequest{RunId: "r", Reason: "operator stop"}, &v1.TerminateRunResponse{}, c.TerminateRun),
 		rpcTestCase("ResumeRun", &v1.ResumeRunRequest{RunId: "r", Reason: "fixed"}, &v1.ResumeRunResponse{}, c.ResumeRun),
 		rpcTestCase("DescribeRun", &v1.DescribeRunRequest{RunId: "r"}, &v1.DescribeRunResponse{Run: closedRun()}, c.DescribeRun),
 		rpcTestCase("AwaitRun", &v1.AwaitRunRequest{RunId: "r"}, &v1.AwaitRunResponse{Run: closedRun(), Closed: true}, c.AwaitRun),
@@ -252,7 +261,7 @@ func TestEveryRPCAuthenticatesAndForwards(t *testing.T) {
 					t.Errorf("forwarded %s %v; want %s %v", name, req, wantName, wantReq)
 				}
 				switch name {
-				case "StartRun", "SignalRun", "CancelRun", "ResumeRun", "ResolveApproval":
+				case "StartRun", "SignalRun", "CancelRun", "TerminateRun", "ResumeRun", "ResolveApproval":
 					if identity != "owner" {
 						t.Errorf("mutation identity=%q", identity)
 					}
@@ -274,6 +283,29 @@ func TestEveryRPCAuthenticatesAndForwards(t *testing.T) {
 			}
 			if calls.Load() != 1 {
 				t.Fatalf("engine calls=%d", calls.Load())
+			}
+		})
+	}
+}
+func TestTerminateRunErrorMapping(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		err  error
+		code connect.Code
+	}{
+		{"closed", engine.ErrRunClosed, connect.CodeFailedPrecondition},
+		{"missing", engine.ErrNotFound, connect.CodeNotFound},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			f := &fakeAPI{call: func(context.Context, string, string, proto.Message) (proto.Message, bool, error) {
+				return nil, false, fmt.Errorf("terminate: %w", tc.err)
+			}}
+			hc, url := rpcHTTP(t, New(testConfig(), f, nil, Options{}))
+			req := connect.NewRequest(&v1.TerminateRunRequest{RunId: "r", Reason: "operator stop"})
+			req.Header().Set("Authorization", "Bearer secret")
+			_, err := rpc.NewClientServiceClient(hc, url).TerminateRun(t.Context(), req)
+			if connect.CodeOf(err) != tc.code {
+				t.Fatalf("err=%v; want %v", err, tc.code)
 			}
 		})
 	}

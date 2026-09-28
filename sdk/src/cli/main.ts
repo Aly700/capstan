@@ -16,6 +16,7 @@ const usage = `Usage: capstan <command> [arguments]
   replay <run-id> --workflows <path>
   signal <run-id> <name> [--input <json>] [--request-id <id>]
   cancel|resume <run-id> [--reason <text>]
+  terminate <run-id> [--reason <text>]
   approve|deny <run-id> <approval-id> [--choice <x>] [--note <text>] [--resolver <name>]
   list [--status <status>]
 Environment: CAPSTAN_ADDRESS (default http://127.0.0.1:7233), CAPSTAN_API_KEY`;
@@ -26,6 +27,7 @@ const definitions: Record<string, { count: number; strings?: string[]; booleans?
   replay: { count: 1, strings: ["workflows"], required: ["workflows"] },
   signal: { count: 2, strings: ["input", "request-id"] },
   cancel: { count: 1, strings: ["reason"] }, resume: { count: 1, strings: ["reason"] },
+  terminate: { count: 1, strings: ["reason"] },
   approve: { count: 2, strings: ["choice", "note", "resolver"] }, deny: { count: 2, strings: ["choice", "note", "resolver"] },
   list: { count: 0, strings: ["status"] },
 };
@@ -65,6 +67,7 @@ export async function main(args = process.argv.slice(2), env = process.env): Pro
       case "describe": output = await client.describe(runId); break;
       case "signal": await client.signal(runId, second, input, text("request-id")); break;
       case "cancel": await client.cancel(runId, text("reason")); break;
+      case "terminate": await client.terminate(runId, text("reason")); break;
       case "resume": await client.resume(runId, text("reason")); break;
       case "approve": case "deny":
         await client.resolveApproval(runId, second, {

@@ -131,4 +131,37 @@ describe.skipIf(!enabled)("end to end on the real server", () => {
     const timedOut = events.filter((e) => e.type === EventType.ACTIVITY_TIMED_OUT).length;
     expect(timedOut).toBe(0); // a retried attempt is not a history event (D4)
   }, 90_000);
+
+  it("terminates a sleeping run and keeps its history closed past the timer deadline", async () => {
+    const taskQueue = "e2e-terminate";
+    const worker = startWorker("e2e-terminate", { E2E_QUEUE: taskQueue });
+    try {
+      const runId = `terminated-${Date.now()}`;
+      await client.start("sleeping", undefined, { runId, taskQueue });
+      const waiting = await until("the one-second timer to start", async () => {
+        const { events } = await rpc.getHistory({ runId });
+        return events.some((event) => event.type === EventType.TIMER_STARTED) ? events : undefined;
+      });
+      expect(waiting.some((event) => event.type === EventType.TIMER_FIRED)).toBe(false);
+      await client.terminate(runId, "operator stopped the sleeping run");
+      const done = await client.describe(runId);
+      expect(done.status).toBe("failed");
+      expect(done.failure).toEqual({ type: "Terminated", message: "operator stopped the sleeping run" });
+
+      const closed = await rpc.getHistory({ runId });
+      const terminal = closed.events.at(-1)!;
+      expect(terminal.type).toBe(EventType.RUN_FAILED);
+      expect(terminal.attributes).toMatchObject({ case: "runFailed", value: { taskCompletedEventId: 0n, failure: { type: "Terminated" } } });
+      expect(closed.events.some((event) => event.type === EventType.TIMER_FIRED)).toBe(false);
+      // sleeping uses a 1s timer, which started before termination. Cross its due time.
+      await delay(1_200);
+      const afterDeadline = await rpc.getHistory({ runId });
+      expect(afterDeadline.events.filter((event) => event.eventId > terminal.eventId && event.type === EventType.TIMER_FIRED)).toEqual([]);
+      expect(afterDeadline.events).toEqual(closed.events);
+      expect((await client.describe(runId)).status).toBe("failed");
+    } finally {
+      kill(worker);
+      await exited(worker);
+    }
+  }, 60_000);
 });
