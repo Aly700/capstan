@@ -1,16 +1,16 @@
-// Engine is the concrete implementation of API. Implemented by the engine lane; this file is
-// a compile-time stub so other lanes can build against engine.New from the start.
+// Engine implements the frozen API over transactional storage.
 package engine
 
 import (
 	"context"
 	"errors"
+	"maps"
+	"math"
 	"time"
 
 	capstanv1 "github.com/Aly700/capstan/gen/capstan/v1"
+	"google.golang.org/protobuf/proto"
 )
-
-var errNotImplemented = errors.New("engine: not implemented yet (engine lane)")
 
 // Engine implements API over a store.Store.
 type Engine struct {
@@ -26,10 +26,27 @@ func New(deps Deps, cfg Config) (*Engine, error) {
 	if deps.Clock == nil {
 		deps.Clock = SystemClock{}
 	}
-	return &Engine{deps: deps, cfg: cfg.WithDefaults()}, nil
+	cfg = cfg.WithDefaults()
+	if cfg.DefaultTaskTimeout <= 0 || cfg.DefaultTaskTimeout > 10*time.Minute || cfg.TaskRetryInitial <= 0 || cfg.TaskRetryMax <= 0 || cfg.MaxHistoryEvents <= 0 || cfg.GatePollInitial <= 0 || cfg.GatePollMax <= 0 || cfg.DailyCapUSD <= 0 || math.IsNaN(cfg.DailyCapUSD) || math.IsInf(cfg.DailyCapUSD, 0) || !validRetry(cfg.DefaultRetry) {
+		return nil, Invalid("invalid engine configuration")
+	}
+	for _, p := range cfg.ModelPrices {
+		for _, rate := range []float64{p.Input, p.Output, p.CacheRead, p.CacheWrite} {
+			if rate < 0 || math.IsNaN(rate) || math.IsInf(rate, 0) {
+				return nil, Invalid("invalid model price")
+			}
+		}
+	}
+	cfg.ModelPrices = maps.Clone(cfg.ModelPrices)
+	if cfg.DefaultRetry != nil {
+		cfg.DefaultRetry = proto.Clone(cfg.DefaultRetry).(*capstanv1.RetryPolicy)
+	}
+	return &Engine{deps: deps, cfg: cfg}, nil
 }
 
 var _ API = (*Engine)(nil)
+
+var errNotImplemented = errors.New("engine: not implemented yet (engine lane)")
 
 func (e *Engine) SignalRun(ctx context.Context, identity string, req *capstanv1.SignalRunRequest) (*capstanv1.SignalRunResponse, error) {
 	return nil, errNotImplemented
@@ -44,18 +61,6 @@ func (e *Engine) ResumeRun(ctx context.Context, identity string, req *capstanv1.
 }
 
 func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *capstanv1.ResolveApprovalRequest) (*capstanv1.ResolveApprovalResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) PollWorkflowTask(ctx context.Context, req *capstanv1.PollWorkflowTaskRequest) (resp *capstanv1.PollWorkflowTaskResponse, found bool, err error) {
-	return nil, false, errNotImplemented
-}
-
-func (e *Engine) CompleteWorkflowTask(ctx context.Context, req *capstanv1.CompleteWorkflowTaskRequest) (*capstanv1.CompleteWorkflowTaskResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) FailWorkflowTask(ctx context.Context, req *capstanv1.FailWorkflowTaskRequest) (*capstanv1.FailWorkflowTaskResponse, error) {
 	return nil, errNotImplemented
 }
 
