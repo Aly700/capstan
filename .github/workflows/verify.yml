@@ -45,6 +45,8 @@ jobs:
       - uses: bufbuild/buf-setup-action@v1
         with:
           version: "1.73.0"
+          # Authenticated release lookup; anonymous calls share the runner IP's rate limit.
+          github_token: ${{ github.token }}
       - name: Install protoc plugins at module versions
         run: |
           protobuf_version=$(go list -m -f '{{.Version}}' google.golang.org/protobuf)
