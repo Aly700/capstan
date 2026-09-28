@@ -1,4 +1,3 @@
-import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { fromJson, toJson } from "@bufbuild/protobuf";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -6,10 +5,10 @@ import { CommandSchema, HistoryEventSchema } from "../src/gen/capstan/v1/capstan
 import { bundleWorkflows } from "../src/sandbox/bundle.ts";
 import type { WorkflowBundle } from "../src/sandbox/bundle.ts";
 import { replay } from "../src/replay/runtime.ts";
-import type { Fixture } from "./fixtures/build.ts";
+import { loadFixtures } from "./fixtures/load.ts";
 
 const directory=new URL("../../conformance/fixtures/",import.meta.url);
-const fixtures=await Promise.all((await readdir(directory)).filter((name)=>name.endsWith(".json")).sort().map(async(name)=>({file:name,fixture:JSON.parse(await readFile(new URL(name,directory),"utf8")) as Fixture})));
+const fixtures=await loadFixtures(directory, "ts");
 
 /** Payload bytes are language-specific; the JSON values they encode are the contract. */
 function normalized(value: unknown): unknown {

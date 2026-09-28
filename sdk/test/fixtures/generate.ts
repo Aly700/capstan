@@ -6,9 +6,10 @@ import { commands as c, run } from "./build.ts";
 import type { Fixture } from "./build.ts";
 
 const dir = fileURLToPath(new URL("../../../conformance/fixtures/", import.meta.url));
-function write(number: number, slug: string, description: string, fixture: Fixture): void {
+function write(number: number, slug: string, description: string, fixture: Fixture, only?: string[]): void {
   fixture.name = slug.replaceAll("-", " ");
   fixture.description = description;
+  if (only !== undefined) fixture.only = only;
   writeFileSync(`${dir}/${String(number).padStart(3, "0")}-${slug}.json`, JSON.stringify(fixture, null, 2) + "\n");
 }
 
@@ -63,6 +64,6 @@ write(48, "mismatch-command-missing", "An activation that now waits without emit
 write(49, "mismatch-cancel-timer-seq", "CancelTimer compares the referenced timer seq; cancellation reuses rather than allocates seq.", run("signalledCondition", { timeout: "1s" }).task().startTimer(1).signal("ready", true).task().command("timerCancelled", { seq: "2", startedEventId: "5" }).task().expectMismatch(10));
 write(50, "discarded-task-timeout", "TaskTimedOut discards code and workflow time just like TaskFailed.", run("sleeping").task().timeout().task(undefined, 2).expectCommands(c.startTimer(1)));
 write(51, "side-effect-new", "A newly executed side effect records its JSON value once and completes with that same value.", run("newSideEffect").task().expectCommands(c.recordMarker(1, "side_effect", "", { saved: 7 }), c.completeRun({ saved: 7 })));
-write(52, "signal-handler-prior-clock", "The README delivers external events before setting the new TaskStarted clock. A synchronous signal handler sees the previous activation time; its awaited continuation sees the new time.", run("signalHandlerClock").task("2026-09-28T12:00:01Z").signal("go", true).task("2026-09-28T13:00:00Z").expectCommands(c.completeRun([1790596801000, 1790600400000])));
+write(52, "signal-handler-current-clock", "D15 sets the TaskStarted clock before delivering external events. A synchronous signal handler and its awaited continuation both observe the current activation time.", run("signalHandlerClock").task("2026-09-28T12:00:01Z").signal("go", true).task("2026-09-28T13:00:00Z").expectCommands(c.completeRun([1790600400000, 1790600400000])));
 write(53, "patch-false-memoized", "An absent historical patch returns false, and that same patch id remains false after an await reaches a new activation. No patch marker or extra seq is allocated.", run("repeatedOldPatch").task().scheduleActivity(1, "double", 21).completeActivity(1, 42).task().expectCommands(c.completeRun([false, false])));
-write(54, "race-batched-native-order", "TimerFired precedes ActivityCompleted in one activation, but both are delivered before promises drain. The timer branch has an extra then continuation, so the direct activity result wins Promise.race.", run("raceActivityAndSleep").task().scheduleActivity(1, "double", 21).startTimer(2).fireTimer(2).completeActivity(1, 42).task().expectCommands(c.completeRun(42)));
+write(54, "race-batched-native-order", "TimerFired precedes ActivityCompleted in one activation, but both are delivered before promises drain. The timer branch has an extra then continuation, so the direct activity result wins Promise.race.", run("raceActivityAndSleep").task().scheduleActivity(1, "double", 21).startTimer(2).fireTimer(2).completeActivity(1, 42).task().expectCommands(c.completeRun(42)), ["ts"]);

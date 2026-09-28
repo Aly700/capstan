@@ -71,10 +71,10 @@ class ReplayRuntime implements WorkflowRuntime {
     this.activation = activation;
     this.commands = [];
     this.info = { ...this.info, attempt: activation.attempt, isReplaying: !!activation.completed };
-    for (const event of activation.external) { this.deliver(event); this.checkConditions(); }
     const timestamp = activation.started.time;
     if (!timestamp) throw new Error(`TaskStarted ${activation.started.eventId} has no time`);
     this.time = Number(timestamp.seconds) * 1_000 + timestamp.nanos / 1_000_000;
+    for (const event of activation.external) { this.deliver(event); this.checkConditions(); }
   }
   private emit(command: Command): void {
     if (this.closed) throw new Error("workflow emitted a command after closing");

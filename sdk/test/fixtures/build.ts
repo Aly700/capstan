@@ -7,6 +7,7 @@ export interface Fixture {
   name: string;
   workflow: string;
   description: string;
+  only?: string[];
   history: JsonObject[];
   expect: { commands: JsonObject[] } | { mismatch: { eventId: number } };
 }
