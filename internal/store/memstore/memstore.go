@@ -188,18 +188,14 @@ func cloneMessage[T proto.Message](v T) T {
 	}
 	return proto.Clone(v).(T)
 }
-func cloneValue[T any](v *T) *T {
-	if v == nil {
-		return nil
-	}
-	c := *v
-	return &c
-}
 func cloneRun(v *store.Run) *store.Run {
 	c := *v
 	c.Input = cloneMessage(v.Input)
 	c.Result = cloneMessage(v.Result)
 	c.Failure = cloneMessage(v.Failure)
+	c.RunDeadline = c.RunDeadline.UTC()
+	c.StartedAt = c.StartedAt.UTC()
+	c.ClosedAt = c.ClosedAt.UTC()
 	return &c
 }
 func cloneTask(v *store.Task) *store.Task {
@@ -207,6 +203,31 @@ func cloneTask(v *store.Task) *store.Task {
 	c.Activity = cloneMessage(v.Activity)
 	c.HeartbeatDetails = cloneMessage(v.HeartbeatDetails)
 	c.LastFailure = cloneMessage(v.LastFailure)
+	c.VisibleAt = c.VisibleAt.UTC()
+	c.LeasedUntil = c.LeasedUntil.UTC()
+	c.StartedAt = c.StartedAt.UTC()
+	c.ScheduledAt = c.ScheduledAt.UTC()
+	c.CheckAt = c.CheckAt.UTC()
+	c.LastHeartbeatAt = c.LastHeartbeatAt.UTC()
+	return &c
+}
+func cloneTimer(v *store.Timer) *store.Timer {
+	c := *v
+	c.DueAt = c.DueAt.UTC()
+	return &c
+}
+func cloneApproval(v *store.Approval) *store.Approval {
+	c := *v
+	c.DueAt = c.DueAt.UTC()
+	c.CheckAt = c.CheckAt.UTC()
+	c.RequestedAt = c.RequestedAt.UTC()
+	c.ResolvedAt = c.ResolvedAt.UTC()
+	return &c
+}
+func cloneCall(v *store.AICall) *store.AICall {
+	c := *v
+	c.At = c.At.UTC()
+	c.FinishedAt = c.FinishedAt.UTC()
 	return &c
 }
 func cloneEvents(v []*capstanv1.HistoryEvent) []*capstanv1.HistoryEvent {
@@ -229,10 +250,10 @@ func (s *snapshot) clone() *snapshot {
 		history:   cloneMap(s.history, cloneEvents),
 		inbox:     cloneMap(s.inbox, cloneEvents),
 		tasks:     cloneMap(s.tasks, cloneTask),
-		timers:    cloneMap(s.timers, cloneValue[store.Timer]),
-		approvals: cloneMap(s.approvals, cloneValue[store.Approval]),
+		timers:    cloneMap(s.timers, cloneTimer),
+		approvals: cloneMap(s.approvals, cloneApproval),
 		signals:   cloneMap(s.signals, func(v struct{}) struct{} { return v }),
-		calls:     cloneMap(s.calls, cloneValue[store.AICall]),
+		calls:     cloneMap(s.calls, cloneCall),
 	}
 }
 func limitRows[T any](rows []T, limit int) []T {
@@ -389,9 +410,9 @@ func (tx *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Tim
 	if oldest == nil {
 		return nil, nil
 	}
-	oldest.LeasedUntil = now.Add(lease)
+	oldest.LeasedUntil = now.Add(lease).UTC()
 	oldest.WorkerID = worker
-	oldest.StartedAt = now
+	oldest.StartedAt = now.UTC()
 	return cloneTask(oldest), nil
 }
 func (tx *transaction) GetTask(id int64, _ bool) (*store.Task, error) {
@@ -463,7 +484,7 @@ func (tx *transaction) InsertTimer(t *store.Timer) error {
 	if tx.data.timers[key] != nil {
 		return store.ErrAlreadyExists
 	}
-	tx.data.timers[key] = cloneValue(t)
+	tx.data.timers[key] = cloneTimer(t)
 	return nil
 }
 func (tx *transaction) DeleteTimer(id string, seq int64) (bool, error) {
@@ -485,7 +506,7 @@ func (tx *transaction) DueTimers(now time.Time, limit int) ([]*store.Timer, erro
 	var rows []*store.Timer
 	for _, t := range tx.data.timers {
 		if !t.DueAt.After(now) {
-			rows = append(rows, cloneValue(t))
+			rows = append(rows, cloneTimer(t))
 		}
 	}
 	slices.SortFunc(rows, func(a, b *store.Timer) int {
@@ -506,7 +527,7 @@ func (tx *transaction) RunTimers(id string) ([]*store.Timer, error) {
 	var rows []*store.Timer
 	for _, t := range tx.data.timers {
 		if t.RunID == id {
-			rows = append(rows, cloneValue(t))
+			rows = append(rows, cloneTimer(t))
 		}
 	}
 	slices.SortFunc(rows, func(a, b *store.Timer) int { return compare(a.Seq, b.Seq) })
@@ -520,7 +541,7 @@ func (tx *transaction) InsertApproval(a *store.Approval) error {
 	if tx.data.approvals[key] != nil {
 		return store.ErrAlreadyExists
 	}
-	tx.data.approvals[key] = cloneValue(a)
+	tx.data.approvals[key] = cloneApproval(a)
 	return nil
 }
 func (tx *transaction) GetApproval(id, approvalID string, _ bool) (*store.Approval, error) {
@@ -531,7 +552,7 @@ func (tx *transaction) GetApproval(id, approvalID string, _ bool) (*store.Approv
 	if a == nil {
 		return nil, store.ErrNotFound
 	}
-	return cloneValue(a), nil
+	return cloneApproval(a), nil
 }
 func (tx *transaction) UpdateApproval(a *store.Approval) error {
 	if err := tx.check(); err != nil {
@@ -541,7 +562,7 @@ func (tx *transaction) UpdateApproval(a *store.Approval) error {
 	if tx.data.approvals[key] == nil {
 		return store.ErrNotFound
 	}
-	tx.data.approvals[key] = cloneValue(a)
+	tx.data.approvals[key] = cloneApproval(a)
 	return nil
 }
 func (tx *transaction) RunApprovals(id string) ([]*store.Approval, error) {
@@ -551,7 +572,7 @@ func (tx *transaction) RunApprovals(id string) ([]*store.Approval, error) {
 	var rows []*store.Approval
 	for _, a := range tx.data.approvals {
 		if a.RunID == id {
-			rows = append(rows, cloneValue(a))
+			rows = append(rows, cloneApproval(a))
 		}
 	}
 	slices.SortFunc(rows, func(a, b *store.Approval) int { return compare(a.ApprovalID, b.ApprovalID) })
@@ -567,7 +588,7 @@ func (tx *transaction) DueApprovals(now time.Time, limit int) ([]*store.Approval
 	var rows []*store.Approval
 	for _, a := range tx.data.approvals {
 		if a.Status == store.ApprovalPending && !a.CheckAt.IsZero() && !a.CheckAt.After(now) {
-			rows = append(rows, cloneValue(a))
+			rows = append(rows, cloneApproval(a))
 		}
 	}
 	slices.SortFunc(rows, func(a, b *store.Approval) int {
@@ -601,7 +622,7 @@ func (tx *transaction) InsertAICall(c *store.AICall) error {
 	tx.owner.nextCallID++
 	c.ID = tx.owner.nextCallID
 	tx.owner.mu.Unlock()
-	tx.data.calls[c.ID] = cloneValue(c)
+	tx.data.calls[c.ID] = cloneCall(c)
 	return nil
 }
 func (tx *transaction) GetAICall(id int64, _ bool) (*store.AICall, error) {
@@ -612,7 +633,7 @@ func (tx *transaction) GetAICall(id int64, _ bool) (*store.AICall, error) {
 	if c == nil {
 		return nil, store.ErrNotFound
 	}
-	return cloneValue(c), nil
+	return cloneCall(c), nil
 }
 func (tx *transaction) UpdateAICall(c *store.AICall) error {
 	if err := tx.check(); err != nil {
@@ -621,7 +642,7 @@ func (tx *transaction) UpdateAICall(c *store.AICall) error {
 	if tx.data.calls[c.ID] == nil {
 		return store.ErrNotFound
 	}
-	tx.data.calls[c.ID] = cloneValue(c)
+	tx.data.calls[c.ID] = cloneCall(c)
 	return nil
 }
 func (tx *transaction) callSum(include func(*store.AICall) bool) (float64, error) {
