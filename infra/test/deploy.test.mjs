@@ -16,9 +16,10 @@ test('deployment requires a manual main-branch dispatch and rejects the server s
   assert.match(workflow, /role-to-assume: \$\{\{ vars.CAPSTAN_DEPLOY_ROLE_ARN \}\}/);
   assert.ok(workflow.indexOf('not implemented yet (server lane)') < workflow.indexOf('aws-actions/configure-aws-credentials'));
   assert.doesNotMatch(workflow, /pull_request|push:\s*$|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|secrets\./m);
+  assert.doesNotMatch(workflow, /allowed-account-ids:/, 'the pinned v4 action does not support this input');
 });
 
-function deploy(mode = 'missing') {
+function deploy(mode = 'missing', identity = 'expected') {
   assert.ok(existsSync(`${root}.github/scripts/deploy.sh`), 'deployment script is required');
   mkdirSync(`${root}.lane`, { recursive: true });
   const dir = mkdtempSync(`${root}.lane/deploy-test-`);
@@ -28,6 +29,10 @@ function deploy(mode = 'missing') {
 import {appendFileSync,writeFileSync,readFileSync} from 'node:fs';
 const tool=${JSON.stringify(name)}, args=process.argv.slice(2);
 appendFileSync(process.env.TRACE,JSON.stringify({tool,args})+'\\n');
+if(tool==='aws' && args.includes('get-caller-identity')) {
+  if(process.env.IDENTITY_MODE==='denied') { console.error('AccessDenied'); process.exit(254); }
+  console.log(process.env.IDENTITY_MODE==='wrong'?'111111111111':'000000000000'); process.exit(0);
+}
 if(tool==='aws' && args.includes('describe-images')) {
   if(process.env.IMAGE_MODE==='existing') process.exit(0);
   console.error(process.env.IMAGE_MODE==='denied'?'AccessDeniedException':'ImageNotFoundException'); process.exit(254);
@@ -39,12 +44,22 @@ if(tool==='npx') { const file=args[args.indexOf('--outputs-file')+1]; writeFileS
   }
   const env = Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith('AWS_')));
   const result = spawnSync('bash', [`${root}.github/scripts/deploy.sh`], {
-    cwd: root, encoding: 'utf8', env: { ...env, PATH: `${dir}:${process.env.PATH}`, TRACE: trace, IMAGE_MODE: mode,
+    cwd: root, encoding: 'utf8', env: { ...env, PATH: `${dir}:${process.env.PATH}`, TRACE: trace, IMAGE_MODE: mode, IDENTITY_MODE: identity,
       AWS_ACCOUNT_ID: '000000000000', AWS_REGION: 'us-east-1', COMMIT_SHA: 'a'.repeat(40), BUDGET_EMAIL: 'test@example.com', GATE_URL: '', TMPDIR: dir },
   });
   const calls = existsSync(trace) ? readFileSync(trace, 'utf8').trim().split('\n').map(JSON.parse) : [];
   return { result, calls };
 }
+
+test('wrong or unreadable AWS identity stops before any image or deployment operation', () => {
+  for (const identity of ['wrong', 'denied']) {
+    const { result, calls } = deploy('missing', identity);
+    assert.notEqual(result.status, 0, `identity ${identity} must fail closed`);
+    assert.equal(calls.length, 1, 'only the STS identity check may run');
+    assert.equal(calls[0].tool, 'aws');
+    assert.ok(calls[0].args.includes('get-caller-identity'));
+  }
+});
 
 test('deployment pushes ARM64 SHA image before deploying three workload stacks and smokes HTTPS', () => {
   const { result, calls } = deploy();
