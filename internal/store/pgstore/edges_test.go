@@ -25,8 +25,11 @@ func holdTransaction(t *testing.T, s store.Store, fn func(store.Tx) error) func(
 	unlock := func() { once.Do(func() { close(release) }) }
 	t.Cleanup(func() {
 		unlock()
+		// Let the released transaction commit before cancelling: cancelling first can interrupt
+		// the commit mid-write, which pgx reports as an i/o timeout. The 10 s context bounds the wait.
+		err := <-done
 		cancel()
-		if err := <-done; err != nil && !errors.Is(err, context.Canceled) {
+		if err != nil && !errors.Is(err, context.Canceled) {
 			t.Error(err)
 		}
 	})
