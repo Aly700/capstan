@@ -49,6 +49,19 @@ Replay walks the history in activations. An activation starts at a `TaskStarted`
    order, with the command events that immediately follow it. Otherwise these are the new
    commands returned to the server.
 
+An activation whose `TaskStarted` is followed by `TaskFailed` or `TaskTimedOut` instead of
+`TaskCompleted` was discarded by the server: replay runs no code for it and ignores its time.
+The external events recorded after it are resolved at the start of the next activation that
+is processed. The same applies to the activation that ended in `RunBlocked`; after
+`RunResumed`, the next activation re-runs that step with the current code.
+
+Two external events may legitimately refer to something already settled, and replay ignores
+them without error: a `TimerFired` for a timer the workflow already cancelled
+(`TimerCancelled` with the same `seq` is earlier in history), and an activity result that
+arrives after `ActivityCancelRequested` for its `seq` (it is delivered normally: a cancel
+request is a request, and a result that won the race wins). Any other event for an unknown
+or already-settled `seq` is an SDK error, not a mismatch.
+
 Two commands match when all of these are equal:
 
 | Command | Compared fields |
