@@ -1,12 +1,12 @@
 === RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs
 === RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/false
-    audit_privacy_test.go:38: credential "postgres://owner:audit-db-canary@127.0.0.1:55432/capstan_audit_private" leaked in error/log
+    audit_privacy_test.go:38: credential "[SYNTHETIC_DATABASE_URL_CANARY]" leaked in error/log
     audit_privacy_test.go:38: credential "audit-db-canary" leaked in error/log
     audit_privacy_test.go:38: credential "audit-gate-canary" leaked in error/log
     audit_privacy_test.go:38: credential "audit-api-canary" leaked in error/log
     audit_privacy_test.go:38: credential "audit-provider-canary" leaked in error/log
 === RUN   TestAuditConfiguredCredentialsStayOutOfRPCErrorsAndLogs/true
-    audit_privacy_test.go:38: credential "postgres://owner:audit-db-canary@127.0.0.1:55432/capstan_audit_private" leaked in error/log
+    audit_privacy_test.go:38: credential "[SYNTHETIC_DATABASE_URL_CANARY]" leaked in error/log
     audit_privacy_test.go:38: credential "audit-db-canary" leaked in error/log
     audit_privacy_test.go:38: credential "audit-gate-canary" leaked in error/log
     audit_privacy_test.go:38: credential "audit-api-canary" leaked in error/log

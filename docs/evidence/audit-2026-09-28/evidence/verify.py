@@ -132,4 +132,4 @@ for path in Path('internal/lab').glob('*.go'):
     if not path.name.endswith('_test.go'):
         wrappers.update(re.findall(r'^func \(\w+ \*faultTx\) (\w+)\(', path.read_text(), re.M))
 assert len(methods) == 35 and not methods - wrappers
-print('PASS fault wrapper covers all35 Tx methods; historical lab-l2 count34 is stale after D30')
+print('PASS fault wrapper covers all 35 Tx methods; original lab-l2 count 34 corrected after D30')

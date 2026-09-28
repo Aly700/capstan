@@ -1,0 +1,11 @@
+✔ cleanup rejects late resource creation (0.858084ms)
+✔ cleanup closes registration before awaiting any child (0.414416ms)
+✔ a failed spawn with no PID can be cleaned up (0.135542ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37.256917

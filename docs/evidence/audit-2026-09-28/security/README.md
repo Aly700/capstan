@@ -1,6 +1,6 @@
 # Security and SDK audit evidence — 2026-09-28
 
-These are locally executed command outputs, including failing regressions captured before fixes. All credential values in failure output are deliberately fake audit canaries. No provider request or AWS operation was made. The real-process privacy probe uses the shared PostgreSQL only through a fresh `capstan_audit_*` database, ports 7630/7631, and cleans up its own resources.
+These are locally executed command outputs, including failing regressions captured before fixes. All credential values in failure output are deliberately fake audit canaries. Six synthetic database URL tokens in the two failing diagnostic logs are replaced with `[SYNTHETIC_DATABASE_URL_CANARY]` for publication; failure assertions and all other output are retained. Unmasked originals remain in the ignored local `.lane/` directory. No provider request or AWS operation was made. The real-process privacy probe uses the shared PostgreSQL only through a fresh `capstan_audit_*` database, ports 7630/7631, and cleans up its own resources.
 
 ## Commands and results
 
