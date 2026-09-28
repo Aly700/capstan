@@ -34,6 +34,13 @@ describe("fixture builder", () => {
 describe("conformance corpus structure", () => {
   const files = readdirSync(fixtureDir).filter((file) => file.endsWith(".json")).sort();
   it("contains at least 24 additional fixtures", () => expect(files.length).toBeGreaterThanOrEqual(25));
+  it("shares the reviewed signal clock, patch memoization, and batched race edges", () => {
+    expect(files).toEqual(expect.arrayContaining([
+      "052-signal-handler-prior-clock.json",
+      "053-patch-false-memoized.json",
+      "054-race-batched-native-order.json",
+    ]));
+  });
   for (const file of files) {
     it(`${file} is valid protojson with gap-free history and a current activation`, () => {
       const fixture = JSON.parse(readFileSync(`${fixtureDir}/${file}`, "utf8"));

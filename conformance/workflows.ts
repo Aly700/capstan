@@ -167,3 +167,16 @@ export async function waitingOnly(): Promise<unknown> {
 export async function newSideEffect(): Promise<unknown> {
   return sideEffect(() => ({ saved: 7 }));
 }
+
+export async function signalHandlerClock(): Promise<number[]> {
+  let observed: number | undefined;
+  setHandler(defineSignal("go"), () => { observed = now(); });
+  await condition(() => observed !== undefined);
+  return [observed!, now()];
+}
+
+export async function repeatedOldPatch(): Promise<boolean[]> {
+  const first = patched("v2");
+  await activity("double", 21, options);
+  return [first, patched("v2")];
+}
