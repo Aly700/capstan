@@ -1,0 +1,156 @@
+=== RUN   TestClaimedRunLockDoesNotWaitAndRollsBackLease
+--- PASS: TestClaimedRunLockDoesNotWaitAndRollsBackLease (0.11s)
+=== RUN   TestConformance
+=== RUN   TestConformance/Runs/InsertGetUpdate
+=== RUN   TestConformance/Runs/InsertDuplicateIsAlreadyExists
+=== RUN   TestConformance/Runs/GetMissingIsNotFound
+=== RUN   TestConformance/Runs/ListFiltersAndPaginates
+=== RUN   TestConformance/Runs/RunsPastDeadlineOrdersAndLimits
+=== RUN   TestConformance/History/AppendContiguous
+=== RUN   TestConformance/History/AppendGapIsConflict
+=== RUN   TestConformance/History/AppendDuplicateIsConflict
+=== RUN   TestConformance/History/ReadAfterAndLimit
+=== RUN   TestConformance/History/ProtoRoundTripExact
+=== RUN   TestConformance/Inbox/ArrivalOrderAndDrainEmpties
+=== RUN   TestConformance/Inbox/Size
+=== RUN   TestConformance/Tasks/InsertAssignsIncreasingIDs
+=== RUN   TestConformance/Tasks/ClaimOldestVisibleUnleased
+=== RUN   TestConformance/Tasks/ClaimRespectsVisibleAt
+=== RUN   TestConformance/Tasks/ClaimNoneReturnsNil
+=== RUN   TestConformance/Tasks/UpdateAndGet
+=== RUN   TestConformance/Tasks/DueTasksOrderAndLimit
+=== RUN   TestConformance/Tasks/DeleteMissingIsNotError
+=== RUN   TestConformance/Tasks/RunTasks
+=== RUN   TestConformance/Timers/InsertDuplicateIsAlreadyExists
+=== RUN   TestConformance/Timers/DueOrderAndLimit
+=== RUN   TestConformance/Timers/DeleteReportsExistence
+=== RUN   TestConformance/Approvals/InsertGetUpdate
+=== RUN   TestConformance/Approvals/DueOnlyPending
+=== RUN   TestConformance/Signals/RecordDuplicateIsAlreadyExists
+=== RUN   TestConformance/Ledger/SpentSinceCountsReservedAtEstimate
+=== RUN   TestConformance/Ledger/RunCost
+=== RUN   TestConformance/Ledger/InsertGetUpdate
+=== RUN   TestConformance/Ledger/LockBudgetSerialises
+=== RUN   TestConformance/Tx/RollbackDiscardsEverything
+=== RUN   TestConformance/Tx/ErrorIsReturnedUnchanged
+=== RUN   TestConformance/Tx/HandledSentinelsPermitCommit
+=== RUN   TestConformance/Notify/DeliveredOnCommitOnly
+=== RUN   TestConformance/Notify/CoalescedNonBlocking
+=== RUN   TestConformance/Notify/CancelStopsDelivery
+=== RUN   TestConformance/Notify/OneWakePerTask
+=== RUN   TestConformance/Notify/MultipleTasksInOneTransaction
+=== RUN   TestConformance/Notify/RoundRobin
+=== RUN   TestConformance/Notify/SkipsPendingHints
+=== RUN   TestConformance/Notify/CancelPreservesRotation
+=== RUN   TestConformance/RunNotify/DeliveredOnCommitOnly
+=== RUN   TestConformance/RunNotify/RollbackDiscardsNotification
+=== RUN   TestConformance/RunNotify/IsolatedTopicsBroadcast
+=== RUN   TestConformance/RunNotify/CoalescedNonBlocking
+=== RUN   TestConformance/RunNotify/CancelIsIdempotent
+=== RUN   TestConformance/Concurrency/GetRunForUpdateSerialises
+=== RUN   TestConformance/Concurrency/ClaimSkipsLockedRows
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip/Run
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip/Task
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip/Timer
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip/Approval
+=== RUN   TestConformance/Time/ZeroTimesRoundTrip/AICall
+=== RUN   TestConformance/Time/UTCPreserved
+=== RUN   TestConformance/Time/UTCPreserved/Run
+=== RUN   TestConformance/Time/UTCPreserved/Task
+=== RUN   TestConformance/Time/UTCPreserved/Timer
+=== RUN   TestConformance/Time/UTCPreserved/Approval
+=== RUN   TestConformance/Time/UTCPreserved/AICall
+=== RUN   TestConformance/Time/UpdateUTCPreserved
+=== RUN   TestConformance/Time/UpdateUTCPreserved/Run
+=== RUN   TestConformance/Time/UpdateUTCPreserved/Task
+=== RUN   TestConformance/Time/UpdateUTCPreserved/Timer
+=== RUN   TestConformance/Time/UpdateUTCPreserved/Approval
+=== RUN   TestConformance/Time/UpdateUTCPreserved/AICall
+=== RUN   TestConformance/Time/ClaimUTCPreserved
+--- PASS: TestConformance (6.49s)
+    --- PASS: TestConformance/Runs/InsertGetUpdate (0.08s)
+    --- PASS: TestConformance/Runs/InsertDuplicateIsAlreadyExists (0.08s)
+    --- PASS: TestConformance/Runs/GetMissingIsNotFound (0.08s)
+    --- PASS: TestConformance/Runs/ListFiltersAndPaginates (0.09s)
+    --- PASS: TestConformance/Runs/RunsPastDeadlineOrdersAndLimits (0.08s)
+    --- PASS: TestConformance/History/AppendContiguous (0.09s)
+    --- PASS: TestConformance/History/AppendGapIsConflict (0.08s)
+    --- PASS: TestConformance/History/AppendDuplicateIsConflict (0.08s)
+    --- PASS: TestConformance/History/ReadAfterAndLimit (0.08s)
+    --- PASS: TestConformance/History/ProtoRoundTripExact (0.08s)
+    --- PASS: TestConformance/Inbox/ArrivalOrderAndDrainEmpties (0.08s)
+    --- PASS: TestConformance/Inbox/Size (0.08s)
+    --- PASS: TestConformance/Tasks/InsertAssignsIncreasingIDs (0.07s)
+    --- PASS: TestConformance/Tasks/ClaimOldestVisibleUnleased (0.08s)
+    --- PASS: TestConformance/Tasks/ClaimRespectsVisibleAt (0.08s)
+    --- PASS: TestConformance/Tasks/ClaimNoneReturnsNil (0.07s)
+    --- PASS: TestConformance/Tasks/UpdateAndGet (0.08s)
+    --- PASS: TestConformance/Tasks/DueTasksOrderAndLimit (0.08s)
+    --- PASS: TestConformance/Tasks/DeleteMissingIsNotError (0.08s)
+    --- PASS: TestConformance/Tasks/RunTasks (0.08s)
+    --- PASS: TestConformance/Timers/InsertDuplicateIsAlreadyExists (0.08s)
+    --- PASS: TestConformance/Timers/DueOrderAndLimit (0.08s)
+    --- PASS: TestConformance/Timers/DeleteReportsExistence (0.08s)
+    --- PASS: TestConformance/Approvals/InsertGetUpdate (0.08s)
+    --- PASS: TestConformance/Approvals/DueOnlyPending (0.08s)
+    --- PASS: TestConformance/Signals/RecordDuplicateIsAlreadyExists (0.08s)
+    --- PASS: TestConformance/Ledger/SpentSinceCountsReservedAtEstimate (0.08s)
+    --- PASS: TestConformance/Ledger/RunCost (0.08s)
+    --- PASS: TestConformance/Ledger/InsertGetUpdate (0.08s)
+    --- PASS: TestConformance/Ledger/LockBudgetSerialises (0.13s)
+    --- PASS: TestConformance/Tx/RollbackDiscardsEverything (0.09s)
+    --- PASS: TestConformance/Tx/ErrorIsReturnedUnchanged (0.07s)
+    --- PASS: TestConformance/Tx/HandledSentinelsPermitCommit (0.08s)
+    --- PASS: TestConformance/Notify/DeliveredOnCommitOnly (0.88s)
+    --- PASS: TestConformance/Notify/CoalescedNonBlocking (0.11s)
+    --- PASS: TestConformance/Notify/CancelStopsDelivery (0.07s)
+    --- PASS: TestConformance/Notify/OneWakePerTask (0.07s)
+    --- PASS: TestConformance/Notify/MultipleTasksInOneTransaction (0.08s)
+    --- PASS: TestConformance/Notify/RoundRobin (0.09s)
+    --- PASS: TestConformance/Notify/SkipsPendingHints (0.08s)
+    --- PASS: TestConformance/Notify/CancelPreservesRotation (0.07s)
+    --- PASS: TestConformance/RunNotify/DeliveredOnCommitOnly (0.28s)
+    --- PASS: TestConformance/RunNotify/RollbackDiscardsNotification (0.27s)
+    --- PASS: TestConformance/RunNotify/IsolatedTopicsBroadcast (1.07s)
+    --- PASS: TestConformance/RunNotify/CoalescedNonBlocking (0.11s)
+    --- PASS: TestConformance/RunNotify/CancelIsIdempotent (0.07s)
+    --- PASS: TestConformance/Concurrency/GetRunForUpdateSerialises (0.13s)
+    --- PASS: TestConformance/Concurrency/ClaimSkipsLockedRows (0.09s)
+    --- PASS: TestConformance/Time/ZeroTimesRoundTrip (0.08s)
+        --- PASS: TestConformance/Time/ZeroTimesRoundTrip/Run (0.00s)
+        --- PASS: TestConformance/Time/ZeroTimesRoundTrip/Task (0.00s)
+        --- PASS: TestConformance/Time/ZeroTimesRoundTrip/Timer (0.00s)
+        --- PASS: TestConformance/Time/ZeroTimesRoundTrip/Approval (0.00s)
+        --- PASS: TestConformance/Time/ZeroTimesRoundTrip/AICall (0.00s)
+    --- PASS: TestConformance/Time/UTCPreserved (0.08s)
+        --- PASS: TestConformance/Time/UTCPreserved/Run (0.00s)
+        --- PASS: TestConformance/Time/UTCPreserved/Task (0.00s)
+        --- PASS: TestConformance/Time/UTCPreserved/Timer (0.00s)
+        --- PASS: TestConformance/Time/UTCPreserved/Approval (0.00s)
+        --- PASS: TestConformance/Time/UTCPreserved/AICall (0.00s)
+    --- PASS: TestConformance/Time/UpdateUTCPreserved (0.09s)
+        --- PASS: TestConformance/Time/UpdateUTCPreserved/Run (0.00s)
+        --- PASS: TestConformance/Time/UpdateUTCPreserved/Task (0.00s)
+        --- PASS: TestConformance/Time/UpdateUTCPreserved/Timer (0.00s)
+        --- PASS: TestConformance/Time/UpdateUTCPreserved/Approval (0.00s)
+        --- PASS: TestConformance/Time/UpdateUTCPreserved/AICall (0.00s)
+    --- PASS: TestConformance/Time/ClaimUTCPreserved (0.08s)
+=== RUN   TestClaimTaskConcurrentWorkersClaimOnce
+--- PASS: TestClaimTaskConcurrentWorkersClaimOnce (0.38s)
+PASS
+ok  	github.com/Aly700/capstan/internal/store/pgstore	8.222s
+=== RUN   TestAuditPollProgressPastBusyRun
+=== RUN   TestAuditPollProgressPastBusyRun/workflow
+2026/09/28 13:41:28 INFO server listening address=127.0.0.1:7600
+    audit_poll_test.go:124: available task claimed in 10.108166ms; formerly busy task claimed after release
+2026/09/28 13:41:28 INFO server stopped
+=== RUN   TestAuditPollProgressPastBusyRun/activity
+2026/09/28 13:41:28 INFO server listening address=127.0.0.1:7600
+    audit_poll_test.go:124: available task claimed in 5.660291ms; formerly busy task claimed after release
+2026/09/28 13:41:28 INFO server stopped
+--- PASS: TestAuditPollProgressPastBusyRun (0.30s)
+    --- PASS: TestAuditPollProgressPastBusyRun/workflow (0.14s)
+    --- PASS: TestAuditPollProgressPastBusyRun/activity (0.17s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	1.813s

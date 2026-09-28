@@ -1,0 +1,102 @@
+Capstan crash demo · 2026-09-28T17:35:57.204Z
+Real Go binary + SDK worker + PostgreSQL. Wall-clock playback; no simulated crash or clock jump.
+Source: 2ce601e + this demo's working-tree files
+$ GOTOOLCHAIN=go1.26.4 go build -o .lane/bin/capstan-server ./cmd/capstan-server
+$ CAPSTAN_ADDR=127.0.0.1:7652 .lane/bin/capstan-server serve  # database capstan_audit_crash_11699_1790616957217
+$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # workflows: crash.ts
+PID  PGID UCOMM
+11737 11737 capstan-server  
+11742 11742 node
+$ capstan start crashSurvivor evidence-crash --queue evidence-crash
+{
+  "run": {
+    "runId": "evidence-crash",
+    "workflowType": "crashSurvivor",
+    "taskQueue": "evidence-crash",
+    "status": "running",
+    "startedAt": "2026-09-28T17:35:58.274Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+$ capstan describe evidence-crash
+{
+  "runId": "evidence-crash",
+  "workflowType": "crashSurvivor",
+  "taskQueue": "evidence-crash",
+  "status": "running",
+  "startedAt": "2026-09-28T17:35:58.274Z",
+  "lastEventId": 10,
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ kill -9 11737  # the SERVER, while the run is waiting on its first timer
+Server is unreachable. Worker stays alive. Waiting 4 real seconds, past the timer's deadline.
+$ CAPSTAN_ADDR=127.0.0.1:7652 .lane/bin/capstan-server serve  # restart on the SAME database
+Restarted server PID 11891; worker PID 11742 is unchanged.
+$ capstan describe evidence-crash
+{
+  "runId": "evidence-crash",
+  "workflowType": "crashSurvivor",
+  "taskQueue": "evidence-crash",
+  "status": "completed",
+  "startedAt": "2026-09-28T17:35:58.274Z",
+  "closedAt": "2026-09-28T17:36:12.461Z",
+  "lastEventId": 40,
+  "result": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "costUsd": 0,
+  "pendingActivities": 0,
+  "pendingApprovals": 0
+}
+$ capstan history evidence-crash
+1	2026-09-28T17:35:58.275Z	RUN_STARTED	workflowType=crashSurvivor
+2	2026-09-28T17:35:58.278Z	TASK_SCHEDULED
+3	2026-09-28T17:35:58.298Z	TASK_STARTED
+4	2026-09-28T17:35:58.311Z	TASK_COMPLETED
+5	2026-09-28T17:35:58.313Z	ACTIVITY_SCHEDULED	seq=1 activityType=step
+6	2026-09-28T17:35:58.323Z	ACTIVITY_COMPLETED	seq=1
+7	2026-09-28T17:35:58.325Z	TASK_SCHEDULED
+8	2026-09-28T17:35:58.330Z	TASK_STARTED
+9	2026-09-28T17:35:58.336Z	TASK_COMPLETED
+10	2026-09-28T17:35:58.338Z	TIMER_STARTED	seq=2
+11	2026-09-28T17:36:03.637Z	TIMER_FIRED	seq=2
+12	2026-09-28T17:36:03.640Z	TASK_SCHEDULED
+13	2026-09-28T17:36:04.310Z	TASK_STARTED
+14	2026-09-28T17:36:04.322Z	TASK_COMPLETED
+15	2026-09-28T17:36:04.324Z	ACTIVITY_SCHEDULED	seq=3 activityType=step
+16	2026-09-28T17:36:04.335Z	ACTIVITY_COMPLETED	seq=3
+17	2026-09-28T17:36:04.336Z	TASK_SCHEDULED
+18	2026-09-28T17:36:04.340Z	TASK_STARTED
+19	2026-09-28T17:36:04.347Z	TASK_COMPLETED
+20	2026-09-28T17:36:04.348Z	TIMER_STARTED	seq=4
+21	2026-09-28T17:36:09.369Z	TIMER_FIRED	seq=4
+22	2026-09-28T17:36:09.371Z	TASK_SCHEDULED
+23	2026-09-28T17:36:09.377Z	TASK_STARTED
+24	2026-09-28T17:36:09.386Z	TASK_COMPLETED
+25	2026-09-28T17:36:09.387Z	ACTIVITY_SCHEDULED	seq=5 activityType=step
+26	2026-09-28T17:36:09.396Z	ACTIVITY_COMPLETED	seq=5
+27	2026-09-28T17:36:09.397Z	TASK_SCHEDULED
+28	2026-09-28T17:36:09.401Z	TASK_STARTED
+29	2026-09-28T17:36:09.406Z	TASK_COMPLETED
+30	2026-09-28T17:36:09.407Z	TIMER_STARTED	seq=6
+31	2026-09-28T17:36:12.411Z	TIMER_FIRED	seq=6
+32	2026-09-28T17:36:12.413Z	TASK_SCHEDULED
+33	2026-09-28T17:36:12.419Z	TASK_STARTED
+34	2026-09-28T17:36:12.428Z	TASK_COMPLETED
+35	2026-09-28T17:36:12.429Z	ACTIVITY_SCHEDULED	seq=7 activityType=step
+36	2026-09-28T17:36:12.444Z	ACTIVITY_COMPLETED	seq=7
+37	2026-09-28T17:36:12.445Z	TASK_SCHEDULED
+38	2026-09-28T17:36:12.453Z	TASK_STARTED
+39	2026-09-28T17:36:12.458Z	TASK_COMPLETED
+40	2026-09-28T17:36:12.459Z	RUN_COMPLETED
+PASS: result [1,2,3,4]; 10 pre-crash events preserved as an exact prefix; 4 activity completions; 3 distinct timer firings.
+Cleanup: stopping this demo's processes and dropping its database.

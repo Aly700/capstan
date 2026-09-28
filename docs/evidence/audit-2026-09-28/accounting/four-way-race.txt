@@ -1,0 +1,66 @@
+=== RUN   TestAuditPostgresFourWayTerminalRace
+=== RUN   TestAuditPostgresFourWayTerminalRace/0
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/1
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/2
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/3
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/4
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/5
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/6
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/7
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/8
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/9
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/10
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/11
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/12
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/13
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/14
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/15
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/16
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/17
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/18
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== RUN   TestAuditPostgresFourWayTerminalRace/19
+    audit_race_test.go:215: three observed DB lock waiters; one timer proven due; held-lock sweep skipped; terminal=1 timer_fired=0 tasks/timers/inbox/approvals=0
+=== NAME  TestAuditPostgresFourWayTerminalRace
+    audit_race_test.go:218: 20 four-way races: completed=10 terminated=10 timer_fired=0 timer_removed_at_close=20; no duplicate terminal/timer events or remaining resources
+--- PASS: TestAuditPostgresFourWayTerminalRace (1.27s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/0 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/1 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/2 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/3 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/4 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/5 (0.12s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/6 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/7 (0.04s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/8 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/9 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/10 (0.07s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/11 (0.06s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/12 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/13 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/14 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/15 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/16 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/17 (0.05s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/18 (0.04s)
+    --- PASS: TestAuditPostgresFourWayTerminalRace/19 (0.05s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	2.606s

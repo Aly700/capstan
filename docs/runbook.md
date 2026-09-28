@@ -1,9 +1,13 @@
 # Capstan deployment runbook
 
-This lane builds and synthesizes infrastructure only. Nothing has been deployed or
-validated in AWS. The current server stub exits 1; the deploy workflow rejects it.
-Use the deployment steps only after the lead has integrated the server, store, engine
-and SDK, passed `make verify`, and authorized the live proof.
+This runbook describes the deployment design and operator procedures. The integrated
+server runs locally against PostgreSQL; the [independent audit](evidence/audit-2026-09-28.md)
+exercises that implementation. AWS deployment, identity, prices, alarms and destruction
+were outside the local audit's permitted scope. Obtain current deployment evidence from
+the deployment lane before treating those procedures as validated.
+
+The documented deployment uses one server task. The local audit's successful two-process
+timer test does not establish general multiple-server support.
 
 ## Shape and cost boundary
 
@@ -39,7 +43,7 @@ Compose `down`; all lanes share it. These checks do not start another database:
 make verify
 docker build -t capstan-server:lane .
 docker run --rm capstan-server:lane
-# Until server integration: exit 1, capstan-server: not implemented yet (server lane)
+# Without required configuration: exit 1; this is not a configured-server smoke test.
 cd infra
 npm ci
 npm run typecheck
@@ -54,7 +58,7 @@ or bootstrap roles. `LegacyStackSynthesizer` lets deployment pass a specific
 CloudFormation execution role. Tests also enforce the 51,200-byte inline template limit.
 See [CDK synthesis options](https://docs.aws.amazon.com/cdk/v2/guide/customize-synth.html).
 
-For local server use after integration, the optional Compose service is under profile
+For local server use, the optional Compose service is under profile
 `full`. The defaults point at `postgres:5432` inside Compose; a host-side database URL
 from `.env` must be adjusted before using that service. On this shared machine, continue
 using the existing database and run the server directly; do not bring up this worktree's

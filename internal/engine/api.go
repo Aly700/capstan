@@ -112,7 +112,7 @@ var DefaultModelPrices = map[string]ModelPrice{
 	"claude-opus-5":    {Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
 	"claude-sonnet-5":  {Input: 2, Output: 10, CacheRead: 0.2, CacheWrite: 2.5},
 	"claude-haiku-4-5": {Input: 1, Output: 5, CacheRead: 0.1, CacheWrite: 1.25},
-	"claude-fable-5-1": {Input: 10, Output: 50, CacheRead: 0.25, CacheWrite: 12.5},
+	"claude-fable-5-1": {Input: 10, Output: 50, CacheRead: 1, CacheWrite: 12.5},
 }
 
 // Config holds the engine's tunables. Zero values are replaced by the defaults below.

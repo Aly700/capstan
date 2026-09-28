@@ -1,0 +1,37 @@
+=== RUN   TestAuditPostgresConcurrentAIReservations
+    audit_accounting_test.go:159: 16 independent activity reservations at $0.60 against $1 cap: accepted=1 rejected=15
+--- PASS: TestAuditPostgresConcurrentAIReservations (0.48s)
+=== RUN   TestAuditPostgresAIInvalidEstimates
+    audit_accounting_test.go:175: negative, sub-micro negative, NaN and both infinities rejected over RPC; ledger unchanged
+--- PASS: TestAuditPostgresAIInvalidEstimates (0.14s)
+=== RUN   TestAuditPostgresAIPricingAndRounding
+    audit_accounting_test.go:209: model=unpriced estimate=0.1234565 input=100 read=0 ok=true usage_unknown=false cost=0.123457 (repeat identical)
+    audit_accounting_test.go:209: model=claude-sonnet-5 estimate=1.0000000 input=0 read=1 ok=true usage_unknown=false cost=0.000000 (repeat identical)
+    audit_accounting_test.go:209: model=claude-sonnet-5 estimate=1.0000000 input=0 read=3 ok=true usage_unknown=false cost=0.000001 (repeat identical)
+    audit_accounting_test.go:209: model=claude-fable-5-1 estimate=1.0000000 input=0 read=2 ok=true usage_unknown=false cost=0.000001 (repeat identical)
+    audit_accounting_test.go:209: model=claude-fable-5-1 estimate=1.0000000 input=0 read=1000000 ok=true usage_unknown=false cost=0.250000 (repeat identical)
+    audit_accounting_test.go:209: model=claude-haiku-4-5-20251001 estimate=1.0000000 input=1000000 read=0 ok=true usage_unknown=false cost=1.000000 (repeat identical)
+    audit_accounting_test.go:209: model=claude-opus-50 estimate=0.2000000 input=1000000 read=0 ok=true usage_unknown=false cost=0.200000 (repeat identical)
+    audit_accounting_test.go:209: model=claude-sonnet-5 estimate=0.7000005 input=0 read=0 ok=false usage_unknown=true cost=0.700001 (repeat identical)
+    audit_accounting_test.go:209: model=claude-sonnet-5 estimate=0.7000000 input=1000000 read=0 ok=false usage_unknown=true cost=2.000000 (repeat identical)
+    audit_accounting_test.go:209: model=claude-sonnet-5 estimate=0.7000000 input=0 read=0 ok=false usage_unknown=false cost=0.000000 (repeat identical)
+--- PASS: TestAuditPostgresAIPricingAndRounding (0.19s)
+=== RUN   TestAuditPostgresLostReserveAckAndTorontoMidnight
+=== RUN   TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-09-29T03:59:59Z
+    audit_accounting_test.go:255: 2026-09-29T03:59:59Z: dropped post-commit ack consumes $1 until Toronto midnight; next day's $1 accepted; durable total=$2
+=== RUN   TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-12-01T04:59:59Z
+    audit_accounting_test.go:255: 2026-12-01T04:59:59Z: dropped post-commit ack consumes $1 until Toronto midnight; next day's $1 accepted; durable total=$2
+=== RUN   TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-03-08T04:59:59Z
+    audit_accounting_test.go:255: 2026-03-08T04:59:59Z: dropped post-commit ack consumes $1 until Toronto midnight; next day's $1 accepted; durable total=$2
+=== RUN   TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-11-01T03:59:59Z
+    audit_accounting_test.go:255: 2026-11-01T03:59:59Z: dropped post-commit ack consumes $1 until Toronto midnight; next day's $1 accepted; durable total=$2
+--- PASS: TestAuditPostgresLostReserveAckAndTorontoMidnight (0.51s)
+    --- PASS: TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-09-29T03:59:59Z (0.13s)
+    --- PASS: TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-12-01T04:59:59Z (0.13s)
+    --- PASS: TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-03-08T04:59:59Z (0.12s)
+    --- PASS: TestAuditPostgresLostReserveAckAndTorontoMidnight/2026-11-01T03:59:59Z (0.13s)
+=== RUN   TestAuditPostgresAIUnderestimateObservation
+    audit_accounting_test.go:272: LIMITATION: $1 cap accepted a $0 reservation then recorded $2 of actual usage; reservation cap is not an unconditional provider-spend cap
+--- PASS: TestAuditPostgresAIUnderestimateObservation (0.15s)
+PASS
+ok  	github.com/Aly700/capstan/internal/server	2.833s

@@ -1,0 +1,114 @@
+[
+  {
+    "command": "scripts/run-load.sh 50 1000 4",
+    "date": "2026-09-28T17:40:51.734Z",
+    "raw_directory": ".lane/load_c50_w4-1790617250012",
+    "result": {
+      "runs": 1000,
+      "concurrency": 50,
+      "completed": 1000,
+      "errors": 0,
+      "activities": 5000,
+      "elapsed_seconds": 9.937190667,
+      "runs_per_second": 100.63206327728602,
+      "activities_per_second": 503.1603163864301,
+      "p50_ms": 492.353958,
+      "p99_ms": 567.800125
+    },
+    "audit": {
+      "runs": 1000,
+      "completed": 1000,
+      "other": 0,
+      "activity_completions": 5000,
+      "task_failures": 0,
+      "remaining_tasks": 0
+    },
+    "sampler": {
+      "samples": 11,
+      "window_seconds": 11.081,
+      "postgres_cpu_percent": 179.14352495262162,
+      "server_cpu_percent": 164.42559335800019,
+      "worker_cpu_percent": [
+        38.3539391751647,
+        37.722227235809044,
+        36.549047919862836,
+        37.000270733688296
+      ],
+      "max_waiting_locks": 0,
+      "max_ready_tasks": 18,
+      "max_leased_tasks": 47,
+      "max_active_or_in_transaction": 40,
+      "backend_observations": {
+        "idle / Client / ClientRead": 130,
+        "active / Client / ClientRead": 7,
+        "idle in transaction / Client / ClientRead": 291,
+        "idle in transaction / None / None": 18,
+        "idle in transaction / LWLock / ProcArray": 1,
+        "active / None / None": 14,
+        "idle / None / None": 1
+      },
+      "other_active_databases": [
+        "capstan_audit_e33e85fea84d28ba",
+        "capstan_audit_f2008c07edb4324b"
+      ],
+      "deadlocks_delta": 0,
+      "transactions_delta": 37608
+    }
+  },
+  {
+    "command": "scripts/run-load.sh 200 1000 4",
+    "date": "2026-09-28T17:42:04.258Z",
+    "raw_directory": ".lane/load_c200_w4-1790617322721",
+    "result": {
+      "runs": 1000,
+      "concurrency": 200,
+      "completed": 1000,
+      "errors": 0,
+      "activities": 5000,
+      "elapsed_seconds": 10.721338083,
+      "runs_per_second": 93.27193977640002,
+      "activities_per_second": 466.35969888200015,
+      "p50_ms": 2099.800625,
+      "p99_ms": 2361.649125
+    },
+    "audit": {
+      "runs": 1000,
+      "completed": 1000,
+      "other": 0,
+      "activity_completions": 5000,
+      "task_failures": 0,
+      "remaining_tasks": 0
+    },
+    "sampler": {
+      "samples": 11,
+      "window_seconds": 11.043,
+      "postgres_cpu_percent": 189.36826949198587,
+      "server_cpu_percent": 176.9446708322014,
+      "worker_cpu_percent": [
+        37.3992574481572,
+        37.67092275649733,
+        37.58036765371728,
+        37.308702345377164
+      ],
+      "max_waiting_locks": 1,
+      "max_ready_tasks": 164,
+      "max_leased_tasks": 39,
+      "max_active_or_in_transaction": 40,
+      "backend_observations": {
+        "idle / Client / ClientRead": 121,
+        "active / Client / ClientRead": 7,
+        "idle / None / None": 1,
+        "idle in transaction / Client / ClientRead": 312,
+        "idle in transaction / None / None": 7,
+        "active / None / None": 7,
+        "active / Lock / transactionid": 1
+      },
+      "other_active_databases": [
+        "capstan_audit_e33e85fea84d28ba",
+        "capstan_audit_f2008c07edb4324b"
+      ],
+      "deadlocks_delta": 0,
+      "transactions_delta": 34822
+    }
+  }
+]

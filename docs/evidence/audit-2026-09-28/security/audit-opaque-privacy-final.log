@@ -1,0 +1,2 @@
+{"case":"activity_failure","fake_canary_only":true,"run_status":"RUN_STATUS_FAILED","history_contains_provider_credential":false,"describe_contains_provider_credential":false,"cli_contains_provider_credential":false,"ui_data_source_contains_provider_credential":false}
+{"case":"opaque_successful_result","fake_canary_only":true,"run_status":"RUN_STATUS_COMPLETED","history_contains_provider_credential":true,"describe_contains_provider_credential":true}

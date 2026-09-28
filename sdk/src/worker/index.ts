@@ -8,6 +8,7 @@ import { bundleWorkflows } from "../sandbox/bundle.ts";
 import { replay } from "../replay/runtime.ts";
 import { failureToProto } from "../internal/failure.ts";
 import { encode } from "../internal/payload.ts";
+import { diagnosticRedactor, redactDiagnosticValue, type Redactor } from "../internal/privacy.ts";
 import { CancelledFailure, HistoryMismatchError } from "../types.ts";
 import { activityStorage, executeActivity } from "./activities.ts";
 import { createTransport } from "./transport.ts";
@@ -74,6 +75,7 @@ export class Worker {
   private bundle!: Awaited<ReturnType<typeof bundleWorkflows>>;
   private identity = "";
   private buildId = "";
+  private redact: Redactor = (text) => text;
   private readonly polls = new AbortController();
   private readonly tasks = new AbortController();
   private running: Promise<void> | undefined;
@@ -85,6 +87,7 @@ export class Worker {
     }
     const worker = new Worker();
     worker.options = options;
+    worker.redact = diagnosticRedactor([options.apiKey, options.gateApiKey]);
     worker.client = createClient(WorkerService, createTransport(options));
     worker.bundle = await bundleWorkflows(options.workflowsPath);
     worker.identity = options.identity ?? `${hostname()}:${process.pid}`;
@@ -94,6 +97,7 @@ export class Worker {
 
   private log = (entry: Record<string, unknown>) => {
     try {
+      entry = redactDiagnosticValue(entry, this.redact);
       if (this.options.logger) this.options.logger(entry);
       else process.stderr.write(`${JSON.stringify(entry)}\n`);
     } catch { /* Logging must not change task outcomes. */ }
@@ -106,7 +110,7 @@ export class Worker {
     } catch (error) {
       if (this.tasks.signal.aborted) return;
       const mismatch = error instanceof HistoryMismatchError || (error instanceof Error && error.name === "HistoryMismatchError");
-      const failure = failureToProto(error);
+      const failure = failureToProto(error, this.redact);
       if (mismatch) failure.details = encode({ $capstan: { kind: "mismatch", eventId: (error as HistoryMismatchError).eventId } });
       await report(() => this.client.failWorkflowTask({ taskToken: task.taskToken, cause: mismatch ? TaskFailedCause.HISTORY_MISMATCH : TaskFailedCause.SDK_ERROR, failure, identity: this.identity }, { signal: this.tasks.signal }), this.log, "workflow");
       return;
@@ -132,7 +136,7 @@ export class Worker {
         ...this.options.activities,
         "capstan.gate.decide": createGateActivity(this.options),
         "capstan.model": createModelActivity({ client: this.client, taskToken: task.taskToken, ...(this.options.model === undefined ? {} : { model: this.options.model }) }),
-      }, settleOnAbort: task.activityType === "capstan.model", identity: this.identity, shutdown: this.tasks.signal, logger: this.log }),
+      }, settleOnAbort: task.activityType === "capstan.model", identity: this.identity, shutdown: this.tasks.signal, logger: this.log, redact: this.redact }),
     }));
     this.running = Promise.all(loops).then(() => {});
     return this.running;

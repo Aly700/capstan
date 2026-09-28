@@ -1,0 +1,2 @@
+git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/023-gate-late-decision.patch]: exit status 1: error: patch failed: internal/engine/approvals.go:173
+error: internal/engine/approvals.go: patch does not apply

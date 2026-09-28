@@ -1,5 +1,11 @@
 # Evidence index
 
+The [independent audit](audit-2026-09-28.md) is the current verification ledger.
+Rows below describe the original evidence lane's measurements, which the audit checks
+separately. Historical load and large lab campaigns lack their referenced raw logs;
+those traceability claims are FAILED in the audit. Fresh commands and raw measurements
+are preserved under [audit-2026-09-28/](audit-2026-09-28/).
+
 Measurements and demonstrations run on **2026-09-28** in `lane/evidence`, starting
 from integration commit `73804f2`. Every VERIFIED row below has been executed against
 the real binaries. Pending rows are explicit gaps, not claims established by these demos.
@@ -32,18 +38,13 @@ transaction/polling path to PostgreSQL. They do not establish a row-lock-bound
 `SKIP LOCKED` ceiling. All repeats and the sample that observed another lane's
 activity are retained.
 
-## Pending evidence
+## Integrated implementation and remaining evidence gaps
 
-The lab lane owns `lab-*.md` and `defects.md`; those files and its CLI are not in this
-worktree's starting revision. The lab command above comes from the plan and is
-marked pending until its owner supplies the campaign. No lab result is inferred
-from the crash demo's completion count.
-
-`human()` remained a stub in main when checked on 2026-09-28. The explicitly permitted
-signal fallback proves an idle wait with no worker process or leased task in this
-demo, followed by persisted signal delivery and successful resume. Five real seconds
-are not multi-day clock-jump evidence. The complete approval/days claim stays pending.
-
+The lab and `human()` implementations are now integrated. The original idle recording
+still demonstrates a five-second signal wait; it does not become a human-approval or
+multi-day recording retroactively. The audit adds an authenticated PostgreSQL RPC test
+that advances the engine clock seven days with no worker and no task lease, then approves
+and completes the run. A live multi-day Gate deployment remains outside that proof.
 
 ## Verification
 
@@ -56,10 +57,9 @@ node --test scripts/evidence-lib.test.mjs
 
 The merge gate passed, including generated-code drift checks, buf lint, gofmt,
 Go vet, all Go tests with the race detector and real PostgreSQL tests, SDK typecheck,
-and **295 SDK tests in 13 files**, including both real-server e2e cases. This revision's
-Makefile does not itself set `CAPSTAN_E2E`, so the command above enables it explicitly
-and reserves port 7399 for this lane. No lab package exists in this base revision;
-its campaign is pending integration.
+and **295 SDK tests in 13 files**, including both real-server e2e cases. Those counts describe the evidence lane's original revision. The integrated Makefile
+sets `CAPSTAN_E2E=1` itself and includes the lab. Current gate output and audit ports
+are recorded in the independent audit.
 
 Three harness regression tests also passed. A real SIGTERM interruption during the
 crash demo exited 130 and left no owned process groups or evidence databases.

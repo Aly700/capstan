@@ -71,17 +71,45 @@ func (t *transaction) DeleteTask(id int64) error {
 }
 
 func (t *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Time, lease time.Duration, workerID string) (*store.Task, error) {
-	v, err := scanTask(t.tx.QueryRow(t.ctx, "select "+taskColumns+` from task where kind=$1 and task_queue=$2 and visible_at<=$3 and leased_until is null order by visible_at,id limit 1 for update skip locked`, kind, queue, nullTime(now)))
-	if errors.Is(err, store.ErrNotFound) {
-		return nil, nil
-	}
-	if err != nil {
-		return nil, err
+	skipped := []string{}
+	var v *store.Task
+	for {
+		var err error
+		v, err = scanTask(t.tx.QueryRow(t.ctx, "select "+taskColumns+` from task where kind=$1 and task_queue=$2 and visible_at<=$3 and leased_until is null and not (run_id=any($4::text[])) order by visible_at,id limit 1 for update skip locked`, kind, queue, nullTime(now), skipped))
+		if errors.Is(err, store.ErrNotFound) {
+			return nil, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		// Probe the parent without retaining its lock: store callers may claim
+		// different activities of one run concurrently. A savepoint also clears
+		// NOWAIT's aborted state so this poll can try the next task when busy.
+		if _, err = t.tx.Exec(t.ctx, "savepoint capstan_claim_run"); err != nil {
+			return nil, dbError(err)
+		}
+		_, probeErr := t.tx.Exec(t.ctx, "select 1 from run where run_id=$1 for update nowait", v.RunID)
+		if _, err = t.tx.Exec(t.ctx, "rollback to savepoint capstan_claim_run"); err != nil {
+			return nil, dbError(err)
+		}
+		if _, err = t.tx.Exec(t.ctx, "release savepoint capstan_claim_run"); err != nil {
+			return nil, dbError(err)
+		}
+		if probeErr == nil {
+			break
+		}
+		var state interface{ SQLState() string }
+		if !errors.As(probeErr, &state) || state.SQLState() != "55P03" {
+			return nil, dbError(probeErr)
+		}
+		// Every task of this busy run would hit the same lock. Skip the run
+		// for this transaction so a large fan-out cannot consume the poll deadline.
+		skipped = append(skipped, v.RunID)
 	}
 	v.LeasedUntil = now.Add(lease).UTC()
 	v.WorkerID = workerID
 	v.StartedAt = now.UTC()
-	_, err = t.tx.Exec(t.ctx, `update task set leased_until=$2,worker_id=$3,started_at=$4 where id=$1`, v.ID, nullTime(v.LeasedUntil), v.WorkerID, nullTime(v.StartedAt))
+	_, err := t.tx.Exec(t.ctx, `update task set leased_until=$2,worker_id=$3,started_at=$4 where id=$1`, v.ID, nullTime(v.LeasedUntil), v.WorkerID, nullTime(v.StartedAt))
 	if err != nil {
 		return nil, dbError(err)
 	}

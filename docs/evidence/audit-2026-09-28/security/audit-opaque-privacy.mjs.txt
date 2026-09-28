@@ -1,0 +1,26 @@
+import { execFileSync } from "node:child_process";
+import { join } from "node:path";
+import { Evidence, managed, root, until } from "../scripts/evidence-lib.mjs";
+const canary = "audit-fake-provider-credential";
+const evidence = new Evidence("opaque_privacy", 7631, { databasePrefix: "capstan_audit" });
+await managed(evidence, async (e) => {
+  e.child(process.execPath, ["--import", "tsx", join(root,".lane/audit-opaque-worker.mts")], "opaque-worker", {
+    CAPSTAN_ADDRESS: e.address, CAPSTAN_API_KEY: e.key, AUDIT_QUEUE: e.queue,
+    AUDIT_WORKFLOWS: join(root,".lane/audit-opaque-workflows.ts"), ANTHROPIC_API_KEY: canary,
+  }, join(root,"sdk"));
+  await e.start("auditSecretFailure","audit-private-failure");
+  const run = await until("failed run", async () => {
+    const { run } = await e.rpc("DescribeRun",{runId:"audit-private-failure"});
+    return run.status === "RUN_STATUS_FAILED" ? run : undefined;
+  });
+  const history = await e.history("audit-private-failure");
+  const cli = execFileSync(process.execPath,[join(root,"sdk/bin/capstan.mjs"),"history","audit-private-failure","--json"],{
+    cwd:root,env:{...process.env,CAPSTAN_ADDRESS:e.address,CAPSTAN_API_KEY:e.key},encoding:"utf8",
+  });
+  console.log(JSON.stringify({case:"activity_failure",fake_canary_only:true,run_status:run.status,history_contains_provider_credential:JSON.stringify(history).includes(canary),describe_contains_provider_credential:JSON.stringify(run).includes(canary),cli_contains_provider_credential:cli.includes(canary),ui_data_source_contains_provider_credential:JSON.stringify(history).includes(canary)}));
+  await e.start("auditSecretResult", "audit-private-result");
+  const completed = await e.status("audit-private-result", "RUN_STATUS_COMPLETED");
+  const results = await e.history("audit-private-result");
+  const decodedPayloads = results.flatMap((event) => Object.values(event)).filter((value) => value && typeof value === "object" && value.result).map((value) => Buffer.from(value.result.data || "", "base64").toString());
+  console.log(JSON.stringify({ case:"opaque_successful_result", fake_canary_only:true,run_status:completed.status,history_contains_provider_credential:decodedPayloads.some((value) => value.includes(canary)),describe_contains_provider_credential:Buffer.from(completed.result.data,"base64").toString().includes(canary) }));
+});

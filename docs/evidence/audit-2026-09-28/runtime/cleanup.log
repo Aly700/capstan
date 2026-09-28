@@ -1,0 +1,11 @@
+Command: python3 .lane/audit-cleanup-check.py
+Read-only post-gate resource inventory. No process or database was removed by this check.
+database query command (password supplied only by environment): ["psql", "-X", "-h", "127.0.0.1", "-p", "55432", "-U", "capstan", "-d", "capstan", "-At", "-v", "ON_ERROR_STOP=1", "-c", "select datname from pg_database where datname like 'capstan_audit_%' or datname like 'capstan_server_test_%' order by datname"]
+database query exit: 0
+remaining audit/initial-test databases: []
+lsof listener exit: 1
+remaining listeners on audit ports7600-7699: []
+remaining owned server/worker/SQL helper processes (arguments suppressed): []
+remaining audit mutation worktrees: []
+shared PostgreSQL select1: {"exit": 0, "result": "1"}
+Additional ps comm + per-PID lsof cwd inventory found 15 Node processes with this cwd. Launcher inspection identified only the active Codex CLI and its MCP services (pagebolt, Playwright, shadcn, context7, chrome-devtools telemetry, xcodebuildmcp), not audit servers/workers or SQL lock holders; these session-owned tools were left running. Full process arguments were not published.

@@ -1,5 +1,12 @@
 # Load measurements
 
+Audit traceability note (2026-09-28): the tables below match the committed
+`load-results.json`, but all 61 referenced raw run directories are absent from this
+worktree. The historical latency/CPU/lock measurements therefore **FAIL independent
+raw-data traceability**. They are retained as reported measurements, not replaced or
+reconstructed. Fresh audit runs with committed raw samples are linked in the
+[audit](audit-2026-09-28.md).
+
 Verified on 2026-09-28. This is the complete set of **11 measured runs**: 11,700
 workflows and 58,500 persisted activity completions, with zero failed runs. The best
 observed run was 78.7942 runs/s at concurrency 50. Throughput stopped improving in

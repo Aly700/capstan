@@ -116,7 +116,7 @@ func TestFinishRoundsUSDToMicroDollars(t *testing.T) {
 	}{
 		{"one_cache_read_token", "claude-sonnet-5", 1, 0},
 		{"three_cache_read_tokens", "claude-sonnet-5", 3, .000001},
-		{"half_micro_dollar", "claude-fable-5-1", 2, .000001},
+		{"half_micro_dollar", "claude-haiku-4-5", 5, .000001}, // 5 × $0.10/M = $0.0000005, a tie
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			e, _, s := newTestEngine(t)

@@ -1,0 +1,5 @@
+ok  	github.com/Aly700/capstan/cmd/capstan-server	2.604s
+ok  	github.com/Aly700/capstan/internal/auth	1.255s
+ok  	github.com/Aly700/capstan/internal/config	1.813s
+ok  	github.com/Aly700/capstan/internal/server	4.667s
+ok  	github.com/Aly700/capstan/internal/gate	1.981s

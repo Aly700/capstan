@@ -1,0 +1,17 @@
+=== RUN   TestAuditReviewClaimBusyBacklog
+=== RUN   TestAuditReviewClaimBusyBacklog/64
+    audit_claim_review_test.go:61: busy tasks=64 elapsed=6.727125ms error=<nil>
+=== RUN   TestAuditReviewClaimBusyBacklog/512
+    audit_claim_review_test.go:61: busy tasks=512 elapsed=6.247459ms error=<nil>
+=== RUN   TestAuditReviewClaimBusyBacklog/2048
+    audit_claim_review_test.go:61: busy tasks=2048 elapsed=5.715042ms error=<nil>
+--- PASS: TestAuditReviewClaimBusyBacklog (1.05s)
+    --- PASS: TestAuditReviewClaimBusyBacklog/64 (0.12s)
+    --- PASS: TestAuditReviewClaimBusyBacklog/512 (0.26s)
+    --- PASS: TestAuditReviewClaimBusyBacklog/2048 (0.67s)
+=== RUN   TestClaimedRunLockDoesNotWaitAndRollsBackLease
+--- PASS: TestClaimedRunLockDoesNotWaitAndRollsBackLease (0.10s)
+=== RUN   TestClaimTaskConcurrentWorkersClaimOnce
+--- PASS: TestClaimTaskConcurrentWorkersClaimOnce (0.39s)
+PASS
+ok  	github.com/Aly700/capstan/internal/store/pgstore	2.905s

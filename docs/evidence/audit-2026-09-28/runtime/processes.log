@@ -1,0 +1,54 @@
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--audit/sdk
+
+stdout | test/audit-runtime.test.js > independent audit on real server processes > rejects expired/duplicate completions and retains a keyed effect across a server kill
+AUDIT recovery: expired workflow/activity rejected; duplicate completion accepted once; one keyed effect after SIGKILL/restart
+
+ ✓ test/audit-runtime.test.js > independent audit on real server processes > rejects expired/duplicate completions and retains a keyed effect across a server kill 4013ms
+stdout | test/audit-runtime.test.js > independent audit on real server processes > rolls back a workflow completion when the server dies inside its transaction
+AUDIT atomic crash: SIGKILL during InsertTask rolled back uncommitted events; restart retained prefix and scheduled/completed activity once
+
+ ✓ test/audit-runtime.test.js > independent audit on real server processes > rolls back a workflow completion when the server dies inside its transaction 12051ms
+stdout | test/audit-runtime.test.js > independent audit on real server processes > fires every timer once with two server processes and keeps terminal races atomic
+AUDIT timers: 60/60 fired once with two processes; 20 terminal races retain one terminal event and no tasks/timers/inbox
+
+ ✓ test/audit-runtime.test.js > independent audit on real server processes > fires every timer once with two server processes and keeps terminal races atomic 26031ms
+{
+  "run": {
+    "runId": "audit-old",
+    "workflowType": "changedWorkflow",
+    "taskQueue": "evidence-audit_patch",
+    "status": "running",
+    "startedAt": "2026-09-28T18:01:39.348Z",
+    "lastEventId": 2,
+    "costUsd": 0,
+    "pendingActivities": 0,
+    "pendingApprovals": 0
+  },
+  "started": true
+}
+stdout | test/audit-runtime.test.js > independent audit on real server processes > resumes BLOCKED via CLI and replays both old and new patched results
+$ capstan start changedWorkflow audit-old --queue evidence-audit_patch
+
+OK
+stdout | test/audit-runtime.test.js > independent audit on real server processes > resumes BLOCKED via CLI and replays both old and new patched results
+$ capstan signal audit-old continue --input true
+
+OK
+stdout | test/audit-runtime.test.js > independent audit on real server processes > resumes BLOCKED via CLI and replays both old and new patched results
+$ capstan resume audit-old --reason 'audit patch installed'
+
+OK
+OK
+stdout | test/audit-runtime.test.js > independent audit on real server processes > resumes BLOCKED via CLI and replays both old and new patched results
+$ capstan replay audit-old --workflows /Users/affan/Projects/capstan--audit/examples/evidence/blocked-patched.ts
+$ capstan replay audit-new --workflows /Users/affan/Projects/capstan--audit/examples/evidence/blocked-patched.ts
+AUDIT patch: BLOCKED -> CLI resume -> old result1/new result10; both CLI replays OK; old prefix unchanged
+
+ ✓ test/audit-runtime.test.js > independent audit on real server processes > resumes BLOCKED via CLI and replays both old and new patched results 2540ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  14:00:56
+   Duration  44.70s (tests 100%)
+

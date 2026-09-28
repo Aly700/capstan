@@ -126,3 +126,23 @@ func TestMutationPatchRejectsTestsAndContracts(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMutationCatalogueAppliesToCurrentSources(t *testing.T) {
+	root, err := filepath.Abs("../..")
+	if err != nil {
+		t.Fatal(err)
+	}
+	mutants, err := loadMutants(root, "internal/lab/mutants/*.patch")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, mutant := range mutants {
+		t.Run(mutant.ID, func(t *testing.T) {
+			command := exec.Command("git", "apply", "--check", mutant.Patch)
+			command.Dir = root
+			if output, err := command.CombinedOutput(); err != nil {
+				t.Fatalf("catalogue patch no longer applies: %v\n%s", err, output)
+			}
+		})
+	}
+}

@@ -1,0 +1,142 @@
+CHECK baseline
+COMMAND ['git', 'rev-parse', '2ce601e^']
+EXIT 0
+867a557a514e0862ea0a7df3e6cbb1bb140c41a2
+
+CHECK frozen data-contract differences (expected empty)
+COMMAND ['git', 'diff', '867a557', '--', 'proto/capstan/v1/capstan.proto', 'internal/store/store.go', 'internal/engine/api.go', 'internal/store/pgstore/migrations/0001_init.sql', 'conformance/README.md', 'sdk/src/types.ts', 'sdk/src/workflow/index.ts', 'sdk/src/workflow/agent.ts', 'sdk/src/client/index.ts']
+EXIT 0
+
+CHECK worker diff (private implementation only; public signatures retained)
+COMMAND ['git', 'diff', '867a557', '--', 'sdk/src/worker/index.ts']
+EXIT 0
+diff --git a/sdk/src/worker/index.ts b/sdk/src/worker/index.ts
+index ac744c0..3de6cdf 100644
+--- a/sdk/src/worker/index.ts
++++ b/sdk/src/worker/index.ts
+@@ -8,6 +8,7 @@ import { bundleWorkflows } from "../sandbox/bundle.ts";
+ import { replay } from "../replay/runtime.ts";
+ import { failureToProto } from "../internal/failure.ts";
+ import { encode } from "../internal/payload.ts";
++import { diagnosticRedactor, redactDiagnosticValue, type Redactor } from "../internal/privacy.ts";
+ import { CancelledFailure, HistoryMismatchError } from "../types.ts";
+ import { activityStorage, executeActivity } from "./activities.ts";
+ import { createTransport } from "./transport.ts";
+@@ -74,6 +75,7 @@ export class Worker {
+   private bundle!: Awaited<ReturnType<typeof bundleWorkflows>>;
+   private identity = "";
+   private buildId = "";
++  private redact: Redactor = (text) => text;
+   private readonly polls = new AbortController();
+   private readonly tasks = new AbortController();
+   private running: Promise<void> | undefined;
+@@ -85,6 +87,7 @@ export class Worker {
+     }
+     const worker = new Worker();
+     worker.options = options;
++    worker.redact = diagnosticRedactor([options.apiKey, options.gateApiKey]);
+     worker.client = createClient(WorkerService, createTransport(options));
+     worker.bundle = await bundleWorkflows(options.workflowsPath);
+     worker.identity = options.identity ?? `${hostname()}:${process.pid}`;
+@@ -94,6 +97,7 @@ export class Worker {
+ 
+   private log = (entry: Record<string, unknown>) => {
+     try {
++      entry = redactDiagnosticValue(entry, this.redact);
+       if (this.options.logger) this.options.logger(entry);
+       else process.stderr.write(`${JSON.stringify(entry)}\n`);
+     } catch { /* Logging must not change task outcomes. */ }
+@@ -106,7 +110,7 @@ export class Worker {
+     } catch (error) {
+       if (this.tasks.signal.aborted) return;
+       const mismatch = error instanceof HistoryMismatchError || (error instanceof Error && error.name === "HistoryMismatchError");
+-      const failure = failureToProto(error);
++      const failure = failureToProto(error, this.redact);
+       if (mismatch) failure.details = encode({ $capstan: { kind: "mismatch", eventId: (error as HistoryMismatchError).eventId } });
+       await report(() => this.client.failWorkflowTask({ taskToken: task.taskToken, cause: mismatch ? TaskFailedCause.HISTORY_MISMATCH : TaskFailedCause.SDK_ERROR, failure, identity: this.identity }, { signal: this.tasks.signal }), this.log, "workflow");
+       return;
+@@ -132,7 +136,7 @@ export class Worker {
+         ...this.options.activities,
+         "capstan.gate.decide": createGateActivity(this.options),
+         "capstan.model": createModelActivity({ client: this.client, taskToken: task.taskToken, ...(this.options.model === undefined ? {} : { model: this.options.model }) }),
+-      }, settleOnAbort: task.activityType === "capstan.model", identity: this.identity, shutdown: this.tasks.signal, logger: this.log }),
++      }, settleOnAbort: task.activityType === "capstan.model", identity: this.identity, shutdown: this.tasks.signal, logger: this.log, redact: this.redact }),
+     }));
+     this.running = Promise.all(loops).then(() => {});
+     return this.running;
+
+CHECK clock readers outside tests
+COMMAND ['rg', '-n', 'time\\.Now|time\\.Since|time\\.Until', 'internal/engine', 'internal/store', '-g', '!**/*test.go', '-g', '!**/storetest/**']
+EXIT 0
+internal/engine/api.go:86:func (SystemClock) Now() time.Time { return time.Now().UTC() }
+
+CHECK auth digest compare control flow
+COMMAND ['sed', '-n', '37,55p', 'internal/auth/auth.go']
+EXIT 0
+// Identify authenticates a Bearer header by comparing every configured SHA-256
+// hash in constant time. The scheme is case insensitive; the key is not.
+func Identify(header string, keys map[string][32]byte) (name string, ok bool) {
+	scheme, key, found := strings.Cut(header, " ")
+	if !found || !strings.EqualFold(scheme, "Bearer") || key == "" {
+		return "", false
+	}
+	for _, c := range key {
+		if c <= ' ' || c >= 127 || c == ',' {
+			return "", false
+		}
+	}
+	sum := sha256.Sum256([]byte(key))
+	for candidate, expected := range keys {
+		if subtle.ConstantTimeCompare(sum[:], expected[:]) == 1 {
+			name, ok = candidate, true
+		}
+	}
+	return name, ok
+
+CHECK server multiplicity documentation
+COMMAND ['rg', '-n', 'single|one server|multiple-server', 'README.md', 'docs/runbook.md']
+EXIT 0
+README.md:30:The deployment runbook specifies one server process. The audit exercised timers with
+README.md:32:or multiple-server support claim.
+docs/runbook.md:9:The documented deployment uses one server task. The local audit's successful two-process
+docs/runbook.md:10:timer test does not establish general multiple-server support.
+docs/runbook.md:15:endpoints. A single ARM64 Fargate task uses 0.25 vCPU / 0.5 GB and a public IP for HTTPS
+docs/runbook.md:18:from the task group; it is encrypted, single-AZ `db.t4g.micro`, 20 GB gp3 and not public.
+docs/runbook.md:245:| RDS PostgreSQL db.t4g.micro, single-AZ | $0.016/instance-hour; $11.68/month | $0.016/hour | [RDS PostgreSQL](https://aws.amazon.com/rds/postgresql/pricing/) |
+
+CHECK foundation stub
+COMMAND ['git', 'show', 'f25c16a:internal/engine/engine.go']
+EXIT 0
+// Engine is the concrete implementation of API. Implemented by the engine lane; this file is
+// a compile-time stub so other lanes can build against engine.New from the start.
+package engine
+
+import (
+	"context"
+	"errors"
+	"time"
+
+	capstanv1 "github.com/Aly700/capstan/gen/capstan/v1"
+)
+
+var errNotImplemented = errors.New("engine: not implemented yet (engine lane)")
+
+// Engine implements API over a store.Store.
+type Engine struct {
+	deps Deps
+	cfg  Config
+}
+
+// New builds an engine. deps.Store is required; deps.Clock defaults to SystemClock.
+func New(deps Deps, cfg Config) (*Engine, error) {
+	if deps.Store == nil {
+		return nil, errors.New("engine: store is required")
+	}
+	if deps.Clock == nil {
+		deps.Clock = SystemClock{}
+	}
+	return &Engine{deps: deps, cfg: cfg.WithDefaults()}, nil
+}
+
+var _ API = (*Engine)(nil)
+[remaining stub bodies omitted]

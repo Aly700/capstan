@@ -1,0 +1,27 @@
+=== RUN   TestParseHashesAndIdentify
+--- PASS: TestParseHashesAndIdentify (0.00s)
+=== RUN   TestParseHashesRejectsAmbiguousOrMalformedEntries
+--- PASS: TestParseHashesRejectsAmbiguousOrMalformedEntries (0.00s)
+=== RUN   TestNewKey
+--- PASS: TestNewKey (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/auth	0.174s
+// Identify authenticates a Bearer header by comparing every configured SHA-256
+// hash in constant time. The scheme is case insensitive; the key is not.
+func Identify(header string, keys map[string][32]byte) (name string, ok bool) {
+	scheme, key, found := strings.Cut(header, " ")
+	if !found || !strings.EqualFold(scheme, "Bearer") || key == "" {
+		return "", false
+	}
+	for _, c := range key {
+		if c <= ' ' || c >= 127 || c == ',' {
+			return "", false
+		}
+	}
+	sum := sha256.Sum256([]byte(key))
+	for candidate, expected := range keys {
+		if subtle.ConstantTimeCompare(sum[:], expected[:]) == 1 {
+			name, ok = candidate, true
+		}
+	}
+	return name, ok

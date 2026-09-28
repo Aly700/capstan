@@ -1,0 +1,31 @@
+PASS load original result table: all 88 numeric cells match downward truncation
+PASS load original CPU table: all 66 numeric cells match JSON
+PASS load final result table: all 176 numeric cells match JSON
+PASS load final CPU table: all 176 numeric cells match JSON
+PASS load incremental comparison: all 30 numeric cells match JSON
+PASS load pool comparison: 12 numeric cells match JSON
+PASS all before/after ranges computed from all retained entries
+PASS all 61 run/audit entries internally agree, zero errors, task failures or remaining tasks
+ORIGINAL 11 11700 58500
+AFTER 22 23400 117000 samples 331 other_active 22
+FAIL raw directories absent 61 of 61 (latency percentile and CPU/lock sampling recomputation unavailable)
+PASS CAST demo-blocked.cast events 34 duration 9.36033 env keys ['TERM']
+PASS CAST demo-cost.cast events 14 duration 2.866916 env keys ['TERM']
+PASS cost ledger cast and pricing arithmetic 14 / 4 -> 0.000034; provider provenance not independently observable
+PASS CAST demo-crash.cast events 20 duration 13.066471 env keys ['TERM']
+PASS CAST demo-idle-wait.cast events 26 duration 6.661564 env keys ['TERM']
+PASS fixtures 39 shared command cases, 14 mismatches, 1 TS-only, 29 workflow exports
+PASS evidence credential scan Anthropic matches 0
+PASS evidence credential scan OpenAI matches 0
+PASS evidence credential scan AWS matches 0
+PASS evidence credential scan DB URL matches 0
+PASS evidence credential scan private key matches 0
+PASS evidence credential scan evidence-key matches 0
+PASS evidence credential scan Bearer matches 0
+PASS fresh audit load raw samples 50 runs=1000 activities=5000 percentile nearest-rank checked
+PASS fresh audit load raw samples 200 runs=1000 activities=5000 percentile nearest-rank checked
+PASS fresh mutation raw data: baseline and M003 2000 seeds each; 25 caught, 1 equivalent
+PASS fresh PostgreSQL campaign reproduces all500 seed/count metrics
+PASS historical mutation snapshot SHA256 independently recomputed from the recorded commit
+PASS all26 mutation result/status and first-seed cells reproduce the historical table
+PASS fault wrapper covers all 35 Tx methods; original lab-l2 count 34 corrected after D30
