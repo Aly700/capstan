@@ -225,4 +225,8 @@ func TestRunClientMethodsUseOneTransaction(t *testing.T) {
 		_, err := e.CancelRun(context.Background(), "", &v1.CancelRunRequest{RunId: "r"})
 		return err
 	})
+	check("terminate", func() error {
+		_, err := e.TerminateRun(context.Background(), "", &v1.TerminateRunRequest{RunId: "r"})
+		return err
+	})
 }

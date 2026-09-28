@@ -36,6 +36,16 @@ func (s *Server) CancelRun(ctx context.Context, req *connect.Request[v1.CancelRu
 	}
 	return connect.NewResponse(resp), nil
 }
+func (s *Server) TerminateRun(ctx context.Context, req *connect.Request[v1.TerminateRunRequest]) (*connect.Response[v1.TerminateRunResponse], error) {
+	resp, err := s.api.TerminateRun(ctx, Identity(ctx), req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	if resp == nil {
+		resp = &v1.TerminateRunResponse{}
+	}
+	return connect.NewResponse(resp), nil
+}
 func (s *Server) ResumeRun(ctx context.Context, req *connect.Request[v1.ResumeRunRequest]) (*connect.Response[v1.ResumeRunResponse], error) {
 	resp, err := s.api.ResumeRun(ctx, Identity(ctx), req.Msg)
 	if err != nil {
