@@ -11,7 +11,8 @@ import (
 func (e *Engine) PollWorkflowTask(ctx context.Context, req *v1.PollWorkflowTaskRequest) (*v1.PollWorkflowTaskResponse, bool, error) {
 	resp := &v1.PollWorkflowTaskResponse{}
 	found := false
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
+		resp, found = &v1.PollWorkflowTaskResponse{}, false
 		now := e.now()
 		task, err := tx.ClaimTask(store.TaskWorkflow, req.GetTaskQueue(), now, e.cfg.DefaultTaskTimeout, req.GetIdentity())
 		if err != nil || task == nil {
@@ -81,7 +82,7 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 }
 
 func (e *Engine) CompleteWorkflowTask(ctx context.Context, req *v1.CompleteWorkflowTaskRequest) (*v1.CompleteWorkflowTaskResponse, error) {
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		task, r, err := e.workflowToken(tx, req.GetTaskToken())
 		if err != nil {
 			return err
@@ -132,7 +133,7 @@ func (e *Engine) CompleteWorkflowTask(ctx context.Context, req *v1.CompleteWorkf
 }
 
 func (e *Engine) FailWorkflowTask(ctx context.Context, req *v1.FailWorkflowTaskRequest) (*v1.FailWorkflowTaskResponse, error) {
-	err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+	err := e.inTx(ctx, func(tx store.Tx) error {
 		task, r, err := e.workflowToken(tx, req.GetTaskToken())
 		if err != nil {
 			return err

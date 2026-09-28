@@ -15,7 +15,8 @@ func (e *Engine) TimeoutRuns(ctx context.Context, limit int) (int, error) {
 	processed := 0
 	for processed < limit {
 		found := false
-		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+		err := e.inTx(ctx, func(tx store.Tx) error {
+			found = false
 			now := e.now()
 			due, err := tx.RunsPastDeadline(now, 1)
 			if err != nil || len(due) == 0 {

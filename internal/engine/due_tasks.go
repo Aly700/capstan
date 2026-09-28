@@ -17,7 +17,8 @@ func (e *Engine) ProcessDueTasks(ctx context.Context, limit int) (int, error) {
 	count := 0
 	for count < limit {
 		handled := false
-		err := e.deps.Store.InTx(ctx, func(tx store.Tx) error {
+		err := e.inTx(ctx, func(tx store.Tx) error {
+			handled = false
 			now := e.now()
 			tasks, err := tx.DueTasks(now, 1)
 			if err != nil || len(tasks) == 0 {

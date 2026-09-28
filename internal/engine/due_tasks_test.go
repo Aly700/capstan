@@ -125,10 +125,11 @@ func TestActivityScheduleToCloseTimeout(t *testing.T) {
 
 func TestRetryVisibilityNotifies(t *testing.T) {
 	e, clock, s := newTestEngine(t)
-	scheduleTestActivity(t, e, "retry-notify", nil)
-	a := mustActivity(t, e)
 	ch, cancel := s.Subscribe(2, "q")
 	defer cancel()
+	scheduleTestActivity(t, e, "retry-notify", nil)
+	awaitNotification(t, ch)
+	a := mustActivity(t, e)
 	if _, err := e.FailActivityTask(context.Background(), &v1.FailActivityTaskRequest{TaskToken: a.TaskToken, Failure: &v1.Failure{Type: "Transient"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -141,11 +142,7 @@ func TestRetryVisibilityNotifies(t *testing.T) {
 	if n, err := e.ProcessDueTasks(context.Background(), 10); n != 1 || err != nil {
 		t.Fatalf("due: %d %v", n, err)
 	}
-	select {
-	case <-ch:
-	default:
-		t.Fatal("visible retry did not notify")
-	}
+	awaitNotification(t, ch)
 	if n, err := e.ProcessDueTasks(context.Background(), 10); n != 0 || err != nil {
 		t.Fatalf("duplicate visibility: %d %v", n, err)
 	}

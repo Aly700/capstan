@@ -24,6 +24,7 @@ lint:
 
 test-go:
 	go test -race -count=1 ./...
+	go test -race -count=1 -tags pgengine ./internal/engine/...
 
 test-sdk:
 	cd sdk && npx vitest run
