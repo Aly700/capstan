@@ -48,18 +48,6 @@ var _ API = (*Engine)(nil)
 
 var errNotImplemented = errors.New("engine: not implemented yet (engine lane)")
 
-func (e *Engine) SignalRun(ctx context.Context, identity string, req *capstanv1.SignalRunRequest) (*capstanv1.SignalRunResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) CancelRun(ctx context.Context, identity string, req *capstanv1.CancelRunRequest) (*capstanv1.CancelRunResponse, error) {
-	return nil, errNotImplemented
-}
-
-func (e *Engine) ResumeRun(ctx context.Context, identity string, req *capstanv1.ResumeRunRequest) (*capstanv1.ResumeRunResponse, error) {
-	return nil, errNotImplemented
-}
-
 func (e *Engine) ResolveApproval(ctx context.Context, identity string, req *capstanv1.ResolveApprovalRequest) (*capstanv1.ResolveApprovalResponse, error) {
 	return nil, errNotImplemented
 }
@@ -70,10 +58,6 @@ func (e *Engine) ReserveAICall(ctx context.Context, req *capstanv1.ReserveAICall
 
 func (e *Engine) FinishAICall(ctx context.Context, req *capstanv1.FinishAICallRequest) (*capstanv1.FinishAICallResponse, error) {
 	return nil, errNotImplemented
-}
-
-func (e *Engine) FireDueTimers(ctx context.Context, limit int) (int, error) {
-	return 0, errNotImplemented
 }
 
 func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error) {
