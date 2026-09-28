@@ -1,0 +1,2 @@
+git [apply --check /Users/affan/Projects/capstan--audit/internal/lab/mutants/005-closed-inbox.patch]: exit status 1: error: patch failed: internal/engine/workflow_task.go:215
+error: internal/engine/workflow_task.go: patch does not apply

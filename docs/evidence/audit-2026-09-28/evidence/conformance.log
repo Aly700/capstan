@@ -1,0 +1,115 @@
+=== RUN   TestConformance
+=== RUN   TestConformance/001-single-activity
+=== RUN   TestConformance/002-parallel-out-of-order
+=== RUN   TestConformance/003-failure-caught-retry
+=== RUN   TestConformance/004-sleep-starts
+=== RUN   TestConformance/005-sleep-fires
+=== RUN   TestConformance/006-race-activity-wins
+=== RUN   TestConformance/007-race-timer-wins
+=== RUN   TestConformance/008-condition-already-true
+=== RUN   TestConformance/009-condition-signal
+=== RUN   TestConformance/010-condition-timeout
+=== RUN   TestConformance/011-condition-cancels-timer
+=== RUN   TestConformance/012-signal-before-registration
+=== RUN   TestConformance/013-handler-history-order
+=== RUN   TestConformance/014-next-signal-fifo
+=== RUN   TestConformance/015-side-effect-recorded
+=== RUN   TestConformance/016-uuid-recorded
+=== RUN   TestConformance/017-patch-new
+=== RUN   TestConformance/018-patch-old
+=== RUN   TestConformance/019-deprecate-historical-patch
+=== RUN   TestConformance/020-deprecate-new
+=== RUN   TestConformance/021-random-stable
+=== RUN   TestConformance/022-activation-time
+=== RUN   TestConformance/023-cancel-pending-sleep
+=== RUN   TestConformance/024-continue-as-new
+=== RUN   TestConformance/025-discarded-activation
+=== RUN   TestConformance/026-blocked-resumed-patch
+=== RUN   TestConformance/027-stray-fired-after-cancel
+=== RUN   TestConformance/028-mismatch-activity-type
+=== RUN   TestConformance/029-mismatch-command-removed
+=== RUN   TestConformance/030-mismatch-command-added
+=== RUN   TestConformance/031-mismatch-seq-reordered
+=== RUN   TestConformance/032-mismatch-marker-name
+=== RUN   TestConformance/033-mismatch-marker-id
+=== RUN   TestConformance/034-mismatch-marker-seq
+=== RUN   TestConformance/035-mismatch-timer-seq
+=== RUN   TestConformance/036-mismatch-command-type
+=== RUN   TestConformance/037-approval-resolved
+=== RUN   TestConformance/038-mismatch-approval-id
+=== RUN   TestConformance/039-mismatch-approval-source
+=== RUN   TestConformance/040-mismatch-approval-seq
+=== RUN   TestConformance/041-activity-timeout
+=== RUN   TestConformance/042-activity-cancelled
+=== RUN   TestConformance/043-activity-failure-cause
+=== RUN   TestConformance/044-nested-promise-drain
+=== RUN   TestConformance/045-async-handler-drain
+=== RUN   TestConformance/046-input-duration-not-compared
+=== RUN   TestConformance/047-timer-duration-not-compared
+=== RUN   TestConformance/048-mismatch-command-missing
+=== RUN   TestConformance/049-mismatch-cancel-timer-seq
+=== RUN   TestConformance/050-discarded-task-timeout
+=== RUN   TestConformance/051-side-effect-new
+=== RUN   TestConformance/052-signal-handler-current-clock
+=== RUN   TestConformance/053-patch-false-memoized
+=== RUN   TestConformance/054-race-batched-native-order
+    conformance_test.go:65: fixture only applies to [ts] (D20)
+=== NAME  TestConformance
+    conformance_test.go:119: conformance fixtures: 54 total, 53 shared, 1 Go-skipped
+--- PASS: TestConformance (0.01s)
+    --- PASS: TestConformance/001-single-activity (0.00s)
+    --- PASS: TestConformance/002-parallel-out-of-order (0.00s)
+    --- PASS: TestConformance/003-failure-caught-retry (0.00s)
+    --- PASS: TestConformance/004-sleep-starts (0.00s)
+    --- PASS: TestConformance/005-sleep-fires (0.00s)
+    --- PASS: TestConformance/006-race-activity-wins (0.00s)
+    --- PASS: TestConformance/007-race-timer-wins (0.00s)
+    --- PASS: TestConformance/008-condition-already-true (0.00s)
+    --- PASS: TestConformance/009-condition-signal (0.00s)
+    --- PASS: TestConformance/010-condition-timeout (0.00s)
+    --- PASS: TestConformance/011-condition-cancels-timer (0.00s)
+    --- PASS: TestConformance/012-signal-before-registration (0.00s)
+    --- PASS: TestConformance/013-handler-history-order (0.00s)
+    --- PASS: TestConformance/014-next-signal-fifo (0.00s)
+    --- PASS: TestConformance/015-side-effect-recorded (0.00s)
+    --- PASS: TestConformance/016-uuid-recorded (0.00s)
+    --- PASS: TestConformance/017-patch-new (0.00s)
+    --- PASS: TestConformance/018-patch-old (0.00s)
+    --- PASS: TestConformance/019-deprecate-historical-patch (0.00s)
+    --- PASS: TestConformance/020-deprecate-new (0.00s)
+    --- PASS: TestConformance/021-random-stable (0.00s)
+    --- PASS: TestConformance/022-activation-time (0.00s)
+    --- PASS: TestConformance/023-cancel-pending-sleep (0.00s)
+    --- PASS: TestConformance/024-continue-as-new (0.00s)
+    --- PASS: TestConformance/025-discarded-activation (0.00s)
+    --- PASS: TestConformance/026-blocked-resumed-patch (0.00s)
+    --- PASS: TestConformance/027-stray-fired-after-cancel (0.00s)
+    --- PASS: TestConformance/028-mismatch-activity-type (0.00s)
+    --- PASS: TestConformance/029-mismatch-command-removed (0.00s)
+    --- PASS: TestConformance/030-mismatch-command-added (0.00s)
+    --- PASS: TestConformance/031-mismatch-seq-reordered (0.00s)
+    --- PASS: TestConformance/032-mismatch-marker-name (0.00s)
+    --- PASS: TestConformance/033-mismatch-marker-id (0.00s)
+    --- PASS: TestConformance/034-mismatch-marker-seq (0.00s)
+    --- PASS: TestConformance/035-mismatch-timer-seq (0.00s)
+    --- PASS: TestConformance/036-mismatch-command-type (0.00s)
+    --- PASS: TestConformance/037-approval-resolved (0.00s)
+    --- PASS: TestConformance/038-mismatch-approval-id (0.00s)
+    --- PASS: TestConformance/039-mismatch-approval-source (0.00s)
+    --- PASS: TestConformance/040-mismatch-approval-seq (0.00s)
+    --- PASS: TestConformance/041-activity-timeout (0.00s)
+    --- PASS: TestConformance/042-activity-cancelled (0.00s)
+    --- PASS: TestConformance/043-activity-failure-cause (0.00s)
+    --- PASS: TestConformance/044-nested-promise-drain (0.00s)
+    --- PASS: TestConformance/045-async-handler-drain (0.00s)
+    --- PASS: TestConformance/046-input-duration-not-compared (0.00s)
+    --- PASS: TestConformance/047-timer-duration-not-compared (0.00s)
+    --- PASS: TestConformance/048-mismatch-command-missing (0.00s)
+    --- PASS: TestConformance/049-mismatch-cancel-timer-seq (0.00s)
+    --- PASS: TestConformance/050-discarded-task-timeout (0.00s)
+    --- PASS: TestConformance/051-side-effect-new (0.00s)
+    --- PASS: TestConformance/052-signal-handler-current-clock (0.00s)
+    --- PASS: TestConformance/053-patch-false-memoized (0.00s)
+    --- SKIP: TestConformance/054-race-batched-native-order (0.00s)
+PASS
+ok  	github.com/Aly700/capstan/internal/lab/labworker	0.181s
