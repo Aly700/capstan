@@ -1,13 +1,24 @@
-// Command capstan-server runs the Capstan server. Implemented by the server lane; this stub
-// exists so the image and CI can be built against the real entrypoint path from the start.
+// Command capstan-server serves Capstan, applies migrations, and manages API keys.
 package main
 
 import (
-	"fmt"
+	"context"
+	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	// Keep the daily budget's America/Toronto boundary available in minimal images.
+	_ "time/tzdata"
 )
 
+func signalContext() (context.Context, context.CancelFunc) {
+	return signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+}
 func main() {
-	fmt.Fprintln(os.Stderr, "capstan-server: not implemented yet (server lane)")
-	os.Exit(1)
+	ctx, stop := signalContext()
+	defer stop()
+	if err := run(ctx, os.Args[1:], os.Getenv, os.Stdin, os.Stdout, os.Stderr, productionDependencies()); err != nil {
+		slog.New(slog.NewJSONHandler(os.Stderr, nil)).Error("capstan-server failed", "error", err)
+		os.Exit(1)
+	}
 }

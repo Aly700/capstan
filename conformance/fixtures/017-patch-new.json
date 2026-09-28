@@ -1,0 +1,62 @@
+{
+  "name": "patch new",
+  "workflow": "patchBranch",
+  "description": "A patch first reached in a new activation records true, consumes seq, and takes the new branch.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "patchBranch",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "recordMarker": {
+          "seq": "1",
+          "name": "patch",
+          "markerId": "v2",
+          "details": {
+            "contentType": "application/json",
+            "data": "dHJ1ZQ=="
+          }
+        }
+      },
+      {
+        "scheduleActivity": {
+          "seq": "2",
+          "activityType": "newDouble",
+          "input": {
+            "contentType": "application/json",
+            "data": "MjE="
+          },
+          "startToCloseTimeout": "10s"
+        }
+      }
+    ]
+  }
+}

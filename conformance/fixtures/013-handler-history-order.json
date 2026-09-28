@@ -1,0 +1,104 @@
+{
+  "name": "handler history order",
+  "workflow": "orderedHandler",
+  "description": "A handler receives every signal synchronously and in event history order.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "orderedHandler",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_SIGNAL_RECEIVED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "signalReceived": {
+        "name": "number",
+        "input": {
+          "contentType": "application/json",
+          "data": "Nw=="
+        },
+        "identity": "client"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_SIGNAL_RECEIVED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "signalReceived": {
+        "name": "number",
+        "input": {
+          "contentType": "application/json",
+          "data": "OQ=="
+        },
+        "identity": "client"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:04.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:04.000Z",
+      "taskStarted": {
+        "scheduledEventId": "7",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "WzcsOV0="
+          }
+        }
+      }
+    ]
+  }
+}

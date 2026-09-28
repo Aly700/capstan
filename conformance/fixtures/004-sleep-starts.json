@@ -1,0 +1,46 @@
+{
+  "name": "sleep starts",
+  "workflow": "sleeping",
+  "description": "A new durable sleep emits one timer.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "sleeping",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "startTimer": {
+          "seq": "1",
+          "fireAfter": "1s"
+        }
+      }
+    ]
+  }
+}

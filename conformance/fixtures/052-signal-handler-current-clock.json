@@ -1,0 +1,91 @@
+{
+  "name": "signal handler current clock",
+  "workflow": "signalHandlerClock",
+  "description": "D15 sets the TaskStarted clock before delivering external events. A synchronous signal handler and its awaited continuation both observe the current activation time.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "signalHandlerClock",
+        "taskQueue": "q",
+        "taskTimeout": "10s"
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_SIGNAL_RECEIVED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "signalReceived": {
+        "name": "go",
+        "input": {
+          "contentType": "application/json",
+          "data": "dHJ1ZQ=="
+        },
+        "identity": "client"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T13:00:00.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T13:00:00.000Z",
+      "taskStarted": {
+        "scheduledEventId": "6",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "completeRun": {
+          "result": {
+            "contentType": "application/json",
+            "data": "WzE3OTA2MDA0MDAwMDAsMTc5MDYwMDQwMDAwMF0="
+          }
+        }
+      }
+    ]
+  }
+}

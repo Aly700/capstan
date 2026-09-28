@@ -2209,7 +2209,7 @@ export const FinishAICallResponseSchema: GenMessage<FinishAICallResponse> = /*@_
  */
 export type StartRunRequest = Message<"capstan.v1.StartRunRequest"> & {
   /**
-   * required, caller-chosen, 1-200 chars of [A-Za-z0-9._:-]
+   * required, caller-chosen, 1-180 chars of [A-Za-z0-9._:-]; "~" is reserved (D19, D21)
    *
    * @generated from field: string run_id = 1;
    */

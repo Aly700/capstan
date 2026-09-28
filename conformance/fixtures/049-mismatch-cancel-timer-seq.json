@@ -1,0 +1,138 @@
+{
+  "name": "mismatch cancel timer seq",
+  "workflow": "signalledCondition",
+  "description": "CancelTimer compares the referenced timer seq; cancellation reuses rather than allocates seq.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "signalledCondition",
+        "taskQueue": "q",
+        "taskTimeout": "10s",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJ0aW1lb3V0IjoiMXMifQ=="
+        }
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "4",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "5",
+      "type": "EVENT_TYPE_TIMER_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "timerStarted": {
+        "seq": "1",
+        "fireAfter": "1s",
+        "taskCompletedEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "type": "EVENT_TYPE_SIGNAL_RECEIVED",
+      "time": "2026-09-28T12:00:02.000Z",
+      "signalReceived": {
+        "name": "ready",
+        "input": {
+          "contentType": "application/json",
+          "data": "dHJ1ZQ=="
+        },
+        "identity": "client"
+      }
+    },
+    {
+      "eventId": "7",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "8",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskStarted": {
+        "scheduledEventId": "7",
+        "identity": "w1"
+      }
+    },
+    {
+      "eventId": "9",
+      "type": "EVENT_TYPE_TASK_COMPLETED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "taskCompleted": {
+        "scheduledEventId": "7",
+        "startedEventId": "8",
+        "identity": "w1",
+        "buildId": "b1"
+      }
+    },
+    {
+      "eventId": "10",
+      "type": "EVENT_TYPE_TIMER_CANCELLED",
+      "time": "2026-09-28T12:00:03.000Z",
+      "timerCancelled": {
+        "seq": "2",
+        "startedEventId": "5",
+        "taskCompletedEventId": "9"
+      }
+    },
+    {
+      "eventId": "11",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:04.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "12",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:04.000Z",
+      "taskStarted": {
+        "scheduledEventId": "11",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "mismatch": {
+      "eventId": 10
+    }
+  }
+}
