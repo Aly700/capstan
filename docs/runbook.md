@@ -243,6 +243,20 @@ provider and AWS service-linked roles remain because they may be shared and have
 standing charge. There is no bootstrap bucket to empty. Check for DELETE_FAILED stacks
 and retry after resolving the named resource; a failed deploy does not imply cleanup.
 
+CloudFormation deregisters ECS task definitions, leaving `INACTIVE` revisions behind.
+After the stack deletions, list `capstan` task definitions in `ACTIVE`, `INACTIVE` and
+`DELETE_IN_PROGRESS` states. The ECS `--family-prefix` parameter requires the full
+family name (`capstan-server`); `capstan` silently misses those revisions. A general
+inventory should list all revisions and filter their ARNs. See the
+[ListTaskDefinitions API](https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListTaskDefinitions.html).
+Delete only inactive revisions verified as created by this
+session, using `aws ecs delete-task-definitions --task-definitions <exact-owned-arns>`.
+The workload cleanup script checks the empty pre-deploy baseline, exact account/region
+and family, registration time and `Project=capstan` tag before deleting any revision.
+Keep checking pending deletions; do not call the complete resource inventory empty
+while they remain. The live attempt-2 rollback left such a revision. See
+[ECS task-definition states](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-definition-state.html).
+
 Verify in the CloudFormation, ECS, RDS, ECR, Secrets Manager, CloudWatch and Cloud Map
 consoles that the Capstan stacks/resources are gone, including the private hosted zone,
 VPC link ENIs and task public IP. Check for manually created RDS snapshots and log
