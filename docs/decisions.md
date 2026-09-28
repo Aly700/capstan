@@ -74,3 +74,96 @@ HTTP/2 cleartext for `http://` addresses and HTTP/1.1 for `https://`. Proto comm
 `engine.New`, `memstore.New`, `pgstore.Open`, `pgstore.Migrate` and `cmd/capstan-server`
 exist as stubs from wave 0 so each lane compiles against real symbols. The owning lane
 replaces the stub; no other lane edits it.
+
+## D12 — 2026-09-28 — Cancel commands reference; they do not allocate
+
+`ScheduleActivity`, `StartTimer`, `RecordMarker` and `RequestApproval` allocate the next seq;
+their seq must be greater than every seq already allocated in the run (history plus earlier
+commands in the same task). `RequestActivityCancel` and `CancelTimer` carry the seq of the
+activity or timer they refer to: it must exist in history (or earlier in the same task) and
+not be settled yet. The plan's "strictly increasing" rule applies to allocating commands only.
+(SDK lane issue 1.)
+
+## D13 — 2026-09-28 — No per-activity cancellation API in v1
+
+The workflow API has no call to cancel one activity. `RequestActivityCancel` stays in the
+protocol and the engine supports it, for the lab and a later API; v1 workflows cancel through
+run cancellation. (SDK issue 2.)
+
+## D14 — 2026-09-28 — Mismatch position for an extra command
+
+When code emits more commands than an already-completed activation recorded, the mismatch
+names that activation's `TaskCompleted` event id. (SDK issue 3; conformance README updated.)
+
+## D15 — 2026-09-28 — now() is set before events resolve
+
+An activation sets `now()` to its `TaskStarted` time first, then resolves external events,
+then drains. Signal handlers, condition predicates and continuations all observe the current
+activation's time. (SDK issue 4; conformance README steps reordered.)
+
+## D16 — 2026-09-28 — SDK failure metadata travels in details
+
+`ActivityFailure.activityType/seq` and `TimeoutFailure.timeoutType` are carried inside
+`Failure.details` as `{"$capstan": {kind, …}, "details": <original>}`. The server never reads
+payloads, so this is an SDK-internal encoding. (SDK issue 5.)
+
+## D17 — 2026-09-28 — An unrecordable side effect fails the task
+
+A `sideEffect` callback that throws, returns a non-JSON value, or emits commands fails the
+workflow task (`SDK_ERROR`) even if user code catches the error, because continuing would
+record a history that cannot replay. (SDK issue 6.)
+
+## D18 — 2026-09-28 — TerminateRun
+
+A run whose workflow task fails forever, or which is blocked with no fix coming, must be
+closable by an operator. `ClientService.TerminateRun(run_id, reason)` flushes the inbox,
+appends `RunFailed{failure.type = "Terminated", message = reason}` with
+`task_completed_event_id = 0`, and closes the run as FAILED. Additive to the protocol; CLI
+`capstan terminate`. Implemented at integration.
+
+## D19 — 2026-09-28 — "~" is reserved for continuation run ids
+
+The schema's run_id check allows `~`; StartRun's user-facing validation does not. Continued
+runs are named `<base>~<k>`, so they can never collide with a caller-chosen id. (SDK issue 7.)
+
+## D20 — 2026-09-28 — Language-specific fixtures
+
+A fixture may carry `"only": ["ts"]`. Fixture 054 depends on JavaScript promise-continuation
+depth when two results arrive in the same activation; the Go reference worker does not model
+V8 microtasks and skips it. Workflow authors should not rely on which of two results that
+arrive together wins a `Promise.race`: the outcome is stable across replays of the same code,
+but it is an engine detail, not a guarantee. (SDK issue 8.)
+
+## D21 — 2026-09-28 — Caller run ids are at most 180 characters
+
+A continuation appends `~<k>` to its base id, and the schema caps run_id at 200 characters.
+StartRun therefore accepts caller ids of 1–180 characters, leaving room for up to 19
+characters of suffix. (Server lane issue 1.) The engine's contract comment on `Deps` now
+states that GATE approvals resolve only through the Gate or by timeout (server issue 2).
+
+## D22 — 2026-09-28 — Money is rounded to the micro-dollar by the engine
+
+The schema stores USD as numeric(12,6), but the price formula can produce smaller amounts (one
+claude-sonnet-5 cache-read token costs $0.0000002). The engine rounds every USD amount it
+computes (reservation estimates, finished costs) to 6 decimal places, half away from zero,
+before it writes the amount or returns it. Both stores then hold the same value, and a repeated
+FinishAICall returns exactly what the first one returned. (Engine lane issue 4.)
+
+## D23 — 2026-09-28 — Store precision and updates
+
+PostgreSQL keeps timestamps to the microsecond and run timeouts in milliseconds. The engine
+truncates every time it computes (each clock reading and every deadline derived from one) to
+the whole microsecond before it reaches a store or a response. StartRun rejects a
+task_timeout or run_timeout that is not a whole number of milliseconds. Activity options travel
+inside serialized protobufs and are kept exactly.
+
+`Tx.Update*` replaces every field of the record except its key, as pgstore does. The engine
+never changes a record's creation fields, so no caller depends on which fields are
+"mutable". (Engine lane issue 5.)
+
+## D24 — 2026-09-28 — Due-query limits must be positive
+
+`DueTasks`, `DueTimers`, `DueApprovals` and `RunsPastDeadline` return at most `limit` rows, and
+a limit of zero or less returns none (pgstore's behaviour). `ReadHistory` and `ListRuns` keep
+their documented rule that a limit of zero or less means no limit. The engine's background
+methods reject `limit <= 0` with ErrInvalidArgument.
