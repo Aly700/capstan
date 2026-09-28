@@ -48,13 +48,16 @@ type auditLedgerServer struct {
 	worker rpc.WorkerServiceClient
 	client rpc.ClientServiceClient
 	store  store.Store
+	engine *engine.Engine
+	dsn    string
 	clock  *auditLedgerClock
 	url    string
 }
 
 func newAuditLedgerServer(t *testing.T, at time.Time, capUSD float64) *auditLedgerServer {
 	t.Helper()
-	s, err := pgstore.OpenWithMaxConns(t.Context(), testpg.New(t), 4)
+	dsn := testpg.New(t)
+	s, err := pgstore.OpenWithMaxConns(t.Context(), dsn, 4)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +88,7 @@ func newAuditLedgerServer(t *testing.T, at time.Time, capUSD float64) *auditLedg
 	})
 	url := "http://" + listener.Addr().String()
 	opts := []connect.ClientOption{connect.WithInterceptors(auditLedgerAuth())}
-	return &auditLedgerServer{worker: rpc.NewWorkerServiceClient(http.DefaultClient, url, opts...), client: rpc.NewClientServiceClient(http.DefaultClient, url, opts...), store: s, clock: clock, url: url}
+	return &auditLedgerServer{worker: rpc.NewWorkerServiceClient(http.DefaultClient, url, opts...), client: rpc.NewClientServiceClient(http.DefaultClient, url, opts...), store: s, engine: e, dsn: dsn, clock: clock, url: url}
 }
 
 func auditLedgerAuth() connect.Interceptor {
