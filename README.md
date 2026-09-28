@@ -29,8 +29,15 @@ RPCs and `/metrics` require an API key. `/ui/` serves public static files; its r
 comes from authenticated RPCs. Payloads are opaque and persisted as supplied: callers
 must keep credentials out of workflow inputs, results, markers and failure details.
 
-The daily AI cap limits reservations in the Toronto calendar day. Actual provider spend
-can exceed it if the estimate is too low; it is not an unconditional billing limit.
+**Cost cap.** The daily AI cap applies to the Toronto calendar day and is absolute for
+bounded reservations from the SDK's text-only `model()` path at configured server prices
+(D32). Every SDK call sends conservative input and provider-enforced output token bounds
+and enables no cache writes. For priced models, the server reserves the larger of its own
+priced bound and the worker's estimate. Other callers must cover any higher-cost usage
+classes, such as cache writes, in their estimate and keep usage within declared bounds.
+A reservation without both bounds is unbounded and trusted as given; unknown models also
+rely on the worker's estimate because the server has no price for them (D8). Finish always
+records true usage, even above an unbounded or incorrectly declared reservation.
 A lost Reserve acknowledgement leaves its reservation counted until that day's midnight.
 
 The deployment runbook specifies one server process. The audit exercised timers with

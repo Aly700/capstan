@@ -22,8 +22,8 @@ func TestNewCreatesMigratedDatabase(t *testing.T) {
 	if err := conn.QueryRow(t.Context(), `select count(*) from schema_migration where applied_at is not null`).Scan(&n); err != nil {
 		t.Fatal(err)
 	}
-	if n != 1 {
-		t.Fatalf("migrations applied = %d, want 1", n)
+	if n != 2 {
+		t.Fatalf("migrations applied = %d, want 2", n)
 	}
 	if !regexp.MustCompile(`^capstan_audit_[0-9a-f]{16}$`).MatchString(conn.Config().Database) {
 		t.Fatalf("database name = %q", conn.Config().Database)
