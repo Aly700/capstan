@@ -1,0 +1,52 @@
+{
+  "name": "continue as new",
+  "workflow": "continueCounting",
+  "description": "continueAsNew emits a closing command with new input and does not emit CompleteRun.",
+  "history": [
+    {
+      "eventId": "1",
+      "type": "EVENT_TYPE_RUN_STARTED",
+      "time": "2026-09-28T12:00:00.000Z",
+      "runStarted": {
+        "workflowType": "continueCounting",
+        "taskQueue": "q",
+        "taskTimeout": "10s",
+        "input": {
+          "contentType": "application/json",
+          "data": "eyJuIjo0fQ=="
+        }
+      }
+    },
+    {
+      "eventId": "2",
+      "type": "EVENT_TYPE_TASK_SCHEDULED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskScheduled": {
+        "taskQueue": "q",
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "type": "EVENT_TYPE_TASK_STARTED",
+      "time": "2026-09-28T12:00:01.000Z",
+      "taskStarted": {
+        "scheduledEventId": "2",
+        "identity": "w1"
+      }
+    }
+  ],
+  "expect": {
+    "commands": [
+      {
+        "continueAsNew": {
+          "input": {
+            "contentType": "application/json",
+            "data": "eyJuIjo1fQ=="
+          }
+        }
+      }
+    ]
+  }
+}
