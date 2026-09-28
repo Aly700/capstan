@@ -7,6 +7,7 @@ import { WorkerService, TaskFailedCause, type PollWorkflowTaskResponse } from ".
 import { bundleWorkflows } from "../sandbox/bundle.ts";
 import { replay } from "../replay/runtime.ts";
 import { failureToProto } from "../internal/failure.ts";
+import { encode } from "../internal/payload.ts";
 import { CancelledFailure, HistoryMismatchError } from "../types.ts";
 import { activityStorage, executeActivity } from "./activities.ts";
 import { createTransport } from "./transport.ts";
@@ -105,7 +106,9 @@ export class Worker {
     } catch (error) {
       if (this.tasks.signal.aborted) return;
       const mismatch = error instanceof HistoryMismatchError || (error instanceof Error && error.name === "HistoryMismatchError");
-      await report(() => this.client.failWorkflowTask({ taskToken: task.taskToken, cause: mismatch ? TaskFailedCause.HISTORY_MISMATCH : TaskFailedCause.SDK_ERROR, failure: failureToProto(error), identity: this.identity }, { signal: this.tasks.signal }), this.log, "workflow");
+      const failure = failureToProto(error);
+      if (mismatch) failure.details = encode({ $capstan: { kind: "mismatch", eventId: (error as HistoryMismatchError).eventId } });
+      await report(() => this.client.failWorkflowTask({ taskToken: task.taskToken, cause: mismatch ? TaskFailedCause.HISTORY_MISMATCH : TaskFailedCause.SDK_ERROR, failure, identity: this.identity }, { signal: this.tasks.signal }), this.log, "workflow");
       return;
     }
     if (!this.tasks.signal.aborted) await report(() => this.client.completeWorkflowTask({ taskToken: task.taskToken, commands, identity: this.identity, buildId: this.buildId }, { signal: this.tasks.signal }), this.log, "workflow");

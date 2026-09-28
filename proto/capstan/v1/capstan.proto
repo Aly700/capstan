@@ -611,6 +611,9 @@ message FinishAICallRequest {
   int64 cache_read_tokens = 5;
   int64 cache_write_tokens = 6;
   string error_code = 7; // fixed codes only, never raw provider text
+  // A provider request was sent without usage returned. Failed calls charge at
+  // least their reservation estimate, even when all reported token counts are zero.
+  bool usage_unknown = 8;
 }
 
 message FinishAICallResponse {

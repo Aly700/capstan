@@ -208,7 +208,9 @@ describe("worker over scripted h2c Connect", () => {
     if (scheduled.attributes.case === "activityScheduled") scheduled.attributes.value.activityType = "changed";
     const { server } = await setup({ worker: { pollWorkflowTask: onceTask({ taskToken: new Uint8Array([7]), runId: "r", workflowType: "singleActivity", history: events }) } });
     await expect.poll(() => server.requests<FailWorkflowTaskRequest>("FailWorkflowTask").length).toBe(1);
-    expect(server.requests<FailWorkflowTaskRequest>("FailWorkflowTask")[0]).toMatchObject({ cause: TaskFailedCause.HISTORY_MISMATCH, failure: { type: "HistoryMismatchError" } });
+    const failed = server.requests<FailWorkflowTaskRequest>("FailWorkflowTask")[0]!;
+    expect(failed).toMatchObject({ cause: TaskFailedCause.HISTORY_MISMATCH, failure: { type: "HistoryMismatchError", message: "history mismatch at event 5: history has ActivityScheduled(seq=1, type=changed), code emitted ScheduleActivity(seq=1, type=double)" } });
+    expect(value(failed.failure!.details)).toEqual({ $capstan: { kind: "mismatch", eventId: 5 } });
   });
 
   it.each(["throwsApplication", "forbidden"])("classifies workflow outcome for %s", async (workflowType) => {
