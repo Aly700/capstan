@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Capstan · Runs</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/ui/style.css">
+  <script src="/ui/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a href="/ui/" class="brand">CAPSTAN</a><span>Run viewer</span><span class="readonly">Read only</span></header>
+  <main>
+    <section class="connection" aria-label="Connection">
+      <form id="connect-form">
+        <label for="api-key">API key</label>
+        <input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required aria-describedby="key-help">
+        <button type="submit">Connect</button>
+        <span id="key-help" class="muted">Kept in this tab’s session. Cleared when you disconnect.</span>
+      </form>
+      <div id="connected" hidden><span class="connection-label">Authenticated session</span><button id="disconnect" class="quiet" type="button">Disconnect &amp; clear key</button></div>
+    </section>
+    <p id="message" role="status" aria-live="polite">Enter an API key to read runs.</p>
+    <section id="list-view">
+      <div class="heading"><div><p class="eyebrow">Execution history</p><h1>Runs</h1></div><button id="refresh" type="button" disabled>Refresh</button></div>
+      <form id="filters" class="filters">
+        <label>Status<select id="status" aria-label="Status"><option value="">All statuses</option><option value="RUNNING">Running</option><option value="COMPLETED">Completed</option><option value="BLOCKED">Blocked</option><option value="FAILED">Failed</option><option value="CANCELLED">Cancelled</option><option value="TIMED_OUT">Timed out</option><option value="CONTINUED_AS_NEW">Continued as new</option></select></label>
+        <label>Workflow type<input id="workflow-type" type="text" placeholder="All types · exact match" maxlength="200"></label>
+        <label>Per page<select id="page-size"><option>10</option><option selected>25</option><option>50</option></select></label>
+        <button type="submit" id="apply" disabled>Apply filters</button>
+      </form>
+      <div class="table-wrap"><table><thead><tr><th>Run ID</th><th>Status</th><th>Workflow type</th><th>Started · UTC</th><th class="numeric">Events</th></tr></thead><tbody id="runs"><tr><td colspan="5" class="empty">No runs loaded.</td></tr></tbody></table></div>
+      <nav class="pager" aria-label="Run pages"><span id="page-label">Page 1</span><button id="previous" type="button" disabled>Previous</button><button id="next" type="button" disabled>Next</button></nav>
+    </section>
+    <section id="detail-view" hidden>
+      <div class="heading"><a href="#" id="back">← All runs</a><button id="refresh-run" type="button">Refresh history</button></div>
+      <h1 id="run-title" tabindex="-1"></h1><div id="run-meta" class="run-meta"></div>
+      <aside id="blocked" class="blocked" hidden aria-label="Replay mismatch"></aside>
+      <div class="timeline-heading"><h2>Event timeline</h2><span id="event-count" class="muted"></span></div>
+      <ol id="timeline" class="timeline"></ol>
+      <button id="more-history" type="button" hidden>Load more events</button>
+    </section>
+    <footer>Capstan · History is append-only. All times shown in UTC.</footer>
+  </main>
+</body>
+</html>
