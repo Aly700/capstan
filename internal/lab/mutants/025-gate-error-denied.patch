@@ -1,0 +1,14 @@
+diff --git a/internal/engine/approvals.go b/internal/engine/approvals.go
+index 2f5b3cb..412ee88 100644
+--- a/internal/engine/approvals.go
++++ b/internal/engine/approvals.go
+@@ -176,6 +176,9 @@ func (e *Engine) ProcessDueApprovals(ctx context.Context, limit int) (int, error
+ 				if !a.DueAt.IsZero() && !a.DueAt.After(now) {
+ 					return e.resolveApproval(tx, r, a, v1.ApprovalOutcome_APPROVAL_OUTCOME_EXPIRED, "", "timeout", "")
+ 				}
++				if gateErr != nil {
++					return e.resolveApproval(tx, r, a, v1.ApprovalOutcome_APPROVAL_OUTCOME_DENIED, "", "gate-error", "")
++				}
+ 				if gateErr == nil {
+ 					var outcome v1.ApprovalOutcome
+ 					switch decision.Status {

@@ -3,14 +3,18 @@
 Measured on Apple M5 Max, Go 1.26.4 (`darwin/arm64`); SDK gates used Node 26.8.1.
 
 The lab runs the merged engine on memstore with three worker actors, the timer,
-task-reaper, approval, and run-timeout loops, and an external-client actor. A seeded
-scheduler grants one actor a step at a time. `TestLab` runs inside `testing/synctest`;
+task-reaper, approval, and run-timeout loops, and an external-client actor. Two
+simultaneous root runs share a task queue and the worker pool. A seeded scheduler
+selects actor steps and also overlaps pairs of background-loop calls, choosing the
+order of their individual store transactions. `TestLab` runs inside `testing/synctest`;
 the standalone campaign uses an explicit logical clock because the testing bubble
 is only available to tests. Both modes avoid real-time sleeps for durable waits.
 
 Each seed first runs its scenario without injected faults, then with faults. The
-catalogue covers sequential and parallel effects, signals, human and Gate approvals,
-continuation, cancellation, run timeout, approval expiry, and activity retry. Explicit
+catalogue covers twelve primary scenarios: sequential and parallel effects, signals,
+human and Gate approvals, Gate errors and late decisions, continuation, cancellation,
+run timeout, approval expiry, and activity retry. Every primary runs beside a peer
+with distinct effect inputs. Explicit
 expected results/statuses additionally check the baseline. Workflow functions rerun
 from their first line for every task; no saved coroutine stack survives a replay.
 
@@ -35,6 +39,18 @@ operations, falling back to the selected transaction's commit boundary. All 34 T
 methods are intercepted. This includes the transaction after the Gate call. An idle
 Gate scenario jumps to its next persisted poll deadline after a crash leaves a lease.
 
+The Gate client additionally returns pending, a 503 error, a timeout, then approval
+in sequence. A separate case advances time during the external Gate call so that an
+approved decision arrives after the approval deadline; the result must be expired.
+These are engine-facing client responses, not HTTP transport tests.
+
+The overlapping background actors rendezvous at `InTx`. The seeded scheduler runs
+one whole transaction, checks history and timers, then chooses which actor may run
+its next transaction. This explores orders between lease and resolution transactions
+and between sweeper items. Memstore serializes each transaction under one mutex;
+the lab does not interleave operations inside that transaction. Worker steps with
+fault injection remain serial, and overlap waves do not arm the store fault injector.
+
 ## Assertions
 
 - P1 reads the destination's idempotency ledger: every effect scheduled by a completed
@@ -51,6 +67,13 @@ A review mutation that silently discarded injected signals passed the earlier ha
 the strengthened harness rejects it at seed 0. That is a harness correction, not a
 Capstan engine defect.
 
+Ten bounded protocol probes supplement workflow outcomes: heartbeat renewal, retry
+deadline, cancellation before start, failed-workflow lease release, approval
+idempotency, signal ordering, retry attempt/key/token behavior, workflow token fields,
+closed inbox cleanup, and exclusive claims. Each seed selects one probe against a
+fresh real engine and memstore. The [mutation score](lab-mutation.md) measures whether
+these checks and the scenario checks detect independently applied production bugs.
+
 ## Reproduction
 
 ```sh
@@ -64,7 +87,7 @@ step-limit and fault options, alongside the default test reproduction. The CLI r
 failures and their traces, bounds parallelism, validates options before scheduling,
 and prints failure diagnostics even if writing its Markdown report fails.
 
-The final 2,000-seed test took 16.87 seconds without the race detector. The full
+The original, pre-Delta 1 2,000-seed test took 16.87 seconds without the race detector. The full
 200,000-seed campaign passed in 12m34.513863084s, with all nine fault types exercised
 and zero known-seed exclusions. Its 46,179,964 reported steps count faulted executions;
 each seed additionally completed a fault-free baseline. Both the lab race gate and
@@ -72,12 +95,33 @@ each seed additionally completed a fault-free baseline. Both the lab race gate a
 [the campaign report](lab-2026-09-28.md) for the larger run and
 [the defect register](defects.md) for confirmed findings and known-seed handling.
 
+Delta 1's larger fault model and bounded campaign are recorded separately in
+[the concurrent campaign](lab-delta1-2026-09-28.md): 148,554 seeds passed in
+19m50.041s at parallelism eight, with zero failing seeds and 9,870,634 interleaved
+transaction steps. The final 2,000-seed gate passed in 52.109 seconds. These results supersede the
+original timings for the current implementation; the original report remains a
+record of the earlier, narrower campaign.
+
+## PostgreSQL feasibility
+
+A small real-clock campaign is practical as a separate opt-in driver. The original
+20–25 ms memstore leases were too short for the same sequence of network round trips;
+the PG driver uses 500 ms leases and completes each claimed task in one actor step.
+It runs outside synctest, on two fresh databases in the existing shared PostgreSQL,
+with two runs per seed, durable timers, effects, duplicate acknowledgements, rollback
+faults, and engine reconstruction. It does not emulate network I/O with fake time.
+See [the PostgreSQL evidence](lab-pg.md) for the exact command, measurements, timer
+deadline oracle, and the narrower scenario and scheduling bounds.
+
 ## Limits
 
-The scheduler explores interleavings at actor/API boundaries, with explicit replay
-command and transaction-operation interruption points. It does not explore arbitrary
+The memstore scheduler explores interleavings between background-loop transactions,
+with actor/API steps elsewhere and explicit replay-command and transaction-operation
+interruption points. It does not explore arbitrary
 instruction-level preemption, real process termination, network transport failures,
-or PostgreSQL crash recovery. Its Gate is an injected approved response.
+or PostgreSQL crash recovery. The optional PG driver uses serial actor steps and
+real network timing; its seed alone cannot control timer eligibility to the same
+extent as the logical-clock campaign.
 
 The frozen Store API exposes only inbox size, not inbox contents. Timer checks bound
 buffered-fire allowances by that size and recheck after flush; the early-sweep check
