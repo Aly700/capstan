@@ -95,10 +95,27 @@ export class Evidence {
     return child;
   }
   async stop(child, signal = "SIGTERM") {
-    if (!child || child.pid === undefined || child.exitCode !== null || child.signalCode !== null) return;
-    try { process.kill(-child.pid, signal); } catch (error) { if (error.code !== "ESRCH") throw error; }
-    try { await until("process exit", () => child.exitCode !== null || child.signalCode !== null, 5000); }
-    catch { try { process.kill(-child.pid, "SIGKILL"); } catch {} await until("killed process exit", () => child.exitCode !== null || child.signalCode !== null, 5000); }
+    if (!child) return;
+    if (child.pid === undefined) return;
+    const hasExited = () => child.exitCode !== null || child.signalCode !== null;
+    if (hasExited()) return;
+    try {
+      process.kill(-child.pid, signal);
+    } catch (error) {
+      if (error.code !== "ESRCH") throw error;
+    }
+    try {
+      await until("process exit", hasExited, 5000);
+      return;
+    } catch {
+      // Escalate if the initial wait fails; the final wait decides success.
+    }
+    try {
+      process.kill(-child.pid, "SIGKILL");
+    } catch {
+      // Still wait for the child's exit notification if signaling fails.
+    }
+    await until("killed process exit", hasExited, 5000);
   }
   async stopWorkers() { await Promise.all(this.workers.map((worker) => this.stop(worker))); }
   async rpc(method, body = {}) {
