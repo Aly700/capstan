@@ -24,6 +24,11 @@ EVIDENCE = ROOT / "docs/evidence"
 RAW = Path(__file__).resolve().parent
 SHA = "904cb6c41da4f57ac0399d1524989288e3ededb1"
 FINAL = RAW / SHA[:7]
+POLISH_SHA = "0a80a08f7a0a3bb88afd4221e1fe9b085c48afb1"
+POLISH = RAW / "polish-2026-09-28"
+SOURCE_PATHS = ["cmd", "internal", "sdk", "gen", "proto", "examples", "scripts",
+                "Makefile", "go.mod", "go.sum", "compose.yaml", "conformance",
+                ":(exclude)examples/codex-lanes", ":(exclude)scripts/demo-codex-lanes*"]
 ORDER = [(50,1000,4),(200,1000,4),(800,1600,4),(50,1000,1),
          (50,1000,8),(25,1000,4),(10,500,4),(100,1000,4),
          (50,1000,4),(200,1000,4),(800,1600,4)]
@@ -203,7 +208,7 @@ def table_counts(text):
     return {m[0]:int(m[1]) for m in re.findall(r"^\| ([a-z][a-z0-9-]+) \| (\d+) \|$", text, re.M)}
 
 
-def verify_mutations(folder, require_current=False):
+def verify_mutations(folder, require_current=False, patch_revision=None):
     report = obj(folder / "results.json")
     results = report["results"]
     assert len(results)==26 and report["seeds"]==2000
@@ -231,9 +236,11 @@ def verify_mutations(folder, require_current=False):
             assert len(seeds)==report["seeds"]
         else:
             raise AssertionError((name,row["status"]))
-        if require_current:
-            patch = ROOT / "internal/lab/mutants" / Path(row["mutant"]["patch"]).name
-            same(hashlib.sha256(patch.read_bytes()).hexdigest(),row["patch_sha256"],name)
+        if require_current or patch_revision:
+            patch = "internal/lab/mutants/" + Path(row["mutant"]["patch"]).name
+            data = (ROOT / patch).read_bytes() if require_current else subprocess.check_output(
+                ["git", "show", f"{patch_revision}:{patch}"], cwd=ROOT)
+            same(hashlib.sha256(data).hexdigest(),row["patch_sha256"],name)
         statuses[row["status"]] += 1
     same(dict(statuses), {"caught":25,"equivalent":1})
     return report
@@ -390,7 +397,13 @@ def final_pg():
 def artifacts():
     inspection = obj(EVIDENCE/"audit-2026-09-28/evidence/artifact-inspection.json")
     for name,info in inspection["images"].items():
-        data = (EVIDENCE/name).read_bytes()
+        # The blocked screenshot was refreshed by polish. Keep checking the
+        # auditor's original geometry against its original image, not the new UI.
+        if name == "ui-blocked.png":
+            data = subprocess.check_output(
+                ["git", "show", f"{SHA}:docs/evidence/{name}"], cwd=ROOT)
+        else:
+            data = (EVIDENCE/name).read_bytes()
         if name.endswith(".png"):
             assert data[:8]==b"\x89PNG\r\n\x1a\n"
             same(list(struct.unpack(">II",data[16:24])),[info["width"],info["height"]],name)
@@ -518,9 +531,65 @@ def operational_proofs():
     current = read(EVIDENCE/"audit-2026-09-28.md")
     assert current.startswith(original), "auditor's original report changed"
     failed = set(re.findall(r"^\| ([A-Z]\d+) \| \*\*FAILED\*\*",original,re.M))
-    resolution = current.split("## Post-audit resolution",1)[1]
+    resolution = current.split("## Post-audit resolution",1)[1].split("\n## ",1)[0]
     assert failed==set(re.findall(r"^\| ([A-Z]\d+) \|",resolution,re.M))
     print("PASS final gate, human wait, 16 ordered races, quickstart/browser and all FAILED-row resolutions")
+
+
+def polish_provenance():
+    # Historical observations still describe SHA. Pin the reviewed refactors and
+    # viewer fix separately; no unlisted source drift is accepted by this gate.
+    changed = subprocess.check_output(
+        ["git", "diff", "--name-only", SHA, POLISH_SHA, "--", *SOURCE_PATHS],
+        cwd=ROOT, text=True).splitlines()
+    same(set(changed), {
+        "internal/engine/commands.go", "internal/engine/workflow_task.go",
+        "internal/lab/mutants/003-started-token-check.patch",
+        "internal/lab/mutants/016-expired-workflow-completion.patch",
+        "internal/server/ui/static/app.js", "internal/store/pgstore/tasks.go",
+        # Pre-existing 71601cf waits for test cleanup before cancelling its context.
+        "internal/store/pgstore/edges_test.go",
+        "scripts/check-ui.mjs", "scripts/evidence-lib.mjs",
+        "sdk/src/replay/activation.ts", "sdk/src/replay/runtime.ts",
+        "sdk/src/sandbox/globals.ts", "sdk/src/worker/builtins/model.ts",
+    }, "reviewed source changes since the measured revision")
+    subprocess.run(["git", "diff", "--exit-code", POLISH_SHA, "--", *SOURCE_PATHS],
+                   cwd=ROOT, check=True)
+
+
+def polish_proofs():
+    before_folder = POLISH / "mutations-before"
+    before_revision = obj(before_folder / "results.json")["revision"]
+    before = verify_mutations(before_folder, patch_revision=before_revision)
+    after = verify_mutations(POLISH / "mutations-after", require_current=True)
+    # The mutation runner snapshots committed production code. Verify that its
+    # engine, stores and lab are the ones whose current source was pinned above.
+    subprocess.run(["git", "diff", "--exit-code", after["revision"], POLISH_SHA,
+                    "--", "internal/engine", "internal/store", "internal/lab", "cmd/capstan-lab"],
+                   cwd=ROOT, check=True)
+    for old, new in zip(before["results"], after["results"]):
+        same(new["mutant"]["id"], old["mutant"]["id"])
+        same(new["status"], old["status"])
+        same(new["seed"], old["seed"])
+        # Protobuf diagnostic formatting can vary whitespace between executions.
+        same(re.sub(r"\s+", " ", new["check"]), re.sub(r"\s+", " ", old["check"]))
+    ui = obj(POLISH / "ui-check.json")
+    same(ui["check"], "PASS")
+    assert "blocked mismatch event 5 and timeline link" in ui["checks"]
+    assert "old-history fallback event 14 and resume command" in ui["checks"]
+    assert "mismatch link loads subsequent history pages" in ui["checks"]
+    assert "mismatch link opens the correct event in a new tab" in ui["checks"]
+    screenshot = (EVIDENCE / "ui-blocked.png").read_bytes()
+    inspected_screenshot = subprocess.check_output(
+        ["git", "show", f"{POLISH_SHA}:docs/evidence/ui-blocked.png"], cwd=ROOT)
+    same(screenshot, inspected_screenshot, "inspected polish screenshot")
+    same(list(struct.unpack(">II", screenshot[16:24])), [1280, 2120], "polish screenshot geometry")
+    gate = read(POLISH / "verify.txt")
+    assert POLISH_SHA in gate and "Exit: 0" in gate
+    commands = ("buf generate", "buf lint", "go vet", "go test -race",
+                "-tags pgengine", "tsc --noEmit", "vitest run")
+    assert all(command in gate for command in commands)
+    print("PASS polish: pinned source, merge gate, viewer event 5; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks")
 
 
 def main():
@@ -528,22 +597,17 @@ def main():
     parser.add_argument("--historical",action="store_true")
     parser.add_argument("--write",action="store_true")
     args = parser.parse_args()
-    # The measured code must be unchanged since SHA. The Codex-lanes workload example and
-    # its AWS demo scripts were merged afterwards; the campaigns never run them.
-    subprocess.run(["git", "diff", "--exit-code", SHA, "--", "cmd", "internal",
-                    "sdk", "gen", "proto", "examples", "scripts", "Makefile",
-                    "go.mod", "go.sum", "compose.yaml", "conformance",
-                    ":(exclude)examples/codex-lanes", ":(exclude)scripts/demo-codex-lanes*"],
-                   cwd=ROOT, check=True)
+    polish_provenance()
     historical()
     artifacts()
     if args.historical:
         print("PASS historical numeric verification")
         return
     loads,lab,pg = final_load(),final_lab(),final_pg()
-    mutations = verify_mutations(FINAL / "mutations",True)
+    mutations = verify_mutations(FINAL / "mutations", patch_revision=SHA)
     prefix = final_demos()
     operational_proofs()
+    polish_proofs()
     output = {"source_sha":SHA,"load":loads,"lab":lab,"pg":pg,"crash_prefix":prefix,
               "mutation_statuses":dict(Counter(r["status"] for r in mutations["results"]))}
     destination = FINAL / "numbers.json"

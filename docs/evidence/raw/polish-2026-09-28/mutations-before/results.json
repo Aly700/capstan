@@ -1,0 +1,400 @@
+{
+  "revision": "c85928e561c50156897a76ccb8b8bf84e85381cf",
+  "lab_source_sha256": "795120ef8cd87a27269b4f5565310f4359ef629da7987a38b3883ddd40804671",
+  "snapshot": "5a16987e4aa8c3e9f366139da52237b8e057e46c",
+  "seeds": 2000,
+  "started": "2026-09-29T01:34:30.910444Z",
+  "results": [
+    {
+      "mutant": {
+        "id": "M001",
+        "name": "Timer delivery retains timer row",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/001-timer-retained.patch",
+        "description": "A timer delivery refactor omits deleting the consumed timer, allowing repeated delivery.",
+        "expected_check": "P3 timer uniqueness and consumed-row check"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: P3: run \"lab\": timer row 2 is duplicated or retained after settling",
+      "patch_sha256": "6f3341fa576f96c56379a29a05191a0ea98b3a039bc061c40bd93371a02ed7d7",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M001.jsonl",
+      "elapsed_ns": 718162500
+    },
+    {
+      "mutant": {
+        "id": "M002",
+        "name": "Inbox flush precedes command events",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/002-inbox-before-commands.patch",
+        "description": "Workflow completion flushes buffered external events before recording its commands.",
+        "expected_check": "activation ordering and replay history matching"
+      },
+      "status": "caught",
+      "seed": 2,
+      "check": "protocol cancel-before-start: cancel-before-start emitted 0 cancellation events",
+      "patch_sha256": "3877b9857bac991fec54b2ed14b0bc963cf45bb59e67cba45895b099bf4a39e6",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M002.jsonl",
+      "elapsed_ns": 705898417
+    },
+    {
+      "mutant": {
+        "id": "M003",
+        "name": "Workflow token omits started event comparison",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/003-started-token-check.patch",
+        "description": "The workflow token validator drops its direct comparison with the task started event.",
+        "expected_check": "workflow stale token rejection",
+        "equivalent_reason": "The remaining run.LastEventID != tok.StartedEventId guard rejects every differing started ID on engine-reachable states: PollWorkflowTask writes TaskStarted last and stores that same ID in task.StartedEventID; while InFlight, external events only enter the inbox; complete, fail, and timeout clear or replace the task. This mutant removes a redundant guard only, assuming state was produced through the engine."
+      },
+      "status": "equivalent",
+      "seed": -1,
+      "check": "The remaining run.LastEventID != tok.StartedEventId guard rejects every differing started ID on engine-reachable states: PollWorkflowTask writes TaskStarted last and stores that same ID in task.StartedEventID; while InFlight, external events only enter the inbox; complete, fail, and timeout clear or replace the task. This mutant removes a redundant guard only, assuming state was produced through the engine.",
+      "patch_sha256": "b3f9518e648b142f25a2a6ab3c6944e16b0af49e1dc5997937f9dfa580f4bb7f",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M003.jsonl",
+      "elapsed_ns": 38494888083
+    },
+    {
+      "mutant": {
+        "id": "M004",
+        "name": "Activity retry does not increment attempt",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/004-retry-attempt.patch",
+        "description": "An activity retry resets visibility and lease but forgets to increment the attempt fence.",
+        "expected_check": "retry attempt progression or bounded scenario completion"
+      },
+      "status": "caught",
+      "seed": 6,
+      "check": "protocol retry-attempt: activity retry attempt = 1 after 1",
+      "patch_sha256": "b0e82a452f67b42715d617a8b8336c4556264fd1fd7eee74256f4e270f03ef67",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M004.jsonl",
+      "elapsed_ns": 875079083
+    },
+    {
+      "mutant": {
+        "id": "M005",
+        "name": "Close retains buffered events",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/005-closed-inbox.patch",
+        "description": "Run cleanup omits draining the unreachable inbox after a closing command.",
+        "expected_check": "closed-run inbox emptiness"
+      },
+      "status": "caught",
+      "seed": 8,
+      "check": "protocol closed-inbox: closed run retains 1 buffered events",
+      "patch_sha256": "fa3a47950b7ff02558e6dc112d041ac9d88ad6b0457a79db2a0d88b8e0ba05b4",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M005.jsonl",
+      "elapsed_ns": 846828375
+    },
+    {
+      "mutant": {
+        "id": "M006",
+        "name": "In-flight signal is acknowledged and dropped",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/006-drop-inflight-signal.patch",
+        "description": "An optimization mistakenly discards signals arriving while workflow work is leased.",
+        "expected_check": "accepted-signal exactly-once delivery or scenario completion"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "scenario pipeline: signal peer/inflight-40: got 0 deliveries, want one",
+      "patch_sha256": "f36ab8be4e6d4f5d24cd816aaa66a196295b8ba8ef912e5d8c7fc570cfb75cb8",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M006.jsonl",
+      "elapsed_ns": 669328166
+    },
+    {
+      "mutant": {
+        "id": "M007",
+        "name": "Workflow task failure retains InFlight",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/007-failed-inflight.patch",
+        "description": "SDK-error workflow task failure schedules a retry but leaves the old in-flight projection set.",
+        "expected_check": "workflow task projection check after failure"
+      },
+      "status": "caught",
+      "seed": 3,
+      "check": "protocol failed-workflow-release: failed workflow task still owns InFlight",
+      "patch_sha256": "ea682cb66c746e9ed3fd7a8941b9cd620897aa2b58ba76cd9a698bd9796459f2",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M007.jsonl",
+      "elapsed_ns": 755019750
+    },
+    {
+      "mutant": {
+        "id": "M008",
+        "name": "Last event projection increments one too far",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/008-last-event-off-by-one.patch",
+        "description": "An inclusive-count mistake increments the run history projection one past the appended batch.",
+        "expected_check": "P4 contiguous history and last_event_id projection"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: store: conflict",
+      "patch_sha256": "747848bd33318d55dc9c92eccc4f4e6bff485ce2d2c03b1082f608fc68b56fd0",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M008.jsonl",
+      "elapsed_ns": 654881500
+    },
+    {
+      "mutant": {
+        "id": "M009",
+        "name": "Heartbeat does not extend deadline",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/009-heartbeat-deadline.patch",
+        "description": "Heartbeat details are persisted but the heartbeat timestamp is not refreshed, causing premature expiry.",
+        "expected_check": "heartbeat lease-extension check"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "protocol heartbeat-renewal: renewed heartbeat task expired early: processed 1",
+      "patch_sha256": "e8a6bf9f19b3224951b3f7cef3888f079c438c9bc36c34e3598ee10a125393f0",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M009.jsonl",
+      "elapsed_ns": 712108500
+    },
+    {
+      "mutant": {
+        "id": "M010",
+        "name": "Retry is queued past schedule-to-close",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/010-retry-past-deadline.patch",
+        "description": "Retry eligibility ignores that the next visibility time is after the activity schedule-to-close deadline.",
+        "expected_check": "activity retry deadline projection and final timeout semantics"
+      },
+      "status": "caught",
+      "seed": 1,
+      "check": "protocol retry-deadline: activity retry remains queued beyond schedule-to-close: attempt 2",
+      "patch_sha256": "af39ec2addc0a062688025492bd59e96e234bc0cf0d6c836b5550da945de5778",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M010.jsonl",
+      "elapsed_ns": 693247750
+    },
+    {
+      "mutant": {
+        "id": "M011",
+        "name": "Cancel-before-start retains deliverable activity",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/011-cancel-unstarted-task.patch",
+        "description": "Cancelling an unleased activity emits ActivityCancelled but forgets to remove its queue task.",
+        "expected_check": "cancelled activity has no deliverable task"
+      },
+      "status": "caught",
+      "seed": 2,
+      "check": "protocol cancel-before-start: cancelled unstarted activity was delivered",
+      "patch_sha256": "9020d63b9414e32ea3512666219571a56907dfbca3f8fcd43132171997bf2a7a",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M011.jsonl",
+      "elapsed_ns": 747898709
+    },
+    {
+      "mutant": {
+        "id": "M012",
+        "name": "Continuation uses predecessor input",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/012-continuation-input.patch",
+        "description": "A copied run initializer uses the old input instead of the ContinueAsNew command input.",
+        "expected_check": "continuation expected result or bounded scenario completion"
+      },
+      "status": "caught",
+      "seed": 7,
+      "check": "baseline continuation: did not finish in 1000 steps",
+      "patch_sha256": "fdc539cc4746652082767af69ee4db6a255122b838cfd32396d5d24c681c297d",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M012.jsonl",
+      "elapsed_ns": 889337042
+    },
+    {
+      "mutant": {
+        "id": "M013",
+        "name": "Human approval may resolve twice",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/013-approval-twice.patch",
+        "description": "The human approval endpoint omits its pending-state fence and accepts repeated decisions.",
+        "expected_check": "duplicate approval rejection and one resolution event"
+      },
+      "status": "caught",
+      "seed": 4,
+      "check": "protocol approval-once: duplicate approval resolution must be rejected: \u003cnil\u003e",
+      "patch_sha256": "7fd94858d90a39ab2bab86ba2fc63745e13155ccf52eda46b32760dfa97b94d6",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M013.jsonl",
+      "elapsed_ns": 808974917
+    },
+    {
+      "mutant": {
+        "id": "M014",
+        "name": "Timer deletion commits before delivery",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/014-split-timer-transaction.patch",
+        "description": "A transaction-scope refactor commits DeleteTimer separately before its event delivery; failure or a competing actor can observe the gap.",
+        "expected_check": "P3 pending timer row or buffered delivery consistency"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: P3: run \"lab\": 1 timer(s) lost: no row, terminal event, or sufficient inbox entries",
+      "patch_sha256": "7ec431dbe15e6d15a5576ec941f8272bfd5a6b70903c9f4955de8874869d4358",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M014.jsonl",
+      "elapsed_ns": 707607291
+    },
+    {
+      "mutant": {
+        "id": "M015",
+        "name": "ClaimTask ignores an active lease",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/015-claim-active-lease.patch",
+        "description": "Queue selection drops the unleased filter and can hand the same live task to another worker.",
+        "expected_check": "exclusive task claim and workflow token fencing"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: worker replay failed: invalid history after TaskStarted event 3",
+      "patch_sha256": "29220c695da1cf07ff2df283d1eaf95becb34f42babcb14978d370528df98fee",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M015.jsonl",
+      "elapsed_ns": 630819458
+    },
+    {
+      "mutant": {
+        "id": "M016",
+        "name": "Expired workflow completion is accepted",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/016-expired-workflow-completion.patch",
+        "description": "Workflow token validation relies only on the asynchronous reaper and accepts an expired token before it runs.",
+        "expected_check": "late workflow acknowledgement rejection"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "scenario pipeline: late workflow completion accepted: \u003cnil\u003e",
+      "patch_sha256": "6683aaf85bb353528201bc05a7407d92bc0674fb4bdc5fc3d2339f2a5248882c",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M016.jsonl",
+      "elapsed_ns": 672898667
+    },
+    {
+      "mutant": {
+        "id": "M017",
+        "name": "Expired activity completion is accepted",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/017-expired-activity-completion.patch",
+        "description": "Activity token validation omits the start-to-close lease check and accepts a stale completion before the reaper.",
+        "expected_check": "late activity acknowledgement rejection"
+      },
+      "status": "caught",
+      "seed": 2,
+      "check": "scenario signal: late activity completion accepted: \u003cnil\u003e",
+      "patch_sha256": "804f6a6074df65aac8f00b25627b95806ac7bd0b6c5028b0a6006d5714dbcd7e",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M017.jsonl",
+      "elapsed_ns": 776837875
+    },
+    {
+      "mutant": {
+        "id": "M018",
+        "name": "Transaction snapshot aliases mutable tasks",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/018-rollback-task-alias.patch",
+        "description": "A snapshot optimization shares the task map across transactions, so rollback leaks task mutations.",
+        "expected_check": "transaction rollback snapshot equality and task/history consistency"
+      },
+      "status": "caught",
+      "seed": 7,
+      "check": "scenario continuation: did not finish in 1000 steps",
+      "patch_sha256": "fab787570c46b41c43cd02e0ee414ad70cadea76a602c3afa8bdbf532bc71322",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M018.jsonl",
+      "elapsed_ns": 911988375
+    },
+    {
+      "mutant": {
+        "id": "M019",
+        "name": "Inbox push prepends instead of appending",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/019-inbox-reversed.patch",
+        "description": "Buffered external events use stack insertion instead of FIFO order.",
+        "expected_check": "accepted signal order and workflow result"
+      },
+      "status": "caught",
+      "seed": 5,
+      "check": "protocol signal-order: accepted signal order[0] = \"third\"",
+      "patch_sha256": "1429ce41bf5897e9d604740f55b70c5ee27b88a06648f5e5131a9de8b0d05134",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M019.jsonl",
+      "elapsed_ns": 755471000
+    },
+    {
+      "mutant": {
+        "id": "M020",
+        "name": "Timer selection includes a future millisecond",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/020-timer-early.patch",
+        "description": "A boundary adjustment widens the due-timer predicate by one millisecond.",
+        "expected_check": "P3 no early timer delivery and early sweep count"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "scenario pipeline: P3: run \"lab\": timer 2 fired before its deadline 2000-01-01T00:00:00.081Z",
+      "patch_sha256": "40771222e0e1f3b9e5c1be41ec32d32ec425d19d6280a6943ddad6088e0e1835",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M020.jsonl",
+      "elapsed_ns": 657948167
+    },
+    {
+      "mutant": {
+        "id": "M021",
+        "name": "Timer row references the completing task event",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/021-timer-reference.patch",
+        "description": "Timer insertion stores the workflow completion event ID where the timer-start event ID belongs.",
+        "expected_check": "P3 timer started-event reference"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: P3: run \"lab\": timer row 2 references an unknown start",
+      "patch_sha256": "e72ab5004619b761aa7018963550aad7e1b1169be9f9affacbdc05f7bec713b0",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M021.jsonl",
+      "elapsed_ns": 671120167
+    },
+    {
+      "mutant": {
+        "id": "M022",
+        "name": "Effect idempotency key omits run identity",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/022-idempotency-run-collision.patch",
+        "description": "An idempotency-key refactor uses one shared prefix, causing unrelated runs with the same sequence to share effects.",
+        "expected_check": "P1 effect keys and concurrent run expected results"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: root peer: scenario pipeline-peer: unexpected result content_type:\"application/json\" data:\"[1,\\\"done\\\"]\" or failure \u003cnil\u003e",
+      "patch_sha256": "b6a3175afd05c6bced878911f4359d1291dd1f3c1a3e766204193a4ddba24f18",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M022.jsonl",
+      "elapsed_ns": 719371250
+    },
+    {
+      "mutant": {
+        "id": "M023",
+        "name": "Gate decision arriving after deadline wins",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/023-gate-late-decision.patch",
+        "description": "Gate response handling does not recheck the deadline after external I/O.",
+        "expected_check": "approval deadline expected outcome"
+      },
+      "status": "caught",
+      "seed": 6,
+      "check": "baseline gate-late: root lab: scenario gate-late: unexpected result content_type:\"application/json\"  data:\"{\\\"choice\\\":\\\"\\\",\\\"note\\\":\\\"\\\",\\\"outcome\\\":\\\"approved\\\",\\\"resolver\\\":\\\"lab-gate\\\"}\" or failure \u003cnil\u003e",
+      "patch_sha256": "d7086be2c0354ec725173a51c4fa17eb4cde4edbc5e19d821e86c9a09ef19e75",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M023.jsonl",
+      "elapsed_ns": 809297042
+    },
+    {
+      "mutant": {
+        "id": "M024",
+        "name": "Gate pending status is treated as approval",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/024-gate-pending-approved.patch",
+        "description": "An external-status mapping mistakenly treats PENDING as a successful approval.",
+        "expected_check": "Gate pending must not resolve approval"
+      },
+      "status": "caught",
+      "seed": 5,
+      "check": "baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:\"application/json\"  data:\"{\\\"choice\\\":\\\"\\\",\\\"note\\\":\\\"\\\",\\\"outcome\\\":\\\"approved\\\",\\\"resolver\\\":\\\"\\\"}\" or failure \u003cnil\u003e",
+      "patch_sha256": "c43acb8e3530adf202708a496ffa734b697b42571e96276e16818516a5b92f6c",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M024.jsonl",
+      "elapsed_ns": 841174792
+    },
+    {
+      "mutant": {
+        "id": "M025",
+        "name": "Gate error becomes a final denial",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/025-gate-error-denied.patch",
+        "description": "Transient Gate failures are converted to permanent denial instead of remaining pending for retry.",
+        "expected_check": "Gate error retry and expected outcome"
+      },
+      "status": "caught",
+      "seed": 5,
+      "check": "baseline gate-errors: root lab: scenario gate-errors: unexpected result content_type:\"application/json\" data:\"{\\\"choice\\\":\\\"\\\",\\\"note\\\":\\\"\\\",\\\"outcome\\\":\\\"denied\\\",\\\"resolver\\\":\\\"gate-error\\\"}\" or failure \u003cnil\u003e",
+      "patch_sha256": "481c60c043f45cfa55982611ffa74be464567ff743a1bd3b6794ff12c264258d",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M025.jsonl",
+      "elapsed_ns": 811686833
+    },
+    {
+      "mutant": {
+        "id": "M026",
+        "name": "RunTasks leaks other runs task rows",
+        "patch": "/Users/affan/Projects/capstan--polish/internal/lab/mutants/026-cross-run-tasks.patch",
+        "description": "A missing run predicate returns every task; closing one run deletes work belonging to concurrent runs.",
+        "expected_check": "per-run task ownership and concurrent completion"
+      },
+      "status": "caught",
+      "seed": 0,
+      "check": "baseline pipeline: did not finish in 1000 steps",
+      "patch_sha256": "726f18bffcca8d03b0cd5683584259b949d8a42911a7f602dc88dbbf359ca4dc",
+      "log": "/Users/affan/Projects/capstan--polish/.lane/polish-mutations-before/M026.jsonl",
+      "elapsed_ns": 665978667
+    }
+  ]
+}
