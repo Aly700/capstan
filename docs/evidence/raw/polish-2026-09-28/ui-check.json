@@ -1,0 +1,25 @@
+{
+  "check": "PASS",
+  "date": "2026-09-29T01:51:24.719Z",
+  "browser": "148.0.7778.168",
+  "playwright": "1.64.0-alpha-1789764292000",
+  "runs": 13,
+  "checks": [
+    "public assets",
+    "JSON auth",
+    "status and type filters",
+    "paging",
+    "collapsed payloads",
+    "text-only injection",
+    "blocked mismatch event 5 and timeline link",
+    "mismatch link loads subsequent history pages",
+    "mismatch link opens the correct event in a new tab",
+    "old-history fallback event 14 and resume command",
+    "mobile overflow",
+    "session-only key",
+    "reload",
+    "disconnect",
+    "no key in URLs, bodies, DOM or logs",
+    "same origin; no CORS preflight"
+  ]
+}

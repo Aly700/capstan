@@ -1,12 +1,13 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -75,7 +75,7 @@
- 	if err != nil {
- 		return nil, nil, err
+@@ -88,8 +88,7 @@
  	}
--	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
-+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() {
+ 	// The task was started and its lease is still live, checked before the reaper runs.
+ 	if task.StartedEventID == 0 ||
+-		task.LeasedUntil.IsZero() ||
+-		!e.now().Before(task.LeasedUntil) {
++		task.LeasedUntil.IsZero() {
  		return nil, nil, ErrStaleTask
  	}
- 	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING || !r.InFlight || r.WorkflowTaskID != task.ID || r.LastEventID != tok.StartedEventId {
+ 	// The run still expects this task; D2 keeps TaskStarted last while it is in flight.

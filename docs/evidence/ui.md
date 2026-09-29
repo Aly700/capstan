@@ -59,3 +59,11 @@ its completed history and result 5. [Browser transcript](raw/904cb6c/quickstart-
 on the final code; the wider historical filter, paging, mobile and privacy
 campaign above was not repeated by this lane.
 <!-- final-numbers:end -->
+
+## Blocked banner follow-up (2026-09-28)
+
+The [blocked screenshot](ui-blocked.png) was regenerated and inspected after the
+polish fix. The banner reads `Replay mismatch at event 5`, links to that timeline
+event (loading further history pages when needed), and retains `capstan resume`.
+`scripts/check-ui.sh` also checks the old-history fallback to blocked event 14.
+Desktop and mobile checks passed; the other screenshots above remain historical.

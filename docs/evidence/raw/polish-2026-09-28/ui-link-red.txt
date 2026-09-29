@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '#event-5'
+- '#run=evidence-blocked&event=5'
+
+    at file:///Users/affan/Projects/capstan--polish/scripts/check-ui.mjs:66:12
+    at async managed (file:///Users/affan/Projects/capstan--polish/scripts/evidence-lib.mjs:173:65)
+    at async file:///Users/affan/Projects/capstan--polish/scripts/check-ui.mjs:11:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '#event-5',
+  expected: '#run=evidence-blocked&event=5',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

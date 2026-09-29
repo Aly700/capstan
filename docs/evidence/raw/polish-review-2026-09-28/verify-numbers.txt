@@ -1,0 +1,16 @@
+PASS historical load: every table cell, range, percentile, CPU delta and lock observation
+PASS historical archive: 605 hashes; lab aggregates, mutation seeds, gates and timing/control logs
+LIMIT historical lab fault/step totals have emitted aggregate reports, not per-seed records
+recording aws-2026-09-28-attempt-2.cast: structure OK; not in the audit inspection manifest
+recording codex-lanes-local.cast: structure OK; not in the audit inspection manifest
+recording aws-2026-09-28.cast: structure OK; not in the audit inspection manifest
+PASS image geometry/timing, recordings/cost arithmetic, source inventories and preserved audit measurements
+PASS final gate, human wait, 16 ordered races, quickstart/browser and all FAILED-row resolutions
+PASS polish: pinned source, merge gate, viewer event 5; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks
+PASS polish review: grouped fences, pinned source and merge gate; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks
+PASS recorded-session resolution: all 11 open rows mapped; four local Gate cases and retained AWS receipt fields checked; no live service calls
+PASS final load: 11 measurements, 11700 completed, 58500 activities, 0 errors
+PASS final lab: 200000 seeds, 65602948 steps, 13285961 transaction steps, 0 failures
+PASS mutation catalogue: 26 valid, 25 caught, 1 equivalent; every first failing seed checked
+PASS PostgreSQL: 500 seeds, 53835 steps, 7589 duplicate acknowledgements
+PASS every generated final numeric section matches committed observations
