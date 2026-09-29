@@ -108,7 +108,23 @@ export function createModelActivity(options: {
       else failed = failure("ModelProviderError", typeof fields.status === "number" && fields.status >= 400 && fields.status < 500 && ![408, 409, 429].includes(fields.status));
       errorCode = failed.type === "ModelTimeout" && providerRequestSent && !usageReceived ? "ModelTimeoutUsageUnknown" : failed.type;
     }
-    const finish = { reservationId, ok: failed === undefined, inputTokens: BigInt(usage.inputTokens), outputTokens: BigInt(usage.outputTokens), cacheReadTokens: BigInt(usage.cacheReadTokens), cacheWriteTokens: BigInt(usage.cacheWriteTokens), errorCode, usageUnknown: providerRequestSent && !usageReceived };
+    const ok = failed === undefined;
+    const inputTokens = BigInt(usage.inputTokens);
+    const outputTokens = BigInt(usage.outputTokens);
+    const cacheReadTokens = BigInt(usage.cacheReadTokens);
+    const cacheWriteTokens = BigInt(usage.cacheWriteTokens);
+    // D27 keeps the reservation counted when a sent request has no valid usage.
+    const usageUnknown = providerRequestSent && !usageReceived;
+    const finish = {
+      reservationId,
+      ok,
+      inputTokens,
+      outputTokens,
+      cacheReadTokens,
+      cacheWriteTokens,
+      errorCode,
+      usageUnknown,
+    };
     let costUsd: number | undefined;
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
