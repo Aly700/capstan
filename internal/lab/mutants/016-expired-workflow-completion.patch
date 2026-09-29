@@ -1,15 +1,13 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -111,11 +111,6 @@
- 	if !hasLease {
+@@ -88,8 +88,7 @@
+ 	}
+ 	// The task was started and its lease is still live, checked before the reaper runs.
+ 	if task.StartedEventID == 0 ||
+-		task.LeasedUntil.IsZero() ||
+-		!e.now().Before(task.LeasedUntil) {
++		task.LeasedUntil.IsZero() {
  		return nil, nil, ErrStaleTask
  	}
--	// Reject expired acknowledgements even before the asynchronous reaper runs.
--	leaseExpired := !e.now().Before(task.LeasedUntil)
--	if leaseExpired {
--		return nil, nil, ErrStaleTask
--	}
- 	runIsRunning := r.Status == v1.RunStatus_RUN_STATUS_RUNNING
- 	if !runIsRunning {
- 		return nil, nil, ErrStaleTask
+ 	// The run still expects this task; D2 keeps TaskStarted last while it is in flight.

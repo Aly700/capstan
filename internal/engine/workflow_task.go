@@ -75,62 +75,28 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 	if err != nil {
 		return nil, nil, err
 	}
-	tokenIsWorkflow := tok.Kind == v1.TaskKind_TASK_KIND_WORKFLOW
-	if !tokenIsWorkflow {
+	// The token names this exact workflow task attempt.
+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW ||
+		task.Kind != store.TaskWorkflow ||
+		tok.RunId != task.RunID ||
+		tok.Attempt != task.Attempt ||
+		tok.ScheduledEventId != task.ScheduledEventID ||
+		// M003: the run's LastEventID check below makes this started-event check redundant.
+		tok.StartedEventId != task.StartedEventID ||
+		tok.Seq != 0 {
 		return nil, nil, ErrStaleTask
 	}
-	taskIsWorkflow := task.Kind == store.TaskWorkflow
-	if !taskIsWorkflow {
+	// The task was started and its lease is still live, checked before the reaper runs.
+	if task.StartedEventID == 0 ||
+		task.LeasedUntil.IsZero() ||
+		!e.now().Before(task.LeasedUntil) {
 		return nil, nil, ErrStaleTask
 	}
-	sameRun := tok.RunId == task.RunID
-	if !sameRun {
-		return nil, nil, ErrStaleTask
-	}
-	sameAttempt := tok.Attempt == task.Attempt
-	if !sameAttempt {
-		return nil, nil, ErrStaleTask
-	}
-	sameScheduledEvent := tok.ScheduledEventId == task.ScheduledEventID
-	if !sameScheduledEvent {
-		return nil, nil, ErrStaleTask
-	}
-	sameStartedEvent := tok.StartedEventId == task.StartedEventID
-	if !sameStartedEvent {
-		return nil, nil, ErrStaleTask
-	}
-	workflowHasNoSequence := tok.Seq == 0
-	if !workflowHasNoSequence {
-		return nil, nil, ErrStaleTask
-	}
-	taskHasStarted := task.StartedEventID != 0
-	if !taskHasStarted {
-		return nil, nil, ErrStaleTask
-	}
-	hasLease := !task.LeasedUntil.IsZero()
-	if !hasLease {
-		return nil, nil, ErrStaleTask
-	}
-	// Reject expired acknowledgements even before the asynchronous reaper runs.
-	leaseExpired := !e.now().Before(task.LeasedUntil)
-	if leaseExpired {
-		return nil, nil, ErrStaleTask
-	}
-	runIsRunning := r.Status == v1.RunStatus_RUN_STATUS_RUNNING
-	if !runIsRunning {
-		return nil, nil, ErrStaleTask
-	}
-	taskIsInFlight := r.InFlight
-	if !taskIsInFlight {
-		return nil, nil, ErrStaleTask
-	}
-	taskIsCurrent := r.WorkflowTaskID == task.ID
-	if !taskIsCurrent {
-		return nil, nil, ErrStaleTask
-	}
-	// D2 buffers external events while in flight, so TaskStarted must still be last.
-	historyEndsAtTokenStart := r.LastEventID == tok.StartedEventId
-	if !historyEndsAtTokenStart {
+	// The run still expects this task; D2 keeps TaskStarted last while it is in flight.
+	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING ||
+		!r.InFlight ||
+		r.WorkflowTaskID != task.ID ||
+		r.LastEventID != tok.StartedEventId {
 		return nil, nil, ErrStaleTask
 	}
 	return task, r, nil

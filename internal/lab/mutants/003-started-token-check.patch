@@ -1,14 +1,12 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -95,10 +95,6 @@
- 	if !sameScheduledEvent {
+@@ -81,8 +81,6 @@
+ 		tok.RunId != task.RunID ||
+ 		tok.Attempt != task.Attempt ||
+ 		tok.ScheduledEventId != task.ScheduledEventID ||
+-		// M003: the run's LastEventID check below makes this started-event check redundant.
+-		tok.StartedEventId != task.StartedEventID ||
+ 		tok.Seq != 0 {
  		return nil, nil, ErrStaleTask
  	}
--	sameStartedEvent := tok.StartedEventId == task.StartedEventID
--	if !sameStartedEvent {
--		return nil, nil, ErrStaleTask
--	}
- 	workflowHasNoSequence := tok.Seq == 0
- 	if !workflowHasNoSequence {
- 		return nil, nil, ErrStaleTask
