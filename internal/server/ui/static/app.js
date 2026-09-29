@@ -123,6 +123,14 @@ function failures(failure) {
   for (let item = failure, depth = 0; item && depth < 10; item = item.cause, depth++) parts.push(`${item.type || "Failure"}: ${item.message || "No message"}`);
   return parts.join(" → ");
 }
+async function revealEvent(runId, eventId) {
+  while (!$(eventId) && selectedRun?.runId === runId && !$("more-history").hidden) {
+    const loaded = events.length;
+    await detail(runId, true);
+    if (events.length === loaded) return;
+  }
+  if (selectedRun?.runId === runId) $(eventId)?.scrollIntoView({ block: "center" });
+}
 function renderTimeline() {
   const byId = new Map(events.map((event) => [event.eventId, event]));
   const rows = events.map((event) => {
@@ -156,9 +164,24 @@ function renderTimeline() {
   $("blocked").hidden = !blocked;
   if (blocked) {
     const mismatch = events.findLast((event) => event.runBlocked);
+    const failure = mismatch?.runBlocked.failure || selectedRun.failure;
+    const metadata = unpack(failure?.details)?.value?.$capstan;
+    const hasMismatchEvent = metadata?.kind === "mismatch" && Number.isSafeInteger(metadata.eventId) && metadata.eventId > 0;
+    const heading = element("h2", mismatch ? `Replay mismatch · event #${mismatch.eventId}` : "Replay mismatch · run blocked");
+    if (hasMismatchEvent) {
+      const eventId = `event-${metadata.eventId}`;
+      const runId = selectedRun.runId;
+      const link = element("a", `Replay mismatch at event ${metadata.eventId}`);
+      link.href = `#run=${encodeURIComponent(runId)}&event=${metadata.eventId}`;
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        await revealEvent(runId, eventId);
+      });
+      heading.replaceChildren(link);
+    }
     $("blocked").replaceChildren(
-      element("h2", mismatch ? `Replay mismatch · event #${mismatch.eventId}` : "Replay mismatch · run blocked"),
-      element("p", failures(mismatch?.runBlocked.failure || selectedRun.failure)),
+      heading,
+      element("p", failures(failure)),
       element("p", "Deploy compatible workflow code, then explicitly resume this run:"),
       element("pre", `capstan resume '${selectedRun.runId.replaceAll("'", "'\\''")}'`),
     );
@@ -190,8 +213,14 @@ async function detail(runId, more = false) {
     notice(`History refreshed ${new Date().toISOString().slice(11, 19)} UTC.`);
   } catch (error) { report(error, version); }
 }
-function route() {
-  try { const match = /^#run=(.*)$/.exec(location.hash); return match ? detail(decodeURIComponent(match[1])) : list(); }
+async function route() {
+  try {
+    const match = /^#run=([^&]*)(?:&event=([1-9]\d*))?$/.exec(location.hash);
+    if (!match) return list();
+    const runId = decodeURIComponent(match[1]);
+    await detail(runId);
+    if (match[2]) await revealEvent(runId, `event-${match[2]}`);
+  }
   catch { notice("Invalid run link.", true); }
 }
 $("connect-form").addEventListener("submit", (event) => {

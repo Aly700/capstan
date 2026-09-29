@@ -61,7 +61,28 @@ await managed(new Evidence("ui", 7300), async (env) => {
     await page.goto(`${env.address}/ui/#run=evidence-blocked`);
     await page.waitForSelector("#blocked:not([hidden])");
     assert.match(await page.locator("#blocked").textContent(), /capstan resume 'evidence-blocked'/);
-    assert.match(await page.locator("#blocked").textContent(), /event #/);
+    assert.equal(await page.locator("#blocked h2").textContent(), "Replay mismatch at event 5");
+    const mismatchLink = page.locator("#blocked h2 a");
+    assert.equal(await mismatchLink.getAttribute("href"), "#run=evidence-blocked&event=5");
+    await mismatchLink.click();
+    assert.equal(new URL(page.url()).hash, "#run=evidence-blocked");
+    assert.equal(await page.locator("#event-5").evaluate((event) => {
+      const bounds = event.getBoundingClientRect();
+      return bounds.top >= 0 && bounds.bottom <= innerHeight;
+    }), true);
+    const linkedPage = await context.newPage();
+    await linkedPage.goto(`${env.address}/ui/#run=evidence-blocked&event=5`);
+    await linkedPage.getByLabel("API key", { exact: true }).fill(env.key);
+    await linkedPage.getByRole("button", { name: "Connect", exact: true }).click();
+    await linkedPage.waitForFunction(() => {
+      const event = document.getElementById("event-5");
+      if (!event || document.getElementById("detail-view").hidden) return false;
+      const bounds = event.getBoundingClientRect();
+      return bounds.top >= 0 && bounds.bottom <= innerHeight;
+    });
+    assert.equal(await linkedPage.locator("#run-title").textContent(), "evidence-blocked");
+    await linkedPage.close();
+    await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: join(root, "docs/evidence/ui-blocked.png"), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.screenshot({ path: join(root, "docs/evidence/ui-mobile.png"), fullPage: true });
@@ -76,11 +97,44 @@ await managed(new Evidence("ui", 7300), async (env) => {
     assert.equal(requests.some((request) => request.url.includes(env.key) || request.body?.includes(env.key)), false);
     assert.equal(requests.some((request) => request.method === "OPTIONS"), false);
     assert.equal(requests.some((request) => !request.url.startsWith(env.address)), false);
+    // The mismatch may be on a history page that has not been loaded yet.
+    await page.route("**/capstan.v1.ClientService/GetHistory", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      if (!route.request().postDataJSON().afterEventId || route.request().postDataJSON().afterEventId === "0") {
+        body.events = body.events.slice(0, 4);
+        body.more = true;
+      }
+      await route.fulfill({ response, json: body });
+    });
+    await page.reload();
+    await page.waitForSelector("#blocked:not([hidden])");
+    assert.equal(await page.locator("#event-5").count(), 0);
+    await page.locator("#blocked h2 a").click();
+    await page.waitForSelector("#event-5");
+    assert.equal(new URL(page.url()).hash, "#run=evidence-blocked");
+    await page.unrouteAll();
+    // Older workers did not attach the D16 mismatch envelope.
+    await page.route("**/capstan.v1.ClientService/*", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      if (body.run?.failure) delete body.run.failure.details;
+      for (const event of body.events || []) {
+        if (event.runBlocked?.failure) delete event.runBlocked.failure.details;
+      }
+      await route.fulfill({ response, json: body });
+    });
+    await page.reload();
+    await page.waitForSelector("#blocked:not([hidden])");
+    assert.equal(await page.locator("#blocked h2").textContent(), "Replay mismatch · event #14");
+    assert.equal(await page.locator("#blocked h2 a").count(), 0);
+    assert.match(await page.locator("#blocked").textContent(), /capstan resume 'evidence-blocked'/);
+    await page.unrouteAll();
     await page.getByRole("button", { name: "Disconnect & clear key" }).click();
     assert.equal(await page.evaluate(() => sessionStorage.length), 0);
     assert.equal(await page.locator("#timeline .event").count(), 0);
     for (const name of readdirSync(env.logdir)) assert.equal(readFileSync(join(env.logdir, name), "utf8").includes(env.key), false, `key in ${name}`);
     assert.deepEqual(errors, []);
-    console.log(JSON.stringify({ check: "PASS", date: new Date().toISOString(), browser: await browser.version(), playwright: JSON.parse(readFileSync(packageFile)).version, runs: 13, checks: ["public assets", "JSON auth", "status and type filters", "paging", "collapsed payloads", "text-only injection", "blocked mismatch and resume command", "mobile overflow", "session-only key", "reload", "disconnect", "no key in URLs, bodies, DOM or logs", "same origin; no CORS preflight"] }, null, 2));
+    console.log(JSON.stringify({ check: "PASS", date: new Date().toISOString(), browser: await browser.version(), playwright: JSON.parse(readFileSync(packageFile)).version, runs: 13, checks: ["public assets", "JSON auth", "status and type filters", "paging", "collapsed payloads", "text-only injection", "blocked mismatch event 5 and timeline link", "mismatch link loads subsequent history pages", "mismatch link opens the correct event in a new tab", "old-history fallback event 14 and resume command", "mobile overflow", "session-only key", "reload", "disconnect", "no key in URLs, bodies, DOM or logs", "same origin; no CORS preflight"] }, null, 2));
   } finally { await browser.close(); }
 });
