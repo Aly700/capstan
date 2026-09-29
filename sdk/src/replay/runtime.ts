@@ -291,8 +291,15 @@ class ReplayRuntime implements WorkflowRuntime {
     switch(attrs.case) {
       case "activityCompleted": {
         let result = decode(attrs.value.result);
-        if (pending.gateProposal) result = replayGateDecision(pending.gateProposal.current, pending.gateProposal.recorded, result, seq, Number(event.eventId));
-        pending.resolve(result);break;
+        if (pending.gateProposal) {
+          const currentProposal = pending.gateProposal.current;
+          const recordedProposal = pending.gateProposal.recorded;
+          const failureEventId = Number(event.eventId);
+          // D29 validates the proposal before user code receives the recorded decision.
+          result = replayGateDecision(currentProposal, recordedProposal, result, seq, failureEventId);
+        }
+        pending.resolve(result);
+        break;
       }
       case "activityFailed": pending.reject(new ActivityFailure(`activity ${pending.activityType} failed`,pending.activityType!,seq,
         attrs.value.failure ? {cause:failureFromProto(attrs.value.failure)} : {}));break;
@@ -315,7 +322,13 @@ class ReplayRuntime implements WorkflowRuntime {
       await yieldToHost();
       this.checkConditions();
       if (this.fatal !== undefined) throw this.fatal;
-      stable=revision===this.revision && commands===this.commands.length ? stable+1 : 0;
+      const revisionUnchanged = revision === this.revision;
+      const commandsUnchanged = commands === this.commands.length;
+      if (revisionUnchanged && commandsUnchanged) {
+        stable++;
+      } else {
+        stable = 0;
+      }
     }
     if (this.closed || !this.completion) return;
     const done=this.completion;
