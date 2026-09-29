@@ -1,12 +1,15 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -75,7 +75,7 @@
- 	if err != nil {
- 		return nil, nil, err
- 	}
--	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
-+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() {
+@@ -111,11 +111,6 @@
+ 	if !hasLease {
  		return nil, nil, ErrStaleTask
  	}
- 	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING || !r.InFlight || r.WorkflowTaskID != task.ID || r.LastEventID != tok.StartedEventId {
+-	// Reject expired acknowledgements even before the asynchronous reaper runs.
+-	leaseExpired := !e.now().Before(task.LeasedUntil)
+-	if leaseExpired {
+-		return nil, nil, ErrStaleTask
+-	}
+ 	runIsRunning := r.Status == v1.RunStatus_RUN_STATUS_RUNNING
+ 	if !runIsRunning {
+ 		return nil, nil, ErrStaleTask
