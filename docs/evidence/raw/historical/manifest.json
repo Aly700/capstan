@@ -4830,5 +4830,13 @@
     "source_sha256": "a64a49770c7b51444ca61a5e469f48a1af10f945b9c952a32262362d6e9fa024",
     "bytes": 4482,
     "sha256": "a64a49770c7b51444ca61a5e469f48a1af10f945b9c952a32262362d6e9fa024"
+  },
+  {
+    "source": "git:1f438f5:docs/evidence/raw/historical/agent/agent-delta1-gate-e2e.log",
+    "path": "docs/evidence/raw/historical/agent/agent-delta1-gate-e2e.log",
+    "source_bytes": 759,
+    "source_sha256": "1cd5c566156a8a8ae16c4e5e51234d35b6c7e5e1a59ca67aa333935b9f4b1a2c",
+    "bytes": 759,
+    "sha256": "1cd5c566156a8a8ae16c4e5e51234d35b6c7e5e1a59ca67aa333935b9f4b1a2c"
   }
 ]

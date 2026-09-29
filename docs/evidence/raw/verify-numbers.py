@@ -26,6 +26,8 @@ SHA = "904cb6c41da4f57ac0399d1524989288e3ededb1"
 FINAL = RAW / SHA[:7]
 POLISH_SHA = "0a80a08f7a0a3bb88afd4221e1fe9b085c48afb1"
 POLISH = RAW / "polish-2026-09-28"
+REVIEW_SHA = "59065273ba73f66109eea66779383eb58286f9a6"
+REVIEW = RAW / "polish-review-2026-09-28"
 SOURCE_PATHS = ["cmd", "internal", "sdk", "gen", "proto", "examples", "scripts",
                 "Makefile", "go.mod", "go.sum", "compose.yaml", "conformance",
                 ":(exclude)examples/codex-lanes", ":(exclude)scripts/demo-codex-lanes*"]
@@ -285,6 +287,13 @@ def historical():
     assert f"Caught **{caught}/{len(mutation['results'])} valid mutants ({caught/len(mutation['results'])*100:.2f}%)**; equivalent survivors: **{equivalents}**." in doc
     assert f"**{caught}/{len(mutation['results'])-equivalents} (100.00%)**" in doc
     checks = {
+        "historical/agent/agent-delta1-gate-e2e.log": [
+            "✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > ALLOW executes the registered tool once",
+            "✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > DENY completes without executing the registered tool",
+            "✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > a real Gate approval waits durably while the single-slot worker runs other work",
+            "✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > survives SIGKILL during approval, observes approval with no worker, and resumes once",
+            "Test Files  1 passed (1)", "Tests  4 passed (4)",
+        ],
         "historical/evidence/verify.log": ["295 passed", "13 passed"],
         "historical/lab/gate-make-verify-l2-final.log": ["293 passed"],
         "historical/lab/l2-2000-final.log": ["validated 2000 seeds", "(16.87s)"],
@@ -553,7 +562,17 @@ def polish_provenance():
         "sdk/src/replay/activation.ts", "sdk/src/replay/runtime.ts",
         "sdk/src/sandbox/globals.ts", "sdk/src/worker/builtins/model.ts",
     }, "reviewed source changes since the measured revision")
-    subprocess.run(["git", "diff", "--exit-code", POLISH_SHA, "--", *SOURCE_PATHS],
+    reviewed = subprocess.check_output(
+        ["git", "diff", "--name-only", POLISH_SHA, REVIEW_SHA, "--", *SOURCE_PATHS],
+        cwd=ROOT, text=True).splitlines()
+    same(set(reviewed), {
+        "internal/engine/workflow_task.go", "internal/engine/activity_task.go",
+        "internal/engine/commands.go",
+        "internal/lab/mutants/003-started-token-check.patch",
+        "internal/lab/mutants/016-expired-workflow-completion.patch",
+        "internal/lab/mutants/017-expired-activity-completion.patch",
+    }, "grouped token fences and refreshed mutant contexts")
+    subprocess.run(["git", "diff", "--exit-code", REVIEW_SHA, "--", *SOURCE_PATHS],
                    cwd=ROOT, check=True)
 
 
@@ -561,9 +580,9 @@ def polish_proofs():
     before_folder = POLISH / "mutations-before"
     before_revision = obj(before_folder / "results.json")["revision"]
     before = verify_mutations(before_folder, patch_revision=before_revision)
-    after = verify_mutations(POLISH / "mutations-after", require_current=True)
-    # The mutation runner snapshots committed production code. Verify that its
-    # engine, stores and lab are the ones whose current source was pinned above.
+    after = verify_mutations(POLISH / "mutations-after", patch_revision=POLISH_SHA)
+    # The mutation runner snapshots committed production code. Keep this campaign
+    # tied to the initial polish source; the review campaign below covers the new fences.
     subprocess.run(["git", "diff", "--exit-code", after["revision"], POLISH_SHA,
                     "--", "internal/engine", "internal/store", "internal/lab", "cmd/capstan-lab"],
                    cwd=ROOT, check=True)
@@ -591,6 +610,18 @@ def polish_proofs():
     assert all(command in gate for command in commands)
     print("PASS polish: pinned source, merge gate, viewer event 5; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks")
 
+    reviewed = verify_mutations(REVIEW / "mutations", require_current=True)
+    same(reviewed["revision"], REVIEW_SHA, "grouped fences mutation source")
+    for old, new in zip(after["results"], reviewed["results"]):
+        same(new["mutant"]["id"], old["mutant"]["id"])
+        same(new["status"], old["status"])
+        same(new["seed"], old["seed"])
+        same(re.sub(r"\s+", " ", new["check"]), re.sub(r"\s+", " ", old["check"]))
+    gate = read(REVIEW / "verify.txt")
+    assert REVIEW_SHA in gate and "Exit: 0" in gate
+    assert all(command in gate for command in commands)
+    print("PASS polish review: grouped fences, pinned source and merge gate; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks")
+
 
 def recorded_session_resolution():
     audit = read(EVIDENCE / "audit-2026-09-28.md")
@@ -602,6 +633,10 @@ def recorded_session_resolution():
     same(len(rows), len(expected))
     unchecked = set(re.findall(r"^\| ([A-Z]\d+) \| \*\*NOT CHECKED\*\*", original, re.M))
     assert expected <= unchecked
+    gate_row = next(line for line in recorded.splitlines() if line.startswith("| S30 |"))
+    assert "**VERIFIED for four recorded local Gate cases**" in gate_row
+    assert "raw/historical/agent/agent-delta1-gate-e2e.log" in gate_row
+    assert "not a deployed Gate" in gate_row
     # Read only the retained receipts: this is not a new cloud or Gate session.
     proof = obj(EVIDENCE / "aws-2026-09-28-attempt-2-proof-summary.json")
     history = obj(EVIDENCE / "aws-2026-09-28-attempt-2-history.json")
@@ -615,7 +650,7 @@ def recorded_session_resolution():
     assert subscription and all(row["SubscriptionArn"] == "PendingConfirmation" for row in subscription)
     billing = obj(EVIDENCE / "aws-2026-09-28-attempt-2-billing-after.json")
     assert billing["ResultsByTime"][0]["Estimated"]
-    print("PASS recorded-session resolution: all 11 open rows mapped; retained AWS receipt fields checked; no live service calls")
+    print("PASS recorded-session resolution: all 11 open rows mapped; four local Gate cases and retained AWS receipt fields checked; no live service calls")
 
 
 def main():
