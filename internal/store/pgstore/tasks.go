@@ -26,13 +26,52 @@ func taskArgs(v *store.Task) ([]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	return []any{v.ID, v.Kind, v.RunID, v.TaskQueue, v.ScheduledEventID, v.Attempt, nullTime(v.VisibleAt), nullTime(v.LeasedUntil), v.WorkerID, nullTime(v.StartedAt), nullTime(v.ScheduledAt), nullTime(v.CheckAt), activity, nullTime(v.LastHeartbeatAt), heartbeat, failure, v.CancelRequested, v.StartedEventID}, nil
+	// Keep this order aligned with taskColumns and scanTask.
+	return []any{
+		v.ID,
+		v.Kind,
+		v.RunID,
+		v.TaskQueue,
+		v.ScheduledEventID,
+		v.Attempt,
+		nullTime(v.VisibleAt),
+		nullTime(v.LeasedUntil),
+		v.WorkerID,
+		nullTime(v.StartedAt),
+		nullTime(v.ScheduledAt),
+		nullTime(v.CheckAt),
+		activity,
+		nullTime(v.LastHeartbeatAt),
+		heartbeat,
+		failure,
+		v.CancelRequested,
+		v.StartedEventID,
+	}, nil
 }
 
 func scanTask(row scanner) (*store.Task, error) {
 	v := new(store.Task)
 	var activity, heartbeat, failure []byte
-	err := row.Scan(&v.ID, &v.Kind, &v.RunID, &v.TaskQueue, &v.ScheduledEventID, &v.Attempt, utcTime{&v.VisibleAt}, utcTime{&v.LeasedUntil}, &v.WorkerID, utcTime{&v.StartedAt}, utcTime{&v.ScheduledAt}, utcTime{&v.CheckAt}, &activity, utcTime{&v.LastHeartbeatAt}, &heartbeat, &failure, &v.CancelRequested, &v.StartedEventID)
+	err := row.Scan(
+		&v.ID,
+		&v.Kind,
+		&v.RunID,
+		&v.TaskQueue,
+		&v.ScheduledEventID,
+		&v.Attempt,
+		utcTime{&v.VisibleAt},
+		utcTime{&v.LeasedUntil},
+		&v.WorkerID,
+		utcTime{&v.StartedAt},
+		utcTime{&v.ScheduledAt},
+		utcTime{&v.CheckAt},
+		&activity,
+		utcTime{&v.LastHeartbeatAt},
+		&heartbeat,
+		&failure,
+		&v.CancelRequested,
+		&v.StartedEventID,
+	)
 	if err != nil {
 		return nil, dbError(err)
 	}
@@ -71,11 +110,22 @@ func (t *transaction) DeleteTask(id int64) error {
 }
 
 func (t *transaction) ClaimTask(kind store.TaskKind, queue string, now time.Time, lease time.Duration, workerID string) (*store.Task, error) {
+	const claimQuery = "select " + taskColumns + `
+		from task
+		where kind=$1
+			and task_queue=$2
+			and visible_at<=$3
+			and leased_until is null
+			and not (run_id=any($4::text[]))
+		order by visible_at,id
+		limit 1
+		for update skip locked`
 	skipped := []string{}
 	var v *store.Task
 	for {
 		var err error
-		v, err = scanTask(t.tx.QueryRow(t.ctx, "select "+taskColumns+` from task where kind=$1 and task_queue=$2 and visible_at<=$3 and leased_until is null and not (run_id=any($4::text[])) order by visible_at,id limit 1 for update skip locked`, kind, queue, nullTime(now), skipped))
+		row := t.tx.QueryRow(t.ctx, claimQuery, kind, queue, nullTime(now), skipped)
+		v, err = scanTask(row)
 		if errors.Is(err, store.ErrNotFound) {
 			return nil, nil
 		}

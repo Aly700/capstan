@@ -1,12 +1,12 @@
 diff --git a/internal/engine/workflow_task.go b/internal/engine/workflow_task.go
 --- a/internal/engine/workflow_task.go
 +++ b/internal/engine/workflow_task.go
-@@ -75,7 +75,7 @@
- 	if err != nil {
- 		return nil, nil, err
- 	}
--	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
-+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
+@@ -81,8 +81,6 @@
+ 		tok.RunId != task.RunID ||
+ 		tok.Attempt != task.Attempt ||
+ 		tok.ScheduledEventId != task.ScheduledEventID ||
+-		// M003: the run's LastEventID check below makes this started-event check redundant.
+-		tok.StartedEventId != task.StartedEventID ||
+ 		tok.Seq != 0 {
  		return nil, nil, ErrStaleTask
  	}
- 	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING || !r.InFlight || r.WorkflowTaskID != task.ID || r.LastEventID != tok.StartedEventId {

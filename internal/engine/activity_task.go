@@ -86,13 +86,26 @@ func (e *Engine) activityToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 		return nil, nil, err
 	}
 	now := e.now()
-	if token.Kind != v1.TaskKind_TASK_KIND_ACTIVITY || task.Kind != store.TaskActivity || task.Activity == nil ||
-		token.RunId != task.RunID || token.Attempt != task.Attempt || token.ScheduledEventId != task.ScheduledEventID ||
-		token.StartedEventId != 0 || token.Seq != task.Activity.Seq || task.LeasedUntil.IsZero() ||
-		task.StartedAt.IsZero() || !task.LeasedUntil.After(now) || activityDeadlinePassed(activityScheduleClose(task), now) ||
+	// The token names this exact activity task attempt and sequence.
+	if token.Kind != v1.TaskKind_TASK_KIND_ACTIVITY ||
+		task.Kind != store.TaskActivity ||
+		task.Activity == nil ||
+		token.RunId != task.RunID ||
+		token.Attempt != task.Attempt ||
+		token.ScheduledEventId != task.ScheduledEventID ||
+		token.StartedEventId != 0 ||
+		token.Seq != task.Activity.Seq {
+		return nil, nil, ErrStaleTask
+	}
+	// The task was started and all its deadlines are still live, before the reaper runs.
+	if task.LeasedUntil.IsZero() ||
+		task.StartedAt.IsZero() ||
+		!task.LeasedUntil.After(now) ||
+		activityDeadlinePassed(activityScheduleClose(task), now) ||
 		activityDeadlinePassed(activityHeartbeatDeadline(task), now) {
 		return nil, nil, ErrStaleTask
 	}
+	// Blocked runs still accept activity results; closed runs do not.
 	if !run.Open() {
 		return nil, nil, ErrStaleTask
 	}

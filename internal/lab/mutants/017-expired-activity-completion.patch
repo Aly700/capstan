@@ -1,13 +1,11 @@
 diff --git a/internal/engine/activity_task.go b/internal/engine/activity_task.go
-index 1f13742..8b01c1b 100644
 --- a/internal/engine/activity_task.go
 +++ b/internal/engine/activity_task.go
-@@ -79,7 +79,7 @@ func (e *Engine) activityToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
- 	if token.Kind != v1.TaskKind_TASK_KIND_ACTIVITY || task.Kind != store.TaskActivity || task.Activity == nil ||
- 		token.RunId != task.RunID || token.Attempt != task.Attempt || token.ScheduledEventId != task.ScheduledEventID ||
- 		token.StartedEventId != 0 || token.Seq != task.Activity.Seq || task.LeasedUntil.IsZero() ||
--		task.StartedAt.IsZero() || !task.LeasedUntil.After(now) || activityDeadlinePassed(activityScheduleClose(task), now) ||
-+		task.StartedAt.IsZero() || activityDeadlinePassed(activityScheduleClose(task), now) ||
+@@ -100,7 +100,6 @@
+ 	// The task was started and all its deadlines are still live, before the reaper runs.
+ 	if task.LeasedUntil.IsZero() ||
+ 		task.StartedAt.IsZero() ||
+-		!task.LeasedUntil.After(now) ||
+ 		activityDeadlinePassed(activityScheduleClose(task), now) ||
  		activityDeadlinePassed(activityHeartbeatDeadline(task), now) {
  		return nil, nil, ErrStaleTask
- 	}

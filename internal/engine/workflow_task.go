@@ -75,10 +75,28 @@ func (e *Engine) workflowToken(tx store.Tx, raw []byte) (*store.Task, *store.Run
 	if err != nil {
 		return nil, nil, err
 	}
-	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW || task.Kind != store.TaskWorkflow || tok.RunId != task.RunID || tok.Attempt != task.Attempt || tok.ScheduledEventId != task.ScheduledEventID || tok.StartedEventId != task.StartedEventID || tok.Seq != 0 || task.StartedEventID == 0 || task.LeasedUntil.IsZero() || !e.now().Before(task.LeasedUntil) {
+	// The token names this exact workflow task attempt.
+	if tok.Kind != v1.TaskKind_TASK_KIND_WORKFLOW ||
+		task.Kind != store.TaskWorkflow ||
+		tok.RunId != task.RunID ||
+		tok.Attempt != task.Attempt ||
+		tok.ScheduledEventId != task.ScheduledEventID ||
+		// M003: the run's LastEventID check below makes this started-event check redundant.
+		tok.StartedEventId != task.StartedEventID ||
+		tok.Seq != 0 {
 		return nil, nil, ErrStaleTask
 	}
-	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING || !r.InFlight || r.WorkflowTaskID != task.ID || r.LastEventID != tok.StartedEventId {
+	// The task was started and its lease is still live, checked before the reaper runs.
+	if task.StartedEventID == 0 ||
+		task.LeasedUntil.IsZero() ||
+		!e.now().Before(task.LeasedUntil) {
+		return nil, nil, ErrStaleTask
+	}
+	// The run still expects this task; D2 keeps TaskStarted last while it is in flight.
+	if r.Status != v1.RunStatus_RUN_STATUS_RUNNING ||
+		!r.InFlight ||
+		r.WorkflowTaskID != task.ID ||
+		r.LastEventID != tok.StartedEventId {
 		return nil, nil, ErrStaleTask
 	}
 	return task, r, nil

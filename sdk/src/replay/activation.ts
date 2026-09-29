@@ -30,7 +30,14 @@ export function activations(history: HistoryEvent[]): Activation[] {
     const recorded: HistoryEvent[] = [];
     if (completed) {
       i++;
-      while (history[i + 1] && commandEventKinds.has(history[i + 1]!.attributes.case ?? "")) recorded.push(history[++i]!);
+      for (;;) {
+        const nextEvent = history[i + 1];
+        if (!nextEvent) break;
+        const isCommandEvent = commandEventKinds.has(nextEvent.attributes.case ?? "");
+        if (!isCommandEvent) break;
+        i++;
+        recorded.push(nextEvent);
+      }
     } else if (next) {
       throw new Error(`invalid history after TaskStarted event ${event.eventId}`);
     }
