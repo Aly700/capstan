@@ -1,0 +1,13 @@
+
+ RUN  v5.0.2 /Users/affan/Projects/capstan--agent/sdk
+
+ ✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > ALLOW executes the registered tool once 809ms
+ ✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > DENY completes without executing the registered tool 686ms
+ ✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > a real Gate approval waits durably while the single-slot worker runs other work 15952ms
+ ✓ test/agent-e2e.test.ts > agent end to end with the real AgentOps Gate > survives SIGKILL during approval, observes approval with no worker, and resumes once 15644ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  12:09:01
+   Duration  66.53s (tests 100%)
+
