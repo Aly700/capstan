@@ -592,6 +592,32 @@ def polish_proofs():
     print("PASS polish: pinned source, merge gate, viewer event 5; 26 valid mutants, 25 caught, 1 equivalent; unchanged seeds/checks")
 
 
+def recorded_session_resolution():
+    audit = read(EVIDENCE / "audit-2026-09-28.md")
+    original = audit.split("## Post-audit resolution", 1)[0]
+    recorded = audit.split("## Post-audit resolution (recorded sessions) — 2026-09-28", 1)[1]
+    rows = re.findall(r"^\| ([A-Z]\d+) \|", recorded, re.M)
+    expected = {"S05", "S30", "S34", *(f"R{i:02}" for i in range(3, 11))}
+    same(set(rows), expected)
+    same(len(rows), len(expected))
+    unchecked = set(re.findall(r"^\| ([A-Z]\d+) \| \*\*NOT CHECKED\*\*", original, re.M))
+    assert expected <= unchecked
+    # Read only the retained receipts: this is not a new cloud or Gate session.
+    proof = obj(EVIDENCE / "aws-2026-09-28-attempt-2-proof-summary.json")
+    history = obj(EVIDENCE / "aws-2026-09-28-attempt-2-history.json")
+    assert proof["prefixMatches"] and proof["taskBefore"] != proof["taskAfter"]
+    same(len(history["before"]), proof["prefixEvents"])
+    same(len(history["after"]), proof["finalEvents"])
+    same(history["before"], history["after"][:proof["prefixEvents"]])
+    final = obj(EVIDENCE / "aws-2026-09-28-attempt-2-final-verification.json")
+    assert final["standingResourcesEmpty"] and not final["rawInventoryEmpty"]
+    subscription = obj(EVIDENCE / "aws-2026-09-28-attempt-2-alarm-subscription.json")
+    assert subscription and all(row["SubscriptionArn"] == "PendingConfirmation" for row in subscription)
+    billing = obj(EVIDENCE / "aws-2026-09-28-attempt-2-billing-after.json")
+    assert billing["ResultsByTime"][0]["Estimated"]
+    print("PASS recorded-session resolution: all 11 open rows mapped; retained AWS receipt fields checked; no live service calls")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--historical",action="store_true")
@@ -608,6 +634,7 @@ def main():
     prefix = final_demos()
     operational_proofs()
     polish_proofs()
+    recorded_session_resolution()
     output = {"source_sha":SHA,"load":loads,"lab":lab,"pg":pg,"crash_prefix":prefix,
               "mutation_statuses":dict(Counter(r["status"] for r in mutations["results"]))}
     destination = FINAL / "numbers.json"
