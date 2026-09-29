@@ -155,7 +155,14 @@ export const bootstrapSource = String.raw`
       else if (value instanceof Map) { result = new Map(); seen.set(value, result); for (const [k, v] of value) result.set(copy(k), copy(v)); return result; }
       else if (value instanceof Set) { result = new Set(); seen.set(value, result); for (const v of value) result.add(copy(v)); return result; }
       else if (value instanceof ArrayBuffer) result = value.slice(0);
-      else if (ArrayBuffer.isView(value)) { const buffer = copy(value.buffer); result = value instanceof DataView ? new DataView(buffer, value.byteOffset, value.byteLength) : new value.constructor(buffer, value.byteOffset, value.length); }
+      else if (ArrayBuffer.isView(value)) {
+        const buffer = copy(value.buffer);
+        if (value instanceof DataView) {
+          result = new DataView(buffer, value.byteOffset, value.byteLength);
+        } else {
+          result = new value.constructor(buffer, value.byteOffset, value.length);
+        }
+      }
       else { result = Array.isArray(value) ? [] : {}; seen.set(value, result); for (const key of Object.keys(value)) define(result, key, { value: copy(value[key]), enumerable: true, writable: true, configurable: true }); return result; }
       seen.set(value, result); return result;
     }
