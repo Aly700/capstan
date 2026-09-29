@@ -71,33 +71,19 @@ func (e *Engine) validateCommands(tx store.Tx, r *store.Run, cmds []*v1.Command)
 		switch a := cmd.GetAttributes().(type) {
 		case *v1.Command_ScheduleActivity:
 			c := a.ScheduleActivity
-			if c == nil {
+			// The activity and any explicit task queue must have valid names.
+			if c == nil ||
+				!validName(c.ActivityType) ||
+				(c.TaskQueue != "" && !validName(c.TaskQueue)) {
 				return Invalid("invalid activity command")
 			}
-			if !validName(c.ActivityType) {
-				return Invalid("invalid activity command")
-			}
-			queueSpecified := c.TaskQueue != ""
-			if queueSpecified && !validName(c.TaskQueue) {
-				return Invalid("invalid activity command")
-			}
-			if !validDuration(c.StartToCloseTimeout) {
-				return Invalid("invalid activity command")
-			}
-			startToClose := c.StartToCloseTimeout.AsDuration()
-			if startToClose <= 0 {
-				return Invalid("invalid activity command")
-			}
-			if !validDuration(c.ScheduleToStartTimeout) {
-				return Invalid("invalid activity command")
-			}
-			if !validDuration(c.ScheduleToCloseTimeout) {
-				return Invalid("invalid activity command")
-			}
-			if !validDuration(c.HeartbeatTimeout) {
-				return Invalid("invalid activity command")
-			}
-			if !validRetry(c.RetryPolicy) {
+			// Start-to-close is required; the other timeouts and retry policy must be valid.
+			if !validDuration(c.StartToCloseTimeout) ||
+				c.StartToCloseTimeout.AsDuration() <= 0 ||
+				!validDuration(c.ScheduleToStartTimeout) ||
+				!validDuration(c.ScheduleToCloseTimeout) ||
+				!validDuration(c.HeartbeatTimeout) ||
+				!validRetry(c.RetryPolicy) {
 				return Invalid("invalid activity command")
 			}
 			seq = c.Seq
