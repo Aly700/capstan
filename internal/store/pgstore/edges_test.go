@@ -19,7 +19,9 @@ import (
 
 func holdTransaction(t *testing.T, s store.Store, fn func(store.Tx) error) func() {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	// Not t.Context(): Go cancels that when the test function returns, before cleanups run,
+	// which races the released transaction's commit. Cleanup below owns cancellation.
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ready, done, release := make(chan error, 1), make(chan error, 1), make(chan struct{})
 	var once sync.Once
 	unlock := func() { once.Do(func() { close(release) }) }
