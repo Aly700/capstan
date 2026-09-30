@@ -1,0 +1,320 @@
+{
+  "verifiedAt": "2026-09-30T03:15:23.327Z",
+  "standingResourcesEmpty": true,
+  "rawInventoryEmpty": false,
+  "fiveUnrelatedStacksUnchanged": true,
+  "sharedOidcProviderUnchanged": true,
+  "sharedFilesByteIdentical": true,
+  "sharedBaselineSha256": "17541767c40bfa94e80651bc7f0f18f2a422640575e35f5576a484d3cf1a4a78",
+  "sharedAfterSha256": "17541767c40bfa94e80651bc7f0f18f2a422640575e35f5576a484d3cf1a4a78",
+  "mainShaAfterTeardown": "dc92bff775e8c99036c6dd3369c14084bc795b9a",
+  "githubVariables": [],
+  "remainingAwsRecords": {
+    "cluster": {
+      "clusters": [
+        {
+          "clusterArn": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+          "clusterName": "capstan",
+          "status": "INACTIVE",
+          "registeredContainerInstancesCount": 0,
+          "runningTasksCount": 0,
+          "pendingTasksCount": 0,
+          "activeServicesCount": 0,
+          "statistics": [],
+          "tags": [
+            {
+              "key": "Project",
+              "value": "capstan"
+            },
+            {
+              "key": "aws:cloudformation:stack-name",
+              "value": "CapstanService"
+            },
+            {
+              "key": "aws:cloudformation:logical-id",
+              "value": "ClusterEB0386A7"
+            },
+            {
+              "key": "aws:cloudformation:stack-id",
+              "value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+            }
+          ],
+          "settings": [],
+          "capacityProviders": [],
+          "defaultCapacityProviderStrategy": []
+        }
+      ],
+      "failures": []
+    },
+    "service": {
+      "services": [
+        {
+          "serviceArn": "arn:aws:ecs:us-east-1:280517746513:service/capstan/capstan-server",
+          "serviceName": "capstan-server",
+          "clusterArn": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+          "loadBalancers": [],
+          "serviceRegistries": [
+            {
+              "registryArn": "arn:aws:servicediscovery:us-east-1:280517746513:service/srv-i746amvshlucs32d",
+              "containerName": "server",
+              "containerPort": 7233
+            }
+          ],
+          "status": "INACTIVE",
+          "desiredCount": 0,
+          "runningCount": 0,
+          "pendingCount": 0,
+          "launchType": "FARGATE",
+          "platformVersion": "LATEST",
+          "platformFamily": "Linux",
+          "taskDefinition": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3",
+          "deploymentConfiguration": {
+            "deploymentCircuitBreaker": {
+              "enable": true,
+              "rollback": true
+            },
+            "maximumPercent": 100,
+            "minimumHealthyPercent": 0,
+            "alarms": {
+              "alarmNames": [],
+              "enable": false,
+              "rollback": false
+            }
+          },
+          "deployments": [
+            {
+              "id": "ecs-svc/9788717464449664022",
+              "status": "PRIMARY",
+              "taskDefinition": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3",
+              "desiredCount": 0,
+              "pendingCount": 0,
+              "runningCount": 0,
+              "failedTasks": 0,
+              "createdAt": "2026-09-29T23:00:57.802000-04:00",
+              "updatedAt": "2026-09-29T23:07:24.350000-04:00",
+              "launchType": "FARGATE",
+              "platformVersion": "1.4.0",
+              "platformFamily": "Linux",
+              "networkConfiguration": {
+                "awsvpcConfiguration": {
+                  "subnets": [
+                    "subnet-0118fb4b7421172f4"
+                  ],
+                  "securityGroups": [
+                    "sg-092f53c691a5aaa88"
+                  ],
+                  "assignPublicIp": "ENABLED"
+                }
+              },
+              "rolloutState": "COMPLETED",
+              "rolloutStateReason": "ECS deployment ecs-svc/9788717464449664022 completed."
+            }
+          ],
+          "roleArn": "arn:aws:iam::280517746513:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+          "events": [],
+          "createdAt": "2026-09-29T23:00:57.802000-04:00",
+          "placementConstraints": [],
+          "placementStrategy": [],
+          "networkConfiguration": {
+            "awsvpcConfiguration": {
+              "subnets": [
+                "subnet-0118fb4b7421172f4"
+              ],
+              "securityGroups": [
+                "sg-092f53c691a5aaa88"
+              ],
+              "assignPublicIp": "ENABLED"
+            }
+          },
+          "healthCheckGracePeriodSeconds": 0,
+          "schedulingStrategy": "REPLICA",
+          "deploymentController": {
+            "type": "ECS"
+          },
+          "tags": [
+            {
+              "key": "Project",
+              "value": "capstan"
+            }
+          ],
+          "createdBy": "arn:aws:iam::280517746513:role/capstan-cloudformation",
+          "enableECSManagedTags": false,
+          "propagateTags": "NONE",
+          "enableExecuteCommand": false
+        }
+      ],
+      "failures": []
+    },
+    "revisions": [
+      {
+        "taskDefinition": {
+          "taskDefinitionArn": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3",
+          "containerDefinitions": [
+            {
+              "name": "server",
+              "image": "280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:dc92bff775e8c99036c6dd3369c14084bc795b9a",
+              "cpu": 0,
+              "links": [],
+              "portMappings": [
+                {
+                  "containerPort": 7233,
+                  "hostPort": 7233,
+                  "protocol": "tcp",
+                  "name": "http"
+                }
+              ],
+              "essential": true,
+              "entryPoint": [],
+              "command": [],
+              "environment": [
+                {
+                  "name": "CAPSTAN_DAILY_CAP_USD",
+                  "value": "2.00"
+                },
+                {
+                  "name": "CAPSTAN_POLL_TIMEOUT",
+                  "value": "20s"
+                },
+                {
+                  "name": "CAPSTAN_MIGRATE",
+                  "value": "true"
+                },
+                {
+                  "name": "CAPSTAN_ADDR",
+                  "value": ":7233"
+                },
+                {
+                  "name": "CAPSTAN_LOG_LEVEL",
+                  "value": "info"
+                }
+              ],
+              "environmentFiles": [],
+              "mountPoints": [],
+              "volumesFrom": [],
+              "secrets": [
+                {
+                  "name": "CAPSTAN_DATABASE_URL",
+                  "valueFrom": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p"
+                },
+                {
+                  "name": "CAPSTAN_API_KEY_HASHES",
+                  "valueFrom": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN"
+                }
+              ],
+              "stopTimeout": 30,
+              "readonlyRootFilesystem": true,
+              "dnsServers": [],
+              "dnsSearchDomains": [],
+              "extraHosts": [],
+              "dockerSecurityOptions": [],
+              "dockerLabels": {},
+              "ulimits": [],
+              "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                  "awslogs-group": "/capstan/server",
+                  "awslogs-region": "us-east-1",
+                  "awslogs-stream-prefix": "server"
+                },
+                "secretOptions": []
+              },
+              "systemControls": [],
+              "credentialSpecs": []
+            }
+          ],
+          "family": "capstan-server",
+          "taskRoleArn": "arn:aws:iam::280517746513:role/capstan-task",
+          "executionRoleArn": "arn:aws:iam::280517746513:role/capstan-execution",
+          "networkMode": "awsvpc",
+          "revision": 3,
+          "volumes": [],
+          "status": "DELETE_IN_PROGRESS",
+          "requiresAttributes": [
+            {
+              "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+              "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+              "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+              "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+              "name": "ecs.capability.secrets.asm.environment-variables"
+            },
+            {
+              "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+            },
+            {
+              "name": "com.amazonaws.ecs.capability.task-iam-role"
+            },
+            {
+              "name": "ecs.capability.container-ordering"
+            },
+            {
+              "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+              "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+              "name": "ecs.capability.task-eni"
+            }
+          ],
+          "placementConstraints": [],
+          "compatibilities": [
+            "EC2",
+            "MANAGED_INSTANCES",
+            "FARGATE"
+          ],
+          "runtimePlatform": {
+            "cpuArchitecture": "ARM64",
+            "operatingSystemFamily": "LINUX"
+          },
+          "requiresCompatibilities": [
+            "FARGATE"
+          ],
+          "cpu": "256",
+          "memory": "512",
+          "registeredAt": "2026-09-29T23:00:33.759000-04:00",
+          "deregisteredAt": "2026-09-29T23:09:04.397000-04:00",
+          "registeredBy": "arn:aws:sts::280517746513:assumed-role/capstan-cloudformation/AWSCloudFormation"
+        },
+        "tags": [
+          {
+            "key": "Project",
+            "value": "capstan"
+          }
+        ]
+      }
+    ],
+    "subscriptions": {
+      "Subscriptions": [
+        {
+          "SubscriptionArn": "PendingConfirmation",
+          "Owner": "280517746513",
+          "Protocol": "email",
+          "Endpoint": "affanyasir9@gmail.com",
+          "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+        },
+        {
+          "SubscriptionArn": "PendingConfirmation",
+          "Owner": "280517746513",
+          "Protocol": "email",
+          "Endpoint": "affanyasir9@gmail.com",
+          "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+        },
+        {
+          "SubscriptionArn": "PendingConfirmation",
+          "Owner": "280517746513",
+          "Protocol": "email",
+          "Endpoint": "affanyasir9@gmail.com",
+          "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+        }
+      ]
+    }
+  }
+}

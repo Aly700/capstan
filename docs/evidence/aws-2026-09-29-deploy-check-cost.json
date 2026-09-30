@@ -1,0 +1,21 @@
+{
+  "currency": "USD",
+  "firstResourceToLastStackDeletionHours": 0.4012630555555556,
+  "conservativeClockToLastStackDeletionHours": 0.40847472222222225,
+  "conservativeClockThroughFinalVerificationHours": 0.431295,
+  "standingRatePerHour": 0.03782,
+  "standingEstimate": 0.0163115769,
+  "costExplorerRequests": 2,
+  "costExplorerEstimate": 0.02,
+  "trafficLogsAllowance": 0.025,
+  "estimateBeforeMiscellaneous": 0.061311576900000005,
+  "roundedEstimate": 0.07,
+  "reserveIncludingHostedZoneAndMiscellaneous": 0.6,
+  "settledBill": false,
+  "pricingBasis": "docs/runbook.md, checked 2026-09-28; AWS Fargate, Route53 and Cost Explorer pricing rechecked during this session",
+  "pricingUrls": [
+    "https://aws.amazon.com/fargate/pricing/",
+    "https://aws.amazon.com/route53/pricing/",
+    "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/pricing/"
+  ]
+}

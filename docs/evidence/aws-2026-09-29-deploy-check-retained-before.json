@@ -1,0 +1,19 @@
+{
+    "clusters": [
+        {
+            "clusterArn": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+            "clusterName": "capstan",
+            "status": "INACTIVE",
+            "registeredContainerInstancesCount": 0,
+            "runningTasksCount": 0,
+            "pendingTasksCount": 0,
+            "activeServicesCount": 0,
+            "statistics": [],
+            "tags": [],
+            "settings": [],
+            "capacityProviders": [],
+            "defaultCapacityProviderStrategy": []
+        }
+    ],
+    "failures": []
+}

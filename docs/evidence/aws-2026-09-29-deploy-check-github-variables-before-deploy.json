@@ -1,0 +1,14 @@
+[
+  {
+    "name": "CAPSTAN_AWS_ACCOUNT_ID",
+    "value": "280517746513"
+  },
+  {
+    "name": "CAPSTAN_BUDGET_EMAIL",
+    "value": "affanyasir9@gmail.com"
+  },
+  {
+    "name": "CAPSTAN_DEPLOY_ROLE_ARN",
+    "value": "arn:aws:iam::280517746513:role/capstan-github-deploy"
+  }
+]

@@ -1,0 +1,113 @@
+[
+    {
+        "Name": "CapstanService",
+        "Status": "CREATE_COMPLETE",
+        "Created": "2026-09-30T03:00:02.574000+00:00",
+        "Updated": "2026-09-30T03:00:08.965000+00:00",
+        "Outputs": [
+            {
+                "OutputKey": "ApiUrl",
+                "OutputValue": "https://dqofm24886.execute-api.us-east-1.amazonaws.com"
+            }
+        ]
+    },
+    {
+        "Name": "CapstanData",
+        "Status": "UPDATE_COMPLETE",
+        "Created": "2026-09-30T02:51:49.121000+00:00",
+        "Updated": "2026-09-30T02:59:43.138000+00:00",
+        "Outputs": [
+            {
+                "OutputKey": "ExportsOutputRefDatabaseUrl8D88187D37D128A7",
+                "OutputValue": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p",
+                "ExportName": "CapstanData:ExportsOutputRefDatabaseUrl8D88187D37D128A7"
+            },
+            {
+                "OutputKey": "ExportsOutputRefApiKeyHashes98F8A7191A08F3C4",
+                "OutputValue": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN",
+                "ExportName": "CapstanData:ExportsOutputRefApiKeyHashes98F8A7191A08F3C4"
+            }
+        ]
+    },
+    {
+        "Name": "CapstanGithubOidc",
+        "Status": "CREATE_COMPLETE",
+        "Created": "2026-09-30T02:50:56.226000+00:00",
+        "Updated": "2026-09-30T02:51:02.213000+00:00",
+        "Outputs": [
+            {
+                "OutputKey": "DeployRoleArn",
+                "OutputValue": "arn:aws:iam::280517746513:role/capstan-github-deploy"
+            },
+            {
+                "OutputKey": "RepositoryUri",
+                "OutputValue": "280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server"
+            }
+        ]
+    },
+    {
+        "Name": "CapstanBudget",
+        "Status": "UPDATE_COMPLETE",
+        "Created": "2026-09-30T02:50:44.365000+00:00",
+        "Updated": "2026-09-30T02:59:56.092000+00:00",
+        "Outputs": null
+    },
+    {
+        "Name": "CapstanNetwork",
+        "Status": "CREATE_COMPLETE",
+        "Created": "2026-09-30T02:49:56.627000+00:00",
+        "Updated": "2026-09-30T02:50:02.580000+00:00",
+        "Outputs": [
+            {
+                "OutputKey": "VpcId",
+                "OutputValue": "vpc-050fe83e31c16ed24",
+                "ExportName": "CapstanNetwork:VpcId"
+            },
+            {
+                "OutputKey": "DatabaseGroupId",
+                "OutputValue": "sg-0ff3507aadb2cf32f",
+                "ExportName": "CapstanNetwork:DatabaseGroupId"
+            },
+            {
+                "OutputKey": "PublicSubnet1Id",
+                "OutputValue": "subnet-0118fb4b7421172f4",
+                "ExportName": "CapstanNetwork:PublicSubnet1Id"
+            },
+            {
+                "OutputKey": "TaskGroupId",
+                "OutputValue": "sg-092f53c691a5aaa88",
+                "ExportName": "CapstanNetwork:TaskGroupId"
+            },
+            {
+                "OutputKey": "PublicSubnet1RouteTableId",
+                "OutputValue": "rtb-0a9a32259e2db0aea",
+                "ExportName": "CapstanNetwork:PublicSubnet1RouteTableId"
+            },
+            {
+                "OutputKey": "PublicSubnet2Id",
+                "OutputValue": "subnet-0f5a2e7dacd73e4ae",
+                "ExportName": "CapstanNetwork:PublicSubnet2Id"
+            },
+            {
+                "OutputKey": "PublicSubnet1Az",
+                "OutputValue": "us-east-1a",
+                "ExportName": "CapstanNetwork:PublicSubnet1Az"
+            },
+            {
+                "OutputKey": "PublicSubnet2Az",
+                "OutputValue": "us-east-1b",
+                "ExportName": "CapstanNetwork:PublicSubnet2Az"
+            },
+            {
+                "OutputKey": "PublicSubnet2RouteTableId",
+                "OutputValue": "rtb-016728d0eec39913c",
+                "ExportName": "CapstanNetwork:PublicSubnet2RouteTableId"
+            },
+            {
+                "OutputKey": "LinkGroupId",
+                "OutputValue": "sg-0c9d4645a7a4880e1",
+                "ExportName": "CapstanNetwork:LinkGroupId"
+            }
+        ]
+    }
+]

@@ -1,0 +1,1130 @@
+{
+  "capturedAt": "2026-09-30T03:06:03.916Z",
+  "identity": {
+    "UserId": "AIDAUCUBJD5I3SE7YKEG6",
+    "Account": "280517746513",
+    "Arn": "arn:aws:iam::280517746513:user/agentops-deployer"
+  },
+  "resources": {
+    "ecsActiveTaskDefinitions": [
+      "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3"
+    ],
+    "ecsClusters": [
+      "arn:aws:ecs:us-east-1:280517746513:cluster/capstan"
+    ],
+    "stacks": [
+      {
+        "Name": "CapstanService",
+        "Status": "CREATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619",
+        "Created": "2026-09-30T03:00:02.574000+00:00",
+        "Updated": "2026-09-30T03:00:08.965000+00:00"
+      },
+      {
+        "Name": "CapstanData",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23",
+        "Created": "2026-09-30T02:51:49.121000+00:00",
+        "Updated": "2026-09-30T02:59:43.138000+00:00"
+      },
+      {
+        "Name": "CapstanGithubOidc",
+        "Status": "CREATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/c23ba6f0-bc79-11f1-b211-0e4ffc68be55",
+        "Created": "2026-09-30T02:50:56.226000+00:00",
+        "Updated": "2026-09-30T02:51:02.213000+00:00"
+      },
+      {
+        "Name": "CapstanBudget",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9",
+        "Created": "2026-09-30T02:50:44.365000+00:00",
+        "Updated": "2026-09-30T02:59:56.092000+00:00"
+      },
+      {
+        "Name": "CapstanNetwork",
+        "Status": "CREATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291",
+        "Created": "2026-09-30T02:49:56.627000+00:00",
+        "Updated": "2026-09-30T02:50:02.580000+00:00"
+      },
+      {
+        "Name": "TellerGithubOidcStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerGithubOidcStack/cd745a50-a3c7-11f1-a5ce-0affe1409a8b",
+        "Created": "2026-08-29T16:36:36.782000+00:00",
+        "Updated": "2026-08-29T16:43:52.503000+00:00"
+      },
+      {
+        "Name": "AgentOpsGithubOidcStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsGithubOidcStack/9b40a340-a3c7-11f1-af75-0affeb0dfddb",
+        "Created": "2026-08-29T16:35:12.619000+00:00",
+        "Updated": "2026-08-29T16:43:14.148000+00:00"
+      },
+      {
+        "Name": "TellerBudgetStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerBudgetStack/b2565e80-a372-11f1-8188-0e4cc7b64b41",
+        "Created": "2026-08-29T06:27:24.082000+00:00",
+        "Updated": "2026-08-29T16:55:39.025000+00:00"
+      },
+      {
+        "Name": "AgentOpsBudgetStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsBudgetStack/870b4680-a36a-11f1-a950-0e8283057ca7",
+        "Created": "2026-08-29T05:28:55.502000+00:00",
+        "Updated": "2026-08-29T16:53:28.934000+00:00"
+      },
+      {
+        "Name": "CDKToolkit",
+        "Status": "CREATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CDKToolkit/e2959430-a354-11f1-85f2-0efed3660b7d",
+        "Created": "2026-08-29T02:54:00.052000+00:00",
+        "Updated": "2026-08-29T02:54:05.909000+00:00"
+      }
+    ],
+    "taggedResources": [
+      {
+        "ResourceARN": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:route-table/rtb-016728d0eec39913c",
+        "Tags": [
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcPublicSubnet2RouteTable94F7E489"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc/PublicSubnet2"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:security-group/sg-0c9d4645a7a4880e1",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "LinkGroup62B12B69"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:subnet/subnet-0118fb4b7421172f4",
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcPublicSubnet1Subnet5C2D37C4"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc/PublicSubnet1"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:logs:us-east-1:280517746513:log-group:/capstan/server",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ServerLogsD9948953"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:logs:us-east-1:280517746513:log-group:/aws/lambda/capstan-task-count",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ProbeLogsBF6C3D77"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ApiKeyHashes98F8A719"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "DatabaseUrl8D88187D"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:apigateway:us-east-1::/vpclinks/1u406d",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcLink"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:security-group/sg-0ff3507aadb2cf32f",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "DatabaseGroupB493B4E2"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:apigateway:us-east-1::/apis/dqofm24886/stages/$default",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Stage"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:lambda:us-east-1:280517746513:function:capstan-task-count",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "TaskCountProbe2FA371D7"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudwatch:us-east-1:280517746513:alarm:capstan-http-5xx-rate",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "GatewayErrorsD0AC9A5C"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ecs:us-east-1:280517746513:service/capstan/capstan-server",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:logs:us-east-1:280517746513:log-group:/capstan/http-api",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "AccessLogs8B620ECA"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-credentials-1VnXeX",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "CredentialsF8F243AA"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:budgets::280517746513:budget/capstan-monthly",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanBudget"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Monthly"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ecr:us-east-1:280517746513:repository/capstan-server",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanGithubOidc"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/c23ba6f0-bc79-11f1-b211-0e4ffc68be55"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Repository22E53BBD"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:route-table/rtb-0a9a32259e2db0aea",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcPublicSubnet1RouteTable6C95E38E"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc/PublicSubnet1"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ClusterEB0386A7"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:events:us-east-1:280517746513:rule/capstan-task-count",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ProbeScheduleC3BDD144"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:rds:us-east-1:280517746513:db:capstan",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "DatabaseB269D8BB"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:servicediscovery:us-east-1:280517746513:namespace/ns-oset2yt2qw6fizyz",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Namespace9B63B8C8"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:sns:us-east-1:280517746513:capstan-alerts",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Alerts91F83244"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/c23ba6f0-bc79-11f1-b211-0e4ffc68be55",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudwatch:us-east-1:280517746513:alarm:capstan-no-running-task",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "MissingTask0C7921C7"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:internet-gateway/igw-0c9cbb90af821c8f0",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcIGWD7BA715C"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:security-group/sg-092f53c691a5aaa88",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "TaskGroup987C7EB6"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:subnet/subnet-0f5a2e7dacd73e4ae",
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "VpcPublicSubnet2Subnet691E08A3"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc/PublicSubnet2"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:rds:us-east-1:280517746513:subgrp:capstandata-databasesubnetgroup7d60f180-ptaunwuxl0hl",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "DatabaseSubnetGroup7D60F180"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:apigateway:us-east-1::/apis/dqofm24886",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "HttpApi"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ec2:us-east-1:280517746513:vpc/vpc-050fe83e31c16ed24",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Vpc8378EB38"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/gate-api-key-0LrE0R",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanData"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "GateKeyAE58746A"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:servicediscovery:us-east-1:280517746513:service/srv-i746amvshlucs32d",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ServiceCloudmapService046058A4"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      },
+      {
+        "ResourceARN": "arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          }
+        ]
+      }
+    ],
+    "ecsInactiveTaskDefinitions": [],
+    "ecsDeletingTaskDefinitions": [],
+    "databases": [
+      {
+        "Id": "capstan",
+        "Arn": "arn:aws:rds:us-east-1:280517746513:db:capstan",
+        "Status": "available"
+      }
+    ],
+    "databaseSubnetGroups": [
+      {
+        "Name": "capstandata-databasesubnetgroup7d60f180-ptaunwuxl0hl",
+        "Vpc": "vpc-050fe83e31c16ed24"
+      }
+    ],
+    "secrets": [
+      {
+        "Name": "capstan/gate-api-key",
+        "Arn": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/gate-api-key-0LrE0R",
+        "Deleted": null
+      },
+      {
+        "Name": "capstan/database-credentials",
+        "Arn": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-credentials-1VnXeX",
+        "Deleted": null
+      },
+      {
+        "Name": "capstan/api-key-hashes",
+        "Arn": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN",
+        "Deleted": null
+      },
+      {
+        "Name": "capstan/database-url",
+        "Arn": "arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p",
+        "Deleted": null
+      }
+    ],
+    "databaseSnapshots": [],
+    "ecr": [
+      {
+        "Name": "capstan-server",
+        "Arn": "arn:aws:ecr:us-east-1:280517746513:repository/capstan-server"
+      }
+    ],
+    "cloudMapNamespaces": [
+      {
+        "Id": "ns-oset2yt2qw6fizyz",
+        "Name": "capstan.internal",
+        "Arn": "arn:aws:servicediscovery:us-east-1:280517746513:namespace/ns-oset2yt2qw6fizyz"
+      }
+    ],
+    "cloudMapServices": [
+      {
+        "Id": "srv-i746amvshlucs32d",
+        "Name": "server",
+        "Arn": "arn:aws:servicediscovery:us-east-1:280517746513:service/srv-i746amvshlucs32d",
+        "Instances": null
+      }
+    ],
+    "apis": [
+      {
+        "Id": "dqofm24886",
+        "Name": "capstan"
+      }
+    ],
+    "vpcLinks": [
+      {
+        "Id": "1u406d",
+        "Name": "capstan",
+        "Status": "AVAILABLE"
+      }
+    ],
+    "hostedZones": [
+      {
+        "Id": "/hostedzone/Z04368913IG6ZH0NWWPRR",
+        "Name": "capstan.internal.",
+        "Private": true
+      }
+    ],
+    "taggedEndpoints": [],
+    "vpcs": [
+      {
+        "Id": "vpc-050fe83e31c16ed24",
+        "State": "available",
+        "Tags": [
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanNetwork"
+          },
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "Vpc8378EB38"
+          },
+          {
+            "Key": "Name",
+            "Value": "CapstanNetwork/Vpc"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291"
+          }
+        ]
+      }
+    ],
+    "taggedEnis": [],
+    "namedEnis": [],
+    "topics": [
+      {
+        "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+      }
+    ],
+    "logGroups": [
+      {
+        "Name": "/aws/lambda/capstan-task-count",
+        "StoredBytes": 0
+      },
+      {
+        "Name": "/capstan/http-api",
+        "StoredBytes": 0
+      },
+      {
+        "Name": "/capstan/server",
+        "StoredBytes": 0
+      }
+    ],
+    "alarms": [
+      {
+        "Name": "capstan-http-5xx-rate",
+        "State": "OK"
+      },
+      {
+        "Name": "capstan-no-running-task",
+        "State": "ALARM"
+      }
+    ],
+    "securityGroups": [
+      {
+        "Id": "sg-0ff3507aadb2cf32f",
+        "Name": "CapstanNetwork-DatabaseGroupB493B4E2-BtGIv6mX3Asm",
+        "Vpc": "vpc-050fe83e31c16ed24"
+      },
+      {
+        "Id": "sg-0c9d4645a7a4880e1",
+        "Name": "CapstanNetwork-LinkGroup62B12B69-5CUxIgUkzopA",
+        "Vpc": "vpc-050fe83e31c16ed24"
+      },
+      {
+        "Id": "sg-092f53c691a5aaa88",
+        "Name": "CapstanNetwork-TaskGroup987C7EB6-3GMaKe35u2rt",
+        "Vpc": "vpc-050fe83e31c16ed24"
+      }
+    ],
+    "rules": [
+      {
+        "Name": "capstan-task-count",
+        "Arn": "arn:aws:events:us-east-1:280517746513:rule/capstan-task-count"
+      }
+    ],
+    "functions": [
+      {
+        "Name": "capstan-task-count",
+        "Arn": "arn:aws:lambda:us-east-1:280517746513:function:capstan-task-count"
+      }
+    ],
+    "roles": [
+      {
+        "Name": "capstan-cloudformation",
+        "Arn": "arn:aws:iam::280517746513:role/capstan-cloudformation"
+      },
+      {
+        "Name": "capstan-execution",
+        "Arn": "arn:aws:iam::280517746513:role/capstan-execution"
+      },
+      {
+        "Name": "capstan-github-deploy",
+        "Arn": "arn:aws:iam::280517746513:role/capstan-github-deploy"
+      },
+      {
+        "Name": "capstan-task",
+        "Arn": "arn:aws:iam::280517746513:role/capstan-task"
+      },
+      {
+        "Name": "capstan-task-count",
+        "Arn": "arn:aws:iam::280517746513:role/capstan-task-count"
+      }
+    ],
+    "budgets": [
+      {
+        "Name": "capstan-monthly",
+        "Limit": {
+          "Amount": "10.0",
+          "Unit": "USD"
+        }
+      }
+    ],
+    "policies": [
+      {
+        "Name": "capstan-workload-boundary",
+        "Arn": "arn:aws:iam::280517746513:policy/capstan-workload-boundary"
+      }
+    ],
+    "knownVpcEnis": [
+      {
+        "Id": "eni-053eff74af1ac1d46",
+        "Vpc": "vpc-050fe83e31c16ed24",
+        "Status": "in-use",
+        "Description": "ENI managed by APIGateway",
+        "PublicIp": null
+      },
+      {
+        "Id": "eni-089fe7b068f23bba8",
+        "Vpc": "vpc-050fe83e31c16ed24",
+        "Status": "in-use",
+        "Description": "ENI managed by APIGateway",
+        "PublicIp": null
+      },
+      {
+        "Id": "eni-07b2d1d0287ef17cf",
+        "Vpc": "vpc-050fe83e31c16ed24",
+        "Status": "in-use",
+        "Description": "arn:aws:ecs:us-east-1:280517746513:attachment/5e171e2d-13f6-44b5-97f0-3ec8dbc0b75a",
+        "PublicIp": "18.234.248.103"
+      },
+      {
+        "Id": "eni-092bd7dd930ce1855",
+        "Vpc": "vpc-050fe83e31c16ed24",
+        "Status": "in-use",
+        "Description": "RDSNetworkInterface",
+        "PublicIp": null
+      }
+    ],
+    "knownVpcEndpoints": [],
+    "ecsServices": [
+      "arn:aws:ecs:us-east-1:280517746513:service/capstan/capstan-server"
+    ],
+    "ecsRunningTasks": [
+      "arn:aws:ecs:us-east-1:280517746513:task/capstan/eb2b1be24fcf41b9934991f4bdd7f464"
+    ],
+    "sharedOidcProvider": {
+      "Url": "token.actions.githubusercontent.com",
+      "Clients": [
+        "sts.amazonaws.com"
+      ]
+    }
+  },
+  "errors": {},
+  "commands": [
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 sts get-caller-identity --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 resourcegroupstaggingapi get-resources --tag-filters Key=Project,Values=capstan --query ResourceTagMappingList --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stacks --query Stacks[].{Name:StackName,Status:StackStatus,Id:StackId,Created:CreationTime,Updated:LastUpdatedTime} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-clusters --query clusterArns[?contains(@, '/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status ACTIVE --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status INACTIVE --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status DELETE_IN_PROGRESS --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-instances --query DBInstances[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBInstanceIdentifier,Arn:DBInstanceArn,Status:DBInstanceStatus} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-subnet-groups --query DBSubnetGroups[?contains(DBSubnetGroupName, 'capstan')].{Name:DBSubnetGroupName,Vpc:VpcId} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-snapshots --query DBSnapshots[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBSnapshotIdentifier,Status:Status,Type:SnapshotType} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecr describe-repositories --query repositories[?contains(repositoryName, 'capstan')].{Name:repositoryName,Arn:repositoryArn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 secretsmanager list-secrets --include-planned-deletion --filters Key=name,Values=capstan/ --query SecretList[].{Name:Name,Arn:ARN,Deleted:DeletedDate} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 servicediscovery list-namespaces --query Namespaces[?contains(Name, 'capstan')].{Id:Id,Name:Name,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 servicediscovery list-services --query Services[?Name=='server' || contains(Name, 'capstan')].{Id:Id,Name:Name,Arn:Arn,Instances:InstanceCount} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 route53 list-hosted-zones --query HostedZones[?contains(Name, 'capstan')].{Id:Id,Name:Name,Private:Config.PrivateZone} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 apigatewayv2 get-apis --query Items[?contains(Name, 'capstan')].{Id:ApiId,Name:Name} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 apigatewayv2 get-vpc-links --query Items[?contains(Name, 'capstan')].{Id:VpcLinkId,Name:Name,Status:VpcLinkStatus} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-vpcs --filters Name=tag:Project,Values=capstan --query Vpcs[].{Id:VpcId,State:State,Tags:Tags} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-vpc-endpoints --filters Name=tag:Project,Values=capstan --query VpcEndpoints[].{Id:VpcEndpointId,Vpc:VpcId,State:State} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-network-interfaces --filters Name=tag:Project,Values=capstan --query NetworkInterfaces[].{Id:NetworkInterfaceId,Vpc:VpcId,Status:Status} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-network-interfaces --query NetworkInterfaces[?contains(Description, 'capstan') || contains(Description, 'Capstan')].{Id:NetworkInterfaceId,Vpc:VpcId,Status:Status,Description:Description} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-security-groups --filters Name=tag:Project,Values=capstan --query SecurityGroups[].{Id:GroupId,Name:GroupName,Vpc:VpcId} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 logs describe-log-groups --query logGroups[?contains(logGroupName, 'capstan')].{Name:logGroupName,StoredBytes:storedBytes} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudwatch describe-alarms --alarm-name-prefix capstan- --query MetricAlarms[].{Name:AlarmName,State:StateValue} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 sns list-topics --query Topics[?contains(TopicArn, ':capstan-')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 lambda list-functions --query Functions[?starts_with(FunctionName, 'capstan-')].{Name:FunctionName,Arn:FunctionArn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 events list-rules --name-prefix capstan- --query Rules[].{Name:Name,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 budgets describe-budgets --account-id 280517746513 --query Budgets[?starts_with(BudgetName, 'capstan-')].{Name:BudgetName,Limit:BudgetLimit} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam list-roles --query Roles[?starts_with(RoleName, 'capstan-')].{Name:RoleName,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam list-policies --scope Local --query Policies[?starts_with(PolicyName, 'capstan-')].{Name:PolicyName,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-network-interfaces --filters Name=vpc-id,Values=vpc-050fe83e31c16ed24 --query NetworkInterfaces[].{Id:NetworkInterfaceId,Vpc:VpcId,Status:Status,Description:Description,PublicIp:Association.PublicIp} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-vpc-endpoints --filters Name=vpc-id,Values=vpc-050fe83e31c16ed24 --query VpcEndpoints[].{Id:VpcEndpointId,Vpc:VpcId,State:State} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-services --cluster arn:aws:ecs:us-east-1:280517746513:cluster/capstan --query serviceArns --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-tasks --cluster arn:aws:ecs:us-east-1:280517746513:cluster/capstan --desired-status RUNNING --query taskArns --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam get-open-id-connect-provider --open-id-connect-provider-arn arn:aws:iam::280517746513:oidc-provider/token.actions.githubusercontent.com --query {Url:Url,Clients:ClientIDList} --output json"
+  ]
+}

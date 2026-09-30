@@ -1,0 +1,222 @@
+[
+  {
+    "name": "CapstanService",
+    "id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619",
+    "createdAt": "2026-09-30T03:00:02.574000+00:00",
+    "deletedAt": "2026-09-30T03:09:52.785000+00:00",
+    "events": [
+      {
+        "Time": "2026-09-30T03:09:52.785000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:06:27.540000+00:00",
+        "Status": "DELETE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T03:04:02.745000+00:00",
+        "Status": "CREATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:04:01.308000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+      },
+      {
+        "Time": "2026-09-30T03:00:08.965000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T03:00:02.574000+00:00",
+        "Status": "REVIEW_IN_PROGRESS",
+        "Reason": "User Initiated"
+      }
+    ]
+  },
+  {
+    "name": "CapstanData",
+    "id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23",
+    "createdAt": "2026-09-30T02:51:49.121000+00:00",
+    "deletedAt": "2026-09-30T03:13:02.447000+00:00",
+    "events": [
+      {
+        "Time": "2026-09-30T03:13:02.447000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:10:00.802000+00:00",
+        "Status": "DELETE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:59:46.460000+00:00",
+        "Status": "UPDATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:59:45.782000+00:00",
+        "Status": "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:59:43.138000+00:00",
+        "Status": "UPDATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:56:56.291000+00:00",
+        "Status": "CREATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:56:54.760000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+      },
+      {
+        "Time": "2026-09-30T02:51:55.306000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:51:49.121000+00:00",
+        "Status": "REVIEW_IN_PROGRESS",
+        "Reason": "User Initiated"
+      }
+    ]
+  },
+  {
+    "name": "CapstanGithubOidc",
+    "id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/c23ba6f0-bc79-11f1-b211-0e4ffc68be55",
+    "createdAt": "2026-09-30T02:50:56.226000+00:00",
+    "deletedAt": "2026-09-30T03:14:01.174000+00:00",
+    "events": [
+      {
+        "Time": "2026-09-30T03:14:01.174000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:13:47.130000+00:00",
+        "Status": "DELETE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:51:45.275000+00:00",
+        "Status": "CREATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:51:43.674000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+      },
+      {
+        "Time": "2026-09-30T02:51:02.213000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:56.226000+00:00",
+        "Status": "REVIEW_IN_PROGRESS",
+        "Reason": "User Initiated"
+      }
+    ]
+  },
+  {
+    "name": "CapstanBudget",
+    "id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9",
+    "createdAt": "2026-09-30T02:50:44.365000+00:00",
+    "deletedAt": "2026-09-30T03:13:14.074000+00:00",
+    "events": [
+      {
+        "Time": "2026-09-30T03:13:14.074000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:13:11.020000+00:00",
+        "Status": "DELETE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:59:59.768000+00:00",
+        "Status": "UPDATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:59:58.866000+00:00",
+        "Status": "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:59:56.092000+00:00",
+        "Status": "UPDATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:54.534000+00:00",
+        "Status": "CREATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:50:54.012000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:50.222000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:44.365000+00:00",
+        "Status": "REVIEW_IN_PROGRESS",
+        "Reason": "User Initiated"
+      }
+    ]
+  },
+  {
+    "name": "CapstanNetwork",
+    "id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291",
+    "createdAt": "2026-09-30T02:49:56.627000+00:00",
+    "deletedAt": "2026-09-30T03:13:40.373000+00:00",
+    "events": [
+      {
+        "Time": "2026-09-30T03:13:40.373000+00:00",
+        "Status": "DELETE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T03:13:16.876000+00:00",
+        "Status": "DELETE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:38.776000+00:00",
+        "Status": "CREATE_COMPLETE",
+        "Reason": null
+      },
+      {
+        "Time": "2026-09-30T02:50:36.104000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "Eventual consistency check initiated"
+      },
+      {
+        "Time": "2026-09-30T02:50:02.580000+00:00",
+        "Status": "CREATE_IN_PROGRESS",
+        "Reason": "User Initiated"
+      },
+      {
+        "Time": "2026-09-30T02:49:56.627000+00:00",
+        "Status": "REVIEW_IN_PROGRESS",
+        "Reason": "User Initiated"
+      }
+    ]
+  }
+]
