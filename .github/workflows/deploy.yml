@@ -23,7 +23,7 @@ jobs:
       BUDGET_EMAIL: ${{ vars.CAPSTAN_BUDGET_EMAIL }}
       GATE_URL: ${{ vars.CAPSTAN_GATE_URL }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Require integrated server and deployment configuration
         run: |
           if grep -Fq 'not implemented yet (server lane)' cmd/capstan-server/main.go; then
@@ -32,7 +32,7 @@ jobs:
           fi
           test -n "$AWS_ACCOUNT_ID"
           test -n "$BUDGET_EMAIL"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "26"
           cache: npm
@@ -41,10 +41,12 @@ jobs:
         working-directory: infra
       - run: npm run typecheck && npm test
         working-directory: infra
-      - uses: docker/setup-buildx-action@v3
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: docker/setup-buildx-action@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.CAPSTAN_DEPLOY_ROLE_ARN }}
+          # A second guard alongside deploy.sh's STS account check.
+          allowed-account-ids: ${{ vars.CAPSTAN_AWS_ACCOUNT_ID }}
           aws-region: us-east-1
           role-session-name: capstan-${{ github.run_id }}
           role-duration-seconds: 3600

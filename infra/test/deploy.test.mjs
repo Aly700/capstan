@@ -16,7 +16,8 @@ test('deployment requires a manual main-branch dispatch and rejects the server s
   assert.match(workflow, /role-to-assume: \$\{\{ vars.CAPSTAN_DEPLOY_ROLE_ARN \}\}/);
   assert.ok(workflow.indexOf('not implemented yet (server lane)') < workflow.indexOf('aws-actions/configure-aws-credentials'));
   assert.doesNotMatch(workflow, /pull_request|push:\s*$|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|secrets\./m);
-  assert.doesNotMatch(workflow, /allowed-account-ids:/, 'the pinned v4 action does not support this input');
+  assert.match(workflow, /aws-actions\/configure-aws-credentials@v6/);
+  assert.match(workflow, /allowed-account-ids: \$\{\{ vars.CAPSTAN_AWS_ACCOUNT_ID \}\}/, 'the credentials step refuses any other account');
 });
 
 function deploy(mode = 'missing', identity = 'expected') {
