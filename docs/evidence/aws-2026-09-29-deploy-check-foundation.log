@@ -1,0 +1,65 @@
+AI agent detected
+Including dependency stacks: CapstanNetwork
+
+✨  Synthesis time: 1.18s
+
+CapstanNetwork
+CapstanNetwork: creating CloudFormation changeset...
+CapstanNetwork: deploying... [1/4]
+
+✅  CapstanNetwork
+
+✨  Deployment time: 41.9s
+
+Outputs:
+CapstanNetwork.DatabaseGroupId = sg-0ff3507aadb2cf32f
+CapstanNetwork.LinkGroupId = sg-0c9d4645a7a4880e1
+CapstanNetwork.PublicSubnet1Az = us-east-1a
+CapstanNetwork.PublicSubnet1Id = subnet-0118fb4b7421172f4
+CapstanNetwork.PublicSubnet1RouteTableId = rtb-0a9a32259e2db0aea
+CapstanNetwork.PublicSubnet2Az = us-east-1b
+CapstanNetwork.PublicSubnet2Id = subnet-0f5a2e7dacd73e4ae
+CapstanNetwork.PublicSubnet2RouteTableId = rtb-016728d0eec39913c
+CapstanNetwork.TaskGroupId = sg-092f53c691a5aaa88
+CapstanNetwork.VpcId = vpc-050fe83e31c16ed24
+Stack ARN:
+arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanNetwork/9ebe6aa0-bc79-11f1-99f5-0eef8d4ec291
+CapstanBudget
+CapstanBudget: creating CloudFormation changeset...
+CapstanBudget: deploying... [2/4]
+
+✅  CapstanBudget
+
+✨  Deployment time: 5.89s
+
+Stack ARN:
+arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9
+CapstanGithubOidc
+CapstanGithubOidc: creating CloudFormation changeset...
+CapstanGithubOidc: deploying... [3/4]
+
+✅  CapstanGithubOidc
+
+✨  Deployment time: 47.05s
+
+Outputs:
+CapstanGithubOidc.DeployRoleArn = arn:aws:iam::280517746513:role/capstan-github-deploy
+CapstanGithubOidc.RepositoryUri = 280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server
+Stack ARN:
+arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanGithubOidc/c23ba6f0-bc79-11f1-b211-0e4ffc68be55
+CapstanData
+CapstanData: creating CloudFormation changeset...
+CapstanData: deploying... [4/4]
+
+✅  CapstanData
+
+✨  Deployment time: 303.14s
+
+Outputs:
+CapstanData.ExportsOutputRefApiKeyHashes98F8A7191A08F3C4 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN
+CapstanData.ExportsOutputRefDatabaseUrl8D88187D37D128A7 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p
+Stack ARN:
+arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23
+
+✨  Total time: 422.88s
+

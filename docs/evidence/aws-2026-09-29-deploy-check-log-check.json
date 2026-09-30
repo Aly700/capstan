@@ -1,0 +1,37 @@
+{
+  "completeLogRead": true,
+  "lineCount": 959,
+  "actions": [
+    {
+      "action": "actions/checkout@v7",
+      "resolvedSha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "runtime": "node24",
+      "source": "https://github.com/actions/checkout/blob/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml"
+    },
+    {
+      "action": "actions/setup-node@v7",
+      "resolvedSha": "820762786026740c76f36085b0efc47a31fe5020",
+      "runtime": "node24",
+      "source": "https://github.com/actions/setup-node/blob/820762786026740c76f36085b0efc47a31fe5020/action.yml"
+    },
+    {
+      "action": "docker/setup-buildx-action@v4",
+      "resolvedSha": "f87e5991a6d7451dcb8d9637bfbc97413f497069",
+      "runtime": "node24",
+      "source": "https://github.com/docker/setup-buildx-action/blob/f87e5991a6d7451dcb8d9637bfbc97413f497069/action.yml"
+    },
+    {
+      "action": "aws-actions/configure-aws-credentials@v6",
+      "resolvedSha": "e1253824e5c10ff9df46874f81ed3ec929e19cfd",
+      "runtime": "node24",
+      "source": "https://github.com/aws-actions/configure-aws-credentials/blob/e1253824e5c10ff9df46874f81ed3ec929e19cfd/action.yml"
+    }
+  ],
+  "allowlistInput": "280517746513",
+  "credentialsStep": "success",
+  "allowlistAcceptedEvidence": "input present; credentials step succeeded and no unexpected-input warning",
+  "oidcAssumed": true,
+  "imagePushed": true,
+  "cdkCompleted": true,
+  "smokePassed": true
+}

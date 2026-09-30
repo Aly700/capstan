@@ -1,0 +1,1136 @@
+{
+  "AgentOpsBudgetStack/describe-stacks": {
+    "Stacks": [
+      {
+        "Capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_NAMED_IAM",
+          "CAPABILITY_AUTO_EXPAND"
+        ],
+        "ChangeSetId": "arn:aws:cloudformation:us-east-1:280517746513:changeSet/cdk-deploy-change-set/8f8fe18c-e7c6-4c63-80be-8abe6568766b",
+        "CreationTime": "2026-08-29T05:28:55.502000+00:00",
+        "DisableRollback": false,
+        "DriftInformation": {
+          "StackDriftStatus": "NOT_CHECKED"
+        },
+        "EnableTerminationProtection": false,
+        "LastUpdatedTime": "2026-08-29T16:53:28.934000+00:00",
+        "NotificationARNs": [],
+        "Parameters": [
+          {
+            "ParameterKey": "BootstrapVersion",
+            "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+            "ResolvedValue": "32"
+          }
+        ],
+        "RoleARN": "arn:aws:iam::280517746513:role/cdk-hnb659fds-cfn-exec-role-280517746513-us-east-1",
+        "RollbackConfiguration": {},
+        "StackId": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsBudgetStack/870b4680-a36a-11f1-a950-0e8283057ca7",
+        "StackName": "AgentOpsBudgetStack",
+        "StackStatus": "UPDATE_COMPLETE",
+        "Tags": []
+      }
+    ]
+  },
+  "AgentOpsBudgetStack/get-template": {
+    "StagesAvailable": [
+      "Original",
+      "Processed"
+    ],
+    "TemplateBody": {
+      "Parameters": {
+        "BootstrapVersion": {
+          "Default": "/cdk-bootstrap/hnb659fds/version",
+          "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+          "Type": "AWS::SSM::Parameter::Value<String>"
+        }
+      },
+      "Resources": {
+        "CDKMetadata": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsBudgetStack/CDKMetadata/Default"
+          },
+          "Properties": {
+            "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzIz1zNQTCwv1k1OydbNyUzSqw4uSUzO1kksL45PKk1JTy0p1nNOy3MCM2t18vJTUvWyivXLjIz0jIz1jBSzijMzdYtK80oyc1P1giA0AIHt6bVXAAAA"
+          },
+          "Type": "AWS::CDK::Metadata"
+        },
+        "MonthlyBudget": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsBudgetStack/MonthlyBudget"
+          },
+          "Properties": {
+            "Budget": {
+              "BudgetLimit": {
+                "Amount": 10,
+                "Unit": "USD"
+              },
+              "BudgetType": "COST",
+              "TimeUnit": "MONTHLY"
+            },
+            "NotificationsWithSubscribers": [
+              {
+                "Notification": {
+                  "ComparisonOperator": "GREATER_THAN",
+                  "NotificationType": "ACTUAL",
+                  "Threshold": 100,
+                  "ThresholdType": "PERCENTAGE"
+                },
+                "Subscribers": [
+                  {
+                    "Address": "affanyasir9@gmail.com",
+                    "SubscriptionType": "EMAIL"
+                  }
+                ]
+              }
+            ]
+          },
+          "Type": "AWS::Budgets::Budget"
+        }
+      },
+      "Rules": {
+        "CheckBootstrapVersion": {
+          "Assertions": [
+            {
+              "Assert": {
+                "Fn::Not": [
+                  {
+                    "Fn::Contains": [
+                      [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ],
+                      {
+                        "Ref": "BootstrapVersion"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "AgentOpsBudgetStack/list-stack-resources": {
+    "StackResourceSummaries": [
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:53:32.866000+00:00",
+        "LogicalResourceId": "CDKMetadata",
+        "PhysicalResourceId": "870b4680-a36a-11f1-a950-0e8283057ca7",
+        "ResourceStatus": "UPDATE_COMPLETE",
+        "ResourceType": "AWS::CDK::Metadata"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T05:29:04.613000+00:00",
+        "LogicalResourceId": "MonthlyBudget",
+        "PhysicalResourceId": "MonthlyBudget-us-east-1-1787981344152-oMQPn5vkkT1h",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::Budgets::Budget"
+      }
+    ]
+  },
+  "AgentOpsGithubOidcStack/describe-stacks": {
+    "Stacks": [
+      {
+        "Capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_NAMED_IAM",
+          "CAPABILITY_AUTO_EXPAND"
+        ],
+        "ChangeSetId": "arn:aws:cloudformation:us-east-1:280517746513:changeSet/cdk-deploy-change-set/4b64c34e-bcd0-4f51-9aa8-d9a324edae73",
+        "CreationTime": "2026-08-29T16:35:12.619000+00:00",
+        "DisableRollback": false,
+        "DriftInformation": {
+          "StackDriftStatus": "NOT_CHECKED"
+        },
+        "EnableTerminationProtection": false,
+        "LastUpdatedTime": "2026-08-29T16:43:14.148000+00:00",
+        "NotificationARNs": [],
+        "Outputs": [
+          {
+            "Description": "Set this ARN as the GitHub repository variable AWS_ROLE_ARN",
+            "OutputKey": "GithubDeployRoleArn",
+            "OutputValue": "arn:aws:iam::280517746513:role/agentops-gate-github-deploy"
+          }
+        ],
+        "Parameters": [
+          {
+            "ParameterKey": "BootstrapVersion",
+            "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+            "ResolvedValue": "32"
+          }
+        ],
+        "RoleARN": "arn:aws:iam::280517746513:role/cdk-hnb659fds-cfn-exec-role-280517746513-us-east-1",
+        "RollbackConfiguration": {},
+        "StackId": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsGithubOidcStack/9b40a340-a3c7-11f1-af75-0affeb0dfddb",
+        "StackName": "AgentOpsGithubOidcStack",
+        "StackStatus": "UPDATE_COMPLETE",
+        "Tags": []
+      }
+    ]
+  },
+  "AgentOpsGithubOidcStack/get-template": {
+    "StagesAvailable": [
+      "Original",
+      "Processed"
+    ],
+    "TemplateBody": {
+      "Outputs": {
+        "GithubDeployRoleArn": {
+          "Description": "Set this ARN as the GitHub repository variable AWS_ROLE_ARN",
+          "Value": {
+            "Fn::GetAtt": [
+              "GithubDeployRoleB0CF66A5",
+              "Arn"
+            ]
+          }
+        }
+      },
+      "Parameters": {
+        "BootstrapVersion": {
+          "Default": "/cdk-bootstrap/hnb659fds/version",
+          "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+          "Type": "AWS::SSM::Parameter::Value<String>"
+        }
+      },
+      "Resources": {
+        "CDKMetadata": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsGithubOidcStack/CDKMetadata/Default"
+          },
+          "Properties": {
+            "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VOQQ6CMBB8i/dSERM9KydPEHyAqe1KFuiWdFuMIfxdkGjiaWZnZ3cmk9nhKNONenKiTZt0eJfjNSjdilm6obJyLHqgi8kdEehQejegAS8q14HIH/TB0nWoX8u4sknkkYOzFbCLXq/GH/9bfR+eFYM4MUOY42ukerkpYuhjmAQ5A7Lh7ZDt5S6d+zaMmPhIAS3IasU3e9yNzMwAAAA="
+          },
+          "Type": "AWS::CDK::Metadata"
+        },
+        "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0": {
+          "DependsOn": [
+            "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65"
+          ],
+          "Metadata": {
+            "aws:asset:path": "asset.c0d9f24649426c60a1bc01108070535a40353ae6cd8ceccb812969319b936e5d",
+            "aws:asset:property": "Code",
+            "aws:cdk:path": "AgentOpsGithubOidcStack/Custom::AWSCDKOpenIdConnectProviderCustomResourceProvider/Handler"
+          },
+          "Properties": {
+            "Code": {
+              "S3Bucket": "cdk-hnb659fds-assets-280517746513-us-east-1",
+              "S3Key": "c0d9f24649426c60a1bc01108070535a40353ae6cd8ceccb812969319b936e5d.zip"
+            },
+            "Handler": "__entrypoint__.handler",
+            "MemorySize": 128,
+            "Role": {
+              "Fn::GetAtt": [
+                "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65",
+                "Arn"
+              ]
+            },
+            "Runtime": "nodejs24.x",
+            "Timeout": 900
+          },
+          "Type": "AWS::Lambda::Function"
+        },
+        "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsGithubOidcStack/Custom::AWSCDKOpenIdConnectProviderCustomResourceProvider/Role"
+          },
+          "Properties": {
+            "AssumeRolePolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "sts:AssumeRole",
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Service": "lambda.amazonaws.com"
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "ManagedPolicyArns": [
+              {
+                "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              }
+            ],
+            "Policies": [
+              {
+                "PolicyDocument": {
+                  "Statement": [
+                    {
+                      "Action": [
+                        "iam:CreateOpenIDConnectProvider",
+                        "iam:DeleteOpenIDConnectProvider",
+                        "iam:UpdateOpenIDConnectProviderThumbprint",
+                        "iam:AddClientIDToOpenIDConnectProvider",
+                        "iam:RemoveClientIDFromOpenIDConnectProvider"
+                      ],
+                      "Effect": "Allow",
+                      "Resource": "*"
+                    }
+                  ],
+                  "Version": "2012-10-17"
+                },
+                "PolicyName": "Inline"
+              }
+            ]
+          },
+          "Type": "AWS::IAM::Role"
+        },
+        "GithubDeployRoleB0CF66A5": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsGithubOidcStack/GithubDeployRole/Resource"
+          },
+          "Properties": {
+            "AssumeRolePolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "sts:AssumeRoleWithWebIdentity",
+                  "Condition": {
+                    "StringEquals": {
+                      "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+                    },
+                    "StringLike": {
+                      "token.actions.githubusercontent.com:sub": [
+                        "repo:Aly700/agentops-gate:ref:refs/heads/main",
+                        "repo:Aly700@*/agentops-gate@*:ref:refs/heads/main"
+                      ]
+                    }
+                  },
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Federated": {
+                      "Ref": "GithubOidcProviderD8241A88"
+                    }
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "Description": "GitHub Actions deployment role for AgentOps Gate main",
+            "RoleName": "agentops-gate-github-deploy"
+          },
+          "Type": "AWS::IAM::Role"
+        },
+        "GithubDeployRoleDefaultPolicyE8F540D1": {
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsGithubOidcStack/GithubDeployRole/DefaultPolicy/Resource"
+          },
+          "Properties": {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "ecr:GetAuthorizationToken",
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:CompleteLayerUpload",
+                    "ecr:CreateRepository",
+                    "ecr:DescribeRepositories",
+                    "ecr:InitiateLayerUpload",
+                    "ecr:PutImage",
+                    "ecr:UploadLayerPart"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":ecr:us-east-1:280517746513:repository/agentops-gate"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": "sts:AssumeRole",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::280517746513:role/cdk-*-280517746513-us-east-1"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": [
+                    "cloudformation:DescribeStacks",
+                    "cloudformation:ListStacks"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "GithubDeployRoleDefaultPolicyE8F540D1",
+            "Roles": [
+              {
+                "Ref": "GithubDeployRoleB0CF66A5"
+              }
+            ]
+          },
+          "Type": "AWS::IAM::Policy"
+        },
+        "GithubOidcProviderD8241A88": {
+          "DeletionPolicy": "Delete",
+          "Metadata": {
+            "aws:cdk:path": "AgentOpsGithubOidcStack/GithubOidcProvider/Resource/Default"
+          },
+          "Properties": {
+            "ClientIDList": [
+              "sts.amazonaws.com"
+            ],
+            "CodeHash": "c0d9f24649426c60a1bc01108070535a40353ae6cd8ceccb812969319b936e5d",
+            "RejectUnauthorized": false,
+            "ServiceToken": {
+              "Fn::GetAtt": [
+                "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0",
+                "Arn"
+              ]
+            },
+            "Url": "https://token.actions.githubusercontent.com"
+          },
+          "Type": "Custom::AWSCDKOpenIdConnectProvider",
+          "UpdateReplacePolicy": "Delete"
+        }
+      },
+      "Rules": {
+        "CheckBootstrapVersion": {
+          "Assertions": [
+            {
+              "Assert": {
+                "Fn::Not": [
+                  {
+                    "Fn::Contains": [
+                      [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ],
+                      {
+                        "Ref": "BootstrapVersion"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "AgentOpsGithubOidcStack/list-stack-resources": {
+    "StackResourceSummaries": [
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:35:21.710000+00:00",
+        "LogicalResourceId": "CDKMetadata",
+        "PhysicalResourceId": "9b40a340-a3c7-11f1-af75-0affeb0dfddb",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::CDK::Metadata"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:35:47.021000+00:00",
+        "LogicalResourceId": "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0",
+        "PhysicalResourceId": "AgentOpsGithubOidcStack-CustomAWSCDKOpenIdConnectP-Ik0CyUal9huR",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::Lambda::Function"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:35:38.636000+00:00",
+        "LogicalResourceId": "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65",
+        "PhysicalResourceId": "AgentOpsGithubOidcStack-CustomAWSCDKOpenIdConnectPr-S86BoL7VU1nd",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:43:33.745000+00:00",
+        "LogicalResourceId": "GithubDeployRoleB0CF66A5",
+        "PhysicalResourceId": "agentops-gate-github-deploy",
+        "ResourceStatus": "UPDATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:36:29.370000+00:00",
+        "LogicalResourceId": "GithubDeployRoleDefaultPolicyE8F540D1",
+        "PhysicalResourceId": "Agent-Githu-hdzUYwtUsa3C",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Policy"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:35:53.775000+00:00",
+        "LogicalResourceId": "GithubOidcProviderD8241A88",
+        "PhysicalResourceId": "arn:aws:iam::280517746513:oidc-provider/token.actions.githubusercontent.com",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "Custom::AWSCDKOpenIdConnectProvider"
+      }
+    ]
+  },
+  "CDKToolkit/describe-stacks": {
+    "Stacks": [
+      {
+        "Capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_NAMED_IAM",
+          "CAPABILITY_AUTO_EXPAND"
+        ],
+        "ChangeSetId": "arn:aws:cloudformation:us-east-1:280517746513:changeSet/cdk-deploy-change-set/f5cfaf79-251f-4008-aec3-05e8e235d0cb",
+        "CreationTime": "2026-08-29T02:54:00.052000+00:00",
+        "Description": "This stack includes resources needed to deploy AWS CDK apps into this environment",
+        "DisableRollback": false,
+        "DriftInformation": {
+          "StackDriftStatus": "NOT_CHECKED"
+        },
+        "EnableTerminationProtection": false,
+        "LastUpdatedTime": "2026-08-29T02:54:05.909000+00:00",
+        "NotificationARNs": [],
+        "Outputs": [
+          {
+            "Description": "The name of the ECR repository which hosts docker image assets",
+            "OutputKey": "ImageRepositoryName",
+            "OutputValue": "cdk-hnb659fds-container-assets-280517746513-us-east-1"
+          },
+          {
+            "Description": "The name of the S3 bucket owned by the CDK toolkit stack",
+            "OutputKey": "BucketName",
+            "OutputValue": "cdk-hnb659fds-assets-280517746513-us-east-1"
+          },
+          {
+            "Description": "The version of the bootstrap resources that are currently mastered in this stack",
+            "OutputKey": "BootstrapVersion",
+            "OutputValue": "32"
+          },
+          {
+            "Description": "The domain name of the S3 bucket owned by the CDK toolkit stack",
+            "OutputKey": "BucketDomainName",
+            "OutputValue": "cdk-hnb659fds-assets-280517746513-us-east-1.s3.us-east-1.amazonaws.com"
+          },
+          {
+            "Description": "The ARN of the KMS key used to encrypt the asset bucket (deprecated)",
+            "ExportName": "CdkBootstrap-hnb659fds-FileAssetKeyArn",
+            "OutputKey": "FileAssetKeyArn",
+            "OutputValue": "AWS_MANAGED_KEY"
+          }
+        ],
+        "Parameters": [
+          {
+            "ParameterKey": "FileAssetsBucketKmsKeyId",
+            "ParameterValue": "AWS_MANAGED_KEY"
+          },
+          {
+            "ParameterKey": "PublicAccessBlockConfiguration",
+            "ParameterValue": "true"
+          },
+          {
+            "ParameterKey": "UseExamplePermissionsBoundary",
+            "ParameterValue": "false"
+          },
+          {
+            "ParameterKey": "FileAssetsBucketName",
+            "ParameterValue": ""
+          },
+          {
+            "ParameterKey": "InputPermissionsBoundary",
+            "ParameterValue": ""
+          },
+          {
+            "ParameterKey": "BootstrapVariant",
+            "ParameterValue": "AWS CDK: Default Resources"
+          },
+          {
+            "ParameterKey": "DenyExternalId",
+            "ParameterValue": "true"
+          },
+          {
+            "ParameterKey": "CloudFormationExecutionPolicies",
+            "ParameterValue": ""
+          },
+          {
+            "ParameterKey": "TrustedAccountsForLookup",
+            "ParameterValue": ""
+          },
+          {
+            "ParameterKey": "Qualifier",
+            "ParameterValue": "hnb659fds"
+          },
+          {
+            "ParameterKey": "ContainerAssetsRepositoryName",
+            "ParameterValue": ""
+          },
+          {
+            "ParameterKey": "TrustedAccounts",
+            "ParameterValue": ""
+          }
+        ],
+        "RollbackConfiguration": {},
+        "StackId": "arn:aws:cloudformation:us-east-1:280517746513:stack/CDKToolkit/e2959430-a354-11f1-85f2-0efed3660b7d",
+        "StackName": "CDKToolkit",
+        "StackStatus": "CREATE_COMPLETE",
+        "Tags": []
+      }
+    ]
+  },
+  "CDKToolkit/get-template": {
+    "StagesAvailable": [
+      "Original",
+      "Processed"
+    ],
+    "TemplateBody": "Description: This stack includes resources needed to deploy AWS CDK apps into this environment\nParameters:\n  TrustedAccounts:\n    Description: List of AWS accounts that are trusted to publish assets and deploy stacks to this environment\n    Default: \"\"\n    Type: CommaDelimitedList\n  TrustedAccountsForLookup:\n    Description: List of AWS accounts that are trusted to look up values in this environment\n    Default: \"\"\n    Type: CommaDelimitedList\n  CloudFormationExecutionPolicies:\n    Description: List of the ManagedPolicy ARN(s) to attach to the CloudFormation deployment role\n    Default: \"\"\n    Type: CommaDelimitedList\n  FileAssetsBucketName:\n    Description: The name of the S3 bucket used for file assets\n    Default: \"\"\n    Type: String\n  FileAssetsBucketKmsKeyId:\n    Description: Empty to create a new key (default), 'AWS_MANAGED_KEY' to use a managed S3 key, or the ID/ARN of an existing key.\n    Default: \"\"\n    Type: String\n  ContainerAssetsRepositoryName:\n    Description: A user-provided custom name to use for the container assets ECR repository\n    Default: \"\"\n    Type: String\n  Qualifier:\n    Description: An identifier to distinguish multiple bootstrap stacks in the same environment\n    Default: hnb659fds\n    Type: String\n    AllowedPattern: \"[A-Za-z0-9_-]{1,10}\"\n    ConstraintDescription: Qualifier must be an alphanumeric identifier of at most 10 characters\n  PublicAccessBlockConfiguration:\n    Description: Whether or not to enable S3 Staging Bucket Public Access Block Configuration\n    Default: \"true\"\n    Type: String\n    AllowedValues:\n      - \"true\"\n      - \"false\"\n  InputPermissionsBoundary:\n    Description: Whether or not to use either the CDK supplied or custom permissions boundary\n    Default: \"\"\n    Type: String\n  UseExamplePermissionsBoundary:\n    Default: \"false\"\n    AllowedValues:\n      - \"true\"\n      - \"false\"\n    Type: String\n  BootstrapVariant:\n    Type: String\n    Default: \"AWS CDK: Default Resources\"\n    Description: Describe the provenance of the resources in this bootstrap stack. Change this when you customize the template. To prevent accidents, the CDK CLI will not overwrite bootstrap stacks with a different variant.\n  DenyExternalId:\n    Type: String\n    Default: \"true\"\n    AllowedValues:\n      - \"true\"\n      - \"false\"\n    Description: Whether to deny AssumeRole calls with an ExternalId. This prevents calls that are intended to be deputized from accidentally assuming CDK Roles.\nConditions:\n  HasTrustedAccounts:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Fn::Join:\n              - \"\"\n              - Ref: TrustedAccounts\n  HasTrustedAccountsForLookup:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Fn::Join:\n              - \"\"\n              - Ref: TrustedAccountsForLookup\n  HasCloudFormationExecutionPolicies:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Fn::Join:\n              - \"\"\n              - Ref: CloudFormationExecutionPolicies\n  HasCustomFileAssetsBucketName:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Ref: FileAssetsBucketName\n  CreateNewKey:\n    Fn::Equals:\n      - \"\"\n      - Ref: FileAssetsBucketKmsKeyId\n  UseAwsManagedKey:\n    Fn::Equals:\n      - AWS_MANAGED_KEY\n      - Ref: FileAssetsBucketKmsKeyId\n  ShouldCreatePermissionsBoundary:\n    Fn::Equals:\n      - \"true\"\n      - Ref: UseExamplePermissionsBoundary\n  PermissionsBoundarySet:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Ref: InputPermissionsBoundary\n  HasCustomContainerAssetsRepositoryName:\n    Fn::Not:\n      - Fn::Equals:\n          - \"\"\n          - Ref: ContainerAssetsRepositoryName\n  UsePublicAccessBlockConfiguration:\n    Fn::Equals:\n      - \"true\"\n      - Ref: PublicAccessBlockConfiguration\n  ShouldDenyExternalId:\n    Fn::Equals:\n      - \"true\"\n      - Ref: DenyExternalId\nResources:\n  FileAssetsBucketEncryptionKey:\n    Type: AWS::KMS::Key\n    Properties:\n      KeyPolicy:\n        Statement:\n          - Action:\n              - kms:Create*\n              - kms:Describe*\n              - kms:Enable*\n              - kms:List*\n              - kms:Put*\n              - kms:Update*\n              - kms:Revoke*\n              - kms:Disable*\n              - kms:Get*\n              - kms:Delete*\n              - kms:ScheduleKeyDeletion\n              - kms:CancelKeyDeletion\n              - kms:GenerateDataKey\n              - kms:TagResource\n              - kms:UntagResource\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n            Resource: \"*\"\n          - Action:\n              - kms:Decrypt\n              - kms:DescribeKey\n              - kms:Encrypt\n              - kms:ReEncrypt*\n              - kms:GenerateDataKey*\n            Effect: Allow\n            Principal:\n              AWS: \"*\"\n            Resource: \"*\"\n            Condition:\n              StringEquals:\n                kms:CallerAccount:\n                  Ref: AWS::AccountId\n                kms:ViaService:\n                  - Fn::Sub: s3.${AWS::Region}.amazonaws.com\n          - Action:\n              - kms:Decrypt\n              - kms:DescribeKey\n              - kms:Encrypt\n              - kms:ReEncrypt*\n              - kms:GenerateDataKey*\n            Effect: Allow\n            Principal:\n              AWS:\n                Fn::Sub: ${FilePublishingRole.Arn}\n            Resource: \"*\"\n    Condition: CreateNewKey\n    UpdateReplacePolicy: Delete\n    DeletionPolicy: Delete\n  FileAssetsBucketEncryptionKeyAlias:\n    Condition: CreateNewKey\n    Type: AWS::KMS::Alias\n    Properties:\n      AliasName:\n        Fn::Sub: alias/cdk-${Qualifier}-assets-key\n      TargetKeyId:\n        Ref: FileAssetsBucketEncryptionKey\n  StagingBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName:\n        Fn::If:\n          - HasCustomFileAssetsBucketName\n          - Fn::Sub: ${FileAssetsBucketName}\n          - Fn::Sub: cdk-${Qualifier}-assets-${AWS::AccountId}-${AWS::Region}\n      AccessControl: Private\n      BucketEncryption:\n        ServerSideEncryptionConfiguration:\n          - ServerSideEncryptionByDefault:\n              SSEAlgorithm: aws:kms\n              KMSMasterKeyID:\n                Fn::If:\n                  - CreateNewKey\n                  - Fn::Sub: ${FileAssetsBucketEncryptionKey.Arn}\n                  - Fn::If:\n                      - UseAwsManagedKey\n                      - Ref: AWS::NoValue\n                      - Fn::Sub: ${FileAssetsBucketKmsKeyId}\n      PublicAccessBlockConfiguration:\n        Fn::If:\n          - UsePublicAccessBlockConfiguration\n          - BlockPublicAcls: true\n            BlockPublicPolicy: true\n            IgnorePublicAcls: true\n            RestrictPublicBuckets: true\n          - Ref: AWS::NoValue\n      VersioningConfiguration:\n        Status: Enabled\n      LifecycleConfiguration:\n        Rules:\n          - Id: CleanupOldVersions\n            Status: Enabled\n            NoncurrentVersionExpiration:\n              NoncurrentDays: 30\n          - Id: AbortIncompleteMultipartUploads\n            Status: Enabled\n            AbortIncompleteMultipartUpload:\n              DaysAfterInitiation: 1\n    UpdateReplacePolicy: Retain\n    DeletionPolicy: Retain\n  StagingBucketPolicy:\n    Type: AWS::S3::BucketPolicy\n    Properties:\n      Bucket:\n        Ref: StagingBucket\n      PolicyDocument:\n        Id: AccessControl\n        Version: \"2012-10-17\"\n        Statement:\n          - Sid: AllowSSLRequestsOnly\n            Action: s3:*\n            Effect: Deny\n            Resource:\n              - Fn::Sub: ${StagingBucket.Arn}\n              - Fn::Sub: ${StagingBucket.Arn}/*\n            Condition:\n              Bool:\n                aws:SecureTransport: \"false\"\n            Principal: \"*\"\n  ContainerAssetsRepository:\n    Type: AWS::ECR::Repository\n    Properties:\n      ImageTagMutability: IMMUTABLE\n      LifecyclePolicy:\n        LifecyclePolicyText: |\n          {\n            \"rules\": [\n              {\n                \"rulePriority\": 1,\n                \"description\": \"Untagged images should not exist, but expire any older than one year\",\n                \"selection\": {\n                  \"tagStatus\": \"untagged\",\n                  \"countType\": \"sinceImagePushed\",\n                  \"countUnit\": \"days\",\n                  \"countNumber\": 365\n                },\n                \"action\": { \"type\": \"expire\" }\n              }\n            ]\n          }\n      RepositoryName:\n        Fn::If:\n          - HasCustomContainerAssetsRepositoryName\n          - Fn::Sub: ${ContainerAssetsRepositoryName}\n          - Fn::Sub: cdk-${Qualifier}-container-assets-${AWS::AccountId}-${AWS::Region}\n      RepositoryPolicyText:\n        Version: \"2012-10-17\"\n        Statement:\n          - Sid: LambdaECRImageRetrievalPolicy\n            Effect: Allow\n            Principal:\n              Service: lambda.amazonaws.com\n            Action:\n              - ecr:BatchGetImage\n              - ecr:GetDownloadUrlForLayer\n            Condition:\n              StringLike:\n                aws:sourceArn:\n                  Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:*\n          - Sid: EmrServerlessImageRetrievalPolicy\n            Effect: Allow\n            Principal:\n              Service: emr-serverless.amazonaws.com\n            Action:\n              - ecr:BatchGetImage\n              - ecr:GetDownloadUrlForLayer\n              - ecr:DescribeImages\n            Condition:\n              StringLike:\n                aws:sourceArn:\n                  Fn::Sub: arn:${AWS::Partition}:emr-serverless:${AWS::Region}:${AWS::AccountId}:/applications/*\n  FilePublishingRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: sts:AssumeRole\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n            Condition:\n              Fn::If:\n                - ShouldDenyExternalId\n                - \"Null\":\n                    sts:ExternalId: \"true\"\n                - Ref: AWS::NoValue\n          - Action: sts:TagSession\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:AssumeRole\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n                Condition:\n                  Fn::If:\n                    - ShouldDenyExternalId\n                    - \"Null\":\n                        sts:ExternalId: \"true\"\n                    - Ref: AWS::NoValue\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:TagSession\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n              - Ref: AWS::NoValue\n      RoleName:\n        Fn::Sub: cdk-${Qualifier}-file-publishing-role-${AWS::AccountId}-${AWS::Region}\n      Tags:\n        - Key: aws-cdk:bootstrap-role\n          Value: file-publishing\n  ImagePublishingRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: sts:AssumeRole\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n            Condition:\n              Fn::If:\n                - ShouldDenyExternalId\n                - \"Null\":\n                    sts:ExternalId: \"true\"\n                - Ref: AWS::NoValue\n          - Action: sts:TagSession\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:AssumeRole\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n                Condition:\n                  Fn::If:\n                    - ShouldDenyExternalId\n                    - \"Null\":\n                        sts:ExternalId: \"true\"\n                    - Ref: AWS::NoValue\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:TagSession\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n              - Ref: AWS::NoValue\n      RoleName:\n        Fn::Sub: cdk-${Qualifier}-image-publishing-role-${AWS::AccountId}-${AWS::Region}\n      Tags:\n        - Key: aws-cdk:bootstrap-role\n          Value: image-publishing\n  LookupRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: sts:AssumeRole\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n            Condition:\n              Fn::If:\n                - ShouldDenyExternalId\n                - \"Null\":\n                    sts:ExternalId: \"true\"\n                - Ref: AWS::NoValue\n          - Action: sts:TagSession\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n          - Fn::If:\n              - HasTrustedAccountsForLookup\n              - Action:\n                  - sts:AssumeRole\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccountsForLookup\n                Condition:\n                  Fn::If:\n                    - ShouldDenyExternalId\n                    - \"Null\":\n                        sts:ExternalId: \"true\"\n                    - Ref: AWS::NoValue\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccountsForLookup\n              - Action:\n                  - sts:TagSession\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccountsForLookup\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:AssumeRole\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n                Condition:\n                  Fn::If:\n                    - ShouldDenyExternalId\n                    - \"Null\":\n                        sts:ExternalId: \"true\"\n                    - Ref: AWS::NoValue\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:TagSession\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n              - Ref: AWS::NoValue\n      RoleName:\n        Fn::Sub: cdk-${Qualifier}-lookup-role-${AWS::AccountId}-${AWS::Region}\n      ManagedPolicyArns:\n        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/ReadOnlyAccess\n      Policies:\n        - PolicyDocument:\n            Statement:\n              - Sid: DontReadSecrets\n                Effect: Deny\n                Action:\n                  - kms:Decrypt\n                Resource: \"*\"\n            Version: \"2012-10-17\"\n          PolicyName: LookupRolePolicy\n      Tags:\n        - Key: aws-cdk:bootstrap-role\n          Value: lookup\n  FilePublishingRoleDefaultPolicy:\n    Type: AWS::IAM::Policy\n    Properties:\n      PolicyDocument:\n        Statement:\n          - Action:\n              - s3:GetObject*\n              - s3:GetBucket*\n              - s3:GetEncryptionConfiguration\n              - s3:List*\n              - s3:DeleteObject*\n              - s3:PutObject*\n              - s3:Abort*\n            Resource:\n              - Fn::Sub: ${StagingBucket.Arn}\n              - Fn::Sub: ${StagingBucket.Arn}/*\n            Condition:\n              StringEquals:\n                aws:ResourceAccount:\n                  - Fn::Sub: ${AWS::AccountId}\n            Effect: Allow\n          - Action:\n              - kms:Decrypt\n              - kms:DescribeKey\n              - kms:Encrypt\n              - kms:ReEncrypt*\n              - kms:GenerateDataKey*\n            Effect: Allow\n            Resource:\n              Fn::If:\n                - CreateNewKey\n                - Fn::Sub: ${FileAssetsBucketEncryptionKey.Arn}\n                - Fn::Sub: arn:${AWS::Partition}:kms:${AWS::Region}:${AWS::AccountId}:key/${FileAssetsBucketKmsKeyId}\n        Version: \"2012-10-17\"\n      Roles:\n        - Ref: FilePublishingRole\n      PolicyName:\n        Fn::Sub: cdk-${Qualifier}-file-publishing-role-default-policy-${AWS::AccountId}-${AWS::Region}\n  ImagePublishingRoleDefaultPolicy:\n    Type: AWS::IAM::Policy\n    Properties:\n      PolicyDocument:\n        Statement:\n          - Action:\n              - ecr:PutImage\n              - ecr:InitiateLayerUpload\n              - ecr:UploadLayerPart\n              - ecr:CompleteLayerUpload\n              - ecr:BatchCheckLayerAvailability\n              - ecr:DescribeRepositories\n              - ecr:DescribeImages\n              - ecr:BatchGetImage\n              - ecr:GetDownloadUrlForLayer\n            Resource:\n              Fn::Sub: ${ContainerAssetsRepository.Arn}\n            Effect: Allow\n          - Action:\n              - ecr:GetAuthorizationToken\n            Resource: \"*\"\n            Effect: Allow\n        Version: \"2012-10-17\"\n      Roles:\n        - Ref: ImagePublishingRole\n      PolicyName:\n        Fn::Sub: cdk-${Qualifier}-image-publishing-role-default-policy-${AWS::AccountId}-${AWS::Region}\n  DeploymentActionRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: sts:AssumeRole\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n            Condition:\n              Fn::If:\n                - ShouldDenyExternalId\n                - \"Null\":\n                    sts:ExternalId: \"true\"\n                - Ref: AWS::NoValue\n          - Action: sts:TagSession\n            Effect: Allow\n            Principal:\n              AWS:\n                Ref: AWS::AccountId\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:AssumeRole\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n                Condition:\n                  Fn::If:\n                    - ShouldDenyExternalId\n                    - \"Null\":\n                        sts:ExternalId: \"true\"\n                    - Ref: AWS::NoValue\n              - Ref: AWS::NoValue\n          - Fn::If:\n              - HasTrustedAccounts\n              - Action:\n                  - sts:TagSession\n                Effect: Allow\n                Principal:\n                  AWS:\n                    Ref: TrustedAccounts\n              - Ref: AWS::NoValue\n      Policies:\n        - PolicyDocument:\n            Statement:\n              - Sid: DeployPermissions\n                Effect: Allow\n                Action:\n                  - cloudformation:CreateChangeSet\n                  - cloudformation:DeleteChangeSet\n                  - cloudformation:ExecuteChangeSet\n                  - cloudformation:CreateStack\n                  - cloudformation:UpdateStack\n                  - cloudformation:RollbackStack\n                  - cloudformation:ContinueUpdateRollback\n                Resource: \"*\"\n              - Sid: PipelineCrossAccountArtifactsBucket\n                Effect: Allow\n                Action:\n                  - s3:GetObject*\n                  - s3:GetBucket*\n                  - s3:List*\n                  - s3:Abort*\n                  - s3:DeleteObject*\n                  - s3:PutObject*\n                Resource: \"*\"\n                Condition:\n                  StringNotEquals:\n                    s3:ResourceAccount:\n                      Ref: AWS::AccountId\n              - Sid: PipelineCrossAccountArtifactsKey\n                Effect: Allow\n                Action:\n                  - kms:Decrypt\n                  - kms:DescribeKey\n                  - kms:Encrypt\n                  - kms:ReEncrypt*\n                  - kms:GenerateDataKey*\n                Resource: \"*\"\n                Condition:\n                  StringEquals:\n                    kms:ViaService:\n                      Fn::Sub: s3.${AWS::Region}.amazonaws.com\n              - Action: iam:PassRole\n                Resource:\n                  Fn::Sub: ${CloudFormationExecutionRole.Arn}\n                Effect: Allow\n              - Sid: CliPermissions\n                Action:\n                  - cloudformation:DeleteStack\n                  - cloudformation:UpdateTerminationProtection\n                  - sts:GetCallerIdentity\n                Resource: \"*\"\n                Effect: Allow\n              - Sid: CliStagingBucket\n                Effect: Allow\n                Action:\n                  - s3:GetObject*\n                  - s3:GetBucket*\n                  - s3:List*\n                Resource:\n                  - Fn::Sub: ${StagingBucket.Arn}\n                  - Fn::Sub: ${StagingBucket.Arn}/*\n              - Sid: ReadVersion\n                Effect: Allow\n                Action:\n                  - ssm:GetParameter\n                  - ssm:GetParameters\n                Resource:\n                  - Fn::Sub: arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${CdkBootstrapVersion}\n              - Sid: Refactor\n                Effect: Allow\n                Action:\n                  - cloudformation:CreateStackRefactor\n                  - cloudformation:ExecuteStackRefactor\n                Resource: \"*\"\n            Version: \"2012-10-17\"\n          PolicyName: default\n      ManagedPolicyArns:\n        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AWSCloudFormationReadOnlyAccess\n      RoleName:\n        Fn::Sub: cdk-${Qualifier}-deploy-role-${AWS::AccountId}-${AWS::Region}\n      Tags:\n        - Key: aws-cdk:bootstrap-role\n          Value: deploy\n  CloudFormationExecutionRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Statement:\n          - Action: sts:AssumeRole\n            Effect: Allow\n            Principal:\n              Service: cloudformation.amazonaws.com\n        Version: \"2012-10-17\"\n      ManagedPolicyArns:\n        Fn::If:\n          - HasCloudFormationExecutionPolicies\n          - Ref: CloudFormationExecutionPolicies\n          - Fn::If:\n              - HasTrustedAccounts\n              - Ref: AWS::NoValue\n              - - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess\n      RoleName:\n        Fn::Sub: cdk-${Qualifier}-cfn-exec-role-${AWS::AccountId}-${AWS::Region}\n      PermissionsBoundary:\n        Fn::If:\n          - PermissionsBoundarySet\n          - Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${InputPermissionsBoundary}\n          - Ref: AWS::NoValue\n  CdkBoostrapPermissionsBoundaryPolicy:\n    Condition: ShouldCreatePermissionsBoundary\n    Type: AWS::IAM::ManagedPolicy\n    Properties:\n      PolicyDocument:\n        Statement:\n          - Sid: ExplicitAllowAll\n            Action:\n              - \"*\"\n            Effect: Allow\n            Resource: \"*\"\n          - Sid: DenyAccessIfRequiredPermBoundaryIsNotBeingApplied\n            Action:\n              - iam:CreateUser\n              - iam:CreateRole\n              - iam:PutRolePermissionsBoundary\n              - iam:PutUserPermissionsBoundary\n            Condition:\n              StringNotEquals:\n                iam:PermissionsBoundary:\n                  Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/cdk-${Qualifier}-permissions-boundary-${AWS::AccountId}-${AWS::Region}\n            Effect: Deny\n            Resource: \"*\"\n          - Sid: DenyPermBoundaryIAMPolicyAlteration\n            Action:\n              - iam:CreatePolicyVersion\n              - iam:DeletePolicy\n              - iam:DeletePolicyVersion\n              - iam:SetDefaultPolicyVersion\n            Effect: Deny\n            Resource:\n              Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/cdk-${Qualifier}-permissions-boundary-${AWS::AccountId}-${AWS::Region}\n          - Sid: DenyRemovalOfPermBoundaryFromAnyUserOrRole\n            Action:\n              - iam:DeleteUserPermissionsBoundary\n              - iam:DeleteRolePermissionsBoundary\n            Effect: Deny\n            Resource: \"*\"\n        Version: \"2012-10-17\"\n      Description: Bootstrap Permission Boundary\n      ManagedPolicyName:\n        Fn::Sub: cdk-${Qualifier}-permissions-boundary-${AWS::AccountId}-${AWS::Region}\n      Path: /\n  CdkBootstrapVersion:\n    Type: AWS::SSM::Parameter\n    Properties:\n      Type: String\n      Name:\n        Fn::Sub: /cdk-bootstrap/${Qualifier}/version\n      Value: \"32\"\nOutputs:\n  BucketName:\n    Description: The name of the S3 bucket owned by the CDK toolkit stack\n    Value:\n      Fn::Sub: ${StagingBucket}\n  BucketDomainName:\n    Description: The domain name of the S3 bucket owned by the CDK toolkit stack\n    Value:\n      Fn::Sub: ${StagingBucket.RegionalDomainName}\n  FileAssetKeyArn:\n    Description: The ARN of the KMS key used to encrypt the asset bucket (deprecated)\n    Value:\n      Fn::If:\n        - CreateNewKey\n        - Fn::Sub: ${FileAssetsBucketEncryptionKey.Arn}\n        - Fn::Sub: ${FileAssetsBucketKmsKeyId}\n    Export:\n      Name:\n        Fn::Sub: CdkBootstrap-${Qualifier}-FileAssetKeyArn\n  ImageRepositoryName:\n    Description: The name of the ECR repository which hosts docker image assets\n    Value:\n      Fn::Sub: ${ContainerAssetsRepository}\n  BootstrapVersion:\n    Description: The version of the bootstrap resources that are currently mastered in this stack\n    Value: \"32\"\n"
+  },
+  "CDKToolkit/list-stack-resources": {
+    "StackResourceSummaries": [
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:09.561000+00:00",
+        "LogicalResourceId": "CdkBootstrapVersion",
+        "PhysicalResourceId": "/cdk-bootstrap/hnb659fds/version",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::SSM::Parameter"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:26.606000+00:00",
+        "LogicalResourceId": "CloudFormationExecutionRole",
+        "PhysicalResourceId": "cdk-hnb659fds-cfn-exec-role-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:09.941000+00:00",
+        "LogicalResourceId": "ContainerAssetsRepository",
+        "PhysicalResourceId": "cdk-hnb659fds-container-assets-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::ECR::Repository"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:46.060000+00:00",
+        "LogicalResourceId": "DeploymentActionRole",
+        "PhysicalResourceId": "cdk-hnb659fds-deploy-role-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:26.774000+00:00",
+        "LogicalResourceId": "FilePublishingRole",
+        "PhysicalResourceId": "cdk-hnb659fds-file-publishing-role-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:43.637000+00:00",
+        "LogicalResourceId": "FilePublishingRoleDefaultPolicy",
+        "PhysicalResourceId": "CDKTo-FileP-Z67Rh9HkhvKD",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Policy"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:26.569000+00:00",
+        "LogicalResourceId": "ImagePublishingRole",
+        "PhysicalResourceId": "cdk-hnb659fds-image-publishing-role-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:43.657000+00:00",
+        "LogicalResourceId": "ImagePublishingRoleDefaultPolicy",
+        "PhysicalResourceId": "CDKTo-Image-HdFeVDSRk7Zk",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Policy"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:26.958000+00:00",
+        "LogicalResourceId": "LookupRole",
+        "PhysicalResourceId": "cdk-hnb659fds-lookup-role-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:23.303000+00:00",
+        "LogicalResourceId": "StagingBucket",
+        "PhysicalResourceId": "cdk-hnb659fds-assets-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::S3::Bucket"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T02:54:25.828000+00:00",
+        "LogicalResourceId": "StagingBucketPolicy",
+        "PhysicalResourceId": "cdk-hnb659fds-assets-280517746513-us-east-1",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::S3::BucketPolicy"
+      }
+    ]
+  },
+  "TellerBudgetStack/describe-stacks": {
+    "Stacks": [
+      {
+        "Capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_NAMED_IAM",
+          "CAPABILITY_AUTO_EXPAND"
+        ],
+        "ChangeSetId": "arn:aws:cloudformation:us-east-1:280517746513:changeSet/cdk-deploy-change-set/b5517b00-5a05-4611-856d-de2f719ff8e9",
+        "CreationTime": "2026-08-29T06:27:24.082000+00:00",
+        "DisableRollback": false,
+        "DriftInformation": {
+          "StackDriftStatus": "NOT_CHECKED"
+        },
+        "EnableTerminationProtection": false,
+        "LastUpdatedTime": "2026-08-29T16:55:39.025000+00:00",
+        "NotificationARNs": [],
+        "Parameters": [
+          {
+            "ParameterKey": "BootstrapVersion",
+            "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+            "ResolvedValue": "32"
+          }
+        ],
+        "RoleARN": "arn:aws:iam::280517746513:role/cdk-hnb659fds-cfn-exec-role-280517746513-us-east-1",
+        "RollbackConfiguration": {},
+        "StackId": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerBudgetStack/b2565e80-a372-11f1-8188-0e4cc7b64b41",
+        "StackName": "TellerBudgetStack",
+        "StackStatus": "UPDATE_COMPLETE",
+        "Tags": []
+      }
+    ]
+  },
+  "TellerBudgetStack/get-template": {
+    "StagesAvailable": [
+      "Original",
+      "Processed"
+    ],
+    "TemplateBody": {
+      "Parameters": {
+        "BootstrapVersion": {
+          "Default": "/cdk-bootstrap/hnb659fds/version",
+          "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+          "Type": "AWS::SSM::Parameter::Value<String>"
+        }
+      },
+      "Resources": {
+        "CDKMetadata": {
+          "Metadata": {
+            "aws:cdk:path": "TellerBudgetStack/CDKMetadata/Default"
+          },
+          "Properties": {
+            "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzIz1zNQTCwv1k1OydbNyUzSqw4uSUzO1kksL45PKk1JTy0p1nNOy3MCM2t18vJTUvWyivXLjIz0jIz1jBSzijMzdYtK80oyc1P1giA0AIHt6bVXAAAA"
+          },
+          "Type": "AWS::CDK::Metadata"
+        },
+        "MonthlyBudget": {
+          "Metadata": {
+            "aws:cdk:path": "TellerBudgetStack/MonthlyBudget"
+          },
+          "Properties": {
+            "Budget": {
+              "BudgetLimit": {
+                "Amount": 10,
+                "Unit": "USD"
+              },
+              "BudgetName": "teller-monthly",
+              "BudgetType": "COST",
+              "TimeUnit": "MONTHLY"
+            },
+            "NotificationsWithSubscribers": [
+              {
+                "Notification": {
+                  "ComparisonOperator": "GREATER_THAN",
+                  "NotificationType": "ACTUAL",
+                  "Threshold": 100,
+                  "ThresholdType": "PERCENTAGE"
+                },
+                "Subscribers": [
+                  {
+                    "Address": "affanyasir9@gmail.com",
+                    "SubscriptionType": "EMAIL"
+                  }
+                ]
+              }
+            ]
+          },
+          "Type": "AWS::Budgets::Budget"
+        }
+      },
+      "Rules": {
+        "CheckBootstrapVersion": {
+          "Assertions": [
+            {
+              "Assert": {
+                "Fn::Not": [
+                  {
+                    "Fn::Contains": [
+                      [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ],
+                      {
+                        "Ref": "BootstrapVersion"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "TellerBudgetStack/list-stack-resources": {
+    "StackResourceSummaries": [
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:55:42.577000+00:00",
+        "LogicalResourceId": "CDKMetadata",
+        "PhysicalResourceId": "b2565e80-a372-11f1-8188-0e4cc7b64b41",
+        "ResourceStatus": "UPDATE_COMPLETE",
+        "ResourceType": "AWS::CDK::Metadata"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T06:27:33.126000+00:00",
+        "LogicalResourceId": "MonthlyBudget",
+        "PhysicalResourceId": "teller-monthly",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::Budgets::Budget"
+      }
+    ]
+  },
+  "TellerGithubOidcStack/describe-stacks": {
+    "Stacks": [
+      {
+        "Capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_NAMED_IAM",
+          "CAPABILITY_AUTO_EXPAND"
+        ],
+        "ChangeSetId": "arn:aws:cloudformation:us-east-1:280517746513:changeSet/cdk-deploy-change-set/fa4da4a5-93e1-4f56-a204-b9edce713a64",
+        "CreationTime": "2026-08-29T16:36:36.782000+00:00",
+        "DisableRollback": false,
+        "DriftInformation": {
+          "StackDriftStatus": "NOT_CHECKED"
+        },
+        "EnableTerminationProtection": false,
+        "LastUpdatedTime": "2026-08-29T16:43:52.503000+00:00",
+        "NotificationARNs": [],
+        "Outputs": [
+          {
+            "Description": "Set this ARN as the GitHub repository variable AWS_ROLE_ARN",
+            "OutputKey": "GithubDeployRoleArn",
+            "OutputValue": "arn:aws:iam::280517746513:role/teller-github-deploy"
+          }
+        ],
+        "Parameters": [
+          {
+            "ParameterKey": "BootstrapVersion",
+            "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+            "ResolvedValue": "32"
+          }
+        ],
+        "RoleARN": "arn:aws:iam::280517746513:role/cdk-hnb659fds-cfn-exec-role-280517746513-us-east-1",
+        "RollbackConfiguration": {},
+        "StackId": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerGithubOidcStack/cd745a50-a3c7-11f1-a5ce-0affe1409a8b",
+        "StackName": "TellerGithubOidcStack",
+        "StackStatus": "UPDATE_COMPLETE",
+        "Tags": []
+      }
+    ]
+  },
+  "TellerGithubOidcStack/get-template": {
+    "StagesAvailable": [
+      "Original",
+      "Processed"
+    ],
+    "TemplateBody": {
+      "Outputs": {
+        "GithubDeployRoleArn": {
+          "Description": "Set this ARN as the GitHub repository variable AWS_ROLE_ARN",
+          "Value": {
+            "Fn::GetAtt": [
+              "GithubDeployRoleB0CF66A5",
+              "Arn"
+            ]
+          }
+        }
+      },
+      "Parameters": {
+        "BootstrapVersion": {
+          "Default": "/cdk-bootstrap/hnb659fds/version",
+          "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+          "Type": "AWS::SSM::Parameter::Value<String>"
+        }
+      },
+      "Resources": {
+        "CDKMetadata": {
+          "Metadata": {
+            "aws:cdk:path": "TellerGithubOidcStack/CDKMetadata/Default"
+          },
+          "Properties": {
+            "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzIz1zNQTCwv1k1OydbNyUzSqw4uSUzO1glKLc4vLUpO1QHKxWcm5upVB+XnpOo4p+WB6YD8nMzkShAXwqoFMf1LSwpKS2p18vJTUvWyivXLjIz1DA2A5mcVZ2bqFpXmlWTmpuoFQWgAnyUG3XwAAAA="
+          },
+          "Type": "AWS::CDK::Metadata"
+        },
+        "GithubDeployRoleB0CF66A5": {
+          "Metadata": {
+            "aws:cdk:path": "TellerGithubOidcStack/GithubDeployRole/Resource"
+          },
+          "Properties": {
+            "AssumeRolePolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "sts:AssumeRoleWithWebIdentity",
+                  "Condition": {
+                    "StringEquals": {
+                      "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+                    },
+                    "StringLike": {
+                      "token.actions.githubusercontent.com:sub": [
+                        "repo:Aly700/teller:ref:refs/heads/main",
+                        "repo:Aly700@*/teller@*:ref:refs/heads/main"
+                      ]
+                    }
+                  },
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Federated": "arn:aws:iam::280517746513:oidc-provider/token.actions.githubusercontent.com"
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "Description": "GitHub Actions deployment role for Teller main",
+            "RoleName": "teller-github-deploy"
+          },
+          "Type": "AWS::IAM::Role"
+        },
+        "GithubDeployRoleDefaultPolicyE8F540D1": {
+          "Metadata": {
+            "aws:cdk:path": "TellerGithubOidcStack/GithubDeployRole/DefaultPolicy/Resource"
+          },
+          "Properties": {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "ecr:GetAuthorizationToken",
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:CompleteLayerUpload",
+                    "ecr:CreateRepository",
+                    "ecr:DescribeRepositories",
+                    "ecr:InitiateLayerUpload",
+                    "ecr:PutImage",
+                    "ecr:UploadLayerPart"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":ecr:us-east-1:280517746513:repository/teller"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": "sts:AssumeRole",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::280517746513:role/cdk-*-280517746513-us-east-1"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": [
+                    "cloudformation:DescribeStacks",
+                    "cloudformation:ListStacks"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "GithubDeployRoleDefaultPolicyE8F540D1",
+            "Roles": [
+              {
+                "Ref": "GithubDeployRoleB0CF66A5"
+              }
+            ]
+          },
+          "Type": "AWS::IAM::Policy"
+        }
+      },
+      "Rules": {
+        "CheckBootstrapVersion": {
+          "Assertions": [
+            {
+              "Assert": {
+                "Fn::Not": [
+                  {
+                    "Fn::Contains": [
+                      [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ],
+                      {
+                        "Ref": "BootstrapVersion"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "TellerGithubOidcStack/list-stack-resources": {
+    "StackResourceSummaries": [
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:36:46.275000+00:00",
+        "LogicalResourceId": "CDKMetadata",
+        "PhysicalResourceId": "cd745a50-a3c7-11f1-a5ce-0affe1409a8b",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::CDK::Metadata"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:44:11.888000+00:00",
+        "LogicalResourceId": "GithubDeployRoleB0CF66A5",
+        "PhysicalResourceId": "teller-github-deploy",
+        "ResourceStatus": "UPDATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Role"
+      },
+      {
+        "DriftInformation": {
+          "StackResourceDriftStatus": "NOT_CHECKED"
+        },
+        "LastUpdatedTimestamp": "2026-08-29T16:37:20.330000+00:00",
+        "LogicalResourceId": "GithubDeployRoleDefaultPolicyE8F540D1",
+        "PhysicalResourceId": "Telle-Githu-cvW3hrhpKa2I",
+        "ResourceStatus": "CREATE_COMPLETE",
+        "ResourceType": "AWS::IAM::Policy"
+      }
+    ]
+  },
+  "oidc/provider": {
+    "ClientIDList": [
+      "sts.amazonaws.com"
+    ],
+    "CreateDate": "2026-08-29T16:35:51.818000+00:00",
+    "Tags": [],
+    "ThumbprintList": [
+      "ab9d0263244dd0326eb67015705a667e79cfe998"
+    ],
+    "Url": "token.actions.githubusercontent.com"
+  }
+}

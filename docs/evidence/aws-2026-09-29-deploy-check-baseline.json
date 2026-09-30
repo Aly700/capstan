@@ -1,0 +1,137 @@
+{
+  "capturedAt": "2026-09-30T02:47:30.697Z",
+  "identity": {
+    "UserId": "AIDAUCUBJD5I3SE7YKEG6",
+    "Account": "280517746513",
+    "Arn": "arn:aws:iam::280517746513:user/agentops-deployer"
+  },
+  "resources": {
+    "ecsActiveTaskDefinitions": [],
+    "stacks": [
+      {
+        "Name": "TellerGithubOidcStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerGithubOidcStack/cd745a50-a3c7-11f1-a5ce-0affe1409a8b",
+        "Created": "2026-08-29T16:36:36.782000+00:00",
+        "Updated": "2026-08-29T16:43:52.503000+00:00"
+      },
+      {
+        "Name": "AgentOpsGithubOidcStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsGithubOidcStack/9b40a340-a3c7-11f1-af75-0affeb0dfddb",
+        "Created": "2026-08-29T16:35:12.619000+00:00",
+        "Updated": "2026-08-29T16:43:14.148000+00:00"
+      },
+      {
+        "Name": "TellerBudgetStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/TellerBudgetStack/b2565e80-a372-11f1-8188-0e4cc7b64b41",
+        "Created": "2026-08-29T06:27:24.082000+00:00",
+        "Updated": "2026-08-29T16:55:39.025000+00:00"
+      },
+      {
+        "Name": "AgentOpsBudgetStack",
+        "Status": "UPDATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/AgentOpsBudgetStack/870b4680-a36a-11f1-a950-0e8283057ca7",
+        "Created": "2026-08-29T05:28:55.502000+00:00",
+        "Updated": "2026-08-29T16:53:28.934000+00:00"
+      },
+      {
+        "Name": "CDKToolkit",
+        "Status": "CREATE_COMPLETE",
+        "Id": "arn:aws:cloudformation:us-east-1:280517746513:stack/CDKToolkit/e2959430-a354-11f1-85f2-0efed3660b7d",
+        "Created": "2026-08-29T02:54:00.052000+00:00",
+        "Updated": "2026-08-29T02:54:05.909000+00:00"
+      }
+    ],
+    "ecsClusters": [],
+    "taggedResources": [
+      {
+        "ResourceARN": "arn:aws:ecs:us-east-1:280517746513:cluster/capstan",
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "capstan"
+          },
+          {
+            "Key": "aws:cloudformation:stack-name",
+            "Value": "CapstanService"
+          },
+          {
+            "Key": "aws:cloudformation:stack-id",
+            "Value": "arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/9a8158b0-bb72-11f1-b977-0affd6b97895"
+          },
+          {
+            "Key": "aws:cloudformation:logical-id",
+            "Value": "ClusterEB0386A7"
+          }
+        ]
+      }
+    ],
+    "ecsInactiveTaskDefinitions": [],
+    "ecsDeletingTaskDefinitions": [],
+    "databases": [],
+    "databaseSubnetGroups": [],
+    "secrets": [],
+    "ecr": [],
+    "databaseSnapshots": [],
+    "cloudMapNamespaces": [],
+    "cloudMapServices": [],
+    "hostedZones": [],
+    "apis": [],
+    "vpcLinks": [],
+    "namedEnis": [],
+    "taggedEndpoints": [],
+    "taggedEnis": [],
+    "vpcs": [],
+    "topics": [],
+    "alarms": [],
+    "logGroups": [],
+    "securityGroups": [],
+    "rules": [],
+    "roles": [],
+    "functions": [],
+    "budgets": [],
+    "policies": [],
+    "sharedOidcProvider": {
+      "Url": "token.actions.githubusercontent.com",
+      "Clients": [
+        "sts.amazonaws.com"
+      ]
+    }
+  },
+  "errors": {},
+  "commands": [
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 sts get-caller-identity --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 resourcegroupstaggingapi get-resources --tag-filters Key=Project,Values=capstan --query ResourceTagMappingList --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudformation describe-stacks --query Stacks[].{Name:StackName,Status:StackStatus,Id:StackId,Created:CreationTime,Updated:LastUpdatedTime} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-clusters --query clusterArns[?contains(@, '/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status ACTIVE --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status INACTIVE --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --status DELETE_IN_PROGRESS --query taskDefinitionArns[?contains(@, ':task-definition/capstan')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-instances --query DBInstances[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBInstanceIdentifier,Arn:DBInstanceArn,Status:DBInstanceStatus} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-subnet-groups --query DBSubnetGroups[?contains(DBSubnetGroupName, 'capstan')].{Name:DBSubnetGroupName,Vpc:VpcId} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 rds describe-db-snapshots --query DBSnapshots[?contains(DBInstanceIdentifier, 'capstan')].{Id:DBSnapshotIdentifier,Status:Status,Type:SnapshotType} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecr describe-repositories --query repositories[?contains(repositoryName, 'capstan')].{Name:repositoryName,Arn:repositoryArn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 secretsmanager list-secrets --include-planned-deletion --filters Key=name,Values=capstan/ --query SecretList[].{Name:Name,Arn:ARN,Deleted:DeletedDate} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 servicediscovery list-namespaces --query Namespaces[?contains(Name, 'capstan')].{Id:Id,Name:Name,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 servicediscovery list-services --query Services[?Name=='server' || contains(Name, 'capstan')].{Id:Id,Name:Name,Arn:Arn,Instances:InstanceCount} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 route53 list-hosted-zones --query HostedZones[?contains(Name, 'capstan')].{Id:Id,Name:Name,Private:Config.PrivateZone} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 apigatewayv2 get-apis --query Items[?contains(Name, 'capstan')].{Id:ApiId,Name:Name} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 apigatewayv2 get-vpc-links --query Items[?contains(Name, 'capstan')].{Id:VpcLinkId,Name:Name,Status:VpcLinkStatus} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-vpcs --filters Name=tag:Project,Values=capstan --query Vpcs[].{Id:VpcId,State:State,Tags:Tags} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-vpc-endpoints --filters Name=tag:Project,Values=capstan --query VpcEndpoints[].{Id:VpcEndpointId,Vpc:VpcId,State:State} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-network-interfaces --filters Name=tag:Project,Values=capstan --query NetworkInterfaces[].{Id:NetworkInterfaceId,Vpc:VpcId,Status:Status} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-network-interfaces --query NetworkInterfaces[?contains(Description, 'capstan') || contains(Description, 'Capstan')].{Id:NetworkInterfaceId,Vpc:VpcId,Status:Status,Description:Description} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ec2 describe-security-groups --filters Name=tag:Project,Values=capstan --query SecurityGroups[].{Id:GroupId,Name:GroupName,Vpc:VpcId} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 logs describe-log-groups --query logGroups[?contains(logGroupName, 'capstan')].{Name:logGroupName,StoredBytes:storedBytes} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 cloudwatch describe-alarms --alarm-name-prefix capstan- --query MetricAlarms[].{Name:AlarmName,State:StateValue} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 sns list-topics --query Topics[?contains(TopicArn, ':capstan-')] --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 lambda list-functions --query Functions[?starts_with(FunctionName, 'capstan-')].{Name:FunctionName,Arn:FunctionArn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 events list-rules --name-prefix capstan- --query Rules[].{Name:Name,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 budgets describe-budgets --account-id 280517746513 --query Budgets[?starts_with(BudgetName, 'capstan-')].{Name:BudgetName,Limit:BudgetLimit} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam list-roles --query Roles[?starts_with(RoleName, 'capstan-')].{Name:RoleName,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam list-policies --scope Local --query Policies[?starts_with(PolicyName, 'capstan-')].{Name:PolicyName,Arn:Arn} --output json",
+    "AWS_PROFILE=agentops aws --profile agentops --region us-east-1 iam get-open-id-connect-provider --open-id-connect-provider-arn arn:aws:iam::280517746513:oidc-provider/token.actions.githubusercontent.com --query {Url:Url,Clients:ClientIDList} --output json"
+  ]
+}

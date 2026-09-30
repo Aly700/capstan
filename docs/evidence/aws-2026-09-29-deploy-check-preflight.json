@@ -1,0 +1,25 @@
+{
+  "localSha": "dc92bff775e8c99036c6dd3369c14084bc795b9a",
+  "branch": "lane/deploycheck",
+  "nodeVersion": "26.8.1",
+  "goToolchain": "go1.26.4",
+  "infraTypecheck": "passed",
+  "infraTests": 26,
+  "cleanupWatchdogTaskdefsTests": 18,
+  "sharedPostgresUsed": false,
+  "awsEnvironment": "all ambient AWS_* removed before explicitly setting agentops/us-east-1",
+  "oidcSubject": "repo:Aly700@112176329/capstan@1392801248:ref:refs/heads/main",
+  "foundationIamReview": "reviewed cdk diff and infra/lib/oidc.ts; imported provider, exact main-only trust, capstan resource families and scoped workload permissions boundary",
+  "watchdogSource": "scripts/demo-codex-lanes-aws-watchdog.mjs",
+  "watchdogSessionCopyChanges": [
+    "session receipt path for this session",
+    "local relative import of evidence-lib.mjs",
+    "warning at 60 minutes",
+    "teardown at 90 minutes",
+    "session hardDeadline at 120 minutes"
+  ],
+  "keyFileMode": "0600",
+  "apiKeyUploaded": false,
+  "hashOnlyUploaded": true,
+  "deployRunUrl": "https://github.com/Aly700/capstan/actions/runs/36662235038"
+}

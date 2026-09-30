@@ -1,0 +1,54 @@
+Local proof is absent or has verified worker/lane cleanup. AWS teardown may begin.
+Saved cleanup-before inventory: /Users/affan/Projects/capstan--deploycheck/docs/evidence/aws-2026-09-29-deploy-check-cleanup-before.json
+2026-09-30T03:06:22.788Z Destroy starting; AWS_PROFILE=agentops, account 280517746513, region us-east-1.
+$ AWS_PROFILE=agentops /Users/affan/.hermes/node/bin/node /Users/affan/Projects/capstan--deploycheck/infra/node_modules/aws-cdk/bin/cdk destroy CapstanService --force --profile agentops --no-lookups -c imageTag=cleanup -c budgetEmail=affanyasir9@gmail.com -c existingGithubProvider=true (wait limit 900s)
+AI agent detected
+CapstanService: destroying... [1/1]
+✅  CapstanService: destroyed
+$ AWS_PROFILE=agentops /Users/affan/.hermes/node/bin/node /Users/affan/Projects/capstan--deploycheck/infra/node_modules/aws-cdk/bin/cdk destroy CapstanData --force --profile agentops --no-lookups -c imageTag=cleanup -c budgetEmail=affanyasir9@gmail.com -c existingGithubProvider=true (wait limit 900s)
+AI agent detected
+Including depending stacks: CapstanService
+CapstanService: destroying... [1/2]
+✅  CapstanService: destroyed
+CapstanData: destroying... [2/2]
+✅  CapstanData: destroyed
+$ AWS_PROFILE=agentops /Users/affan/.hermes/node/bin/node /Users/affan/Projects/capstan--deploycheck/infra/node_modules/aws-cdk/bin/cdk destroy CapstanNetwork CapstanBudget --force --profile agentops --no-lookups -c imageTag=cleanup -c budgetEmail=affanyasir9@gmail.com -c existingGithubProvider=true (wait limit 900s)
+AI agent detected
+Including depending stacks: CapstanData, CapstanService
+CapstanService: destroying... [1/4]
+✅  CapstanService: destroyed
+CapstanData: destroying... [2/4]
+✅  CapstanData: destroyed
+CapstanBudget: destroying... [3/4]
+✅  CapstanBudget: destroyed
+CapstanNetwork: destroying... [4/4]
+✅  CapstanNetwork: destroyed
+$ AWS_PROFILE=agentops /Users/affan/.hermes/node/bin/node /Users/affan/Projects/capstan--deploycheck/infra/node_modules/aws-cdk/bin/cdk destroy CapstanGithubOidc --force --profile agentops --no-lookups -c imageTag=cleanup -c budgetEmail=affanyasir9@gmail.com -c existingGithubProvider=true (wait limit 900s)
+AI agent detected
+Including depending stacks: CapstanService
+CapstanService: destroying... [1/2]
+✅  CapstanService: destroyed
+CapstanGithubOidc: destroying... [2/2]
+✅  CapstanGithubOidc: destroyed
+$ AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs list-task-definitions --family-prefix capstan-server --status INACTIVE
+$ AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3 --include TAGS
+$ AWS_PROFILE=agentops aws --profile agentops --region us-east-1 ecs delete-task-definitions --task-definitions arn:aws:ecs:us-east-1:280517746513:task-definition/capstan-server:3
+Requested deletion of owned inactive task definitions; the final inventory also checks DELETE_IN_PROGRESS.
+Removed GitHub variable CAPSTAN_AWS_ACCOUNT_ID
+Removed GitHub variable CAPSTAN_BUDGET_EMAIL
+Removed GitHub variable CAPSTAN_DEPLOY_ROLE_ARN
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: deployment variables remain
+    at file:///Users/affan/Projects/capstan--deploycheck/scripts/demo-codex-lanes-aws-cleanup.mjs:81:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

@@ -1,0 +1,37 @@
+[
+  {
+    "file": "aws-2026-09-29-deploy-check-cleanup.log",
+    "sourceSha256": "d3e12e627cb5efbb41edf4c215d99188b1fe57af1d3dfcdf429ec976892b4180",
+    "exportSha256": "d3e12e627cb5efbb41edf4c215d99188b1fe57af1d3dfcdf429ec976892b4180",
+    "lines": 54,
+    "normalization": "trailing whitespace and line endings only; all log lines retained"
+  },
+  {
+    "file": "aws-2026-09-29-deploy-check-deploy.log",
+    "sourceSha256": "b9abea6c5991f7d4be0ca1abb066ee47798a90d221d5fccf68375b168bef8a50",
+    "exportSha256": "bdc6ebeb64afe51c7ca2ac0c7ba1b1f4269fa66449ceff12c0f079bf61fb1fea",
+    "lines": 959,
+    "normalization": "trailing whitespace and line endings only; all log lines retained"
+  },
+  {
+    "file": "aws-2026-09-29-deploy-check-foundation.log",
+    "sourceSha256": "f1f5fb277ad2c1b9290329f2fe694ac0a9eabb3f321807fb09a02e0d3b892e38",
+    "exportSha256": "f1f5fb277ad2c1b9290329f2fe694ac0a9eabb3f321807fb09a02e0d3b892e38",
+    "lines": 65,
+    "normalization": "trailing whitespace and line endings only; all log lines retained"
+  },
+  {
+    "file": "aws-2026-09-29-deploy-check-watchdog.log",
+    "sourceSha256": "3c9dc25df713057e8e10b5993fe4a7f5271344501cf40b53046d40be97141dcc",
+    "exportSha256": "3c9dc25df713057e8e10b5993fe4a7f5271344501cf40b53046d40be97141dcc",
+    "lines": 1,
+    "normalization": "trailing whitespace and line endings only; all log lines retained"
+  },
+  {
+    "file": "aws-2026-09-29-deploy-check-worker.log",
+    "sourceSha256": "9bea126490353fe81e3d8d2e5b3c5d286f011e4c7b3d80c88819e2f349d98e2c",
+    "exportSha256": "9bea126490353fe81e3d8d2e5b3c5d286f011e4c7b3d80c88819e2f349d98e2c",
+    "lines": 1,
+    "normalization": "trailing whitespace and line endings only; all log lines retained"
+  }
+]

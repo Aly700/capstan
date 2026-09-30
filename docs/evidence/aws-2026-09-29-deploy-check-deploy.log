@@ -1,0 +1,959 @@
+deploy	Set up job	﻿2026-09-30T02:57:54.2611545Z Current runner version: '2.337.0'
+deploy	Set up job	2026-09-30T02:57:54.2634248Z ##[group]Runner Image Provisioner
+deploy	Set up job	2026-09-30T02:57:54.2635049Z Hosted Compute Agent
+deploy	Set up job	2026-09-30T02:57:54.2635533Z Version: 20260901.588
+deploy	Set up job	2026-09-30T02:57:54.2636121Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+deploy	Set up job	2026-09-30T02:57:54.2636788Z Build Date: 2026-09-01T19:56:44Z
+deploy	Set up job	2026-09-30T02:57:54.2637362Z Worker ID: {51e481f6-cfee-44b2-8e41-cb66f4fc0165}
+deploy	Set up job	2026-09-30T02:57:54.2638109Z Azure Region: westus3
+deploy	Set up job	2026-09-30T02:57:54.2638595Z ##[endgroup]
+deploy	Set up job	2026-09-30T02:57:54.2640126Z ##[group]Operating System
+deploy	Set up job	2026-09-30T02:57:54.2640839Z Ubuntu
+deploy	Set up job	2026-09-30T02:57:54.2641469Z 24.04.5
+deploy	Set up job	2026-09-30T02:57:54.2642056Z LTS
+deploy	Set up job	2026-09-30T02:57:54.2642492Z ##[endgroup]
+deploy	Set up job	2026-09-30T02:57:54.2643009Z ##[group]Runner Image
+deploy	Set up job	2026-09-30T02:57:54.2643547Z Image: ubuntu-24.04
+deploy	Set up job	2026-09-30T02:57:54.2644020Z Version: 20260927.320.1
+deploy	Set up job	2026-09-30T02:57:54.2644902Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+deploy	Set up job	2026-09-30T02:57:54.2646388Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+deploy	Set up job	2026-09-30T02:57:54.2647183Z ##[endgroup]
+deploy	Set up job	2026-09-30T02:57:54.2648234Z ##[group]GITHUB_TOKEN Permissions
+deploy	Set up job	2026-09-30T02:57:54.2650383Z Contents: read
+deploy	Set up job	2026-09-30T02:57:54.2651148Z Metadata: read
+deploy	Set up job	2026-09-30T02:57:54.2651669Z ##[endgroup]
+deploy	Set up job	2026-09-30T02:57:54.2653484Z Secret source: Actions
+deploy	Set up job	2026-09-30T02:57:54.2654287Z Cache mode: write
+deploy	Set up job	2026-09-30T02:57:54.2655006Z Prepare workflow directory
+deploy	Set up job	2026-09-30T02:57:54.3792376Z Prepare all required actions
+deploy	Set up job	2026-09-30T02:57:54.3859663Z Getting action download info
+deploy	Set up job	2026-09-30T02:57:54.7284132Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+deploy	Set up job	2026-09-30T02:57:54.8397063Z Download action repository 'actions/setup-node@v7' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+deploy	Set up job	2026-09-30T02:57:55.0004180Z Download action repository 'docker/setup-buildx-action@v4' (SHA:f87e5991a6d7451dcb8d9637bfbc97413f497069)
+deploy	Set up job	2026-09-30T02:57:55.8127666Z Download action repository 'aws-actions/configure-aws-credentials@v6' (SHA:e1253824e5c10ff9df46874f81ed3ec929e19cfd)
+deploy	Set up job	2026-09-30T02:57:56.5138045Z Complete job name: deploy
+deploy	Run actions/checkout@v7	﻿2026-09-30T02:57:56.5666886Z ##[group]Run actions/checkout@v7
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5667640Z with:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5668182Z   repository: Aly700/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5670659Z   token: ***
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5671038Z   ssh-strict: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5671420Z   ssh-user: git
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5671844Z   persist-credentials: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5672237Z   clean: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5672622Z   sparse-checkout-cone-mode: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5673045Z   fetch-depth: 1
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5673426Z   fetch-tags: false
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5673810Z   show-progress: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5674373Z   lfs: false
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5674775Z   submodules: false
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5675161Z   set-safe-directory: true
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5675601Z   allow-unsafe-pr-checkout: false
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5676179Z env:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5676575Z   AWS_REGION: us-east-1
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5677186Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5677713Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5678405Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5678849Z   GATE_URL:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.5679207Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6586341Z Syncing repository: Aly700/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6603091Z ##[group]Getting Git version info
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6609033Z Working directory is '/home/runner/work/capstan/capstan'
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6619374Z [command]/usr/bin/git version
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6720332Z git version 2.55.0
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6724219Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6732049Z Temporarily overriding HOME='/home/runner/work/_temp/cc952146-4fa7-4de1-b457-224f94ba8439' before making global git config changes
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6733333Z Adding repository directory to the temporary git global config as a safe directory
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6752857Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/capstan/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6816529Z Deleting the contents of '/home/runner/work/capstan/capstan'
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6818578Z ##[group]Determining repository object format
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6820291Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6821522Z ##[group]Initializing the repository
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6835085Z [command]/usr/bin/git init /home/runner/work/capstan/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6968711Z hint: Using 'master' as the name for the initial branch. This default branch name
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6970765Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6973673Z hint: to use in all of your new repositories, which will suppress this warning,
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6975452Z hint: call:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6976891Z hint:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6978563Z hint: 	git config --global init.defaultBranch <name>
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6989196Z hint:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6990061Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6991085Z hint: 'development'. The just-created branch can be renamed via this command:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6991866Z hint:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6992549Z hint: 	git branch -m <name>
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6993153Z hint:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6993908Z hint: Disable this message with "git config set advice.defaultBranchName false"
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6994927Z Initialized empty Git repository in /home/runner/work/capstan/capstan/.git/
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.6996792Z [command]/usr/bin/git remote add origin https://github.com/Aly700/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7031649Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7032769Z ##[group]Disabling automatic garbage collection
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7034855Z [command]/usr/bin/git config --local gc.auto 0
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7088260Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7089356Z ##[group]Setting up auth
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7090451Z Removing SSH command configuration
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7091586Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7144022Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7706089Z Removing HTTP extra header
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7708222Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7712388Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7781862Z Removing includeIf entries pointing to credentials config files
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7785052Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7816872Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.7982186Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8011993Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/capstan/capstan/.git.path /home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8036590Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/capstan/capstan/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8065035Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8092800Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8116411Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8117630Z ##[group]Fetching the repository
+deploy	Run actions/checkout@v7	2026-09-30T02:57:56.8122134Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dc92bff775e8c99036c6dd3369c14084bc795b9a:refs/remotes/origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7781867Z From https://github.com/Aly700/capstan
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7792043Z  * [new ref]         dc92bff775e8c99036c6dd3369c14084bc795b9a -> origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7827781Z [command]/usr/bin/git branch --list --remote origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7833297Z   origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7840398Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7856868Z dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7869246Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7869922Z ##[group]Determining the checkout info
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7870645Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7879919Z [command]/usr/bin/git sparse-checkout disable
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7942605Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7973446Z ##[group]Checking out the ref
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.7974085Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.8667036Z Switched to a new branch 'main'
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.8676105Z branch 'main' set up to track 'origin/main'.
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.8718888Z ##[endgroup]
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.8751723Z [command]/usr/bin/git log -1 --format=%H
+deploy	Run actions/checkout@v7	2026-09-30T02:57:58.8784809Z dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Require integrated server and deployment configuration	﻿2026-09-30T02:57:58.8968640Z ##[group]Run if grep -Fq 'not implemented yet (server lane)' cmd/capstan-server/main.go; then
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8969232Z [36;1mif grep -Fq 'not implemented yet (server lane)' cmd/capstan-server/main.go; then[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8969707Z [36;1m  echo 'The server stub cannot be deployed. Integrate and verify the server first.' >&2[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8970070Z [36;1m  exit 1[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8970276Z [36;1mfi[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8970467Z [36;1mtest -n "$AWS_ACCOUNT_ID"[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.8970704Z [36;1mtest -n "$BUDGET_EMAIL"[0m
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9132021Z shell: /usr/bin/bash -e {0}
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9132294Z env:
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9132479Z   AWS_REGION: us-east-1
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9132694Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9132964Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9133263Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9133481Z   GATE_URL:
+deploy	Require integrated server and deployment configuration	2026-09-30T02:57:58.9133657Z ##[endgroup]
+deploy	Run actions/setup-node@v7	﻿2026-09-30T02:57:58.9291298Z ##[group]Run actions/setup-node@v7
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9291546Z with:
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9291734Z   node-version: 26
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9291916Z   cache: npm
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9292140Z   cache-dependency-path: infra/package-lock.json
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9292398Z   check-latest: false
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9294321Z   token: ***
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9294507Z   package-manager-cache: true
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9294734Z env:
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9294901Z   AWS_REGION: us-east-1
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9295096Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9295332Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9295592Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9295804Z   GATE_URL:
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:58.9295972Z ##[endgroup]
+deploy	Run actions/setup-node@v7	2026-09-30T02:57:59.0394995Z Attempting to download 26...
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:00.0234803Z Acquiring 26.10.0 - x64 from https://github.com/actions/node-versions/releases/download/26.10.0-35737674515/node-26.10.0-linux-x64.tar.gz
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:00.7550046Z Extracting ...
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:00.7666069Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/8c48c27c-7909-4583-ae01-9da25692a7ce -f /home/runner/work/_temp/e24ac07e-480f-49a0-8dda-b5baf1a1a75b
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:02.1510102Z Adding to the cache ...
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:08.8446458Z ##[group]Environment details
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.0615950Z node: v26.10.0
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.0616555Z npm: 11.19.1
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.0616820Z yarn: 1.22.22
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.0617459Z ##[endgroup]
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.0629004Z [command]/opt/hostedtoolcache/node/26.10.0/x64/bin/npm config get cache
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.1489279Z /home/runner/.npm
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:09.3628970Z Cache hit for: node-cache-Linux-x64-npm-bdd64b42017821eb4ee65f486ab39efa657fcf54738d640e119919dcfcc9154e
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:10.5899325Z Received 29360128 of 77794195 (37.7%), 28.0 MBs/sec
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:10.9778178Z Received 77794195 of 77794195 (100.0%), 53.4 MBs/sec
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:10.9779265Z Cache Size: ~74 MB (77794195 B)
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:10.9829555Z [command]/usr/bin/tar -xf /home/runner/work/_temp/092de75f-0879-4446-a654-adedd1db6caa/cache.tzst -P -C /home/runner/work/capstan/capstan --use-compress-program unzstd
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:11.0608526Z Cache restored successfully
+deploy	Run actions/setup-node@v7	2026-09-30T02:58:11.0643643Z Cache restored from key: node-cache-Linux-x64-npm-bdd64b42017821eb4ee65f486ab39efa657fcf54738d640e119919dcfcc9154e
+deploy	Run npm ci	﻿2026-09-30T02:58:11.0782437Z ##[group]Run npm ci
+deploy	Run npm ci	2026-09-30T02:58:11.0782675Z [36;1mnpm ci[0m
+deploy	Run npm ci	2026-09-30T02:58:11.0819623Z shell: /usr/bin/bash -e {0}
+deploy	Run npm ci	2026-09-30T02:58:11.0819893Z env:
+deploy	Run npm ci	2026-09-30T02:58:11.0820082Z   AWS_REGION: us-east-1
+deploy	Run npm ci	2026-09-30T02:58:11.0820292Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run npm ci	2026-09-30T02:58:11.0820546Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run npm ci	2026-09-30T02:58:11.0820826Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run npm ci	2026-09-30T02:58:11.0821061Z   GATE_URL:
+deploy	Run npm ci	2026-09-30T02:58:11.0821240Z ##[endgroup]
+deploy	Run npm ci	2026-09-30T02:58:14.1129288Z
+deploy	Run npm ci	2026-09-30T02:58:14.1137640Z added 10 packages, and audited 31 packages in 3s
+deploy	Run npm ci	2026-09-30T02:58:14.1139832Z
+deploy	Run npm ci	2026-09-30T02:58:14.1140273Z 1 package is looking for funding
+deploy	Run npm ci	2026-09-30T02:58:14.1140801Z   run `npm fund` for details
+deploy	Run npm ci	2026-09-30T02:58:14.1141168Z
+deploy	Run npm ci	2026-09-30T02:58:14.1141385Z found 0 vulnerabilities
+deploy	Run npm run typecheck && npm test	﻿2026-09-30T02:58:14.1561651Z ##[group]Run npm run typecheck && npm test
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1561972Z [36;1mnpm run typecheck && npm test[0m
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1597177Z shell: /usr/bin/bash -e {0}
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1597433Z env:
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1597616Z   AWS_REGION: us-east-1
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1597877Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1598140Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1598425Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1598649Z   GATE_URL:
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.1598824Z ##[endgroup]
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.4114270Z
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.4115061Z > capstan-infra@0.1.0 typecheck
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.4115891Z > tsc --noEmit
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:14.4116297Z
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:15.5459484Z
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:15.5460572Z > capstan-infra@0.1.0 test
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:15.5461368Z > node --test test/*.test.ts test/*.test.mjs
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:15.5461837Z
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.2866137Z ✔ image builds the real ARM64 entrypoint and runs without root (0.869315ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.2871894Z ✔ build context excludes local secrets, evidence, and dependency trees (0.213571ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.2884530Z ✔ compose server is opt-in, loopback-only, and waits for the existing postgres (668.168558ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.8028421Z ✔ deployment requires a manual main-branch dispatch and rejects the server stub before OIDC (1.090182ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.8034741Z ✔ wrong or unreadable AWS identity stops before any image or deployment operation (58.52328ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.8056152Z ✔ deployment pushes ARM64 SHA image before deploying three workload stacks and smokes HTTPS (207.199226ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.8059227Z ✔ rerunning a SHA reuses its immutable image but an ECR authorization failure stops deployment (203.650467ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:16.8061005Z ✔ runbook prices every cost row, explains the ceiling and covers first deploy, rotation, alarms and cleanup (0.562473ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1569389Z ✔ network uses two public AZs and never creates NAT, endpoints, or a load balancer (1405.439746ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1588095Z ✔ database is private, encrypted, single-AZ micro with a generated secret and disposable storage (241.892596ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1596178Z ✔ one ARM task uses secret injection and only HTTPS gateway ingress with SRV discovery (222.625705ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1597754Z ✔ alarms measure the 5xx rate and actual service task count, treating missing task data as failure (141.904768ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1599408Z ✔ budget is account-wide $10 with 50/90/100 percent actual email alerts (91.675001ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1600733Z ✔ GitHub trust binds the immutable repository identity to main and cannot mutate its foundation (98.348388ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1601916Z ✔ workload deployment excludes OIDC, has no lookups/assets, and rejects unsafe context (48.778184ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1602996Z ✔ deployment can create Cloud Map namespaces and runtime roles cannot escape their boundary (92.539975ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1604162Z ✔ first deployment can create the API Gateway service-linked role under its actual service name (78.558499ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1605364Z ✔ Cloud Map tagging APIs use the required regional wildcard resource (89.593214ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1606478Z ✔ API Gateway handlers can tag APIs and VPC links without a wildcard resource (84.69586ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1607586Z ✔ GitHub can apply and remove the workload stack tags required by CloudFormation changesets (84.168496ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1609065Z ✔ workload deployment imports the owner-managed network and has no EC2 mutation permissions (117.071844ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1610054Z ✔ Gate URL and key are injected together or not at all (154.815272ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.1611082Z ✔ the CloudFormation role can register, describe and deregister task definitions (89.201718ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.3622302Z ✔ task count probe publishes the service count, handles absent services, and propagates API failure (76.283825ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4071815Z ✔ CI uses the local toolchain, shared-database contract, and complete merge gate (1.107706ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4073105Z ✔ CI also checks the CDK templates without AWS credentials and builds the ARM image (0.205473ms)
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4121815Z ℹ tests 26
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4122529Z ℹ suites 0
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4123171Z ℹ pass 26
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4131352Z ℹ fail 0
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4131914Z ℹ cancelled 0
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4132343Z ℹ skipped 0
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4132736Z ℹ todo 0
+deploy	Run npm run typecheck && npm test	2026-09-30T02:58:20.4133181Z ℹ duration_ms 4839.336023
+deploy	Run docker/setup-buildx-action@v4	﻿2026-09-30T02:58:20.4402742Z ##[group]Run docker/setup-buildx-action@v4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403013Z with:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403213Z   driver: docker-container
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403424Z   use: true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403601Z   keep-state: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403799Z   cache-binary: true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4403987Z   cleanup: true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4404162Z env:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4404335Z   AWS_REGION: us-east-1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4404545Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4404786Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4405058Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4405305Z   GATE_URL:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.4405488Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6082489Z ##[group]Docker info
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6113301Z [command]/usr/bin/docker version
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6499457Z Client: Docker Engine - Community
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6519101Z  Version:           28.0.4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6521882Z  API version:       1.48
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6558537Z  Go version:        go1.23.7
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6588525Z  Git commit:        b8034c0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6589170Z  Built:             Tue Mar 25 15:07:16 2025
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6589655Z  OS/Arch:           linux/amd64
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6590047Z  Context:           default
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6590310Z
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6594907Z Server: Docker Engine - Community
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6596951Z  Engine:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6597291Z   Version:          28.0.4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6597774Z   API version:      1.48 (minimum version 1.24)
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6599155Z   Go version:       go1.23.7
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6618406Z   Git commit:       6430e49
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6618819Z   Built:            Tue Mar 25 15:07:16 2025
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6619260Z   OS/Arch:          linux/amd64
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6619636Z   Experimental:     false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6620026Z  containerd:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6620302Z   Version:          v2.3.6
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6620769Z   GitCommit:        ee2735368117d2eb259779949d5e75cdafec9761
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6621249Z  runc:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6621512Z   Version:          1.5.1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6621885Z   GitCommit:        v1.5.1-0-g8f2685a4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6622338Z  docker-init:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6622634Z   Version:          0.19.0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6622969Z   GitCommit:        de40ad0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.6708446Z [command]/usr/bin/docker info
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9282140Z Client: Docker Engine - Community
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9285070Z  Version:    28.0.4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9285520Z  Context:    default
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9285899Z  Debug Mode: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9286288Z  Plugins:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9286670Z   buildx: Docker Buildx (Docker Inc.)
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9287044Z     Version:  v0.37.1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9287437Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9288126Z   compose: Docker Compose (Docker Inc.)
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9288540Z     Version:  v2.38.2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9288983Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9289339Z
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9289519Z Server:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9289813Z  Containers: 0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9290087Z   Running: 0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9290374Z   Paused: 0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9290651Z   Stopped: 0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9290946Z  Images: 6
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9291272Z  Server Version: 28.0.4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9291686Z  Storage Driver: overlay2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9292059Z   Backing Filesystem: extfs
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9292412Z   Supports d_type: true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9292738Z   Using metacopy: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9293054Z   Native Overlay Diff: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9293434Z   userxattr: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9293739Z  Logging Driver: json-file
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9294064Z  Cgroup Driver: systemd
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9294400Z  Cgroup Version: 2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9294726Z  Plugins:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9295055Z   Volume: local
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9295509Z   Network: bridge host ipvlan macvlan null overlay
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9296256Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9297288Z  Swarm: inactive
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9297730Z  Runtimes: io.containerd.runc.v2 runc
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9298411Z  Default Runtime: runc
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9298850Z  Init Binary: docker-init
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9299376Z  containerd version: ee2735368117d2eb259779949d5e75cdafec9761
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9299997Z  runc version: v1.5.1-0-g8f2685a4
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9300437Z  init version: de40ad0
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9300856Z  Security Options:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9301179Z   apparmor
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9301485Z   seccomp
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9301784Z    Profile: builtin
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9302120Z   cgroupns
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9302488Z  Kernel Version: 6.17.0-1022-azure
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9304074Z  Operating System: Ubuntu 24.04.5 LTS
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9304486Z  OSType: linux
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9304805Z  Architecture: x86_64
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9305186Z  CPUs: 2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9305516Z  Total Memory: 7.751GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9305872Z  Name: runnervm8df0l
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9306268Z  ID: 96bc9d58-7015-4b4a-8357-8e592f0b19b5
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9306695Z  Docker Root Dir: /var/lib/docker
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9307101Z  Debug Mode: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9307494Z  Username: githubactions
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9308342Z  Experimental: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9308909Z  Insecure Registries:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9309342Z   ::1/128
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9309715Z   127.0.0.0/8
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9310126Z  Live Restore Enabled: false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9310471Z
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9311004Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9904683Z ##[group]Buildx version
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:20.9937780Z [command]/usr/bin/docker buildx version
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0401879Z github.com/docker/buildx v0.37.1 0b265a9f62db554fa9aba6dd19e1bd5704bc7d8a
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0417460Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0558835Z ##[group]Inspecting default docker context
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0687461Z [
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0687983Z   {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0688368Z     "Name": "default",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0688730Z     "Metadata": {},
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0689176Z     "Endpoints": {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0689504Z       "docker": {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0689914Z         "Host": "unix:///var/run/docker.sock",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0690448Z         "SkipTLSVerify": false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0690824Z       }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0691246Z     },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0691624Z     "TLSMaterial": {},
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0692053Z     "Storage": {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0692629Z       "MetadataPath": "<IN MEMORY>",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0693064Z       "TLSPath": "<IN MEMORY>"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0693409Z     }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0693799Z   }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0694092Z ]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.0694772Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.1159610Z ##[group]Pulling BuildKit image(s)
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:21.1176984Z [command]/usr/bin/docker pull moby/buildkit:buildx-stable-1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:22.7827237Z buildx-stable-1: Pulling from moby/buildkit
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5286152Z e6f31ffc071e: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5289156Z 58699b5d8a46: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5290459Z 79330c0ded89: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5291080Z 524a9b2a3071: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5291630Z da08d5134795: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5292264Z c83f748d995d: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5292821Z 9a6fe4fcb2cb: Pulling fs layer
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5293283Z da08d5134795: Waiting
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5293695Z c83f748d995d: Waiting
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5294182Z 9a6fe4fcb2cb: Waiting
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.5294964Z 524a9b2a3071: Waiting
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7057742Z 79330c0ded89: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7062437Z 79330c0ded89: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7204138Z e6f31ffc071e: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7212251Z e6f31ffc071e: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7422270Z 58699b5d8a46: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.7431870Z 58699b5d8a46: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.8887596Z 524a9b2a3071: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.8893558Z 524a9b2a3071: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.9406797Z c83f748d995d: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:23.9407706Z c83f748d995d: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:24.0812617Z 9a6fe4fcb2cb: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:24.0813423Z 9a6fe4fcb2cb: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:24.1297500Z da08d5134795: Verifying Checksum
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:24.1298168Z da08d5134795: Download complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:24.3346633Z e6f31ffc071e: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:27.8319408Z 58699b5d8a46: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:27.8455139Z 79330c0ded89: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:27.8659766Z 524a9b2a3071: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:29.9417530Z da08d5134795: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8069282Z c83f748d995d: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8253839Z 9a6fe4fcb2cb: Pull complete
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8293026Z Digest: sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8306265Z Status: Downloaded newer image for moby/buildkit:buildx-stable-1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8317972Z docker.io/moby/buildkit:buildx-stable-1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8329851Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8330527Z ##[group]Creating a new builder instance
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.8920007Z [command]/usr/bin/docker buildx create --name builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95 --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host --use
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.9433880Z builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.9465132Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.9465664Z ##[group]Booting builder
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.9490262Z [command]/usr/bin/docker buildx inspect --bootstrap --builder builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:30.9938926Z #1 [internal] booting buildkit
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.1438916Z #1 pulling image moby/buildkit:buildx-stable-1
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.5145263Z #1 pulling image moby/buildkit:buildx-stable-1 0.5s done
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.6671027Z #1 creating container buildx_buildkit_builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd950
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8023676Z #1 creating container buildx_buildkit_builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd950 0.3s done
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8310255Z #1 DONE 0.8s
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8596594Z Name:          builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8597018Z Driver:        docker-container
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8597340Z Last Activity: 2026-09-30 02:58:30 +0000 UTC
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8597509Z
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8597601Z Nodes:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8601090Z Name:                  builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd950
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8601536Z Endpoint:              unix:///var/run/docker.sock
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8602683Z Status:                running
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8604067Z BuildKit daemon flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8604576Z BuildKit version:      v0.32.2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8605829Z Platforms:             linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/amd64/v4, linux/386
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8607014Z Labels:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8607305Z  org.mobyproject.buildkit.worker.executor:         oci
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8608530Z  org.mobyproject.buildkit.worker.hostname:         de54ecbf8e8e
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8608943Z  org.mobyproject.buildkit.worker.network:          host
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8610166Z  org.mobyproject.buildkit.worker.oci.process-mode: sandbox
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8610569Z  org.mobyproject.buildkit.worker.selinux.enabled:  false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8612324Z  org.mobyproject.buildkit.worker.snapshotter:      overlayfs
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8612659Z GC Policy rule#0:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8613862Z  All:            false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8614218Z  Filters:        type==source.local type==exec.cachemount type==source.git.checkout
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8615991Z  Keep Duration:  48h0m0s
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8616225Z  Max Used Space: 488.3MiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8616450Z GC Policy rule#1:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8616645Z  All:            false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8617134Z  Keep Duration:  1440h0m0s
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8617358Z  Reserved Space: 7.451GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8617582Z  Max Used Space: 54.02GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8620595Z  Min Free Space: 13.97GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8628512Z GC Policy rule#2:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8644054Z  All:            false
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8644573Z  Reserved Space: 7.451GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8663115Z  Max Used Space: 54.02GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8667108Z  Min Free Space: 13.97GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8669549Z GC Policy rule#3:
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8669930Z  All:            true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8670309Z  Reserved Space: 7.451GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8670678Z  Max Used Space: 54.02GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8671009Z  Min Free Space: 13.97GiB
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.8671688Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9529788Z ##[group]Inspect builder
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9532202Z {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9532778Z   "nodes": [
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9533111Z     {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9533580Z       "name": "builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd950",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9535412Z       "endpoint": "unix:///var/run/docker.sock",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9535907Z       "status": "running",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9536709Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9537439Z       "buildkit": "v0.32.2",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9538238Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/amd64/v4,linux/386",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9538826Z       "features": {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9539314Z         "Automatically load images to the Docker Engine image store": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9540284Z         "Cache export": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9540693Z         "Direct push": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9541091Z         "Docker exporter": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9541556Z         "Multi-platform build": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9541938Z         "OCI exporter": true
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9542272Z       },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9542655Z       "labels": {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9543230Z         "org.mobyproject.buildkit.worker.executor": "oci",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9543881Z         "org.mobyproject.buildkit.worker.hostname": "de54ecbf8e8e",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9544505Z         "org.mobyproject.buildkit.worker.network": "host",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9545367Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9546214Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9547210Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9547988Z       },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9548425Z       "gcPolicy": [
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9548699Z         {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9548958Z           "all": false,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9549260Z           "filter": [
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9549708Z             "type==source.local type==exec.cachemount type==source.git.checkout"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9550324Z           ],
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9550757Z           "keepDuration": "48h0m0s",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9551289Z           "maxUsedSpace": "488.3MiB"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9551828Z         },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9552332Z         {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9552832Z           "all": false,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9553342Z           "keepDuration": "1440h0m0s",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9553885Z           "reservedSpace": "7.451GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9554569Z           "maxUsedSpace": "54.02GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9555176Z           "minFreeSpace": "13.97GiB"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9555680Z         },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9556070Z         {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9556470Z           "all": false,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9556964Z           "reservedSpace": "7.451GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9557482Z           "maxUsedSpace": "54.02GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9558248Z           "minFreeSpace": "13.97GiB"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9558720Z         },
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9559107Z         {
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9559489Z           "all": true,
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9559964Z           "reservedSpace": "7.451GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9560502Z           "maxUsedSpace": "54.02GiB",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9561332Z           "minFreeSpace": "13.97GiB"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9561810Z         }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9562186Z       ]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9562582Z     }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9562944Z   ],
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9563500Z   "name": "builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9564137Z   "driver": "docker-container",
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9564674Z   "lastActivity": "2026-09-30T02:58:30.000Z"
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9565198Z }
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9565946Z ##[endgroup]
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9566578Z ##[group]BuildKit version
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9567198Z builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd950: v0.32.2
+deploy	Run docker/setup-buildx-action@v4	2026-09-30T02:58:31.9568063Z ##[endgroup]
+deploy	Run aws-actions/configure-aws-credentials@v6	﻿2026-09-30T02:58:31.9699684Z ##[group]Run aws-actions/configure-aws-credentials@v6
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9700067Z with:
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9700404Z   role-to-assume: arn:aws:iam::280517746513:role/capstan-github-deploy
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9700829Z   allowed-account-ids: 280517746513
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9701159Z   aws-region: us-east-1
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9701448Z   role-session-name: capstan-36662235038
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9701773Z   role-duration-seconds: 3600
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9702061Z   audience: sts.amazonaws.com
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9702401Z env:
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9702643Z   AWS_REGION: us-east-1
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9702918Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9703245Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9703602Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9703934Z   GATE_URL:
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:31.9704183Z ##[endgroup]
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:32.2969799Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v6	2026-09-30T02:58:32.5088806Z Authenticated as assumedRoleId AROAUCUBJD5I6PIINMBSK:capstan-36662235038
+deploy	Push image, deploy, and smoke	﻿2026-09-30T02:58:32.6919620Z ##[group]Run bash .github/scripts/deploy.sh
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6920092Z [36;1mbash .github/scripts/deploy.sh[0m
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6956286Z shell: /usr/bin/bash -e {0}
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6956624Z env:
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6956937Z   AWS_REGION: us-east-1
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6957240Z   AWS_ACCOUNT_ID: 280517746513
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6957624Z   COMMIT_SHA: dc92bff775e8c99036c6dd3369c14084bc795b9a
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6958224Z   BUDGET_EMAIL: affanyasir9@gmail.com
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6958547Z   GATE_URL:
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6958875Z   AWS_DEFAULT_REGION: us-east-1
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6959373Z   AWS_ACCESS_KEY_ID: ***
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6959859Z   AWS_SECRET_ACCESS_KEY: ***
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6963603Z   AWS_SESSION_TOKEN: ***
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:32.6963894Z ##[endgroup]
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7446870Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7448306Z WARNING! Your credentials are stored unencrypted in '/home/runner/.docker/config.json'.
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7450082Z Configure a credential helper to remove this warning. See
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7451027Z https://docs.docker.com/go/credential-store/
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7451387Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:35.7451647Z Login Succeeded
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0108653Z #0 building with "builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95" instance using docker-container driver
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0109368Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0109946Z #1 [internal] load build definition from Dockerfile
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0110660Z #1 transferring dockerfile: 521B done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0111164Z #1 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0111401Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.0111852Z #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.1930551Z #2 ...
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.1930950Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.1931435Z #3 [auth] docker/dockerfile:pull token for registry-1.docker.io
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.1932046Z #3 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.3423247Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.3424483Z #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.6145839Z #2 DONE 0.8s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.7757241Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.7758995Z #4 docker-image://docker.io/docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.7760463Z #4 resolve docker.io/docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.7785831Z #4 sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 14.14MB / 14.14MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.9930501Z #4 sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 14.14MB / 14.14MB 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.9933623Z #4 extracting sha256:9f624ef51ad55db0ea52d755cc777566386156106fbb4f465eecb22c67ac55ed 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:36.9934264Z #4 DONE 0.4s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.0979391Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.0983486Z #5 [auth] library/golang:pull token for registry-1.docker.io
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.2485626Z #5 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.2485888Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.2486199Z #6 [internal] load metadata for gcr.io/distroless/static-debian12:nonroot
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.6139777Z #6 ...
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.6140291Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.6140831Z #7 [internal] load metadata for docker.io/library/golang:1.26.4
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.6142064Z #7 DONE 0.6s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.7640282Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.7641075Z #6 [internal] load metadata for gcr.io/distroless/static-debian12:nonroot
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:37.8769911Z #6 DONE 0.8s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.0356916Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.0358302Z #8 [internal] load .dockerignore
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.0359019Z #8 transferring context: 176B done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.0359418Z #8 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2481578Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2483075Z #9 [internal] load build context
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2484549Z #9 transferring context: 1.27MB 0.0s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2485280Z #9 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2485587Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2486759Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2488312Z #10 resolve gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2489371Z #10 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2489558Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2490009Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.2490886Z #11 resolve docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.3536394Z #11 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.3537762Z #11 sha256:09e821fe2d4bc3fa8873bdb939114850c34148b272b4e0c917af9e6f47c23a6c 126B / 126B 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.5012226Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 0B / 67.28MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.5015556Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 0B / 102.27MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.5017545Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 0B / 67.78MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.6137200Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 6.29MB / 67.28MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.6142207Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 20.97MB / 67.78MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.6143800Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 15.73MB / 25.63MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.7457107Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 14.68MB / 67.28MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.7459922Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 18.87MB / 102.27MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.7461569Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 63.96MB / 67.78MB 0.5s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.7463663Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 25.63MB / 25.63MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.8908320Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 53.48MB / 67.28MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.8910925Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 67.11MB / 102.27MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:38.8912551Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 67.78MB / 67.78MB 0.6s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:39.0414705Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 67.28MB / 67.28MB 0.8s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:39.0415991Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 102.27MB / 102.27MB 0.8s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:40.5416233Z #11 sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 25.63MB / 25.63MB 1.8s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:40.8417783Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 28.31MB / 49.32MB 0.2s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:40.9916717Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 49.32MB / 49.32MB 0.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:41.5493790Z #11 sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 67.28MB / 67.28MB 3.3s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:41.5495451Z #11 sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 102.27MB / 102.27MB 3.3s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:41.5496762Z #11 sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 67.78MB / 67.78MB 3.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:41.5498465Z #11 sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 49.32MB / 49.32MB 0.9s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:41.5499889Z #11 extracting sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0254646Z #11 ...
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0275218Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0279956Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0281628Z #10 sha256:4db96f2c7ae9e90f3fd5e91cf947d19cced1d8a778d12923113f62c7fff3ec3e 143.35kB / 143.35kB 0.5s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0283637Z #10 sha256:dcaa5a89b0ccda4b283e16d0b4d0891cd93d5fe05c6798f7806781a6a2d84354 314B / 314B 0.3s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0285851Z #10 sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a 351B / 351B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0287033Z #10 sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112 80B / 80B 0.3s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0288561Z #10 sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296 162B / 162B 0.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0289828Z #10 sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4 123B / 123B 2.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0299498Z #10 sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212 188B / 188B 2.9s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0300863Z #10 sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a 67B / 67B 2.8s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0302607Z #10 sha256:bf7a4185f01524837d19abde915ffde84e64368b250f5b5e9f6f75aea62a11d4 29.00kB / 29.00kB 2.8s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0304032Z #10 sha256:39dc083afc39bd8dc43d456fe7ff7d39292e593bb2769972c11bb2e5f9119386 445.71kB / 445.71kB 0.5s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0305488Z #10 sha256:990a9c434e5e0f11549a8d4a41a1991e621b04e30cd63269adbc97b1dc38fd7e 12.48kB / 12.48kB 0.5s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0306834Z #10 sha256:f7c03e5221c3717bfa68250498f74132c03d9d7271f301c9b2a9cfc00fc6e231 83.90kB / 83.90kB 0.4s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0308261Z #10 extracting sha256:f7c03e5221c3717bfa68250498f74132c03d9d7271f301c9b2a9cfc00fc6e231 0.0s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0309517Z #10 extracting sha256:990a9c434e5e0f11549a8d4a41a1991e621b04e30cd63269adbc97b1dc38fd7e done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.0310337Z #10 DONE 3.9s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.1471570Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.1473126Z #10 [stage-1 1/2] FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.1474995Z #10 extracting sha256:39dc083afc39bd8dc43d456fe7ff7d39292e593bb2769972c11bb2e5f9119386 0.1s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.1476782Z #10 extracting sha256:bf7a4185f01524837d19abde915ffde84e64368b250f5b5e9f6f75aea62a11d4
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3556236Z #10 extracting sha256:bf7a4185f01524837d19abde915ffde84e64368b250f5b5e9f6f75aea62a11d4 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3557648Z #10 extracting sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3560005Z #10 extracting sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3561131Z #10 extracting sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3562064Z #10 extracting sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3562921Z #10 extracting sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3564010Z #10 extracting sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3565127Z #10 extracting sha256:dcaa5a89b0ccda4b283e16d0b4d0891cd93d5fe05c6798f7806781a6a2d84354 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3566231Z #10 extracting sha256:4db96f2c7ae9e90f3fd5e91cf947d19cced1d8a778d12923113f62c7fff3ec3e done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3566980Z #10 DONE 4.1s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3567230Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.3568161Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.4786933Z #11 extracting sha256:aa3e9ef32f73c30e8b065800ee66429992d3bfea6a1fb8224afdd878ab5b994f 0.9s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.4788141Z #11 DONE 4.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.6294577Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.6297695Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.6299333Z #11 extracting sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.8811473Z #11 extracting sha256:3f59c84a786323367a79d4959142649bb24b16c989bbaae7f273550b47325959 0.4s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:42.8812571Z #11 DONE 4.7s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:43.0313162Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:43.0316072Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:43.0320474Z #11 extracting sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:44.0617799Z #11 extracting sha256:30d0db852850114cc79598cc8ab1ec19da54691d9e3267288bb3458d7488f125 1.2s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:44.0619096Z #11 DONE 5.9s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:44.2117372Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:44.2119085Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:44.2135515Z #11 extracting sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:45.5953259Z #11 extracting sha256:2f56f74443f60d1f5f878d9915f70362f58a81e76cf1481390cac0016385d5e8 1.5s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:45.5955078Z #11 DONE 7.4s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:45.7458884Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:45.7459982Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:45.7461598Z #11 extracting sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:48.0934350Z #11 extracting sha256:67aaa626ba3010d60ab55d9cdc69c0b12ebff5d1b5ece83ff220fb46a7709b3b 2.5s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:48.0936426Z #11 DONE 9.9s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:48.2441336Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:48.2442015Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:48.2442847Z #11 extracting sha256:09e821fe2d4bc3fa8873bdb939114850c34148b272b4e0c917af9e6f47c23a6c
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.4858638Z #11 extracting sha256:09e821fe2d4bc3fa8873bdb939114850c34148b272b4e0c917af9e6f47c23a6c 1.4s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.4859589Z #11 DONE 11.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6309983Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6311665Z #11 [build 1/8] FROM docker.io/library/golang:1.26.4@sha256:f96cc555eb8db430159a3aa6797cd5bae561945b7b0fe7d0e284c63a3b291609
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6313610Z #11 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0.0s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6314497Z #11 DONE 11.4s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6314843Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:49.6315077Z #12 [build 2/8] WORKDIR /src
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:56.9208225Z #12 DONE 7.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:57.0863238Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:57.0863632Z #13 [build 3/8] COPY go.mod go.sum ./
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:57.0864445Z #13 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:57.0864843Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:57.0865192Z #14 [build 4/8] RUN go mod download
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:58.8795059Z #14 DONE 1.9s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1134276Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1134977Z #15 [build 5/8] COPY cmd/ cmd/
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1135562Z #15 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1135736Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1135921Z #16 [build 6/8] COPY internal/ internal/
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1136286Z #16 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1136520Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1136700Z #17 [build 7/8] COPY gen/ gen/
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1137050Z #17 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1137183Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:58:59.1137703Z #18 [build 8/8] RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o /out/capstan-server ./cmd/capstan-server
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.2192331Z #18 DONE 29.3s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.3736280Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.3738443Z #19 [stage-1 2/2] COPY --from=build /out/capstan-server /capstan-server
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.3739366Z #19 DONE 0.1s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.5256891Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.5259083Z #20 exporting to image
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.5260033Z #20 exporting layers
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.7844821Z #20 exporting layers 0.4s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.9563880Z #20 exporting manifest sha256:bba880323c23195997f6ecb410f42aa405ec1f7da043ec26b99305921999997f done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.9565408Z #20 exporting config sha256:9ea9c94438362290dd4ea00d5df5dc7c991c135033e22e52b063385ffaac1b59 done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.9566621Z #20 exporting attestation manifest sha256:89856bb52c2e0a8e2be787869704753a42bfba74ccf0cb04998bafe4a7b570bb done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.9568514Z #20 exporting manifest list sha256:69679db1999c46fff9c6b0bf6c387367ce35e2c62dfaa68f21844d9b5aa0267b done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:28.9569440Z #20 pushing layers
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.1295639Z #20 ...
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.1296024Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.1296636Z #21 [auth] sharing credentials for 280517746513.dkr.ecr.us-east-1.amazonaws.com
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.1297244Z #21 DONE 0.0s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.2798241Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:29.2798944Z #20 exporting to image
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:31.1325044Z #20 pushing layers 2.3s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:31.1326440Z #20 pushing manifest for 280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:dc92bff775e8c99036c6dd3369c14084bc795b9a@sha256:69679db1999c46fff9c6b0bf6c387367ce35e2c62dfaa68f21844d9b5aa0267b
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:32.1464773Z #20 pushing manifest for 280517746513.dkr.ecr.us-east-1.amazonaws.com/capstan-server:dc92bff775e8c99036c6dd3369c14084bc795b9a@sha256:69679db1999c46fff9c6b0bf6c387367ce35e2c62dfaa68f21844d9b5aa0267b 1.0s done
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:32.1468935Z #20 DONE 3.8s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:34.9798780Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:34.9800224Z ✨  Synthesis time: 1.87s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:34.9800782Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:34.9814802Z CapstanData
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:36.6691646Z CapstanData: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:42.4263187Z CapstanData: deploying... [1/3]
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:45.5118910Z CapstanData | 0/2 | 2:59:43 AM | UPDATE_IN_PROGRESS      | AWS::CloudFormation::Stack                  | CapstanData User Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:47.7600729Z CapstanData | 1/2 | 2:59:45 AM | UPDATE_COMPLETE_CLEANUP | AWS::CloudFormation::Stack                  | CapstanData
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:47.7602007Z CapstanData | 1/2 | 2:59:46 AM | UPDATE_COMPLETE         | AWS::CloudFormation::Stack                  | CapstanData
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8712437Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8714101Z ✅  CapstanData
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8714687Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8715117Z ✨  Deployment time: 6.45s
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8715568Z
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8715797Z Outputs:
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8717001Z CapstanData.ExportsOutputRefApiKeyHashes98F8A7191A08F3C4 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/api-key-hashes-aCpxjN
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8719247Z CapstanData.ExportsOutputRefDatabaseUrl8D88187D37D128A7 = arn:aws:secretsmanager:us-east-1:280517746513:secret:capstan/database-url-Ea1y5p
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8720375Z Stack ARN:
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8721110Z arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanData/e1cb5560-bc79-11f1-9275-0affe23ffc23
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:48.8729841Z CapstanBudget
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:49.6349780Z CapstanBudget: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:55.3876999Z CapstanBudget: deploying... [2/3]
+deploy	Push image, deploy, and smoke	2026-09-30T02:59:58.3460025Z CapstanBudget | 0/2 | 2:59:56 AM | UPDATE_IN_PROGRESS      | AWS::CloudFormation::Stack | CapstanBudget User Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:00.5286626Z CapstanBudget | 1/2 | 2:59:58 AM | UPDATE_COMPLETE_CLEANUP | AWS::CloudFormation::Stack | CapstanBudget
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:00.5290938Z CapstanBudget | 1/2 | 2:59:59 AM | UPDATE_COMPLETE         | AWS::CloudFormation::Stack | CapstanBudget
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7164189Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7165531Z ✅  CapstanBudget
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7166664Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7167246Z ✨  Deployment time: 6.33s
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7167635Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7168064Z Stack ARN:
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7169061Z arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanBudget/bb3392a0-bc79-11f1-93b2-0affe1e500c9
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:01.7175855Z CapstanService
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:02.1351774Z CapstanService: creating CloudFormation changeset...
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:08.1346533Z CapstanService: deploying... [3/3]
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:11.2577293Z CapstanService |  0/29 | 3:00:02 AM | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack                 | CapstanService User Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:11.2584230Z CapstanService |  0/29 | 3:00:08 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack                 | CapstanService User Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5062215Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5064480Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5066300Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5068092Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5069737Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5071073Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5073425Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5074941Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5076421Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5078012Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5079545Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5081225Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5084785Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5086668Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5088561Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::SNS::Topic                            | Alerts (Alerts91F83244) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5091289Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5093201Z CapstanService |  0/29 | 3:00:11 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5094916Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5096548Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5098388Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api                     | HttpApi Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5101867Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5109523Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5111259Z CapstanService |  0/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5112808Z CapstanService |  1/29 | 3:00:12 AM | CREATE_COMPLETE         | AWS::SNS::Topic                            | Alerts (Alerts91F83244)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5114229Z CapstanService |  1/29 | 3:00:12 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5115639Z CapstanService |  2/29 | 3:00:13 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Api                     | HttpApi
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5117126Z CapstanService |  2/29 | 3:00:13 AM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:13.5118730Z CapstanService |  2/29 | 3:00:13 AM | CREATE_IN_PROGRESS      | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7979241Z CapstanService |  2/29 | 3:00:13 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7989912Z CapstanService |  2/29 | 3:00:13 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7991651Z CapstanService |  2/29 | 3:00:13 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7993287Z CapstanService |  3/29 | 3:00:13 AM | CREATE_COMPLETE         | AWS::SNS::Subscription                     | Alerts/affanyasir9@gmail.com (Alertsaffanyasir9gmailcomAF90C18A)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7994458Z CapstanService |  3/29 | 3:00:14 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7995519Z CapstanService |  4/29 | 3:00:15 AM | CREATE_COMPLETE         | AWS::CloudWatch::Alarm                     | GatewayErrors (GatewayErrorsD0AC9A5C)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7996582Z CapstanService |  4/29 | 3:00:15 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.7997622Z CapstanService |  4/29 | 3:00:15 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.8000234Z CapstanService |  4/29 | 3:00:15 AM | CREATE_IN_PROGRESS      | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:15.8001846Z CapstanService |  4/29 | 3:00:15 AM | CREATE_IN_PROGRESS      | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:18.0850040Z CapstanService |  5/29 | 3:00:15 AM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | ProbeLogs (ProbeLogsBF6C3D77)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:18.0852265Z CapstanService |  6/29 | 3:00:15 AM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | ServerLogs (ServerLogsD9948953)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:18.0853837Z CapstanService |  7/29 | 3:00:15 AM | CREATE_COMPLETE         | AWS::Logs::LogGroup                        | AccessLogs (AccessLogs8B620ECA)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:18.0855182Z CapstanService |  8/29 | 3:00:16 AM | CREATE_COMPLETE         | AWS::ECS::Cluster                          | Cluster (ClusterEB0386A7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:18.0856361Z CapstanService |  8/29 | 3:00:17 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:20.3859871Z CapstanService |  8/29 | 3:00:18 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:20.3861512Z CapstanService |  8/29 | 3:00:18 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage                   | Stage Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:20.3863401Z CapstanService |  9/29 | 3:00:19 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Stage                   | Stage
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:31.9276884Z CapstanService |  9/29 | 3:00:31 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:31.9278724Z CapstanService | 10/29 | 3:00:31 AM | CREATE_COMPLETE         | AWS::IAM::Role                             | TaskRole (TaskRole30FC0FBB)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:31.9279678Z CapstanService | 10/29 | 3:00:31 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2249415Z CapstanService | 11/29 | 3:00:31 AM | CREATE_COMPLETE         | AWS::IAM::Role                             | ExecutionRole (ExecutionRole605A040B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2259447Z CapstanService | 11/29 | 3:00:32 AM | CREATE_IN_PROGRESS      | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2262681Z CapstanService | 11/29 | 3:00:32 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2263898Z CapstanService | 12/29 | 3:00:32 AM | CREATE_COMPLETE         | AWS::IAM::Role                             | ProbeRole (ProbeRole49737B5E)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2265060Z CapstanService | 12/29 | 3:00:32 AM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2266711Z CapstanService | 12/29 | 3:00:33 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2268464Z CapstanService | 12/29 | 3:00:33 AM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:34.2269850Z CapstanService | 12/29 | 3:00:33 AM | CREATE_IN_PROGRESS      | AWS::ECS::TaskDefinition                   | Task (Task79114B6B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:36.5934155Z CapstanService | 13/29 | 3:00:34 AM | CREATE_COMPLETE         | AWS::ECS::TaskDefinition                   | Task (Task79114B6B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:52.8488334Z CapstanService | 13/29 | 3:00:50 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:52.8489982Z CapstanService | 14/29 | 3:00:50 AM | CREATE_COMPLETE         | AWS::IAM::Policy                           | ExecutionRole/DefaultPolicy (ExecutionRoleDefaultPolicyA5B92313)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:55.1782733Z CapstanService | 14/29 | 3:00:52 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:55.1784765Z CapstanService | 15/29 | 3:00:53 AM | CREATE_COMPLETE         | AWS::ServiceDiscovery::PrivateDnsNamespace | Namespace (Namespace9B63B8C8)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:55.1786641Z CapstanService | 15/29 | 3:00:54 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:57.4924877Z CapstanService | 15/29 | 3:00:55 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:57.4931140Z CapstanService | 15/29 | 3:00:55 AM | CREATE_IN_PROGRESS      | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:57.4933363Z CapstanService | 16/29 | 3:00:55 AM | CREATE_COMPLETE         | AWS::ServiceDiscovery::Service             | Service/CloudmapService (ServiceCloudmapService046058A4)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:57.4935292Z CapstanService | 16/29 | 3:00:56 AM | CREATE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:00:59.7981661Z CapstanService | 16/29 | 3:00:57 AM | CREATE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:13.8074368Z CapstanService | 16/29 | 3:02:11 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::VpcLink                 | VpcLink Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:13.8076182Z CapstanService | 17/29 | 3:02:12 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::VpcLink                 | VpcLink
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:13.8079489Z CapstanService | 17/29 | 3:02:12 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1593137Z CapstanService | 17/29 | 3:02:14 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1601494Z CapstanService | 17/29 | 3:02:14 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration             | CloudMapIntegration Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1605655Z CapstanService | 18/29 | 3:02:15 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Integration             | CloudMapIntegration
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1607012Z CapstanService | 18/29 | 3:02:15 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1608298Z CapstanService | 18/29 | 3:02:15 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1609313Z CapstanService | 18/29 | 3:02:15 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:16.1610195Z CapstanService | 18/29 | 3:02:15 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5291084Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5293222Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5294966Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Ready Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5296590Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5299279Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Health Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5307602Z CapstanService | 18/29 | 3:02:16 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Client Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5309200Z CapstanService | 19/29 | 3:02:17 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Ready
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5310303Z CapstanService | 20/29 | 3:02:17 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Health
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5311339Z CapstanService | 21/29 | 3:02:17 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Client
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5312616Z CapstanService | 21/29 | 3:02:17 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:18.5313949Z CapstanService | 21/29 | 3:02:17 AM | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route                   | Worker Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:20.8863697Z CapstanService | 22/29 | 3:02:18 AM | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route                   | Worker
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:30.3281055Z CapstanService | 22/29 | 3:02:29 AM | CREATE_IN_PROGRESS      | AWS::ECS::Service                          | Service/Service (ServiceD69D759B) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:32.6855461Z CapstanService | 22/29 | 3:02:30 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | MissingTask (MissingTask0C7921C7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:32.6857301Z CapstanService | 23/29 | 3:02:30 AM | CREATE_COMPLETE         | AWS::ECS::Service                          | Service/Service (ServiceD69D759B)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:32.6859533Z CapstanService | 23/29 | 3:02:31 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | MissingTask (MissingTask0C7921C7) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:32.6861265Z CapstanService | 23/29 | 3:02:31 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ProbeRole/DefaultPolicy (ProbeRoleDefaultPolicyB29DBEA8)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:32.6863235Z CapstanService | 23/29 | 3:02:32 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ProbeRole/DefaultPolicy (ProbeRoleDefaultPolicyB29DBEA8) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:35.0388958Z CapstanService | 23/29 | 3:02:32 AM | CREATE_IN_PROGRESS      | AWS::CloudWatch::Alarm                     | MissingTask (MissingTask0C7921C7) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:35.0392538Z CapstanService | 24/29 | 3:02:33 AM | CREATE_COMPLETE         | AWS::CloudWatch::Alarm                     | MissingTask (MissingTask0C7921C7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:51.5837782Z CapstanService | 24/29 | 3:02:49 AM | CREATE_IN_PROGRESS      | AWS::IAM::Policy                           | ProbeRole/DefaultPolicy (ProbeRoleDefaultPolicyB29DBEA8) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:51.5841074Z CapstanService | 25/29 | 3:02:49 AM | CREATE_COMPLETE         | AWS::IAM::Policy                           | ProbeRole/DefaultPolicy (ProbeRoleDefaultPolicyB29DBEA8)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:51.5845584Z CapstanService | 25/29 | 3:02:50 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Function                      | TaskCountProbe (TaskCountProbe2FA371D7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:53.9604448Z CapstanService | 25/29 | 3:02:51 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Function                      | TaskCountProbe (TaskCountProbe2FA371D7) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:56.3218377Z CapstanService | 25/29 | 3:02:54 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Function                      | TaskCountProbe (TaskCountProbe2FA371D7) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:56.3220363Z CapstanService | 26/29 | 3:02:55 AM | CREATE_COMPLETE         | AWS::Lambda::Function                      | TaskCountProbe (TaskCountProbe2FA371D7)
+deploy	Push image, deploy, and smoke	2026-09-30T03:02:58.6949747Z CapstanService | 26/29 | 3:02:57 AM | CREATE_IN_PROGRESS      | AWS::Events::Rule                          | ProbeSchedule (ProbeScheduleC3BDD144)
+deploy	Push image, deploy, and smoke	2026-09-30T03:03:01.0524620Z CapstanService | 26/29 | 3:02:58 AM | CREATE_IN_PROGRESS      | AWS::Events::Rule                          | ProbeSchedule (ProbeScheduleC3BDD144) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:00.3971050Z CapstanService | 26/29 | 3:03:59 AM | CREATE_IN_PROGRESS      | AWS::Events::Rule                          | ProbeSchedule (ProbeScheduleC3BDD144) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:00.3973244Z CapstanService | 27/29 | 3:03:59 AM | CREATE_COMPLETE         | AWS::Events::Rule                          | ProbeSchedule (ProbeScheduleC3BDD144)
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:02.7710330Z CapstanService | 27/29 | 3:04:00 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                    | ProbeSchedule/AllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA (ProbeScheduleAllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA8AE00E45)
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:02.7713702Z CapstanService | 27/29 | 3:04:01 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                    | ProbeSchedule/AllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA (ProbeScheduleAllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA8AE00E45) Resource creation Initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:02.7719459Z CapstanService | 27/29 | 3:04:01 AM | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                    | ProbeSchedule/AllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA (ProbeScheduleAllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA8AE00E45) Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:02.7729474Z CapstanService | 27/29 | 3:04:01 AM | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack                 | CapstanService Eventual consistency check initiated
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:02.7731545Z CapstanService | 28/29 | 3:04:01 AM | CREATE_COMPLETE         | AWS::Lambda::Permission                    | ProbeSchedule/AllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA (ProbeScheduleAllowEventRuleCapstanServiceTaskCountProbe8CF1F4CA8AE00E45)
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:05.1358779Z CapstanService | 29/29 | 3:04:02 AM | CREATE_COMPLETE         | AWS::CloudFormation::Stack                 | CapstanService
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1827003Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1828458Z ✅  CapstanService
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1829231Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1829698Z ✨  Deployment time: 240.05s
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1830303Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1830617Z Outputs:
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1831416Z CapstanService.ApiUrl = https://dqofm24886.execute-api.us-east-1.amazonaws.com
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1833005Z Stack ARN:
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1838397Z arn:aws:cloudformation:us-east-1:280517746513:stack/CapstanService/07d78480-bc7b-11f1-984c-0effe75b3619
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1860540Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1861586Z ✨  Total time: 275.08s
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.1862650Z
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.6246584Z ok
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.8739266Z ok
+deploy	Push image, deploy, and smoke	2026-09-30T03:04:08.8751524Z Smoke passed: https://dqofm24886.execute-api.us-east-1.amazonaws.com
+deploy	Post Run aws-actions/configure-aws-credentials@v6	﻿2026-09-30T03:04:08.8878338Z Post job cleanup.
+deploy	Post Run docker/setup-buildx-action@v4	﻿2026-09-30T03:04:08.9614176Z Post job cleanup.
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:09.1637677Z ##[group]Removing builder
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:09.3079607Z [command]/usr/bin/docker buildx rm builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5604191Z builder-164af0f0-3fb6-4562-8e5c-6c3e4f04dd95 removed
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5623712Z ##[endgroup]
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5639471Z ##[group]Cleaning up certificates
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5640295Z ##[endgroup]
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5640878Z ##[group]Post cache
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5641789Z State not set
+deploy	Post Run docker/setup-buildx-action@v4	2026-09-30T03:04:15.5642535Z ##[endgroup]
+deploy	Post Run actions/setup-node@v7	﻿2026-09-30T03:04:15.5760043Z Post job cleanup.
+deploy	Post Run actions/setup-node@v7	2026-09-30T03:04:15.6831595Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-bdd64b42017821eb4ee65f486ab39efa657fcf54738d640e119919dcfcc9154e, not saving cache.
+deploy	Post Run actions/checkout@v7	﻿2026-09-30T03:04:15.6997666Z Post job cleanup.
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.7894598Z [command]/usr/bin/git version
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.7959058Z git version 2.55.0
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8022021Z Temporarily overriding HOME='/home/runner/work/_temp/84de178c-a084-45b0-896a-d4c048273018' before making global git config changes
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8023808Z Adding repository directory to the temporary git global config as a safe directory
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8024978Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/capstan/capstan
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8083274Z Removing SSH command configuration
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8084271Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8155913Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8433496Z Removing HTTP extra header
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8455527Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8490932Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8765495Z Removing includeIf entries pointing to credentials config files
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8766578Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8854382Z includeif.gitdir:/home/runner/work/capstan/capstan/.git.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8855515Z includeif.gitdir:/home/runner/work/capstan/capstan/.git/worktrees/*.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8856715Z includeif.gitdir:/github/workspace/.git.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8857495Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8860583Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/capstan/capstan/.git.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8861871Z /home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8870857Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/capstan/capstan/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-da5e1869\-7a61\-4ec6\-bdfd\-814411009b6c\.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8907676Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/capstan/capstan/.git/worktrees/*.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8955470Z /home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.8958792Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/capstan/capstan/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-da5e1869\-7a61\-4ec6\-bdfd\-814411009b6c\.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9002272Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9039196Z /github/runner_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9041391Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-da5e1869\-7a61\-4ec6\-bdfd\-814411009b6c\.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9084008Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9157149Z /github/runner_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9160645Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-da5e1869\-7a61\-4ec6\-bdfd\-814411009b6c\.config
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9203327Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+deploy	Post Run actions/checkout@v7	2026-09-30T03:04:15.9415479Z Removing credentials config '/home/runner/work/_temp/git-credentials-da5e1869-7a61-4ec6-bdfd-814411009b6c.config'
+deploy	Complete job	﻿2026-09-30T03:04:15.9561634Z Cleaning up orphan processes

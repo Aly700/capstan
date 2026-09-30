@@ -1,0 +1,18 @@
+{
+    "Subscriptions": [
+        {
+            "SubscriptionArn": "PendingConfirmation",
+            "Owner": "280517746513",
+            "Protocol": "email",
+            "Endpoint": "affanyasir9@gmail.com",
+            "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+        },
+        {
+            "SubscriptionArn": "PendingConfirmation",
+            "Owner": "280517746513",
+            "Protocol": "email",
+            "Endpoint": "affanyasir9@gmail.com",
+            "TopicArn": "arn:aws:sns:us-east-1:280517746513:capstan-alerts"
+        }
+    ]
+}
