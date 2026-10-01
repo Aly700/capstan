@@ -59,6 +59,17 @@ jobs:
         working-directory: sdk
       - run: make verify
 
+  evidence:
+    # Every published number is recomputed from committed raw data; the script also refuses
+    # unreviewed source drift since the measured revisions, so it needs the full history.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - run: python3 docs/evidence/raw/verify-numbers.py
+
   infra:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
