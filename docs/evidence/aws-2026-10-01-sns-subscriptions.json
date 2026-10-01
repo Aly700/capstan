@@ -1,0 +1,7 @@
+[
+  {
+    "Topic": "arn:aws:sns:us-east-1:280517746513:capstan-alerts",
+    "Endpoint": "<budget email, redacted>",
+    "Arn": "PendingConfirmation"
+  }
+]

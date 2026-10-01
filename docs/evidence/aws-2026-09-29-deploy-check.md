@@ -247,3 +247,22 @@ All evidence was scanned against the actual key, hash line and raw hash: none oc
 Log exports retain every line with trailing whitespace normalized; their source/export
 hashes are in the [log manifest](aws-2026-09-29-deploy-check-log-exports.json).
 No frozen contract or source file changed. No lead push or rerun is required for this check.
+
+## Addendum — 2026-10-01 inventory
+
+Read-only re-inventory at **2026-10-01 13:07 UTC**, about 34 hours after this session's last
+stack deletion (03:14 UTC, 2026-09-30), with the same profile, account and categories:
+[inventory](aws-2026-10-01-final-inventory.json) (`errors={}`) and
+[SNS subscriptions](aws-2026-10-01-sns-subscriptions.json) (endpoint redacted).
+
+| Category | Result | Cost |
+| --- | --- | --- |
+| CloudFormation | No Capstan stacks; the five unrelated stacks only | none |
+| ECS | `cluster/capstan` record INACTIVE, 0 running tasks, 0 services; no task definitions in any status | none (retained metadata) |
+| RDS, ECR, Secrets Manager, Cloud Map, Route 53, API Gateway, VPC/ENIs, log groups, budgets | Empty | none |
+| SNS | `capstan-alerts` topic gone. One PendingConfirmation subscription remains (this session's). The two from 2026-09-28 have expired. | none |
+
+Nothing billable remains, so nothing was deleted. The remaining subscription was created at
+about 03:00 UTC on 2026-09-30, so it should expire on the same schedule as the earlier two,
+around 03:00 UTC on 2026-10-02. It cannot be deleted manually. The INACTIVE cluster record is
+retained by AWS and does not bill.
