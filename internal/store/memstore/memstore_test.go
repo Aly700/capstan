@@ -213,3 +213,71 @@ func TestCloseIsIdempotentAndStopsTransactions(t *testing.T) {
 	_, cancel = s.Subscribe(store.TaskWorkflow, "q")
 	cancel()
 }
+
+// Due queries break time ties the way the PostgreSQL store orders them (check_at,id;
+// due_at,run_id,seq; check_at,run_id,approval_id), so a bounded sweep visits the same rows
+// on either store and a lab seed replays the same schedule.
+func TestDueQueriesBreakTimeTiesLikePostgres(t *testing.T) {
+	s := newStore(t)
+	due := epoch.Add(time.Second)
+	tx(t, s, func(tx store.Tx) error {
+		for _, id := range []string{"b", "a"} {
+			if err := tx.InsertRun(run(id)); err != nil {
+				return err
+			}
+		}
+		for _, id := range []string{"b", "a", "b"} {
+			row := task(id, epoch)
+			row.CheckAt = due
+			if err := tx.InsertTask(row); err != nil {
+				return err
+			}
+		}
+		for _, timer := range []store.Timer{{RunID: "b", Seq: 2, DueAt: due}, {RunID: "b", Seq: 1, DueAt: due}, {RunID: "a", Seq: 9, DueAt: due}} {
+			if err := tx.InsertTimer(&timer); err != nil {
+				return err
+			}
+		}
+		for _, approval := range []store.Approval{{RunID: "b", ApprovalID: "y"}, {RunID: "b", ApprovalID: "x"}, {RunID: "a", ApprovalID: "z"}} {
+			approval.Status, approval.Source, approval.RequestedAt, approval.CheckAt = store.ApprovalPending, capstanv1.ApprovalSource_APPROVAL_SOURCE_HUMAN, epoch, due
+			if err := tx.InsertApproval(&approval); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	tx(t, s, func(tx store.Tx) error {
+		tasks, err := tx.DueTasks(due, 10)
+		if err != nil {
+			return err
+		}
+		for i, row := range tasks {
+			if i > 0 && row.ID <= tasks[i-1].ID {
+				t.Fatalf("due tasks with one check time are not in id order: %d after %d", row.ID, tasks[i-1].ID)
+			}
+		}
+		timers, err := tx.DueTimers(due, 10)
+		if err != nil {
+			return err
+		}
+		var timerOrder []string
+		for _, timer := range timers {
+			timerOrder = append(timerOrder, timer.RunID+"/"+string(rune('0'+timer.Seq)))
+		}
+		if len(tasks) != 3 || len(timerOrder) != 3 || timerOrder[0] != "a/9" || timerOrder[1] != "b/1" || timerOrder[2] != "b/2" {
+			t.Fatalf("due order: %d tasks, timers %v", len(tasks), timerOrder)
+		}
+		approvals, err := tx.DueApprovals(due, 10)
+		if err != nil {
+			return err
+		}
+		var approvalOrder []string
+		for _, approval := range approvals {
+			approvalOrder = append(approvalOrder, approval.RunID+"/"+approval.ApprovalID)
+		}
+		if len(approvalOrder) != 3 || approvalOrder[0] != "a/z" || approvalOrder[1] != "b/x" || approvalOrder[2] != "b/y" {
+			t.Fatalf("due approvals order: %v", approvalOrder)
+		}
+		return nil
+	})
+}
