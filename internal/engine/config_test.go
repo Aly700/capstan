@@ -10,7 +10,7 @@ import (
 
 func TestNewRejectsInvalidConfiguration(t *testing.T) {
 	s := newTestStore(t)
-	for _, cfg := range []Config{{DefaultTaskTimeout: -time.Second}, {DefaultTaskTimeout: 11 * time.Minute}, {TaskRetryInitial: -time.Second}, {TaskRetryMax: -time.Second}, {MaxHistoryEvents: -1}, {DailyCapUSD: -1}, {DailyCapUSD: math.NaN()}, {DailyCapUSD: math.Inf(1)}, {GatePollInitial: -time.Second}, {GatePollMax: -time.Second}, {DefaultRetry: &v1.RetryPolicy{BackoffCoefficient: .5}}, {ModelPrices: map[string]ModelPrice{"bad": {Input: math.NaN()}}}, {ModelPrices: map[string]ModelPrice{"bad": {Output: -1}}}} {
+	for _, cfg := range []Config{{DefaultTaskTimeout: -time.Second}, {DefaultTaskTimeout: 11 * time.Minute}, {DefaultTaskTimeout: 1500 * time.Microsecond}, {TaskRetryInitial: -time.Second}, {TaskRetryMax: -time.Second}, {MaxHistoryEvents: -1}, {DailyCapUSD: -1}, {DailyCapUSD: math.NaN()}, {DailyCapUSD: math.Inf(1)}, {GatePollInitial: -time.Second}, {GatePollMax: -time.Second}, {DefaultRetry: &v1.RetryPolicy{BackoffCoefficient: .5}}, {ModelPrices: map[string]ModelPrice{"bad": {Input: math.NaN()}}}, {ModelPrices: map[string]ModelPrice{"bad": {Output: -1}}}} {
 		if _, err := New(Deps{Store: s}, cfg); err == nil {
 			t.Errorf("accepted invalid config %+v", cfg)
 		}

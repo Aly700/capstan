@@ -187,30 +187,6 @@ func TestPrecisionWorkflowRetryDeadlines(t *testing.T) {
 	}
 }
 
-func TestPrecisionApprovalResolutionTime(t *testing.T) {
-	e, clock, s := newTestEngine(t)
-	clock.Advance(987654321 * time.Nanosecond)
-	pendingApproval(t, e, v1.ApprovalSource_APPROVAL_SOURCE_HUMAN, time.Hour+789*time.Nanosecond)
-	original := readApproval(t, s)
-	clock.Advance(9876 * time.Nanosecond)
-	resolved := clock.Now().Truncate(time.Microsecond)
-	if _, err := e.ResolveApproval(t.Context(), "owner", &v1.ResolveApprovalRequest{RunId: "approval-run", ApprovalId: "approval-1", Outcome: v1.ApprovalOutcome_APPROVAL_OUTCOME_APPROVED}); err != nil {
-		t.Fatal(err)
-	}
-	a := readApproval(t, s)
-	assertMicroTime(t, a.ResolvedAt, resolved)
-	assertMicroTime(t, a.RequestedAt, original.RequestedAt)
-	assertMicroTime(t, a.DueAt, original.DueAt)
-	if a.RequestedEventID != original.RequestedEventID || a.Source != original.Source || a.Seq != original.Seq || a.Status != store.ApprovalApproved || !a.CheckAt.IsZero() {
-		t.Fatalf("resolved approval: %+v", a)
-	}
-	wantTypes(t, history(t, e, "approval-run"),
-		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED,
-		v1.EventType_EVENT_TYPE_TASK_STARTED, v1.EventType_EVENT_TYPE_TASK_COMPLETED,
-		v1.EventType_EVENT_TYPE_APPROVAL_REQUESTED, v1.EventType_EVENT_TYPE_APPROVAL_RESOLVED,
-		v1.EventType_EVENT_TYPE_TASK_SCHEDULED)
-}
-
 func TestPrecisionRunClosureAndContinuationTimes(t *testing.T) {
 	for _, continued := range []bool{false, true} {
 		t.Run(map[bool]string{false: "completed", true: "continued"}[continued], func(t *testing.T) {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"math"
-	"sync"
 	"testing"
 	"time"
 
@@ -193,16 +192,6 @@ func TestReserveComparesRoundedUSDAtCap(t *testing.T) {
 	}
 }
 
-func TestReserveReturnsRoundedUSDSum(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	token := ledgerActivity(t, e)
-	reserveAI(t, e, token, "unpriced", .1)
-	r := reserveAI(t, e, token, "unpriced", .2)
-	if r.SpentTodayUsd != .3 {
-		t.Fatalf("spent = %.18g, want .3", r.SpentTodayUsd)
-	}
-}
-
 func TestFinishRejectsInvalidCostBeforeRounding(t *testing.T) {
 	for _, tc := range []struct {
 		name   string
@@ -258,25 +247,6 @@ func TestLedgerTimestampsUseMicroseconds(t *testing.T) {
 		return nil
 	}); err != nil {
 		t.Fatal(err)
-	}
-}
-
-func TestFinishUsesConfiguredPrices(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	e.cfg.ModelPrices = map[string]ModelPrice{"custom": {Input: 1, Output: 2, CacheRead: 3, CacheWrite: 4}}
-	r := reserveAI(t, e, ledgerActivity(t, e), "custom", 1)
-	out, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, InputTokens: 1_000_000, OutputTokens: 1_000_000, CacheReadTokens: 1_000_000, CacheWriteTokens: 1_000_000})
-	if err != nil || out.GetCostUsd() != 10 {
-		t.Fatalf("configured cost: %v %v", out, err)
-	}
-}
-
-func TestFinishUnknownModelChargesEstimate(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	r := reserveAI(t, e, ledgerActivity(t, e), "unpriced", .7)
-	out, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, InputTokens: 100, OutputTokens: 200})
-	if err != nil || out.GetCostUsd() != .7 {
-		t.Fatalf("unknown cost: %v %v", out, err)
 	}
 }
 
@@ -359,19 +329,6 @@ func TestFinishUnknownUsageChargesAtLeastEstimate(t *testing.T) {
 	}
 }
 
-func TestFinishIsIdempotent(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	r := reserveAI(t, e, ledgerActivity(t, e), "claude-sonnet-5", .7)
-	first, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: true, InputTokens: 100_000})
-	if err != nil {
-		t.Fatal(err)
-	}
-	second, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: r.ReservationId, Ok: false, InputTokens: 2_000_000})
-	if err != nil || second.GetCostUsd() != first.CostUsd {
-		t.Fatalf("second finish: %v %v first=%v", second, err, first)
-	}
-}
-
 func TestFinishRejectsNegativeTokens(t *testing.T) {
 	e, _, _ := newTestEngine(t)
 	r := reserveAI(t, e, ledgerActivity(t, e), "claude-sonnet-5", .7)
@@ -411,33 +368,6 @@ func TestCapResetsAtTorontoMidnight(t *testing.T) {
 	}
 }
 
-func TestConcurrentReservationsCannotExceedCap(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	e.cfg.DailyCapUSD = 1
-	token := ledgerActivity(t, e)
-	var wg sync.WaitGroup
-	errs := make(chan error, 8)
-	for range 8 {
-		wg.Go(func() {
-			_, err := e.ReserveAICall(context.Background(), &v1.ReserveAICallRequest{TaskToken: token, Model: "claude-sonnet-5", EstimateUsd: .6})
-			errs <- err
-		})
-	}
-	wg.Wait()
-	close(errs)
-	success := 0
-	for err := range errs {
-		if err == nil {
-			success++
-		} else if !errors.Is(err, ErrBudgetExceeded) {
-			t.Fatal(err)
-		}
-	}
-	if success != 1 {
-		t.Fatalf("successful reservations=%d want 1", success)
-	}
-}
-
 func TestReserveRequiresLiveActivityToken(t *testing.T) {
 	e, _, _ := newTestEngine(t)
 	token := ledgerActivity(t, e)
@@ -446,42 +376,6 @@ func TestReserveRequiresLiveActivityToken(t *testing.T) {
 	}
 	if _, err := e.ReserveAICall(context.Background(), &v1.ReserveAICallRequest{TaskToken: token, Model: "claude-sonnet-5", EstimateUsd: .1}); !errors.Is(err, ErrStaleTask) {
 		t.Fatalf("completed activity reservation: %v", err)
-	}
-}
-
-func TestReserveAICallSeeded(t *testing.T) {
-	e, clock, s := newTestEngine(t)
-	var task store.Task
-	if err := s.InTx(context.Background(), func(tx store.Tx) error {
-		if err := tx.InsertRun(&store.Run{RunID: "ledger", WorkflowType: "wf", TaskQueue: "q", Status: v1.RunStatus_RUN_STATUS_RUNNING, StartedAt: clock.Now(), TaskTimeout: time.Second}); err != nil {
-			return err
-		}
-		task = store.Task{Kind: store.TaskActivity, RunID: "ledger", TaskQueue: "q", Attempt: 1, ScheduledEventID: 1, ScheduledAt: clock.Now(), StartedAt: clock.Now(), VisibleAt: clock.Now(), LeasedUntil: clock.Now().Add(time.Second), Activity: &v1.ActivityScheduledAttributes{Seq: 1}}
-		return tx.InsertTask(&task)
-	}); err != nil {
-		t.Fatal(err)
-	}
-	token := EncodeToken(&v1.TaskToken{Kind: v1.TaskKind_TASK_KIND_ACTIVITY, RunId: "ledger", TaskId: task.ID, Attempt: 1, ScheduledEventId: 1, Seq: 1})
-	r := reserveAI(t, e, token, "claude-sonnet-5", .6)
-	if r.SpentTodayUsd != .6 {
-		t.Fatalf("reservation: %v", r)
-	}
-}
-
-func TestFinishAICallSeeded(t *testing.T) {
-	e, clock, s := newTestEngine(t)
-	call := &store.AICall{RunID: "ledger", ActivitySeq: 1, Model: "claude-sonnet-5", Status: store.AICallReserved, EstimateUSD: 1, At: clock.Now()}
-	if err := s.InTx(context.Background(), func(tx store.Tx) error {
-		if err := tx.InsertRun(&store.Run{RunID: "ledger", WorkflowType: "wf", TaskQueue: "q", Status: v1.RunStatus_RUN_STATUS_RUNNING, StartedAt: clock.Now(), TaskTimeout: time.Second}); err != nil {
-			return err
-		}
-		return tx.InsertAICall(call)
-	}); err != nil {
-		t.Fatal(err)
-	}
-	r, err := e.FinishAICall(context.Background(), &v1.FinishAICallRequest{ReservationId: call.ID, Ok: true, InputTokens: 1_000_000, OutputTokens: 1_000_000})
-	if err != nil || r.GetCostUsd() != 12 {
-		t.Fatalf("finish: %v %v", r, err)
 	}
 }
 

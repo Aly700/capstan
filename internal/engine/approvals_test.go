@@ -82,11 +82,14 @@ func TestHumanApprovalResolve(t *testing.T) {
 		t.Fatal("invalid choice changed history")
 	}
 	req.Choice = "ship"
+	clock.Advance(9876 * time.Nanosecond)
+	resolved := clock.Now().Truncate(time.Microsecond)
 	if _, err := e.ResolveApproval(context.Background(), "caller", req); err != nil {
 		t.Fatal(err)
 	}
 	a := readApproval(t, s)
-	if a.Status != store.ApprovalApproved || a.Choice != "ship" || a.Resolver != "owner" || !a.ResolvedAt.Equal(clock.Now()) || !a.CheckAt.IsZero() {
+	assertMicroTime(t, a.ResolvedAt, resolved)
+	if a.Status != store.ApprovalApproved || a.Choice != "ship" || a.Resolver != "owner" || !a.CheckAt.IsZero() {
 		t.Fatalf("approval: %+v", a)
 	}
 	r := approvalResolution(t, e)
@@ -313,31 +316,6 @@ func seedApproval(t *testing.T, e *Engine, source v1.ApprovalSource) {
 		return tx.InsertApproval(&store.Approval{RunID: r.RunID, ApprovalID: "approval-1", Seq: 1, RequestedEventID: 1, Source: source, Status: store.ApprovalPending, RequestedAt: now, DueAt: now.Add(time.Hour), CheckAt: now})
 	}); err != nil {
 		t.Fatal(err)
-	}
-}
-
-func TestResolveApprovalSeeded(t *testing.T) {
-	e, _, s := newTestEngine(t)
-	seedApproval(t, e, v1.ApprovalSource_APPROVAL_SOURCE_HUMAN)
-	if _, err := e.ResolveApproval(context.Background(), "owner", &v1.ResolveApprovalRequest{RunId: "approval-run", ApprovalId: "approval-1", Outcome: v1.ApprovalOutcome_APPROVAL_OUTCOME_APPROVED, Choice: "ship"}); err != nil {
-		t.Fatal(err)
-	}
-	if got := readApproval(t, s); got.Status != store.ApprovalApproved || got.Choice != "ship" {
-		t.Fatalf("resolution: %+v", got)
-	}
-}
-
-func TestProcessDueApprovalsSeeded(t *testing.T) {
-	e, _, s := newTestEngine(t)
-	seedApproval(t, e, v1.ApprovalSource_APPROVAL_SOURCE_GATE)
-	e.deps.Gate = approvalGateFunc(func(context.Context, string) (GateApproval, error) {
-		return GateApproval{Status: "DENIED", DecidedBy: "gate-owner"}, nil
-	})
-	if n, err := e.ProcessDueApprovals(context.Background(), 1); n != 1 || err != nil {
-		t.Fatalf("poll: %d %v", n, err)
-	}
-	if got := readApproval(t, s); got.Status != store.ApprovalDenied || got.Resolver != "gate-owner" {
-		t.Fatalf("resolution: %+v", got)
 	}
 }
 

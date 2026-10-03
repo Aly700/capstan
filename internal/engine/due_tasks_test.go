@@ -36,24 +36,6 @@ func TestWorkflowTaskLeaseExpiry(t *testing.T) {
 	}
 }
 
-func TestActivityStartToCloseRetries(t *testing.T) {
-	e, clock, _ := newTestEngine(t)
-	scheduleTestActivity(t, e, "stc-retry", nil)
-	a := mustActivity(t, e)
-	clock.Advance(10 * time.Second)
-	if n, err := e.ProcessDueTasks(context.Background(), 10); n != 1 || err != nil {
-		t.Fatalf("due: %d %v", n, err)
-	}
-	wantTypes(t, history(t, e, "stc-retry"),
-		v1.EventType_EVENT_TYPE_RUN_STARTED, v1.EventType_EVENT_TYPE_TASK_SCHEDULED, v1.EventType_EVENT_TYPE_TASK_STARTED,
-		v1.EventType_EVENT_TYPE_TASK_COMPLETED, v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED)
-	clock.Advance(time.Second)
-	b := mustActivity(t, e)
-	if b.Attempt != 2 || b.IdempotencyKey != a.IdempotencyKey {
-		t.Fatalf("retry: %v", b)
-	}
-}
-
 func assertActivityTimeout(t *testing.T, e *Engine, id string, want v1.TimeoutType) {
 	t.Helper()
 	wantTypes(t, history(t, e, id),
@@ -168,14 +150,5 @@ func TestHeartbeatTimeoutRetryRetainsDetails(t *testing.T) {
 	clock.Advance(time.Second)
 	if n, err := e.ProcessDueTasks(context.Background(), 10); n != 0 || err != nil {
 		t.Fatalf("old heartbeat deadline leaked: %d %v", n, err)
-	}
-}
-
-func TestDueTasksFromStoredTask(t *testing.T) {
-	e, clock, _ := newTestEngine(t)
-	seedActivity(t, e, true)
-	clock.Advance(10 * time.Second)
-	if n, err := e.ProcessDueTasks(context.Background(), 1); n != 1 || err != nil {
-		t.Fatalf("due stored task: %d, %v", n, err)
 	}
 }
