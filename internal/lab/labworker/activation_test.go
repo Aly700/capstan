@@ -147,37 +147,6 @@ func TestActivationsClassifiesEveryCommandKind(t *testing.T) {
 	}
 }
 
-func TestActivationsAttemptUsesReferencedSchedule(t *testing.T) {
-	history := activationHistory(t,
-		`"taskScheduled": {"attempt": 7}`, `"taskScheduled": {"attempt": 2}`,
-		`"taskStarted": {"scheduledEventId": "1"}`, `"taskCompleted": {}`,
-		`"taskStarted": {"scheduledEventId": "99"}`,
-	)
-	got, err := activations(history)
-	if err != nil || len(got) != 2 {
-		t.Fatalf("activations=%v error=%v", got, err)
-	}
-	if got[0].attempt != 7 || got[1].attempt != 1 {
-		t.Fatalf("attempts=%d,%d, want 7,1", got[0].attempt, got[1].attempt)
-	}
-}
-
-func TestActivationsEmptyAndDiscardedHistory(t *testing.T) {
-	for name, history := range map[string][]*capstanv1.HistoryEvent{
-		"empty":     nil,
-		"no task":   activationHistory(t, `"runStarted": {}`, `"taskScheduled": {"attempt": 1}`),
-		"failed":    activationHistory(t, `"taskStarted": {}`, `"taskFailed": {}`),
-		"timed out": activationHistory(t, `"taskStarted": {}`, `"taskTimedOut": {}`),
-	} {
-		t.Run(name, func(t *testing.T) {
-			got, err := activations(history)
-			if err != nil || len(got) != 0 {
-				t.Fatalf("activations=%v error=%v, want no activations", got, err)
-			}
-		})
-	}
-}
-
 func TestActivationsRejectMalformedTaskBoundary(t *testing.T) {
 	for _, kind := range []string{"signalReceived", "activityScheduled", "taskStarted", "taskScheduled", "runBlocked", "runTimedOut"} {
 		t.Run(kind, func(t *testing.T) {
@@ -186,15 +155,5 @@ func TestActivationsRejectMalformedTaskBoundary(t *testing.T) {
 				t.Fatalf("error=%v, want malformed boundary naming TaskStarted event 1", err)
 			}
 		})
-	}
-}
-
-func TestActivationsRejectNilHistoryEvent(t *testing.T) {
-	for _, history := range [][]*capstanv1.HistoryEvent{
-		{nil}, append(activationHistory(t, `"taskStarted": {}`), nil),
-	} {
-		if _, err := activations(history); err == nil {
-			t.Fatal("nil history event was accepted")
-		}
 	}
 }

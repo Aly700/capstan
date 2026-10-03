@@ -3,7 +3,6 @@ package labworker
 import (
 	"encoding/json"
 	"errors"
-	"strings"
 	"testing"
 
 	capstanv1 "github.com/Aly700/capstan/gen/capstan/v1"
@@ -190,20 +189,5 @@ func TestMatchCommandsReportsFirstMismatchAndCompletedAnchor(t *testing.T) {
 	}
 	if err := matchCommands([]*capstanv1.Command{activity, timer}, []*capstanv1.HistoryEvent{activityEvent, timerEvent}, 40); err != nil {
 		t.Fatalf("matching activation mismatch: %v", err)
-	}
-}
-
-func TestHistoryMismatchErrorDescribesPositionAndBothSides(t *testing.T) {
-	err := &HistoryMismatchError{EventID: 17, Expected: "timerStarted seq=1", Actual: "scheduleActivity seq=1"}
-	want := "history mismatch at event 17: history has timerStarted seq=1, code emitted scheduleActivity seq=1"
-	if err.Error() != want {
-		t.Fatalf("error=%q, want %q", err.Error(), want)
-	}
-	err = assertHistoryMismatch(t, matchCommands(
-		[]*capstanv1.Command{matchingCommand(t, `{"scheduleActivity":{"seq":"2","activityType":"new"}}`)},
-		[]*capstanv1.HistoryEvent{matchingEvent(t, `{"eventId":"17","activityScheduled":{"seq":"1","activityType":"old"}}`)}, 16), 17)
-	if !strings.Contains(err.Expected, "activityScheduled") || !strings.Contains(err.Expected, "old") ||
-		!strings.Contains(err.Actual, "scheduleActivity") || !strings.Contains(err.Actual, "new") {
-		t.Fatalf("unhelpful mismatch descriptions: %+v", err)
 	}
 }

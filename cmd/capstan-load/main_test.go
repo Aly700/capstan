@@ -15,11 +15,8 @@ func TestSummaryCountsFailuresAndNearestRankLatency(t *testing.T) {
 	if got.Completed != 100 || got.Errors != 1 || got.Activities != 502 || got.RunsPerSecond != 10 || got.ActivitiesPerSecond != 50.2 || got.P50MS != 50 || got.P99MS != 99 {
 		t.Fatalf("bad summary: %+v", got)
 	}
-}
-
-func TestSummaryWithNoSuccessHasNoInventedPercentiles(t *testing.T) {
-	got := summarize([]sample{{Error: "unavailable"}}, time.Second, 1)
+	got = summarize([]sample{{Error: "unavailable"}}, time.Second, 1)
 	if got.Completed != 0 || got.Errors != 1 || got.P50MS != 0 || got.P99MS != 0 {
-		t.Fatalf("bad summary: %+v", got)
+		t.Fatalf("no-success summary invented percentiles: %+v", got)
 	}
 }

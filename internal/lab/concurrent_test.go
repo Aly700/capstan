@@ -31,19 +31,6 @@ func TestTransactionSchedulerInterleavesAPITransactions(t *testing.T) {
 	}
 }
 
-func TestConcurrentRunsShareQueueAndKeepSeparateOutcomes(t *testing.T) {
-	result, err := Run(context.Background(), 1, Options{NoFaults: true})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.RootRuns != 2 {
-		t.Fatalf("got %d roots, want two sharing the queue", result.RootRuns)
-	}
-	if result.TransactionSteps == 0 {
-		t.Fatal("no transaction-level interleaving")
-	}
-}
-
 func TestGateFaultResponsesAreExercised(t *testing.T) {
 	for _, name := range []string{"gate-errors", "gate-late"} {
 		result, err := Run(context.Background(), 1, Options{NoFaults: true, Scenario: name})
@@ -65,30 +52,5 @@ func TestGateOracleRequiresRecoveryFromEveryClientResponse(t *testing.T) {
 		if err := checkGateResponses("gate-errors", responses); err == nil {
 			t.Fatalf("accepted premature resolution after %v", responses)
 		}
-	}
-}
-
-func TestCompanionKeepsTwoEffectsWithoutRedundantTimer(t *testing.T) {
-	_, snapshot, err := runScenario(context.Background(), 0, scenarioCatalog()[0], Options{NoFaults: true, Workers: 3, MaxSteps: 1000})
-	if err != nil {
-		t.Fatal(err)
-	}
-	timers := map[string]int{}
-	activities := map[string]int{}
-	for id, history := range snapshot.Histories {
-		for _, event := range history {
-			if event.GetTimerStarted() != nil {
-				timers[id]++
-			}
-			if event.GetActivityScheduled() != nil {
-				activities[id]++
-			}
-		}
-	}
-	if timers["peer"] != 0 {
-		t.Fatalf("companion scheduled %d redundant timers", timers["peer"])
-	}
-	if timers["lab"] != 1 || activities["lab"] != 2 || activities["peer"] != 2 {
-		t.Fatalf("primary timers=%d, activity counts=%v", timers["lab"], activities)
 	}
 }

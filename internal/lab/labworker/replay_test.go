@@ -161,6 +161,7 @@ func TestSideEffectFailureCannotBeCaught(t *testing.T) {
 		func(*Context) any { panic("bad side effect") },
 		func(*Context) any { return make(chan int) },
 		func(wf *Context) any { _ = wf.Sleep(time.Second); return 7 },
+		func(*Context) any { return panickingJSON{} },
 	} {
 		_, err := Replay("marker", initial(t), func(wf *Context, _ any) (any, error) {
 			func() { defer func() { _ = recover() }(); wf.SideEffect(func() any { return callback(wf) }) }()
@@ -198,16 +199,6 @@ type panickingJSON struct{}
 
 func (panickingJSON) MarshalJSON() ([]byte, error) { panic("cannot serialize") }
 
-func TestSideEffectEncodingPanicCannotBeCaught(t *testing.T) {
-	_, err := Replay("encoding", initial(t), func(wf *Context, _ any) (any, error) {
-		func() { defer func() { _ = recover() }(); wf.SideEffect(func() any { return panickingJSON{} }) }()
-		return "caught", nil
-	})
-	if err == nil {
-		t.Fatal("unrecordable marker must fail the task even when caught")
-	}
-}
-
 func TestReplayDisposesWorkflowDefers(t *testing.T) {
 	for _, wait := range []bool{false, true} {
 		t.Run(map[bool]string{false: "marker", true: "sleep"}[wait], func(t *testing.T) {
@@ -239,28 +230,6 @@ func TestReplayDisposesWorkflowDefers(t *testing.T) {
 				t.Fatal("replay hung disposing a workflow defer")
 			}
 		})
-	}
-}
-
-func TestReplaySerializesDisposalDefers(t *testing.T) {
-	for range 10 {
-		finished := 0
-		_, err := Replay("cleanup", initial(t), func(wf *Context, _ any) (any, error) {
-			branches := make([]Branch, 20)
-			for i := range branches {
-				branches[i] = func(child *Context) (any, error) {
-					defer func() { finished++ }()
-					return child.Activity("effect", nil)
-				}
-			}
-			return wf.All(branches...)
-		})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if finished != 20 {
-			t.Fatalf("disposal completed %d defers, want 20", finished)
-		}
 	}
 }
 

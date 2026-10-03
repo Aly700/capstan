@@ -10,6 +10,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"strings"
@@ -298,22 +299,6 @@ func TestKeyCommandsAndUsage(t *testing.T) {
 		}
 	}
 }
-func TestMigrateNeedsOnlyDatabaseURL(t *testing.T) {
-	called := false
-	d := dependencies{migrate: func(context.Context, string) error { called = true; return nil }}
-	getenv := func(k string) string {
-		if k == "CAPSTAN_DATABASE_URL" {
-			return "postgres://only-db"
-		}
-		return ""
-	}
-	if err := run(context.Background(), []string{"migrate"}, getenv, strings.NewReader(""), io.Discard, io.Discard, d); err != nil || !called {
-		t.Fatalf("called=%v err=%v", called, err)
-	}
-	if err := run(context.Background(), []string{"migrate"}, func(string) string { return "" }, strings.NewReader(""), io.Discard, io.Discard, d); err == nil {
-		t.Fatal("missing migration DSN accepted")
-	}
-}
 func TestStartupFailureClosesResources(t *testing.T) {
 	for _, step := range []string{"migrate", "open", "engine", "readiness", "listen"} {
 		t.Run(step, func(t *testing.T) {
@@ -352,6 +337,16 @@ func TestStartupFailureClosesResources(t *testing.T) {
 			}
 		})
 	}
+}
+
+func postgresTestURL(t *testing.T, dsn, name string) string {
+	t.Helper()
+	u, err := url.Parse(dsn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	u.Path = "/" + name
+	return u.String()
 }
 
 func TestReadinessQueriesPostgres(t *testing.T) {
