@@ -119,7 +119,7 @@ ok   github.com/Aly700/capstan/internal/lab   323.388s
 That is 2,000 completed run executions across baseline and faulted variants,
 with every final cleanup check enabled. The log is
 [archived delta-pg-500-uncontended.log](raw/historical/lab/delta-pg-500-uncontended.log); despite its filename, the host was still
-shared with other lanes. Only this lane's CPU-heavy jobs had ended. The databases
+shared with other work. Only this campaign's CPU-heavy jobs had ended. The databases
 were removed by normal test cleanup. No lease duration, scheduler behavior,
 source assertion, or property was changed between the bounded final-source
 attempt and this successful rerun.

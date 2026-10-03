@@ -16,7 +16,7 @@ Repeated runs vary substantially, so all repeats are retained below.
 Apple M5 Max, 18 logical CPUs, 51,539,607,552 bytes (48 GiB; marketed as 48 GB),
 macOS 26.6.2 build 25G83. The server and Node workers ran natively on the Mac.
 PostgreSQL ran in the existing Colima VM: 4 vCPUs, 8 GiB configured memory, Docker
-reported 8,307,109,888 usable bytes. Other lanes shared this machine and PostgreSQL.
+reported 8,307,109,888 usable bytes. Other work shared this machine and PostgreSQL.
 
 - Go 1.26.4 darwin/arm64; Connect Go 1.21.0; pgx 5.11.0; Go protobuf 1.36.12.
 - PostgreSQL 16.15, aarch64 Alpine, GCC 15.2.0; psql client 16.13.
@@ -44,7 +44,7 @@ scripts/run-load.sh 10 500 4
 scripts/run-load.sh 100 1000 4
 scripts/run-load.sh 50 1000 4   # repeat
 scripts/run-load.sh 200 1000 4  # repeat
-scripts/run-load.sh 800 1600 4  # repeat after a sample observed another lane
+scripts/run-load.sh 800 1600 4  # repeat after a sample observed another process
 python3 scripts/summarize-load.py .lane/load_c10_w4-* .lane/load_c25_w4-* .lane/load_c50_w4-* .lane/load_c100_w4-* .lane/load_c200_w4-* .lane/load_c800_w4-* .lane/load_c50_w1-* .lane/load_c50_w8-*
 ```
 
@@ -140,7 +140,7 @@ Mac-to-Colima statement round trips. Identifying that split would need additiona
 server instrumentation; the evidence supports the transaction path as the bottleneck,
 not an assertion that PostgreSQL CPU or workers are exhausted.
 
-The first 800 run sampled another lane's test database and an active `postgres`
+The first 800 run sampled another test database and an active `postgres`
 connection. Its result is retained and marked in the JSON. The repeat sampled no
 other active databases and still dropped to 39.0705 runs/s. The full machine was
 shared; absence from a one-second sample does not rule out brief competing work.
@@ -256,7 +256,7 @@ are shortened to their basenames):
 ```
 
 
-## Historical performance-lane measurements
+## Historical performance measurements
 
 Measured on 2026-09-28, with the same machine, versions, workload, driver, worker
 slots, transports, sampling SQL and timing boundaries described above. The before
@@ -266,7 +266,7 @@ The final campaigns also include main through `eb2659e`, including the fault lab
 The required D30 fault-wrapper adapter affects lab tests only.
 
 The prescribed 11 runs were repeated in the exact original invocation order, then
-the entire 11-run campaign was repeated because other lanes were sampled. Together
+the entire 11-run campaign was repeated because other processes were sampled. Together
 they completed **23,400 workflows and 117,000 persisted activity completions, with zero
 errors**, zero task failures and no remaining tasks in any post-run audit. All
 50 new baseline, tuning and final measurements are appended to
@@ -286,9 +286,9 @@ unset CAPSTAN_DB_MAX_CONNS  # measured default: 40
 # Repeat them with CAPSTAN_LOAD_PHASE=after-repeat.
 ```
 
-The harness changes only add a safe database-prefix option, performance-lane ports,
+The harness changes only add a safe database-prefix option, performance ports,
 and phase/pool metadata. Its defaults remain `capstan_evidence_*` and 7301.
-The performance lane used only port 7401 and its own `capstan_perf_*` load databases.
+The performance campaign used only port 7401 and its own `capstan_perf_*` load databases.
 Archived controls and gates are in [raw/historical/perf/](raw/historical/perf/).
 Raw logs were `.lane/after-1.log` through `after-11.log`, and
 `.lane/after-repeat-1.log` through `after-repeat-11.log`. Each points to an unchanged
@@ -456,10 +456,10 @@ made without that measurement.
 | after-repeat / 10 | 200 / 4 | 14 | 181.4597 | 152.8311 | 134.3294 | 40 | 163 | 1 | 0 |
 | after-repeat / 11 | 800 / 4 | 22 | 186.1713 | 163.5366 | 128.5671 | 40 | 764 | 0 | 0 |
 
-Other lanes shared the machine and PostgreSQL: **22 of these 22 final
+Other work shared the machine and PostgreSQL: **22 of these 22 final
 runs sampled other active databases**. An independent process audit observed the
-lab lane's PostgreSQL campaign and later CPU-heavy lab campaigns overlapping the
-first campaign, including its slower final 800 point. No performance-lane tests ran
+lab's PostgreSQL campaign and later CPU-heavy lab campaigns overlapping the
+first campaign, including its slower final 800 point. No performance tests ran
 alongside its loads, and no own orphan process was found. The second campaign is
 retained regardless of overlap. Container CPU includes other databases; absence
 from a one-second sample still cannot establish an otherwise idle host. The JSON
@@ -481,7 +481,7 @@ passed ([archived merged-verify-reviewed.log](raw/historical/perf/merged-verify-
 race and 2,000 without; an additional `go test -count=1 -v ./internal/lab/...`
 passed its default 2,000 seeds ([archived lab-default-reviewed.log](raw/historical/perf/lab-default-reviewed.log)). Database tests
 were never skipped. SDK output: 18 files passed, 2 opt-in files skipped;
-369 tests passed, 5 skipped. The performance lane made no SDK source changes.
+369 tests passed, 5 skipped. The performance campaign made no SDK source changes.
 
 <!-- final-numbers:start -->
 ## Final code (904cb6c)

@@ -1,5 +1,5 @@
 // Agent primitives for workflow code: durable model calls, tool calls through AgentOps
-// Gate, and human decisions. Frozen contract for the build; implemented by the agent lane
+// Gate, and human decisions. Frozen contract for the build, implemented
 // on top of the activity and approval mechanisms.
 
 import { ApplicationFailure, type Duration } from "../types.ts";

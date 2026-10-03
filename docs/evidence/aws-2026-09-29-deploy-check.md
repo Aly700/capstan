@@ -8,7 +8,7 @@ and unconfirmed SNS subscriptions, listed below. No local worker or watchdog rem
 
 This is the September 29 Toronto session; all timestamps below are **September 30, 2026 UTC**.
 No deployment fix, source change, dependency, Codex lane, or manual ECS stop-task was needed.
-Nothing was pushed. The evidence commit stays on `lane/deploycheck`.
+Nothing was pushed. The evidence commit stays local.
 
 ## Identity, baseline and foundation
 
@@ -246,7 +246,7 @@ complete teardown inventory and byte comparison. Local shared PostgreSQL was not
 All evidence was scanned against the actual key, hash line and raw hash: none occur.
 Log exports retain every line with trailing whitespace normalized; their source/export
 hashes are in the [log manifest](aws-2026-09-29-deploy-check-log-exports.json).
-No frozen contract or source file changed. No lead push or rerun is required for this check.
+No frozen contract or source file changed. No push or rerun is required for this check.
 
 ## Addendum — 2026-10-01 inventory
 

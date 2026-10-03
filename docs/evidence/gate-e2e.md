@@ -1,6 +1,6 @@
 # Tool calls through the real AgentOps Gate
 
-Verified 2026-09-28 by the agent lane: [run log](raw/historical/agent/agent-delta1-gate-e2e.log),
+Verified 2026-09-28: [run log](raw/historical/agent/agent-delta1-gate-e2e.log),
 [compose file used](raw/historical/agent/agent-e2e-compose.yml) (environment references only).
 
 ```sh

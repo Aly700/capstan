@@ -1,5 +1,5 @@
 // The client used by scripts, the CLI, and tests to start and inspect runs. Frozen
-// contract for the build; implemented by the SDK core lane.
+// contract for the build.
 
 import type { Duration } from "../types.ts";
 import { Code, ConnectError, createClient } from "@connectrpc/connect";

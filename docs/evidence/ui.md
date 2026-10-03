@@ -57,7 +57,7 @@ The clean-shell quickstart completed `quickstart-1` and the real browser display
 its completed history and result 5. [Browser transcript](raw/904cb6c/quickstart-ui.log),
 [inspected screenshot](raw/904cb6c/quickstart-ui.png). This checks the README path
 on the final code; the wider historical filter, paging, mobile and privacy
-campaign above was not repeated by this lane.
+campaign above was not repeated on the final code.
 <!-- final-numbers:end -->
 
 ## Blocked banner follow-up (2026-09-28)

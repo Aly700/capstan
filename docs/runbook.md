@@ -3,8 +3,8 @@
 This runbook describes the deployment design and operator procedures. The integrated
 server runs locally against PostgreSQL; the [independent audit](evidence/audit-2026-09-28.md)
 exercises that implementation. AWS deployment, identity, prices, alarms and destruction
-were outside the local audit's permitted scope. Obtain current deployment evidence from
-the deployment lane before treating those procedures as validated.
+were outside the local audit's permitted scope. Obtain current deployment evidence
+before treating those procedures as validated.
 
 The documented deployment uses one server task. The local audit's successful two-process
 timer test does not establish general multiple-server support.
@@ -37,7 +37,7 @@ The server's separate $2/day model cap does not cover AWS or the Gate's infrastr
 
 Use Go 1.26.4, Node 26, buf 1.73.0, and the protoc plugins pinned by `go.mod`.
 The existing Colima PostgreSQL remains at 127.0.0.1:55432. Do not restart it or run
-Compose `down`; all lanes share it. These checks do not start another database:
+Compose `down`; other work shares it. These checks do not start another database:
 
 ```sh
 make verify

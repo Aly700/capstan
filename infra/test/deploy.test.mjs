@@ -14,7 +14,7 @@ test('deployment requires a manual main-branch dispatch and rejects the server s
   assert.match(workflow, /id-token: write/);
   assert.match(workflow, /cancel-in-progress: false/);
   assert.match(workflow, /role-to-assume: \$\{\{ vars.CAPSTAN_DEPLOY_ROLE_ARN \}\}/);
-  assert.ok(workflow.indexOf('not implemented yet (server lane)') < workflow.indexOf('aws-actions/configure-aws-credentials'));
+  assert.ok(workflow.indexOf('not implemented yet (server stub)') < workflow.indexOf('aws-actions/configure-aws-credentials'));
   assert.doesNotMatch(workflow, /pull_request|push:\s*$|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|secrets\./m);
   assert.match(workflow, /aws-actions\/configure-aws-credentials@v6/);
   assert.match(workflow, /allowed-account-ids: \$\{\{ vars.CAPSTAN_AWS_ACCOUNT_ID \}\}/, 'the credentials step refuses any other account');

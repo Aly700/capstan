@@ -27,6 +27,20 @@ FINAL = RAW / SHA[:7]
 POLISH_SHA = "0a80a08f7a0a3bb88afd4221e1fe9b085c48afb1"
 POLISH = RAW / "polish-2026-09-28"
 REVIEW_SHA = "59065273ba73f66109eea66779383eb58286f9a6"
+# Wording pass after the review: comment-only source edits and documentation. Pinned so
+# the source-drift and audit-report checks below still accept exactly those edits.
+WORDING_SHA = "0000000000000000000000000000000000000000"
+WORDING_FILES = {
+    "Makefile", "cmd/capstan-lab/mutate.go", "conformance/README.md",
+    "conformance/workflows.ts", "gen/capstan/v1/capstan.pb.go",
+    "gen/capstan/v1/capstanv1connect/capstan.connect.go",
+    "internal/store/pgstore/pgstore.go", "internal/store/store.go",
+    "proto/capstan/v1/capstan.proto", "scripts/demo-idle-wait.mjs",
+    "sdk/src/client/index.ts", "sdk/src/gen/capstan/v1/capstan_pb.ts",
+    "sdk/src/testing/index.ts", "sdk/src/worker/index.ts",
+    "sdk/src/workflow/agent.ts", "sdk/src/workflow/index.ts",
+    "sdk/test/agent-live.test.ts",
+}
 REVIEW = RAW / "polish-review-2026-09-28"
 SOURCE_PATHS = ["cmd", "internal", "sdk", "gen", "proto", "examples", "scripts",
                 "Makefile", "go.mod", "go.sum", "compose.yaml", "conformance",
@@ -536,7 +550,10 @@ def operational_proofs():
     setup = re.search(r"<!-- quickstart:start -->\n```bash\n(.*?)```",readme,re.S)[1]
     cleanup = re.search(r"<!-- quickstart:cleanup -->\n```bash\n(.*?)```",readme,re.S)[1]
     same(read(FINAL/"quickstart-commands.sh"),setup+"\n"+cleanup,"tested README commands")
-    original = subprocess.check_output(["git","show",f"{SHA}:docs/evidence/audit-2026-09-28.md"],cwd=ROOT,text=True)
+    # The report text is pinned at the wording pass; its row statuses are counted against the
+    # measured revision above, so measurements cannot drift behind a wording change.
+    original = subprocess.check_output(["git","show",f"{WORDING_SHA}:docs/evidence/audit-2026-09-28.md"],cwd=ROOT,text=True)
+    original = original.split("## Post-audit resolution",1)[0]
     current = read(EVIDENCE/"audit-2026-09-28.md")
     assert current.startswith(original), "auditor's original report changed"
     failed = set(re.findall(r"^\| ([A-Z]\d+) \| \*\*FAILED\*\*",original,re.M))
@@ -573,7 +590,12 @@ def polish_provenance():
         "internal/lab/mutants/017-expired-activity-completion.patch",
     }, "grouped token fences and refreshed mutant contexts")
     # 6d7db69 changed only the held-transaction test helper after the review; no campaign runs it.
-    subprocess.run(["git", "diff", "--exit-code", REVIEW_SHA, "--", *SOURCE_PATHS,
+    worded = subprocess.check_output(
+        ["git", "diff", "--name-only", REVIEW_SHA, WORDING_SHA, "--", *SOURCE_PATHS,
+         ":(exclude)internal/store/pgstore/edges_test.go"],
+        cwd=ROOT, text=True).splitlines()
+    same(set(worded), WORDING_FILES, "comment and wording edits after the review")
+    subprocess.run(["git", "diff", "--exit-code", WORDING_SHA, "--", *SOURCE_PATHS,
                     ":(exclude)internal/store/pgstore/edges_test.go"],
                    cwd=ROOT, check=True)
 

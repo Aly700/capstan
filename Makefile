@@ -1,4 +1,4 @@
-# Capstan build gate. `make verify` is what every lane must pass before merge.
+# Capstan build gate. `make verify` is what every change must pass before merge.
 SHELL := /bin/bash
 export PATH := $(HOME)/go/bin:$(PATH)
 # Gates run on the toolchain go.mod names, as CI does (D26); override with GOTOOLCHAIN=local.
@@ -33,7 +33,7 @@ test-sdk:
 
 test: test-go test-sdk
 
-# One shared PostgreSQL for all tests and lanes. Tests create and drop their own databases.
+# One shared PostgreSQL for all tests and local work. Tests create and drop their own databases.
 pg-up:
 	docker compose up -d --wait postgres
 

@@ -1,7 +1,7 @@
 # Evidence index
 
 Final production source: **`904cb6c41da4f57ac0399d1524989288e3ededb1`**, measured
-**2026-09-28**. Final-lane commits add evidence and documentation; the engine and SDK
+**2026-09-28**. Later commits add evidence and documentation; the engine and SDK
 remain at that revision. [Raw data and reproduction](raw/README.md),
 [historical archive manifest](raw/historical/manifest.json),
 [numeric verifier](raw/verify-numbers.py).
@@ -27,8 +27,8 @@ Recorded sessions (single runs, not recomputed by `raw/verify-numbers.py`):
 
 | Claim | How it is shown | Evidence | Status |
 | --- | --- | --- | --- |
-| Tool calls through AgentOps Gate | Real Gate from its own Compose: allow, deny, approval, worker SIGKILLed during the approval wait | [Gate](gate-e2e.md), [log](raw/historical/agent/agent-delta1-gate-e2e.log) | VERIFIED — 2026-09-28, agent lane (historical recorded run) |
-| Real agent work survives a worker crash | Two real Codex lanes at xhigh; worker SIGKILLed; activities reattach with one launch per lane | [Codex lanes](codex-lanes-local.md) | VERIFIED — 2026-09-28, workload lane (recorded) |
+| Tool calls through AgentOps Gate | Real Gate from its own Compose: allow, deny, approval, worker SIGKILLed during the approval wait | [Gate](gate-e2e.md), [log](raw/historical/agent/agent-delta1-gate-e2e.log) | VERIFIED — 2026-09-28 (historical recorded run) |
+| Real agent work survives a worker crash | Two real Codex lanes at xhigh; worker SIGKILLed; activities reattach with one launch per lane | [Codex lanes](codex-lanes-local.md) | VERIFIED — 2026-09-28 (recorded) |
 | Cloud deployment survives a server kill | AWS agentops via GitHub OIDC; `ecs stop-task` mid-run; replacement task; 16-event prefix intact; teardown inventory | [AWS](aws-2026-09-28.md) | VERIFIED once — 2026-09-28, image b49c413 (recorded; standing resources deleted, AWS-retained INACTIVE records noted) |
 
 The final [quickstart transcript](raw/904cb6c/quickstart.log) runs from a clean shell.
@@ -55,7 +55,7 @@ resolution. The final memory campaign includes every seed and supersedes those
 aggregate claims for the current code.
 
 The cost recording is retained and its arithmetic checked. No paid model request,
-provider invoice check, AWS operation, push or deployment was part of this lane.
+provider invoice check, AWS operation, push or deployment was part of this pass.
 The static viewer is public; its data comes from authenticated same-origin RPCs.
 Workflow payloads are opaque and can contain caller-supplied secrets (D33).
 
@@ -77,4 +77,4 @@ historical per-seed observations as verified.
 The shared PostgreSQL was never stopped, reset or restarted. Measurement commands
 clean up their owned processes and databases. The ordinary test suite retains its
 existing isolated test database prefixes and audit ports; the load and demo campaigns
-use only final-lane databases and ports. [Final cleanup](raw/904cb6c/cleanup.log).
+use only their own databases and ports. [Final cleanup](raw/904cb6c/cleanup.log).

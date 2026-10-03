@@ -1,5 +1,5 @@
-// Package pgstore implements store.Store on PostgreSQL 16 with pgx. Implemented by the
-// store lane; must pass the shared conformance suite in store/storetest.
+// Package pgstore implements store.Store on PostgreSQL 16 with pgx. It
+// must pass the shared conformance suite in store/storetest.
 package pgstore
 
 import (

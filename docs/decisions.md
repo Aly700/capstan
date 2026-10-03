@@ -2,11 +2,12 @@
 
 Numbered, dated, never rewritten. A later decision may supersede an earlier one by number.
 
-## D1 — 2026-09-28 — Contracts first, written by the lead
+## D1 — 2026-09-28 — Contracts first, frozen for the build
 
 The proto, the store interface, the engine API, the schema, the conformance rules and the
-SDK's public signatures are written by the lead before any lane starts and frozen for the
-build. Lanes implement them in parallel. This is the only way nine lanes avoid colliding.
+SDK's public signatures were written first and frozen for the build. The nine components
+were then implemented against them in parallel. This is the only way parallel work on nine
+components avoids colliding.
 
 ## D2 — 2026-09-28 — The inbox generalises the spec's signal inbox
 
@@ -47,7 +48,7 @@ No change to AgentOps Gate is needed. The call happens outside any transaction.
 
 Tests use one compose PostgreSQL on port 55432 and create a database per test. Testcontainers
 needs extra configuration under colima and would start one container per test package per
-lane. CI uses a PostgreSQL service container with the same helper.
+concurrent build. CI uses a PostgreSQL service container with the same helper.
 
 ## D8 — 2026-09-28 — Model cost is computed by the server
 
@@ -69,11 +70,11 @@ RPC is unary, so the Connect protocol works over HTTP/1.1 through the gateway; t
 HTTP/2 cleartext for `http://` addresses and HTTP/1.1 for `https://`. Proto comments that say
 "up to 30 seconds" describe the ceiling, not the default.
 
-## D11 — 2026-09-28 — Compile-time stubs for every cross-lane symbol
+## D11 — 2026-09-28 — Compile-time stubs for every cross-component symbol
 
 `engine.New`, `memstore.New`, `pgstore.Open`, `pgstore.Migrate` and `cmd/capstan-server`
-exist as stubs from wave 0 so each lane compiles against real symbols. The owning lane
-replaces the stub; no other lane edits it.
+exist as stubs from the start so each component compiles against real symbols. The owning
+component replaces the stub; nothing else edits it.
 
 ## D12 — 2026-09-28 — Cancel commands reference; they do not allocate
 
@@ -82,7 +83,7 @@ their seq must be greater than every seq already allocated in the run (history p
 commands in the same task). `RequestActivityCancel` and `CancelTimer` carry the seq of the
 activity or timer they refer to: it must exist in history (or earlier in the same task) and
 not be settled yet. The plan's "strictly increasing" rule applies to allocating commands only.
-(SDK lane issue 1.)
+(SDK issue 1.)
 
 ## D13 — 2026-09-28 — No per-activity cancellation API in v1
 
@@ -138,7 +139,7 @@ but it is an engine detail, not a guarantee. (SDK issue 8.)
 
 A continuation appends `~<k>` to its base id, and the schema caps run_id at 200 characters.
 StartRun therefore accepts caller ids of 1–180 characters, leaving room for up to 19
-characters of suffix. (Server lane issue 1.) The engine's contract comment on `Deps` now
+characters of suffix. (Server issue 1.) The engine's contract comment on `Deps` now
 states that GATE approvals resolve only through the Gate or by timeout (server issue 2).
 
 ## D22 — 2026-09-28 — Money is rounded to the micro-dollar by the engine
@@ -147,7 +148,7 @@ The schema stores USD as numeric(12,6), but the price formula can produce smalle
 claude-sonnet-5 cache-read token costs $0.0000002). The engine rounds every USD amount it
 computes (reservation estimates, finished costs) to 6 decimal places, half away from zero,
 before it writes the amount or returns it. Both stores then hold the same value, and a repeated
-FinishAICall returns exactly what the first one returned. (Engine lane issue 4.)
+FinishAICall returns exactly what the first one returned. (Engine issue 4.)
 
 ## D23 — 2026-09-28 — Store precision and updates
 
@@ -159,7 +160,7 @@ inside serialized protobufs and are kept exactly.
 
 `Tx.Update*` replaces every field of the record except its key, as pgstore does. The engine
 never changes a record's creation fields, so no caller depends on which fields are
-"mutable". (Engine lane issue 5.)
+"mutable". (Engine issue 5.)
 
 ## D24 — 2026-09-28 — Due-query limits must be positive
 
@@ -174,7 +175,7 @@ The price table is keyed by model family (`claude-opus-5`, `claude-sonnet-5`, `c
 `claude-fable-5-1`), while workers send the real model id (`claude-opus-5-5`,
 `claude-haiku-4-5-20251001`, …). The engine prices a call by the exact key if present, otherwise
 by the longest key that is a prefix of the id and ends at a `-` boundary of it; otherwise the
-model is unknown and is charged its estimate (D8). Implemented by the lead at integration.
+model is unknown and is charged its estimate (D8). Implemented at integration.
 
 ## D26 — 2026-09-28 — Gates run on the pinned toolchain
 
@@ -188,14 +189,14 @@ A model call can fail after the provider has billed it (a timeout on a non-strea
 response), with no token counts to report. `FinishAICallRequest` gains
 `bool usage_unknown`. When it is set on a failed call, the engine charges the reservation
 estimate instead of zero, so the ledger over-counts rather than under-counts. The worker
-sets it when a provider request was sent and no usage came back. (Agent lane issue 1.)
+sets it when a provider request was sent and no usage came back. (Agent issue 1.)
 
 ## D28 — 2026-09-28 — A lost Reserve acknowledgement stays counted until midnight
 
 If a ReserveAICall commits but its response is lost, the worker never calls the provider
 (it has no reservation id), and the orphaned reservation counts at its estimate against
 that Toronto day's cap. No money is spent, and the cap fails closed. This is a documented
-v1 limitation. Reconciling orphaned reservations is later work. (Agent lane issue 2.)
+v1 limitation. Reconciling orphaned reservations is later work. (Agent issue 2.)
 
 ## D29 — 2026-09-28 — A tool runs with the arguments the Gate decided on
 
@@ -204,11 +205,11 @@ v1 limitation. Reconciling orphaned reservations is later work. (Agent lane issu
 arguments recomputed by the current code. When the current code proposes different
 arguments for a step the Gate has already decided, the workflow task fails as a history
 mismatch and the run blocks, naming the step. An approval therefore can never authorise
-arguments nobody saw. (Agent lane issue 4.)
+arguments nobody saw. (Agent issue 4.)
 
 ## D30 — 2026-09-28 — AwaitRun subscribes to committed run closure
 
-The lead authorises two additive store methods: `Store.SubscribeRun(runID string)
+Two additive store methods are authorised: `Store.SubscribeRun(runID string)
 (<-chan struct{}, func())` and `Tx.NotifyRunClosed(runID string)`. The engine's common
 close path schedules the notification in the closing transaction. Only commit delivers
 it; rollback is silent. Run notifications wake all subscribers for that run, coalesce

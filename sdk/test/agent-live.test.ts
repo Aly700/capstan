@@ -4,7 +4,7 @@ import { FinishAICallResponseSchema, ReserveAICallResponseSchema, type FinishAIC
 import { activityStorage } from "../src/worker/activities.ts";
 import { createModelActivity } from "../src/worker/builtins/model.ts";
 
-// Explicit opt-in only. Phase A uses a recording ledger double, so the lead can
+// Explicit opt-in only. Uses a recording ledger double to
 // smoke-test the installed provider SDK without requiring the Capstan server.
 it.skipIf(process.env.CAPSTAN_LIVE !== "1")("live Anthropic smoke reserves under $0.05 and finishes with usage", async () => {
   expect(Boolean(process.env.ANTHROPIC_API_KEY)).toBe(true);

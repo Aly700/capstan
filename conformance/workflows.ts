@@ -122,7 +122,7 @@ export async function markerChange(): Promise<unknown> {
   return nextSignal(defineSignal("done"));
 }
 
-// The agent API stays a stub until its lane lands. These workflows exercise the frozen
+// These workflows bypass the agent API and exercise the frozen
 // runtime approval contract directly, without implementing any agent primitive here.
 function approvalRuntime(): WorkflowRuntime {
   return (globalThis as unknown as Record<symbol, WorkflowRuntime>)[Symbol.for("capstan.workflow.runtime")]!;

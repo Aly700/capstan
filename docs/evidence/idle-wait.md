@@ -32,7 +32,7 @@ RUNNING, persisted in the database. It then submits `{"approved":true}` via the 
 CLI while no worker exists, shows the resulting unleased workflow task, starts a
 replacement worker, and requires completion with that same result.
 
-“Zero workers” is scoped to this isolated demo; other lanes are not stopped. There
+“Zero workers” is scoped to this isolated demo; other processes are not stopped. There
 is no run-owned task lease while idle. The shared server and its database pool still
 exist, and history occupies storage. The recording preserves wall-clock timing and
 contains the actual SQL/CLI output. Cleanup removes all demo processes and its

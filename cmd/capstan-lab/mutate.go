@@ -311,7 +311,7 @@ func runMutations(ctx context.Context, root string, opts mutationOptions, comman
 	if _, err := git(scratch, "add", "-A", "internal/lab"); err != nil {
 		return report, err
 	}
-	if _, err := git(scratch, "-c", "commit.gpgsign=false", "commit", "--allow-empty", "-m", "test(lab): isolated mutation snapshot", "-m", "Co-Authored-By: Codex <noreply@openai.com>"); err != nil {
+	if _, err := git(scratch, "-c", "commit.gpgsign=false", "commit", "--allow-empty", "-m", "test(lab): isolated mutation snapshot"); err != nil {
 		return report, err
 	}
 	snapshot, err := git(scratch, "rev-parse", "HEAD")

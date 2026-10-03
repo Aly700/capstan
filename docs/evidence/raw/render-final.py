@@ -216,7 +216,7 @@ is a live multi-day Gate deployment.
 its completed history and result 5. [Browser transcript](raw/{SHA}/quickstart-ui.log),
 [inspected screenshot](raw/{SHA}/quickstart-ui.png). This checks the README path
 on the final code; the wider historical filter, paging, mobile and privacy
-campaign above was not repeated by this lane."""),write)
+campaign above was not repeated on the final code."""),write)
     replace_block(E/"cost.md",section("""No provider request was made. The verifier reads the retained recording:
 14 input tokens and 4 output tokens, priced at $1/M and $5/M, give $0.000034.
 The recorded reservation was $0.010000, and the second worker left one ledger row.

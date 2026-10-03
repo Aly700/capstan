@@ -156,14 +156,14 @@ export const log = {
   error: (message: string, fields?: Record<string, unknown>) => runtime().log("error", message, fields),
 };
 
-// ---- agent layer (implemented by the agent lane on top of activities and approvals) ----
+// ---- agent layer (implemented on top of activities and approvals) ----
 
 export { human, model, tool } from "./agent.ts";
 export type { HumanDecision, HumanOptions, ModelRequest, ModelResult, ToolOptions, ToolResult } from "./agent.ts";
 
 // ---- runtime binding ----
 
-/** The replay runtime the sandbox installs. Internal: implemented by the SDK core lane. */
+/** The replay runtime the sandbox installs. Internal. */
 export interface WorkflowRuntime {
   proxyActivities<A>(options: ActivityOptions): ActivityProxy<A>;
   activity<T>(activityType: string, input: unknown, options: ActivityOptions): Promise<T>;

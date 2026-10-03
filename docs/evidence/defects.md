@@ -24,7 +24,7 @@ defect is added later, record its exact reproducing seed and symptom here, retai
 minimal regression in the owning package, and recognize only that documented failure.
 A seed alone must never suppress unrelated errors.
 
-No engine or store fix was made by this lane. See [the campaign report](lab-2026-09-28.md)
+No engine or store fix was made in this campaign. See [the campaign report](lab-2026-09-28.md)
 for measured coverage and [the fault model](lab-l2.md) for scope and limits.
 
 ## Harness findings corrected during development
@@ -69,7 +69,7 @@ the headline count and known list.
 Evidence is preserved in [archived l2-fault-red-behavior.log](raw/historical/lab/l2-fault-red-behavior.log). Main now normalizes cloned
 run/task/timer/approval/audit times to UTC and runs the full shared memstore conformance
 suite (`internal/store/memstore/conformance_test.go`). Delta 1 received those changes
-through its initial merge of main. This lane did not alter the store or hide tests
+through its initial merge of main. This campaign did not alter the store or hide tests
 behind a skip.
 
 <!-- final-numbers:start -->

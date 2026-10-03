@@ -72,7 +72,7 @@ GOTOOLCHAIN=go1.26.4 make verify
 ```
 
 This evidence covers the reference worker. Seed campaigns and engine defect
-counts belong to L2, which requires the engine lane to be merged first.
+counts belong to L2, which requires the integrated engine.
 
 <!-- final-numbers:start -->
 ## Final code (904cb6c)
