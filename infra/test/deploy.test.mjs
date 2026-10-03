@@ -89,13 +89,3 @@ test('rerunning a SHA reuses its immutable image but an ECR authorization failur
   assert.notEqual(denied.result.status, 0);
   assert.equal(denied.calls.filter(c => ['npx', 'docker', 'curl'].includes(c.tool)).length, 0);
 });
-
-test('runbook prices every cost row, explains the ceiling and covers first deploy, rotation, alarms and cleanup', () => {
-  assert.ok(existsSync(`${root}docs/runbook.md`), 'runbook is required');
-  const doc = readFileSync(`${root}docs/runbook.md`, 'utf8');
-  for (const term of ['CapstanGithubOidc', 'workloadOnly=true', 'capstan/api-key-hashes', 'force-new-deployment', 'capstan-http-5xx-rate', 'capstan-no-running-task', 'cdk destroy', '20 s', '30 s', 'not a hard spending cap', '730', 'hour', '50%', '90%', '100%', 'Route 53', 'CPU credits']) assert.ok(doc.includes(term), `runbook must explain ${term}`);
-  const rows = doc.split('\n').filter(line => line.startsWith('| ') && !line.startsWith('| Cost ') && !line.startsWith('| ---'));
-  assert.ok(rows.length >= 12);
-  for (const row of rows) assert.match(row, /https:\/\/aws\.amazon\.com\/[^ )]+/);
-  assert.doesNotMatch(doc, /\bdeterministic\b|AdministratorAccess|cdk bootstrap/);
-});

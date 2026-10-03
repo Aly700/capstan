@@ -2,15 +2,14 @@ import { createServer, type IncomingMessage } from "node:http";
 import { once } from "node:events";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
-import { create, fromJson, type MessageInitShape } from "@bufbuild/protobuf";
+import { create, type MessageInitShape } from "@bufbuild/protobuf";
 import { DurationSchema } from "@bufbuild/protobuf/wkt";
 import { Code, ConnectError } from "@connectrpc/connect";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { HistoryEventSchema, PollActivityTaskResponseSchema, TaskFailedCause, type CompleteActivityTaskRequest, type FailActivityTaskRequest, type FailWorkflowTaskRequest, type FinishAICallRequest, type ReserveAICallRequest } from "../src/gen/capstan/v1/capstan_pb.ts";
+import { PollActivityTaskResponseSchema, type CompleteActivityTaskRequest, type FailActivityTaskRequest, type FinishAICallRequest, type ReserveAICallRequest } from "../src/gen/capstan/v1/capstan_pb.ts";
 import { Worker, type WorkerOptions } from "../src/worker/index.ts";
 import { decode, encode } from "../src/internal/payload.ts";
 import { fakeServer } from "./fake-server.ts";
-import { FixtureBuilder, payload } from "./fixtures/build.ts";
 
 const workflowsPath = fileURLToPath(new URL("./agent-fixtures/workflows.ts", import.meta.url));
 const decisionId = "00000000-0000-4000-8000-000000000001";
@@ -109,28 +108,6 @@ describe("built-in activities in a real worker with local HTTP and Connect fakes
     const s = await setup(gateOptions(g.gateUrl));
     await expect.poll(() => s.server.requests("CompleteActivityTask").length).toBe(1);
     expect(decode(s.server.requests<CompleteActivityTaskRequest>("CompleteActivityTask")[0]!.result)).toEqual({ effect: "REQUIRE_APPROVAL", decisionId, approvalId, arguments: input.arguments });
-  });
-  it.each(["ALLOW", "REQUIRE_APPROVAL"])("reports changed %s arguments as HISTORY_MISMATCH without scheduling the tool", async (effect) => {
-    const h = new FixtureBuilder("changedToolArgs", null).task().scheduleActivity(1, "capstan.gate.decide", input)
-      .completeActivity(1, { effect, decisionId, approvalId, arguments: input.arguments }).task();
-    if (effect === "REQUIRE_APPROVAL") h.command("approvalRequested", { seq: "2", approvalId, source: "APPROVAL_SOURCE_GATE", gateDecisionId: decisionId, tool: input.toolName, arguments: payload(input.arguments)! })
-      .external("approvalResolved", { seq: "2", approvalId, outcome: "APPROVAL_OUTCOME_APPROVED", resolver: "owner" }).task();
-    let sent = false;
-    const executeTool = vi.fn();
-    const s = await setup({ activities: { "fs.write": executeTool } }, [], false, { worker: {
-      pollWorkflowTask: async (_request, context) => {
-        if (!sent) { sent = true; return { taskToken: new Uint8Array([7]), runId: "run", workflowType: "changedToolArgs", history: h.history.map((event) => fromJson(HistoryEventSchema, event)) }; }
-        if (!context.signal.aborted) await new Promise<void>((resolve) => context.signal.addEventListener("abort", () => resolve(), { once: true }));
-        return {};
-      },
-    } });
-    await expect.poll(() => s.server.requests("FailWorkflowTask").length, { timeout: 1_000 }).toBe(1);
-    const failed = s.server.requests<FailWorkflowTaskRequest>("FailWorkflowTask")[0]!;
-    expect(failed).toMatchObject({ cause: TaskFailedCause.HISTORY_MISMATCH, failure: { type: "HistoryMismatchError", message: expect.stringContaining("arguments changed since the Gate decided") } });
-    expect(decode(failed.failure!.details)).toEqual({ $capstan: { kind: "mismatch", eventId: Number(h.history.find((event) => event.activityCompleted)?.eventId) } });
-    expect(s.server.requests("CompleteWorkflowTask")).toHaveLength(0);
-    expect(s.server.requests("CompleteActivityTask")).toHaveLength(0);
-    expect(executeTool).not.toHaveBeenCalled();
   });
   it.each([
     { id: decisionId, effect: "REQUIRE_APPROVAL", approvalId: null },

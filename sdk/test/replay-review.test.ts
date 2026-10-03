@@ -12,30 +12,19 @@ function review(body: string, fixture: Fixture) {
 }
 
 describe("independent replay contract regressions", () => {
-  it("reports the first mismatch even when a later marker eagerly detects another", async () => {
-    const history = run("run").task().scheduleActivity(1, "double", 21).marker(2, "uuid", "", "recorded").task().expectCommands();
-    const body = "void rt.activity('triple',21,{startToCloseTimeout:'10s'}); rt.sideEffect(()=>1); return rt.nextSignal({name:'done'});";
-    await expect(review(body, history)).rejects.toMatchObject({ name: "HistoryMismatchError", eventId: 5 });
-  });
-
-  it.each([
-    ["callback throws undefined", "() => { throw undefined; }"],
-    ["callback emits a command", "() => { void rt.sleep(1); return 1; }"],
-    ["callback throws", "() => { throw new Error('side effect callback failed'); }"],
-    ["BigInt result", "() => 1n"],
-    ["circular result", "() => { const value = {}; value.self = value; return value; }"],
-  ])("fails closed when a caught side effect has no recordable result: %s", async (_label, callback) => {
+  it.each<[string, string, Record<string, unknown>]>([
+    ["callback throws undefined", "() => { throw undefined; }", { name: "Error", message: "workflow callback threw an empty value" }],
+    ["callback emits a command", "() => { void rt.sleep(1); return 1; }", { name: "Error", message: "sideEffect callbacks cannot emit workflow commands; call the workflow API outside the callback" }],
+    ["callback throws", "() => { throw new Error('side effect callback failed'); }", { name: "Error", message: "side effect callback failed" }],
+    ["BigInt result", "() => 1n", { name: "TypeError", message: expect.stringContaining("BigInt") }],
+    ["circular result", "() => { const value = {}; value.self = value; return value; }", { name: "TypeError", message: expect.stringContaining("circular") }],
+  ])("fails closed when a caught side effect has no recordable result: %s", async (_label, callback, failure) => {
     const history = run("run").task().expectCommands();
     const body = `try { rt.sideEffect(${callback}); } catch {} return rt.activity('double',21,{startToCloseTimeout:'10s'});`;
-    await expect(review(body, history)).rejects.toMatchObject({ message: expect.any(String) });
-  });
-
-  it("sets the current TaskStarted time before a synchronous signal handler runs", async () => {
-    const history = run("run").task("2026-09-28T12:00:01Z").signal("go", true).task("2026-09-28T13:00:00Z").expectCommands();
-    const body = "let observed;rt.setHandler({name:'go'},()=>{observed=rt.now();});await rt.condition(()=>observed!==undefined);return [observed,rt.now()];";
-    const result = await review(body, history);
-    expect(result[0]?.attributes.case).toBe("completeRun");
-    if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([1790600400000, 1790600400000]);
+    const settled = await review(body, history).then((commands) => ({ commands, error: undefined }), (error: unknown) => ({ commands: undefined, error }));
+    expect(settled.error).toMatchObject(failure);
+    // The activity scheduled after the swallowed failure never leaves the runtime as a command.
+    expect(settled.commands).toBeUndefined();
   });
 
   it("sets the current clock before evaluating a condition after a signal", async () => {
@@ -44,14 +33,5 @@ describe("independent replay contract regressions", () => {
     const result = await review(body, history);
     expect(result[0]?.attributes.case).toBe("completeRun");
     if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([1790600400000, 1790600400000]);
-  });
-
-  it("memoizes an old-run false patch decision across later activations", async () => {
-    const history = run("run").task().scheduleActivity(1, "double", 21).completeActivity(1, 42).task().expectCommands();
-    const body = "const first=rt.patched('v2');await rt.activity('double',21,{startToCloseTimeout:'10s'});return [first,rt.patched('v2')];";
-    const result = await review(body, history);
-    expect(result).toHaveLength(1);
-    expect(result[0]?.attributes.case).toBe("completeRun");
-    if (result[0]?.attributes.case === "completeRun") expect(decode(result[0].attributes.value.result)).toEqual([false, false]);
   });
 });

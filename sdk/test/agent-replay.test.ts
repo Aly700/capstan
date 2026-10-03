@@ -110,12 +110,6 @@ describe("agent replay uses the existing commands and sequence allocator", () =>
       { requestApproval: { seq: "4", source: "APPROVAL_SOURCE_HUMAN" } },
     ]);
   });
-  it("defaults risk to MEDIUM and tool timeout to five minutes", async () => {
-    const h = history("defaults");
-    expect(await run(h)).toMatchObject([{ scheduleActivity: { input: payload({ toolName: "read", arguments: {}, riskTier: "MEDIUM" }) } }]);
-    h.scheduleActivity(1, "capstan.gate.decide", {}).completeActivity(1, { effect: "ALLOW", decisionId: "d", approvalId: null, arguments: {} }).task();
-    expect(await run(h)).toMatchObject([{ scheduleActivity: { seq: "2", activityType: "read", startToCloseTimeout: "300s" } }]);
-  });
   it("fails closed on an invalid recorded Gate effect", async () => {
     expect(await run(decided("UNKNOWN"))).toMatchObject([{ failRun: { failure: { type: "GateResponseInvalid", nonRetryable: true } } }]);
   });

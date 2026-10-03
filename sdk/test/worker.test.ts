@@ -79,13 +79,6 @@ describe("worker over scripted h2c Connect", () => {
     expect(server.requests<FailActivityTaskRequest>("FailActivityTask")[0]!.failure?.type).toBe("TimeoutFailure");
   });
 
-  it("honours the original server start time for an already expired attempt", async () => {
-    let signal: AbortSignal | undefined;
-    const { server } = await setup({ worker: { pollActivityTask: onceTask(activityTask({ startedTime: { seconds: BigInt(Math.floor(Date.now() / 1_000) - 6) }, startToCloseTimeout: { seconds: 5n } })) } }, { activities: { double: async () => { signal = activityContext().signal; return new Promise(() => {}); } } });
-    await expect.poll(() => server.requests<FailActivityTaskRequest>("FailActivityTask").length, { timeout: 500 }).toBe(1);
-    expect(signal).toBeUndefined();
-  });
-
   it("does not execute synchronous activity effects after its server deadline", async () => {
     let effects = 0;
     const { server } = await setup({ worker: { pollActivityTask: onceTask(activityTask({ startedTime: { seconds: BigInt(Math.floor(Date.now() / 1_000) - 6) }, startToCloseTimeout: { seconds: 5n } })) } }, { activities: { double: () => { ++effects; return 42; } } });

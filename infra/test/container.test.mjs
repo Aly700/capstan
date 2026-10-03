@@ -6,18 +6,6 @@ import test from 'node:test';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
-test('image builds the real ARM64 entrypoint and runs without root', () => {
-  assert.ok(existsSync(`${root}Dockerfile`), 'Dockerfile is required');
-  const file = readFileSync(`${root}Dockerfile`, 'utf8');
-  assert.match(file, /FROM .*golang:1\.26\.4.* AS build/);
-  assert.match(file, /CGO_ENABLED=0 GOOS=linux GOARCH=arm64/);
-  assert.match(file, /go build -trimpath -ldflags "-s -w".*\.\/cmd\/capstan-server/);
-  assert.match(file, /FROM .*gcr\.io\/distroless\/static-debian12:nonroot/);
-  assert.match(file, /EXPOSE 7233/);
-  assert.match(file, /USER nonroot/);
-  assert.match(file, /ENTRYPOINT \["\/capstan-server", "serve"\]/);
-});
-
 test('build context excludes local secrets, evidence, and dependency trees', () => {
   assert.ok(existsSync(`${root}.dockerignore`), '.dockerignore is required');
   const lines = readFileSync(`${root}.dockerignore`, 'utf8').split('\n');

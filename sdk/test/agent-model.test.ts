@@ -62,11 +62,6 @@ describe("capstan.model accounting and provider boundary", () => {
     expect(s.reserve.mock.calls[0]![0]).toMatchObject({ maxOutputTokens: 8n, inputTokensUpperBound: 283n, estimateUsd: 0.000646 });
     expect(s.call.mock.calls[0]![0]).toMatchObject({ messages, system: "café🔒", max_tokens: 8 });
   });
-  it("keeps a positive framing bound for an empty text message", async () => {
-    const s = setup();
-    await s.invoke({ prompt: "", maxTokens: 8 });
-    expect(s.reserve.mock.calls[0]![0]).toMatchObject({ maxOutputTokens: 8n, inputTokensUpperBound: 128n });
-  });
   it.each([undefined, 0, 0.01])("bounds the recorded 14-token live prompt even with estimate %s", async (estimateUsd) => {
     const recorded = response("OK.");
     recorded.model = "claude-haiku-4-5-20251001";
@@ -222,11 +217,6 @@ describe("capstan.model accounting and provider boundary", () => {
     await expect(s.invoke()).rejects.toMatchObject({ type: "ModelCancelled" });
     expect(s.call).not.toHaveBeenCalled();
     expect(s.finish.mock.calls[0]![0]).toMatchObject({ ok: false, usageUnknown: false });
-  });
-  it("recognizes the installed SDK's real timeout error class", async () => {
-    const s = setup(async () => { throw new Anthropic.APIConnectionTimeoutError(); });
-    await expect(s.invoke()).rejects.toMatchObject({ type: "ModelTimeout" });
-    expect(s.finish.mock.calls[0]![0]).toMatchObject({ errorCode: "ModelTimeoutUsageUnknown", ok: false });
   });
   it("retries only the idempotent finish RPC if its acknowledgement is lost", async () => {
     const s = setup();

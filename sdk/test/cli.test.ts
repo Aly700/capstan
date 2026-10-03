@@ -11,10 +11,10 @@ const closers: Array<() => Promise<void>> = [];
 afterEach(async () => { for (const close of closers.reverse()) await close(); closers.length = 0; });
 const launcher = fileURLToPath(new URL("../bin/capstan.mjs", import.meta.url));
 const workflows = fileURLToPath(new URL("./worker-fixtures/workflows.ts", import.meta.url));
-async function invoke(args: string[], client: NonNullable<Parameters<typeof fakeServer>[0]>["client"] = {}) {
+async function invoke(args: string[], client: NonNullable<Parameters<typeof fakeServer>[0]>["client"] = {}, env: NodeJS.ProcessEnv = {}) {
   const server = await fakeServer({ ...(client ? { client } : {}) });
   closers.push(server.close);
-  const child = spawn(process.execPath, [launcher, ...args], { env: { ...process.env, CAPSTAN_ADDRESS: server.address, CAPSTAN_API_KEY: server.apiKey }, stdio: ["ignore", "pipe", "pipe"] });
+  const child = spawn(process.execPath, [launcher, ...args], { env: { ...process.env, CAPSTAN_ADDRESS: server.address, CAPSTAN_API_KEY: server.apiKey, ...env }, stdio: ["ignore", "pipe", "pipe"] });
   let stdout = "", stderr = "";
   child.stdout.on("data", (data: Buffer) => { stdout += data.toString(); });
   child.stderr.on("data", (data: Buffer) => { stderr += data.toString(); });
@@ -52,10 +52,16 @@ describe("capstan launcher commands", () => {
     expect(result.code).toBe(0); expect(result.stdout).toContain("OK");
     expect(result.server.requests("SignalRun")[0]).toMatchObject({ runId: "r", name: "go", input: { data: new Uint8Array(Buffer.from("42")) } });
   });
-  it.each(["cancel", "resume"])("%s sends its run and optional reason", async (command) => {
+  it.each(["cancel", "resume", "terminate"] as const)("%s sends its run and optional reason", async (command) => {
     const result = await invoke([command, "r", "--reason", "reviewed"]);
     expect(result.code).toBe(0); expect(result.stdout).toContain("OK");
-    expect(result.server.requests(command === "cancel" ? "CancelRun" : "ResumeRun")[0]).toMatchObject({ runId: "r", reason: "reviewed" });
+    expect(result.server.requests({ cancel: "CancelRun", resume: "ResumeRun", terminate: "TerminateRun" }[command])[0]).toMatchObject({ runId: "r", reason: "reviewed" });
+  });
+  it("requires an API key before sending a request", async () => {
+    const result = await invoke(["terminate", "run-1"], {}, { CAPSTAN_API_KEY: "" });
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("CAPSTAN_API_KEY is required");
+    expect(result.server.calls).toHaveLength(0);
   });
   it.each(["approve", "deny"])("%s sends the approval choice, note and resolver", async (command) => {
     const result = await invoke([command, "r", "approval1", "--choice", "ship", "--note", "checked", "--resolver", "owner"]);
