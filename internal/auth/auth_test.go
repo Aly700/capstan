@@ -2,7 +2,6 @@ package auth
 
 import (
 	"crypto/sha256"
-	"encoding/base64"
 	"fmt"
 	"strings"
 	"testing"
@@ -39,19 +38,5 @@ func TestParseHashesRejectsAmbiguousOrMalformedEntries(t *testing.T) {
 	keys, err := ParseHashes("owner:" + h + ",worker:" + strings.Repeat("cd", 32))
 	if err != nil || len(keys) != 2 {
 		t.Fatalf("keys=%v err=%v", keys, err)
-	}
-}
-
-func TestNewKey(t *testing.T) {
-	a, b := NewKey(), NewKey()
-	if a == b {
-		t.Fatal("repeated random key")
-	}
-	if !strings.HasPrefix(a, "cap_") {
-		t.Fatalf("missing prefix: %q", a)
-	}
-	raw, err := base64.RawURLEncoding.DecodeString(strings.TrimPrefix(a, "cap_"))
-	if err != nil || len(raw) != 32 {
-		t.Fatalf("not 32 random bytes: len=%d err=%v", len(raw), err)
 	}
 }

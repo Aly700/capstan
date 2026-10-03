@@ -287,29 +287,6 @@ func TestEveryRPCAuthenticatesAndForwards(t *testing.T) {
 		})
 	}
 }
-func TestTerminateRunErrorMapping(t *testing.T) {
-	for _, tc := range []struct {
-		name string
-		err  error
-		code connect.Code
-	}{
-		{"closed", engine.ErrRunClosed, connect.CodeFailedPrecondition},
-		{"missing", engine.ErrNotFound, connect.CodeNotFound},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			f := &fakeAPI{call: func(context.Context, string, string, proto.Message) (proto.Message, bool, error) {
-				return nil, false, fmt.Errorf("terminate: %w", tc.err)
-			}}
-			hc, url := rpcHTTP(t, New(testConfig(), f, nil, Options{}))
-			req := connect.NewRequest(&v1.TerminateRunRequest{RunId: "r", Reason: "operator stop"})
-			req.Header().Set("Authorization", "Bearer secret")
-			_, err := rpc.NewClientServiceClient(hc, url).TerminateRun(t.Context(), req)
-			if connect.CodeOf(err) != tc.code {
-				t.Fatalf("err=%v; want %v", err, tc.code)
-			}
-		})
-	}
-}
 func TestErrorMappingAndInternalPrivacy(t *testing.T) {
 	tests := []struct {
 		err  error

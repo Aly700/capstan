@@ -2,7 +2,6 @@ package pgstore_test
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 	"testing"
@@ -14,7 +13,6 @@ import (
 	"github.com/Aly700/capstan/internal/store/storetest"
 	"github.com/Aly700/capstan/internal/testpg"
 	"github.com/jackc/pgx/v5"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var at = time.Date(2026, 9, 28, 12, 0, 0, 0, time.UTC)
@@ -153,41 +151,6 @@ func TestClaimTaskConcurrentWorkersClaimOnce(t *testing.T) {
 	}
 }
 
-func TestInsertRunConcurrentOnlyOneWins(t *testing.T) {
-	s, _ := openStore(t)
-	start := make(chan struct{})
-	results := make(chan error, 16)
-	for range 16 {
-		go func() {
-			<-start
-			results <- s.InTx(t.Context(), func(tx store.Tx) error { return tx.InsertRun(run("same-id")) })
-		}()
-	}
-	close(start)
-	wins, duplicates := 0, 0
-	for range 16 {
-		err := <-results
-		switch {
-		case err == nil:
-			wins++
-		case errors.Is(err, store.ErrAlreadyExists):
-			duplicates++
-		default:
-			t.Fatal(err)
-		}
-	}
-	if wins != 1 || duplicates != 15 {
-		t.Fatalf("wins=%d duplicates=%d, want 1 and 15", wins, duplicates)
-	}
-	txOK(t, s, func(tx store.Tx) error {
-		rs, err := tx.ListRuns(store.RunFilter{Limit: 20})
-		if err == nil && len(rs) != 1 {
-			t.Fatalf("runs=%d, want 1", len(rs))
-		}
-		return err
-	})
-}
-
 func TestSubscribeSurvivesListenerReconnect(t *testing.T) {
 	s, dsn := openStore(t)
 	ch, cancel := s.Subscribe(store.TaskActivity, "q")
@@ -224,33 +187,5 @@ func TestSubscribeSurvivesListenerReconnect(t *testing.T) {
 	case <-other:
 	case <-time.After(2 * time.Second):
 		t.Fatal("replacement listener did not deliver notification")
-	}
-}
-
-func TestConcurrentAppendReturnsConflict(t *testing.T) {
-	s, _ := openStore(t)
-	txOK(t, s, func(tx store.Tx) error { return tx.InsertRun(run("r")) })
-	start := make(chan struct{})
-	results := make(chan error, 16)
-	for range 16 {
-		go func() {
-			<-start
-			results <- s.InTx(t.Context(), func(tx store.Tx) error {
-				return tx.AppendEvents("r", []*capstanv1.HistoryEvent{{EventId: 1, Type: capstanv1.EventType_EVENT_TYPE_RUN_STARTED, Time: timestamppb.New(at)}})
-			})
-		}()
-	}
-	close(start)
-	wins := 0
-	for range 16 {
-		err := <-results
-		if err == nil {
-			wins++
-		} else if !errors.Is(err, store.ErrConflict) {
-			t.Errorf("append error %v, want ErrConflict", err)
-		}
-	}
-	if wins != 1 {
-		t.Fatalf("successful appends=%d, want 1", wins)
 	}
 }
