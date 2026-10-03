@@ -42,6 +42,79 @@ WORDING_FILES = {
     "sdk/test/agent-live.test.ts",
 }
 REVIEW = RAW / "polish-review-2026-09-28"
+# Test-quality pass (2026-10-03): tautological and duplicate tests removed; replay-safety,
+# exactly-once, poll-contention, time-zone, daily-cap and approval-recovery properties added.
+# Test files only, so every measurement above still describes the pinned revisions.
+TESTS_SHA = "e847b97bff5481e8ce4a71297e6bbad4f20e10c4"
+TEST_FILE = re.compile(r"(_test\.go|\.test\.(ts|js|mjs))$|^sdk/test/")
+TESTS_FILES = {
+    "cmd/capstan-lab/main_test.go",
+    "cmd/capstan-load/main_test.go",
+    "cmd/capstan-server/main_test.go",
+    "cmd/capstan-server/readiness_test.go",
+    "internal/auth/auth_test.go",
+    "internal/config/config_test.go",
+    "internal/config/model_prices_test.go",
+    "internal/config/pool_test.go",
+    "internal/engine/activity_task_test.go",
+    "internal/engine/api_test.go",
+    "internal/engine/approvals_test.go",
+    "internal/engine/config_test.go",
+    "internal/engine/decisions_delta_test.go",
+    "internal/engine/due_tasks_test.go",
+    "internal/engine/ledger_test.go",
+    "internal/engine/money_test.go",
+    "internal/engine/pg_poll_contention_test.go",
+    "internal/engine/precision_delta_test.go",
+    "internal/engine/run_timeouts_test.go",
+    "internal/engine/wakeup_test.go",
+    "internal/lab/concurrent_test.go",
+    "internal/lab/faults_test.go",
+    "internal/lab/lab_test.go",
+    "internal/lab/labworker/activation_test.go",
+    "internal/lab/labworker/match_test.go",
+    "internal/lab/labworker/replay_test.go",
+    "internal/lab/labworker/worker_test.go",
+    "internal/lab/run_notify_test.go",
+    "internal/lab/sink_test.go",
+    "internal/server/handlers_test.go",
+    "internal/server/ui/handler_test.go",
+    "internal/store/memstore/limits_test.go",
+    "internal/store/memstore/memstore_test.go",
+    "internal/store/memstore/updates_test.go",
+    "internal/store/pgstore/pgstore_test.go",
+    "internal/store/pgstore/stats_export_test.go",
+    "internal/store/pgstore/targeted_notify_test.go",
+    "internal/testpg/testpg_test.go",
+    "sdk/src/cli/terminate.test.ts",
+    "sdk/src/client/terminate.test.ts",
+    "sdk/test/agent-e2e.test.ts",
+    "sdk/test/agent-model.test.ts",
+    "sdk/test/agent-replay.test.ts",
+    "sdk/test/agent-worker.test.ts",
+    "sdk/test/audit-gate.test.ts",
+    "sdk/test/audit-sandbox.test.ts",
+    "sdk/test/cli.test.ts",
+    "sdk/test/client.test.ts",
+    "sdk/test/cost-cap.test.ts",
+    "sdk/test/e2e.test.ts",
+    "sdk/test/e2e/evidence.ts",
+    "sdk/test/e2e/worker.ts",
+    "sdk/test/e2e/workflows.ts",
+    "sdk/test/fixtures/build.test.ts",
+    "sdk/test/fixtures/load.test.ts",
+    "sdk/test/kill-points.test.ts",
+    "sdk/test/replay-match.test.ts",
+    "sdk/test/replay-review.test.ts",
+    "sdk/test/replay-timezone.test.ts",
+    "sdk/test/replay.test.ts",
+    "sdk/test/sandbox.test.ts",
+    "sdk/test/timezone/replay.ts",
+    "sdk/test/timezone/workflows.ts",
+    "sdk/test/types.test.ts",
+    "sdk/test/worker.test.ts",
+}
+
 SOURCE_PATHS = ["cmd", "internal", "sdk", "gen", "proto", "examples", "scripts",
                 "Makefile", "go.mod", "go.sum", "compose.yaml", "conformance",
                 ":(exclude)examples/codex-lanes", ":(exclude)scripts/demo-codex-lanes*"]
@@ -595,9 +668,18 @@ def polish_provenance():
          ":(exclude)internal/store/pgstore/edges_test.go"],
         cwd=ROOT, text=True).splitlines()
     same(set(worded), WORDING_FILES, "comment and wording edits after the review")
-    subprocess.run(["git", "diff", "--exit-code", WORDING_SHA, "--", *SOURCE_PATHS,
+    # The test-quality pass changed tests only; the production sources every campaign
+    # measured are unchanged since the wording pass.
+    tested = subprocess.check_output(
+        ["git", "diff", "--name-only", WORDING_SHA, TESTS_SHA, "--", *SOURCE_PATHS,
+         ":(exclude)internal/store/pgstore/edges_test.go"],
+        cwd=ROOT, text=True).splitlines()
+    same(set(tested), TESTS_FILES, "test-only edits of the test-quality pass")
+    assert all(TEST_FILE.search(path) for path in tested), "test-quality pass touched a non-test path"
+    subprocess.run(["git", "diff", "--exit-code", TESTS_SHA, "--", *SOURCE_PATHS,
                     ":(exclude)internal/store/pgstore/edges_test.go"],
                    cwd=ROOT, check=True)
+    print("PASS source provenance: polish, review, wording and test-only passes pinned; no unlisted drift")
 
 
 def polish_proofs():
