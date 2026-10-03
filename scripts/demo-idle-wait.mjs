@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { Evidence, managed, until, delay, decode } from "./evidence-lib.mjs";
 
 console.log(`Capstan idle-wait demo · ${new Date().toISOString()}`);
-console.log("human() is still a stub at this lane's base/main check. Using the authorized nextSignal('decision') fallback.");
+console.log("human() is still a stub at this revision. Using the nextSignal('decision') fallback.");
 console.log("This is a real wall-clock wait with no workers. It does not demonstrate a multi-day clock jump or an approval API.");
 await managed(new Evidence("idle", 7304), async (env) => {
   const worker = env.worker("idle-signal.ts");
@@ -19,7 +19,7 @@ await managed(new Evidence("idle", 7304), async (env) => {
     const processes = spawnSync("ps", ["-p", env.workers.map((w) => w.pid).join(","), "-o", "pid,pgid,ucomm"], { encoding: "utf8" });
     assert.equal(processes.status, 1);
     console.log(processes.stdout.trim());
-    console.log("Worker processes: 0 (all demo worker PIDs exited; other lanes are untouched).");
+    console.log("Worker processes: 0 (all demo worker PIDs exited; other processes are untouched).");
     console.log(`$ psql <this demo database> -c '${query}'`);
     process.stdout.write(env.sql(query));
     assert.equal(env.sql("select count(*) from task", ["-Atq"]).trim(), "0");

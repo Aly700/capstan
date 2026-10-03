@@ -1,8 +1,8 @@
 // Capstan protocol, version 1.
 //
 // This file is the contract between the Go server and every worker SDK. It is frozen for
-// the build: lanes implement it and do not change it. A change needs the lead, a note in
-// docs/decisions.md, and regenerated code in the same commit.
+// the build: implementations follow it and do not change it. A change needs a note in
+// docs/decisions.md and regenerated code in the same commit.
 //
 // Vocabulary used throughout:
 //   run      one execution of a workflow, identified by a caller-supplied run_id

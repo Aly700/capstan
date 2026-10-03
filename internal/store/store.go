@@ -2,8 +2,8 @@
 //
 // Two implementations exist: pgstore (PostgreSQL, production) and memstore (in memory,
 // used by engine unit tests and the fault lab). Both must pass the shared conformance suite
-// in store/storetest. This file is a frozen contract for the build; change it only with the
-// lead and a note in docs/decisions.md.
+// in store/storetest. This file is a frozen contract for the build; change it only with
+// a note in docs/decisions.md.
 //
 // Rules every implementation honours:
 //

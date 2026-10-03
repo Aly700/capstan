@@ -1,5 +1,5 @@
 // The host-side worker: polls the server, runs workflow tasks in the sandbox and activities
-// in normal Node. Frozen contract for the build; implemented by the SDK core lane.
+// in normal Node. Frozen contract for the build.
 
 import { hostname } from "node:os";
 import { createClient, type Client } from "@connectrpc/connect";
@@ -23,7 +23,7 @@ export interface WorkerOptions {
   taskQueue: string;
   /** Path to the module exporting workflow functions; bundled with esbuild at startup. */
   workflowsPath: string;
-  /** Activity implementations by activity type. Built-in agent activities are added by the agent lane. */
+  /** Activity implementations by activity type. Built-in agent activities are registered automatically. */
   activities?: Record<string, (input: any) => unknown>;
   /** Default model for capstan.model. Defaults to claude-sonnet-5. The API key is read only from ANTHROPIC_API_KEY. */
   model?: string;

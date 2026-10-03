@@ -97,6 +97,6 @@ key order and whitespace differences between languages do not matter.
 
 ## Adding a fixture
 
-Generate fixtures with the helper the SDK lane provides (`sdk/test/fixtures/build.ts`)
+Generate fixtures with the SDK helper (`sdk/test/fixtures/build.ts`)
 rather than writing base64 by hand, give the file the next number, add the workflow to
 `workflows.ts` and to the Go scenarios, and make both test suites pass.
