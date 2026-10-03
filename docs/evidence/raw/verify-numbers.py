@@ -349,7 +349,7 @@ def historical():
     l2 = read(EVIDENCE/"lab-l2.md").split("## Final code",1)[0]
     for snippet in ("16.87 seconds","52.109 seconds","46,179,964","148,554","9,870,634","293 SDK tests"):
         assert snippet in l2,snippet
-    old_races = subprocess.check_output(["git","show","df11bda:internal/engine/pg_poll_lock_test.go"],cwd=ROOT,text=True)
+    old_races = subprocess.check_output(["git","show","df11bda3a364224d342668c920b7f93373913a92:internal/engine/pg_poll_lock_test.go"],cwd=ROOT,text=True)
     kinds = re.search(r'for _, kind := range \[\]string\{([^}]+)\}',old_races.split("func TestPostgresTerminateAgainstTaskOperations",1)[1])[1]
     orders = re.search(r'for _, first := range \[\]string\{([^}]+)\}',old_races)[1]
     assert len(re.findall(r'"[^"]+"',kinds))*len(re.findall(r'"[^"]+"',orders))==16
