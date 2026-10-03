@@ -28,11 +28,13 @@ describe("client over scripted Connect", () => {
     await client.signal("r", "go", { ok: true }, "dedupe");
     await client.cancel("r", "stop");
     await client.resume("r", "fixed");
+    await client.terminate("r", "ended");
     await client.resolveApproval("r", "a", { outcome: "approved", choice: "ship", resolver: "owner", note: "reviewed" });
     await client.resolveApproval("r", "b", { outcome: "denied", resolver: "owner" });
     expect(server.requests("SignalRun")[0]).toMatchObject({ runId: "r", name: "go", requestId: "dedupe" });
     expect(server.requests("CancelRun")[0]).toMatchObject({ runId: "r", reason: "stop" });
     expect(server.requests("ResumeRun")[0]).toMatchObject({ runId: "r", reason: "fixed" });
+    expect(server.requests("TerminateRun")[0]).toMatchObject({ runId: "r", reason: "ended" });
     expect(server.requests("ResolveApproval")).toMatchObject([{ runId: "r", approvalId: "a", outcome: ApprovalOutcome.APPROVED, choice: "ship", resolver: "owner", note: "reviewed" }, { approvalId: "b", outcome: ApprovalOutcome.DENIED }]);
   });
   it("maps closed descriptions, payloads, failures and continuation ids", async () => {

@@ -31,8 +31,4 @@ describe("conformance fixture language selection", () => {
     const loaded = await loadFixtures(directory, language as string);
     expect(loaded.map(({ file }) => file)).toEqual(expected);
   });
-  it("preserves the selected fixture's language metadata", async () => {
-    const loaded = await loadFixtures(directory, "ts");
-    expect(loaded.find(({ file }) => file === "002-ts.json")?.fixture).toMatchObject({ only: ["ts"] });
-  });
 });

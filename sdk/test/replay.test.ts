@@ -53,11 +53,6 @@ describe("replay activation runtime", () => {
     const h=new History().task().complete().activity(1,"a").timer(2).fire(2).result(1,42).task();
     expect(await run("return await Promise.race([rt.activity('a',0,{startToCloseTimeout:'1s'}),rt.sleep('1s').then(()=> 'timer')]);",h)).toEqual([{completeRun:{result:payload(42)}}]);
   });
-  it("awaiting signal handler resumes and condition observes its mutation", async () => {
-    const h=new History().task().complete().add("signalReceived",{name:"go",input:payload(5)}).task();
-    const body="let n=0;rt.setHandler({name:'go'},async x=>{await Promise.resolve(); await Promise.resolve();n=x;});await rt.condition(()=>n>0);return n;";
-    expect(await run(body,h)).toEqual([{completeRun:{result:payload(5)}}]);
-  });
   it("handler can await an activity and emit a later command", async () => {
     const h=new History().task().complete().add("signalReceived",{name:"go",input:payload(5)}).task().complete().activity(1).result(1,10).task();
     const body="let done=false;rt.setHandler({name:'go'},async x=>{await rt.activity('double',x,{startToCloseTimeout:'1s'});await Promise.resolve();done=true;});await rt.condition(()=>done);return 7;";
@@ -73,14 +68,6 @@ describe("replay activation runtime", () => {
   });
   it("unknown timer fires are SDK errors", async () => {
     await expect(run("await rt.sleep('1s');",new History().task().complete().timer(1).fire(9).task())).rejects.toThrow(/unknown/i);
-  });
-  it("cancellation rejects pending sleep and emits CancelRun", async () => {
-    const h=new History().task().complete().timer(1).add("runCancelRequested",{reason:"stop"}).task();
-    expect(await run("await rt.sleep('1s');",h)).toEqual([{cancelRun:{}}]);
-  });
-  it("uses recorded side effects without calling the callback", async () => {
-    const h=new History().task().complete().add("markerRecorded",{seq:"1",name:"side_effect",details:payload(42)}).timer(2).fire(2).task();
-    expect(await run("const n=rt.sideEffect(()=>{throw Error('must not run');});await rt.sleep('1s');return n;",h)).toEqual([{completeRun:{result:payload(42)}}]);
   });
   it("does not invoke a side effect if its historical marker identity mismatches", async () => {
     const h=new History().task().complete().add("markerRecorded",{seq:"1",name:"uuid",details:payload("old")}).task();

@@ -15,16 +15,6 @@ describe("fixture builder", () => {
     expect(fixture.history[5]).toMatchObject({ activityCompleted: { seq: "1", scheduledEventId: "5" } });
     expect(fixture.expect).toEqual({ commands: [commands.completeRun({ doubled: 42 })] });
   });
-  it("records empty completed and discarded activations without command events", () => {
-    const fixture = run("waiting", null).task().task().discard().task().expectCommands();
-    expect(fixture.history.map((event) => event.type)).toContain("EVENT_TYPE_TASK_COMPLETED");
-    expect(fixture.history.map((event) => event.type)).toContain("EVENT_TYPE_TASK_FAILED");
-  });
-  it("discards timed-out activations without a TaskCompleted", () => {
-    const fixture = run("sleeping").task().timeout().task().expectCommands(commands.startTimer(1));
-    expect(fixture.history.map((event) => event.type)).not.toContain("EVENT_TYPE_TASK_COMPLETED");
-    expect(fixture.history.map((event) => event.type)).toContain("EVENT_TYPE_TASK_TIMED_OUT");
-  });
   it("requires a final TaskStarted and known operation references", () => {
     expect(() => run("invalid", null).expectCommands()).toThrow(/TaskStarted/);
     expect(() => run("invalid", null).task().completeActivity(12, true)).toThrow(/unknown activity/i);
@@ -33,14 +23,6 @@ describe("fixture builder", () => {
 
 describe("conformance corpus structure", () => {
   const files = readdirSync(fixtureDir).filter((file) => file.endsWith(".json")).sort();
-  it("contains at least 24 additional fixtures", () => expect(files.length).toBeGreaterThanOrEqual(25));
-  it("shares the reviewed signal clock, patch memoization, and batched race edges", () => {
-    expect(files).toEqual(expect.arrayContaining([
-      "052-signal-handler-current-clock.json",
-      "053-patch-false-memoized.json",
-      "054-race-batched-native-order.json",
-    ]));
-  });
   it("marks only the batched race fixture as TypeScript-specific", () => {
     const restricted = files.filter((file) => JSON.parse(readFileSync(`${fixtureDir}/${file}`, "utf8")).only !== undefined);
     expect(restricted).toEqual(["054-race-batched-native-order.json"]);

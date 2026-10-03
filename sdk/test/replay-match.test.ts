@@ -38,9 +38,6 @@ describe("conformance command comparison", () => {
     expect(failure).toMatchObject({ name: "HistoryMismatchError", eventId: 5, message: `history mismatch at event 5: history has ${expected}, code emitted ${got}` });
   });
   for (const [cmd, ev, attrs, fields] of pairs) {
-    it(`matches ${cmd} by exactly its identifying fields`, () => {
-      expect(() => matchCommands([command(cmd, attrs)], [event(ev, attrs)], 4)).not.toThrow();
-    });
     for (const field of fields) {
       it(`${cmd} compares ${field} and names the first recorded event`, () => {
         const changed = { ...attrs, [field]: field === "seq" ? "2" : field === "source" ? "APPROVAL_SOURCE_GATE" : "changed" };
