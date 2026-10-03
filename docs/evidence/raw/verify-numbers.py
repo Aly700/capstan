@@ -29,7 +29,7 @@ POLISH = RAW / "polish-2026-09-28"
 REVIEW_SHA = "59065273ba73f66109eea66779383eb58286f9a6"
 # Wording pass after the review: comment-only source edits and documentation. Pinned so
 # the source-drift and audit-report checks below still accept exactly those edits.
-WORDING_SHA = "0000000000000000000000000000000000000000"
+WORDING_SHA = "c4de0b7cd3807ab65a22a2c2997782d07a15bded"
 WORDING_FILES = {
     "Makefile", "cmd/capstan-lab/mutate.go", "conformance/README.md",
     "conformance/workflows.ts", "gen/capstan/v1/capstan.pb.go",
