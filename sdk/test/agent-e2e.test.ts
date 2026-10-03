@@ -313,7 +313,10 @@ describe.skipIf(process.env.CAPSTAN_E2E_GATE !== "1")("agent end to end with the
     expect((await effects(runId))[0]!.pid).toBe(survivor.pid);
     const events = await history(runId);
     expect(events.filter((e) => e.type === EventType.APPROVAL_REQUESTED)).toHaveLength(1);
-    expect(events.filter((e) => e.type === EventType.APPROVAL_RESOLVED)).toHaveLength(1);
+    const resolved = events.filter((e) => e.type === EventType.APPROVAL_RESOLVED);
+    expect(resolved).toHaveLength(1);
+    // The survivor resumed the wait the doomed worker started: same approval, resolved once.
+    expect(resolved[0]!.attributes).toMatchObject({ case: "approvalResolved", value: { approvalId: approval.approvalId } });
     await stop(survivor);
   }, 100_000);
 });
