@@ -34,7 +34,7 @@ function startWorker(identity: string, env: Record<string, string> = {}): ChildP
   // so kill() reaches the worker itself.
   const child = spawn(process.execPath, ["--import", "tsx", join(root, "sdk/test/e2e/worker.ts")], {
     cwd: join(root, "sdk"),
-    env: { ...process.env, E2E_ADDRESS: address, E2E_API_KEY: apiKey, E2E_QUEUE: "e2e", E2E_IDENTITY: identity, ...env },
+    env: { ...process.env, E2E_ADDRESS: address, E2E_API_KEY: apiKey, E2E_QUEUE: "e2e", E2E_IDENTITY: identity, E2E_DATABASE_URL: databaseUrl(database), ...env },
     stdio: ["ignore", "ignore", "inherit"],
     detached: true,
   });
@@ -66,8 +66,13 @@ describe.skipIf(!enabled)("end to end on the real server", () => {
   const client = new Client({ address, apiKey });
   const rpc = createClient(ClientService, createTransport({ address, apiKey }));
 
+  const sql = (query: string): string => execFileSync("psql", ["-X", "-qAt", "-v", "ON_ERROR_STOP=1", databaseUrl(database), "-c", query]).toString().trim();
+
   beforeAll(async () => {
     execFileSync("psql", [adminUrl, "-qc", `create database ${database}`]);
+    // The deposit activity's destination: one row per idempotency key, and an unkeyed attempt log.
+    sql("create table e2e_effect (key text primary key, run_id text not null, amount int not null, pid int not null)");
+    sql("create table e2e_attempt (id serial primary key, run_id text not null, key text not null, attempt int not null, pid int not null)");
     const binary = join(scratch, "capstan-server");
     execFileSync("go", ["build", "-o", binary, "./cmd/capstan-server"], { cwd: root, stdio: "inherit" });
     const server = spawn(binary, [], {
@@ -113,23 +118,28 @@ describe.skipIf(!enabled)("end to end on the real server", () => {
     await exited(worker);
   }, 60_000);
 
-  it("finishes a run whose worker is killed mid-activity, with one completion", async () => {
-    const marker = join(scratch, "hanging");
-    const doomed = startWorker("e2e-doomed", { E2E_HANG: marker });
-    const runId = `killed-${Date.now()}`;
-    await client.start("singleActivity", { n: 5 }, { runId, taskQueue: "e2e" });
-    await until("the activity to start", () => (existsSync(marker) ? true : undefined));
+  it("applies a keyed effect once when the worker is killed after the effect and before the acknowledgement", async () => {
+    const marker = join(scratch, "deposited");
+    const workflows = join(root, "sdk/test/e2e/workflows.ts");
+    const doomed = startWorker("e2e-doomed", { E2E_HANG: marker, E2E_WORKFLOWS: workflows });
+    const runId = `deposit-${Date.now()}`;
+    await client.start("deposit", { amount: 7 }, { runId, taskQueue: "e2e" });
+    // The destination row is committed and the attempt logged; the process dies before CompleteActivityTask.
+    await until("the deposit to be written", () => (existsSync(marker) ? true : undefined));
     kill(doomed);
     await exited(doomed);
-    startWorker("e2e-survivor");
-    // singleActivity's start-to-close timeout is 10s; the retry lands on the survivor.
+    const survivor = startWorker("e2e-survivor", { E2E_WORKFLOWS: workflows });
+    // deposit's start-to-close timeout is 3s; the retry lands on the survivor with the same key.
     const done = await client.result(runId, { timeoutMs: 45_000 });
     expect(done.status).toBe("completed");
-    expect(done.result).toEqual({ doubled: 10 });
+    expect(done.result).toEqual({ key: `${runId}/1` });
+    expect(sql(`select attempt || ':' || pid from e2e_attempt where run_id = '${runId}' order by id`)).toBe(`1:${doomed.pid}\n2:${survivor.pid}`);
+    expect(sql(`select key || ':' || amount || ':' || pid from e2e_effect where run_id = '${runId}'`)).toBe(`${runId}/1:7:${doomed.pid}`);
     expect(await completions(runId)).toBe(1);
     const { events } = await rpc.getHistory({ runId });
-    const timedOut = events.filter((e) => e.type === EventType.ACTIVITY_TIMED_OUT).length;
-    expect(timedOut).toBe(0); // a retried attempt is not a history event (D4)
+    expect(events.filter((e) => e.type === EventType.ACTIVITY_TIMED_OUT)).toHaveLength(0); // a retried attempt is not a history event (D4)
+    kill(survivor);
+    await exited(survivor);
   }, 90_000);
 
   it("terminates a sleeping run and keeps its history closed past the timer deadline", async () => {
