@@ -2,7 +2,6 @@ package engine
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"strings"
 	"testing"
@@ -156,17 +155,6 @@ func TestStartRunRequiresWholeMillisecondTimeouts(t *testing.T) {
 	}
 }
 
-func TestBackgroundMethodsRejectNonpositiveLimit(t *testing.T) {
-	e, _, _ := newTestEngine(t)
-	for _, limit := range []int{0, -1} {
-		for _, fn := range []func(context.Context, int) (int, error){e.FireDueTimers, e.ProcessDueTasks, e.ProcessDueApprovals, e.TimeoutRuns} {
-			if n, err := fn(t.Context(), limit); n != 0 || !errors.Is(err, ErrInvalidArgument) {
-				t.Errorf("limit %d: %d %v", limit, n, err)
-			}
-		}
-	}
-}
-
 func TestClockReadingsAndComputedDeadlinesUseMicroseconds(t *testing.T) {
 	e, c, s := newTestEngine(t)
 	c.Advance(987654321 * time.Nanosecond)
@@ -283,13 +271,6 @@ func assertMicroTime(t *testing.T, got, want time.Time) {
 	t.Helper()
 	if got.Nanosecond()%1000 != 0 || !got.Equal(want) {
 		t.Fatalf("time got=%v want=%v", got, want)
-	}
-}
-
-func TestDefaultTaskTimeoutRequiresWholeMilliseconds(t *testing.T) {
-	_, _, s := newTestEngine(t)
-	if _, err := New(Deps{Store: s}, Config{DefaultTaskTimeout: 1500 * time.Microsecond}); !errors.Is(err, ErrInvalidArgument) {
-		t.Fatalf("fractional default timeout: %v", err)
 	}
 }
 

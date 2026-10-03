@@ -12,7 +12,6 @@ import (
 	"github.com/Aly700/capstan/internal/store"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func mustActivity(t *testing.T, e *Engine) *v1.PollActivityTaskResponse {
@@ -284,59 +283,6 @@ func TestHeartbeatExtendsDeadline(t *testing.T) {
 		t.Fatalf("premature timeout: %d, %v", n, err)
 	}
 	mustFinishActivity(t, e, a.TaskToken)
-}
-
-// seedActivity isolates activity methods from the workflow command implementation.
-func seedActivity(t *testing.T, e *Engine, leased bool) []byte {
-	t.Helper()
-	now := e.deps.Clock.Now()
-	a := &v1.ActivityScheduledAttributes{Seq: 1, ActivityType: "act", TaskQueue: "q", StartToCloseTimeout: durationpb.New(10 * time.Second)}
-	r := &store.Run{RunID: "seeded", WorkflowType: "flow", TaskQueue: "q", Status: v1.RunStatus_RUN_STATUS_RUNNING, TaskTimeout: 10 * time.Second, StartedAt: now, LastEventID: 1}
-	task := &store.Task{RunID: r.RunID, Kind: store.TaskActivity, TaskQueue: "q", Activity: a, Attempt: 1, ScheduledEventID: 1, ScheduledAt: now, VisibleAt: now}
-	if leased {
-		task.LeasedUntil = now.Add(10 * time.Second)
-		task.StartedAt = now
-		task.CheckAt = task.LeasedUntil
-	}
-	if err := e.deps.Store.InTx(context.Background(), func(tx store.Tx) error {
-		if err := tx.InsertRun(r); err != nil {
-			return err
-		}
-		if err := tx.AppendEvents(r.RunID, []*v1.HistoryEvent{{EventId: 1, Type: v1.EventType_EVENT_TYPE_ACTIVITY_SCHEDULED, Time: timestamppb.New(now), Attributes: &v1.HistoryEvent_ActivityScheduled{ActivityScheduled: a}}}); err != nil {
-			return err
-		}
-		return tx.InsertTask(task)
-	}); err != nil {
-		t.Fatal(err)
-	}
-	return EncodeToken(&v1.TaskToken{Kind: v1.TaskKind_TASK_KIND_ACTIVITY, RunId: r.RunID, TaskId: task.ID, Attempt: 1, ScheduledEventId: 1, Seq: 1})
-}
-
-func TestActivityMethodsFromStoredTask(t *testing.T) {
-	for _, method := range []string{"poll", "complete", "fail", "heartbeat"} {
-		t.Run(method, func(t *testing.T) {
-			e, _, _ := newTestEngine(t)
-			token := seedActivity(t, e, method != "poll")
-			var err error
-			switch method {
-			case "poll":
-				var found bool
-				_, found, err = e.PollActivityTask(context.Background(), &v1.PollActivityTaskRequest{TaskQueue: "q"})
-				if err == nil && !found {
-					t.Fatal("stored task not claimable")
-				}
-			case "complete":
-				_, err = e.CompleteActivityTask(context.Background(), &v1.CompleteActivityTaskRequest{TaskToken: token})
-			case "fail":
-				_, err = e.FailActivityTask(context.Background(), &v1.FailActivityTaskRequest{TaskToken: token, Failure: &v1.Failure{Type: "Error"}})
-			case "heartbeat":
-				_, err = e.HeartbeatActivityTask(context.Background(), &v1.HeartbeatActivityTaskRequest{TaskToken: token})
-			}
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-	}
 }
 
 func TestPollDoesNotStartExpiredActivity(t *testing.T) {

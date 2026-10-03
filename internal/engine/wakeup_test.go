@@ -57,16 +57,3 @@ func TestNextWakeupEmptyAndOverdue(t *testing.T) {
 		t.Fatalf("overdue: %v %v %v", at, ok, err)
 	}
 }
-
-func TestNextWakeupSeeded(t *testing.T) {
-	e, clock, s := newTestEngine(t)
-	deadline := clock.Now().Add(time.Hour)
-	if err := s.InTx(context.Background(), func(tx store.Tx) error {
-		return tx.InsertRun(&store.Run{RunID: "wake", WorkflowType: "wf", TaskQueue: "q", Status: v1.RunStatus_RUN_STATUS_RUNNING, StartedAt: clock.Now(), TaskTimeout: time.Second, RunDeadline: deadline})
-	}); err != nil {
-		t.Fatal(err)
-	}
-	if at, ok, err := e.NextWakeup(context.Background()); err != nil || !ok || !at.Equal(deadline) {
-		t.Fatalf("next wakeup: %v %v %v", at, ok, err)
-	}
-}

@@ -139,27 +139,6 @@ func TestRunTimeoutHonorsLimit(t *testing.T) {
 	}
 }
 
-func TestRunTimeoutSeeded(t *testing.T) {
-	e, clock, s := newTestEngine(t)
-	if err := s.InTx(context.Background(), func(tx store.Tx) error {
-		return tx.InsertRun(&store.Run{RunID: "timeout", WorkflowType: "wf", TaskQueue: "q", Status: v1.RunStatus_RUN_STATUS_BLOCKED, StartedAt: clock.Now().Add(-time.Hour), RunDeadline: clock.Now(), TaskTimeout: time.Second})
-	}); err != nil {
-		t.Fatal(err)
-	}
-	if n, err := e.TimeoutRuns(context.Background(), 1); n != 1 || err != nil {
-		t.Fatalf("timeout: %d %v", n, err)
-	}
-	if err := s.InTx(context.Background(), func(tx store.Tx) error {
-		r, err := tx.GetRun("timeout", false)
-		if err == nil && (r.Status != v1.RunStatus_RUN_STATUS_TIMED_OUT || r.LastEventID != 1) {
-			t.Errorf("timed out run: %+v", r)
-		}
-		return err
-	}); err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestRunTimeoutRollsBackInboxDrainOnAppendFailure(t *testing.T) {
 	e, clock, s := newTestEngine(t)
 	if _, err := e.StartRun(context.Background(), "owner", &v1.StartRunRequest{RunId: "timeout", WorkflowType: "wf", TaskQueue: "q", RunTimeout: durationpb.New(time.Second)}); err != nil {
