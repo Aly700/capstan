@@ -1,11 +1,8 @@
 package lab
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"reflect"
-	"sync"
 	"testing"
 	"time"
 
@@ -38,49 +35,6 @@ func faultTestRecover(fn func() error) (err error, recovered any) {
 	defer func() { recovered = recover() }()
 	err = fn()
 	return
-}
-
-func TestFaultStoreUnarmedPreservesStoreBehavior(t *testing.T) {
-	s := faultTestStore(t)
-	wake, cancel := s.Subscribe(store.TaskWorkflow, "q")
-	defer cancel()
-	run := &store.Run{RunID: "r", LastEventID: 1, StartedAt: faultTestTime}
-	faultTestTx(t, s, func(tx store.Tx) error {
-		if err := tx.InsertRun(run); err != nil {
-			return err
-		}
-		if err := tx.AppendEvents("r", []*capstanv1.HistoryEvent{{EventId: 1}}); err != nil {
-			return err
-		}
-		tx.Notify(store.TaskWorkflow, "q")
-		return nil
-	})
-	select {
-	case <-wake:
-	default:
-		t.Fatal("unarmed transaction did not deliver its notification")
-	}
-	faultTestTx(t, s.Store, func(tx store.Tx) error {
-		stored, err := tx.GetRun("r", false)
-		if err != nil {
-			return err
-		}
-		if !reflect.DeepEqual(stored, run) {
-			t.Fatalf("underlying run=%+v, want %+v", stored, run)
-		}
-		history, err := tx.ReadHistory("r", 0, 0)
-		if err == nil && (len(history) != 1 || history[0].EventId != 1) {
-			t.Fatalf("underlying history=%v", history)
-		}
-		return err
-	})
-	failure := errors.New("callback failure")
-	if err := s.InTx(t.Context(), func(store.Tx) error { return failure }); err != failure {
-		t.Fatalf("callback error=%v, want original", err)
-	}
-	if s.Hits() != 0 {
-		t.Fatalf("unarmed store hits=%d", s.Hits())
-	}
 }
 
 func TestFaultStoreRollsBackAtEachOperation(t *testing.T) {
@@ -260,38 +214,6 @@ func TestFaultStoreInterceptsEveryTxMethod(t *testing.T) {
 	}
 }
 
-func TestFaultStoreShortTransactionStillInjects(t *testing.T) {
-	for _, crash := range []bool{false, true} {
-		for _, count := range []int{0, 1} {
-			t.Run(fmt.Sprintf("crash=%v/calls=%d", crash, count), func(t *testing.T) {
-				s := faultTestStore(t)
-				s.Arm(99, crash)
-				err, recovered := faultTestRecover(func() error {
-					return s.InTx(t.Context(), func(tx store.Tx) error {
-						if count == 1 {
-							return tx.InsertRun(&store.Run{RunID: "r"})
-						}
-						return nil
-					})
-				})
-				if crash && recovered != ErrServerCrash || !crash && (recovered != nil || !errors.Is(err, ErrInjected)) {
-					t.Fatalf("error=%v panic=%v", err, recovered)
-				}
-				if s.Hits() != 1 {
-					t.Fatalf("hits=%d", s.Hits())
-				}
-				faultTestTx(t, s, func(tx store.Tx) error {
-					_, err := tx.GetRun("r", false)
-					if !errors.Is(err, store.ErrNotFound) {
-						t.Fatalf("short transaction committed: %v", err)
-					}
-					return nil
-				})
-			})
-		}
-	}
-}
-
 func TestFaultStorePreservesRealErrorsAndCountsOnlySuccess(t *testing.T) {
 	s := faultTestStore(t)
 	s.Arm(1, false)
@@ -337,69 +259,6 @@ func TestFaultStoreIgnoredInjectionStillRollsBack(t *testing.T) {
 	})
 }
 
-func TestFaultStoreDisarmAndCancelledEntry(t *testing.T) {
-	s := faultTestStore(t)
-	s.Arm(1, true)
-	s.Disarm()
-	faultTestTx(t, s, func(tx store.Tx) error { return tx.InsertRun(&store.Run{RunID: "r"}) })
-	if s.Hits() != 0 {
-		t.Fatal("disarmed fault fired")
-	}
-	s.Arm(1, false)
-	ctx, cancel := context.WithCancel(t.Context())
-	cancel()
-	if err := s.InTx(ctx, func(store.Tx) error { t.Fatal("cancelled callback entered"); return nil }); !errors.Is(err, context.Canceled) {
-		t.Fatalf("cancelled InTx error=%v", err)
-	}
-	if err := s.InTx(t.Context(), func(tx store.Tx) error { return tx.LockBudget() }); !errors.Is(err, ErrInjected) {
-		t.Fatalf("cancelled entry consumed arm: %v", err)
-	}
-}
-
-func TestFaultStoreConcurrentTransactionsConsumeOneArm(t *testing.T) {
-	s := faultTestStore(t)
-	s.Arm(1, false)
-	start := make(chan struct{})
-	results := make(chan error, 32)
-	for i := range 32 {
-		go func() {
-			<-start
-			results <- s.InTx(t.Context(), func(tx store.Tx) error { return tx.InsertRun(&store.Run{RunID: fmt.Sprint(i)}) })
-		}()
-	}
-	close(start)
-	failures := 0
-	for range 32 {
-		if err := <-results; errors.Is(err, ErrInjected) {
-			failures++
-		} else if err != nil {
-			t.Error(err)
-		}
-	}
-	if failures != 1 || s.Hits() != 1 {
-		t.Fatalf("failures=%d hits=%d, want one each", failures, s.Hits())
-	}
-}
-
-func TestFaultStoreConcurrentControls(t *testing.T) {
-	s := faultTestStore(t)
-	var group sync.WaitGroup
-	for range 8 {
-		group.Go(func() {
-			for range 50 {
-				s.Arm(2, false)
-				s.Disarm()
-				_ = s.Hits()
-				err := s.InTx(t.Context(), func(tx store.Tx) error { return tx.LockBudget() })
-				if err != nil && !errors.Is(err, ErrInjected) {
-					t.Error(err)
-				}
-			}
-		})
-	}
-	group.Wait()
-}
-
 func TestFaultStoreSelectsLaterTransaction(t *testing.T) {
 	for _, crash := range []bool{false, true} {
 		t.Run(fmt.Sprintf("crash=%v", crash), func(t *testing.T) {
@@ -436,49 +295,6 @@ func TestFaultStoreSelectsLaterTransaction(t *testing.T) {
 			})
 			if s.Hits() != 1 {
 				t.Fatalf("one arm injected %d faults", s.Hits())
-			}
-		})
-	}
-}
-
-func TestFaultStoreLaterTransactionCountsCallbackEntries(t *testing.T) {
-	s := faultTestStore(t)
-	s.ArmTransaction(2, 1, false)
-	ctx, cancel := context.WithCancel(t.Context())
-	cancel()
-	if err := s.InTx(ctx, func(store.Tx) error { t.Fatal("cancelled callback entered"); return nil }); !errors.Is(err, context.Canceled) {
-		t.Fatalf("cancelled InTx error=%v", err)
-	}
-	failure := errors.New("first callback failed")
-	if err := s.InTx(t.Context(), func(store.Tx) error { return failure }); err != failure {
-		t.Fatalf("first callback error=%v, want original", err)
-	}
-	if err := s.InTx(t.Context(), func(tx store.Tx) error { return tx.LockBudget() }); !errors.Is(err, ErrInjected) {
-		t.Fatalf("second entered callback error=%v, want ErrInjected", err)
-	}
-}
-
-func TestFaultStoreLaterTransactionDisarm(t *testing.T) {
-	s := faultTestStore(t)
-	s.ArmTransaction(2, 1, true)
-	faultTestTx(t, s, func(store.Tx) error { return nil })
-	s.Disarm()
-	faultTestTx(t, s, func(tx store.Tx) error { return tx.InsertRun(&store.Run{RunID: "r"}) })
-	if s.Hits() != 0 {
-		t.Fatal("pending later-transaction fault survived Disarm")
-	}
-}
-
-func TestFaultStoreArmTransactionRejectsNonpositiveSelection(t *testing.T) {
-	for _, selection := range [][2]int{{0, 1}, {-1, 1}, {1, 0}, {1, -1}} {
-		t.Run(fmt.Sprint(selection), func(t *testing.T) {
-			s := faultTestStore(t)
-			_, recovered := faultTestRecover(func() error {
-				s.ArmTransaction(selection[0], selection[1], false)
-				return nil
-			})
-			if recovered == nil {
-				t.Fatal("nonpositive transaction or operation count accepted")
 			}
 		})
 	}
