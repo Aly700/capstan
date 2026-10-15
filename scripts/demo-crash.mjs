@@ -8,8 +8,8 @@ console.log(`Capstan crash demo · ${new Date().toISOString()}`);
 console.log("Real Go binary + SDK worker + PostgreSQL. Wall-clock playback; no simulated crash or clock jump.");
 console.log(`Source: ${execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: root, encoding: "utf8" }).trim()} + this demo's working-tree files`);
 await managed(new Evidence("crash", 7302), async (env) => {
-  console.log("$ GOTOOLCHAIN=go1.26.4 go build -o .lane/bin/capstan-server ./cmd/capstan-server");
-  console.log(`$ CAPSTAN_ADDR=127.0.0.1:7302 .lane/bin/capstan-server serve  # database ${env.database}`);
+  console.log("$ GOTOOLCHAIN=go1.26.4 go build -o tmp/bin/capstan-server ./cmd/capstan-server");
+  console.log(`$ CAPSTAN_ADDR=127.0.0.1:7302 tmp/bin/capstan-server serve  # database ${env.database}`);
   const worker = env.worker("crash.ts");
   console.log("$ (cd sdk && node --import tsx ../examples/evidence/worker.ts)  # workflows: crash.ts");
   console.log(execFileSync("ps", ["-p", `${env.server.pid},${worker.pid}`, "-o", "pid,pgid,ucomm"], { encoding: "utf8" }).trim());
@@ -28,7 +28,7 @@ await managed(new Evidence("crash", 7302), async (env) => {
   assert.equal(unavailable, true);
   console.log("Server is unreachable. Worker stays alive. Waiting 4 real seconds, past the timer's deadline.");
   await delay(4000);
-  console.log("$ CAPSTAN_ADDR=127.0.0.1:7302 .lane/bin/capstan-server serve  # restart on the SAME database");
+  console.log("$ CAPSTAN_ADDR=127.0.0.1:7302 tmp/bin/capstan-server serve  # restart on the SAME database");
   await env.startServer();
   assert.notEqual(env.server.pid, killedPID);
   console.log(`Restarted server PID ${env.server.pid}; worker PID ${worker.pid} is unchanged.`);

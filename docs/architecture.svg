@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" font-family="Helvetica Neue, Helvetica, Arial, Liberation Sans, sans-serif" font-size="12" fill="#1d2430">
+<title>Capstan architecture</title>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1d2430"/></marker></defs>
+<rect width="1200" height="900" fill="#ffffff"/>
+<rect data-kind="region" data-id="cloud" x="280" y="20" width="900" height="700" rx="2" fill="none" stroke="#1d2430" stroke-width="1.4"/>
+<rect data-kind="region-icon" data-of="cloud" x="288" y="28" width="22" height="22" fill="#1d2430"/><g data-kind="region-icon-art" data-of="cloud" transform="translate(291.0,31.0) scale(0.667)" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5 3.8 3.8 0 0 1 18 18z"/></g>
+<text data-kind="region-label" data-of="cloud" x="316" y="44" font-size="13" font-weight="600" fill="#1d2430">AWS Cloud</text>
+<rect data-kind="region" data-id="region" x="300" y="60" width="860" height="640" rx="2" fill="none" stroke="#2a9d8f" stroke-width="1.4" stroke-dasharray="6 4"/>
+<rect data-kind="region-icon" data-of="region" x="308" y="68" width="22" height="22" fill="#2a9d8f"/><g data-kind="region-icon-art" data-of="region" transform="translate(311.0,71.0) scale(0.667)" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></g>
+<text data-kind="region-label" data-of="region" x="336" y="84" font-size="13" font-weight="600" fill="#1d2430">Region us-east-1 · one account</text>
+<rect data-kind="region" data-id="vpc" x="570" y="120" width="340" height="560" rx="2" fill="none" stroke="#5b4bb7" stroke-width="1.4" stroke-dasharray="6 4"/>
+<rect data-kind="region-icon" data-of="vpc" x="578" y="128" width="22" height="22" fill="#5b4bb7"/><g data-kind="region-icon-art" data-of="vpc" transform="translate(581.0,131.0) scale(0.667)" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 4.5v10l-8 4.5-8-4.5V7z"/><path d="M4 7l8 4.5 8-4.5M12 11.5v10"/></g>
+<text data-kind="region-label" data-of="vpc" x="606" y="144" font-size="13" font-weight="600" fill="#1d2430">VPC · two public subnets · no NAT, no ALB</text>
+<path data-kind="edge" data-edge="0" data-from="caller" data-to="apigw" data-n="1" d="M250.0 286.0 L340.0 286.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="1" data-edge="0" cx="320.0" cy="286.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="1" data-edge="0" x="320.0" y="290.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">1</text>
+<path data-kind="edge" data-edge="1" data-from="apigw" data-to="task" data-n="2" d="M520.0 286.0 L595.0 286.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="2" data-edge="1" cx="545.0" cy="286.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="2" data-edge="1" x="545.0" y="290.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">2</text>
+<path data-kind="edge" data-edge="2" data-from="task" data-to="rds" data-n="3" d="M700.0 342.0 L700.0 530.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="3" data-edge="2" cx="700.0" cy="430.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="3" data-edge="2" x="700.0" y="434.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">3</text>
+<path data-kind="edge" data-edge="3" data-from="worker" data-to="apigw" data-n="4" d="M250.0 480.0 L430.0 480.0 L430.0 342.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="4" data-edge="3" cx="350.0" cy="480.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="4" data-edge="3" x="350.0" y="484.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">4</text>
+<text data-kind="edge-label" data-edge="3" x="370.0" y="461.0" font-size="10.5" fill="#6b7280" text-anchor="middle">poll and complete tasks</text>
+<path data-kind="edge" data-edge="4" data-from="worker" data-to="anthropic" data-n="5" d="M50.0 562.0 L50.0 800.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="5" data-edge="4" cx="50.0" cy="690.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="5" data-edge="4" x="50.0" y="694.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">5</text>
+<path data-kind="edge" data-edge="5" data-from="worker" data-to="gate" data-n="6" d="M230.0 562.0 L230.0 755.0 L430.0 755.0 L430.0 800.0" fill="none" stroke="#1d2430" stroke-width="1.4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="6" data-edge="5" cx="330.0" cy="755.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="6" data-edge="5" x="330.0" y="759.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">6</text>
+<path data-kind="edge" data-edge="6" data-from="task" data-to="gate" data-n="7" d="M595.0 320.0 L550.0 320.0 L550.0 760.0 L550.0 800.0" fill="none" stroke="#1d2430" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="7" data-edge="6" cx="550.0" cy="590.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="7" data-edge="6" x="550.0" y="594.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">7</text>
+<text data-kind="edge-label" data-edge="6" x="485.0" y="590.0" font-size="10.5" fill="#6b7280" text-anchor="middle">polls approvals</text>
+<path data-kind="edge" data-edge="7" data-from="task" data-to="cw" data-n="8" d="M875.0 320.0 L890.0 320.0 L890.0 475.0 L930.0 475.0" fill="none" stroke="#1d2430" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="8" data-edge="7" cx="890.0" cy="445.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="8" data-edge="7" x="890.0" y="449.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">8</text>
+<text data-kind="edge-label" data-edge="7" x="834.0" y="449.0" font-size="10.5" fill="#6b7280" text-anchor="middle">logs · metrics</text>
+<path data-kind="edge" data-edge="8" data-from="secrets" data-to="task" data-n="" d="M930.0 195.0 L805.0 195.0 L805.0 230.0" fill="none" stroke="#1d2430" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<path data-kind="edge" data-edge="9" data-from="ecr" data-to="task" data-n="" d="M930.0 300.0 L875.0 300.0" fill="none" stroke="#1d2430" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<path data-kind="edge" data-edge="10" data-from="github" data-to="ecr" data-n="9" d="M1025.0 800.0 L1025.0 760.0 L1140.0 760.0 L1140.0 300.0 L1120.0 300.0" fill="none" stroke="#1d2430" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<circle data-kind="badge" data-n="9" data-edge="10" cx="1140.0" cy="670.0" r="10" fill="#232f3e" stroke="#ffffff" stroke-width="1.5"/><text data-kind="badge-text" data-n="9" data-edge="10" x="1140.0" y="674.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">9</text>
+<text data-kind="edge-label" data-edge="10" x="1040.0" y="678.0" font-size="10.5" fill="#6b7280" text-anchor="middle">push image, update service</text>
+<rect data-kind="node" data-id="caller" x="20" y="230" width="230" height="112" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="caller" transform="translate(120.0,238.0) scale(1.250)" fill="none" stroke="#1d2430" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></g>
+<text data-kind="node-text" data-of="caller" x="135.0" y="283.0" text-anchor="middle" font-size="12" font-weight="600">Caller</text>
+<text data-kind="node-text" data-of="caller" x="135.0" y="297.0" text-anchor="middle" font-size="12" font-weight="400">capstan CLI · @capstan/sdk client</text>
+<text data-kind="node-text" data-of="caller" x="135.0" y="312.0" text-anchor="middle" font-size="10.5" fill="#6b7280">viewer /ui/ (read-only)</text>
+<rect data-kind="node" data-id="worker" x="20" y="450" width="230" height="112" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="worker" transform="translate(120.0,458.0) scale(1.250)" fill="none" stroke="#1d2430" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></g>
+<text data-kind="node-text" data-of="worker" x="135.0" y="503.0" text-anchor="middle" font-size="12" font-weight="600">Worker (SDK)</text>
+<text data-kind="node-text" data-of="worker" x="135.0" y="517.0" text-anchor="middle" font-size="12" font-weight="400">Node 26 · workflows in TypeScript</text>
+<text data-kind="node-text" data-of="worker" x="135.0" y="532.0" text-anchor="middle" font-size="10.5" fill="#6b7280">replays history in a node:vm sandbox</text>
+<rect data-kind="node" data-id="anthropic" x="20" y="800" width="230" height="70" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="anthropic" transform="translate(30.0,823.0) scale(1.000)" fill="none" stroke="#c2255c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 4.6v9.2l-8 4.6-8-4.6V7.1z"/><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5V6M12 14.5V18M9.8 10.8 6.6 9M14.2 10.8 17.4 9M9.8 13.2 6.6 15M14.2 13.2 17.4 15"/></g>
+<text data-kind="node-text" data-of="anthropic" x="62.0" y="832.0" font-size="12" font-weight="600">Anthropic API</text>
+<text data-kind="node-text" data-of="anthropic" x="62.0" y="846.0" font-size="12" font-weight="400">model calls, priced into ai_call</text>
+<rect data-kind="node" data-id="gate" x="350" y="800" width="260" height="70" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="gate" transform="translate(360.0,823.0) scale(1.000)" fill="none" stroke="#c2255c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3v6.5c0 5-3.4 8.3-8 9.5-4.6-1.2-8-4.5-8-9.5V5.5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></g>
+<text data-kind="node-text" data-of="gate" x="392.0" y="832.0" font-size="12" font-weight="600">AgentOps Gate</text>
+<text data-kind="node-text" data-of="gate" x="392.0" y="846.0" font-size="12" font-weight="400">POST /decisions · GET /approvals</text>
+<rect data-kind="node" data-id="github" x="890" y="800" width="270" height="70" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="github" transform="translate(900.0,823.0) scale(1.000)" fill="none" stroke="#1d2430" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6 7v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7M12 13v4"/></g>
+<text data-kind="node-text" data-of="github" x="932.0" y="832.0" font-size="12" font-weight="600">GitHub Actions</text>
+<text data-kind="node-text" data-of="github" x="932.0" y="846.0" font-size="12" font-weight="400">Verify on push · Deploy by OIDC</text>
+<rect data-kind="node" data-id="apigw" x="340" y="230" width="180" height="112" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="apigw" transform="translate(415.0,238.0) scale(1.250)" fill="none" stroke="#e07a1f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 9h6l-2-2M9 9l-2 2M21 15h-6l2-2M15 15l2 2"/></g>
+<text data-kind="node-text" data-of="apigw" x="430.0" y="283.0" text-anchor="middle" font-size="12" font-weight="600">Amazon API Gateway</text>
+<text data-kind="node-text" data-of="apigw" x="430.0" y="297.0" text-anchor="middle" font-size="12" font-weight="400">HTTP API</text>
+<text data-kind="node-text" data-of="apigw" x="430.0" y="312.0" text-anchor="middle" font-size="10.5" fill="#6b7280">HTTPS · 10 rps · 30 s timeout</text>
+<rect data-kind="node" data-id="task" x="595" y="230" width="280" height="112" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="task" transform="translate(720.0,238.0) scale(1.250)" fill="none" stroke="#e07a1f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2.5v3.5M15 2.5v3.5M9 18v3.5M15 18v3.5M2.5 9h3.5M2.5 15h3.5M18 9h3.5M18 15h3.5"/></g>
+<text data-kind="node-text" data-of="task" x="735.0" y="283.0" text-anchor="middle" font-size="12" font-weight="600">ECS Fargate task</text>
+<text data-kind="node-text" data-of="task" x="735.0" y="297.0" text-anchor="middle" font-size="12" font-weight="400">capstan-server (Go)</text>
+<text data-kind="node-text" data-of="task" x="735.0" y="311.0" text-anchor="middle" font-size="12" font-weight="400">reached by VPC link + Cloud Map SRV</text>
+<text data-kind="node-text" data-of="task" x="735.0" y="326.0" text-anchor="middle" font-size="10.5" fill="#6b7280">ARM64 · one task · :7233</text>
+<rect data-kind="node" data-id="rds" x="590" y="530" width="290" height="104" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="rds" transform="translate(720.0,538.0) scale(1.250)" fill="none" stroke="#3b5bdb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></g>
+<text data-kind="node-text" data-of="rds" x="735.0" y="583.0" text-anchor="middle" font-size="12" font-weight="600">Amazon RDS · PostgreSQL 16</text>
+<text data-kind="node-text" data-of="rds" x="735.0" y="597.0" text-anchor="middle" font-size="12" font-weight="400">capstan</text>
+<text data-kind="node-text" data-of="rds" x="735.0" y="612.0" text-anchor="middle" font-size="10.5" fill="#6b7280">run · event · task · timer · approval · inbox</text>
+<rect data-kind="node" data-id="secrets" x="930" y="150" width="190" height="90" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="secrets" transform="translate(1010.0,158.0) scale(1.250)" fill="none" stroke="#c2255c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M15 12v2.5"/></g>
+<text data-kind="node-text" data-of="secrets" x="1025.0" y="203.0" text-anchor="middle" font-size="12" font-weight="600">AWS Secrets Manager</text>
+<text data-kind="node-text" data-of="secrets" x="1025.0" y="217.0" text-anchor="middle" font-size="12" font-weight="400">four secrets, read at task start</text>
+<rect data-kind="node" data-id="ecr" x="930" y="255" width="190" height="90" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="ecr" transform="translate(1010.0,263.0) scale(1.250)" fill="none" stroke="#e07a1f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5"/></g>
+<text data-kind="node-text" data-of="ecr" x="1025.0" y="308.0" text-anchor="middle" font-size="12" font-weight="600">Amazon ECR</text>
+<text data-kind="node-text" data-of="ecr" x="1025.0" y="322.0" text-anchor="middle" font-size="12" font-weight="400">immutable image tags</text>
+<rect data-kind="node" data-id="cw" x="930" y="430" width="190" height="90" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="cw" transform="translate(1010.0,438.0) scale(1.250)" fill="none" stroke="#c2255c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></g>
+<text data-kind="node-text" data-of="cw" x="1025.0" y="483.0" text-anchor="middle" font-size="12" font-weight="600">Amazon CloudWatch</text>
+<text data-kind="node-text" data-of="cw" x="1025.0" y="497.0" text-anchor="middle" font-size="12" font-weight="400">logs 7 days · two alarms</text>
+<rect data-kind="node" data-id="sns" x="930" y="560" width="190" height="90" rx="2" fill="#ffffff" stroke="#1d2430" stroke-width="1.2"/>
+<g data-kind="node-icon" data-of="sns" transform="translate(1010.0,568.0) scale(1.250)" fill="none" stroke="#c2255c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></g>
+<text data-kind="node-text" data-of="sns" x="1025.0" y="613.0" text-anchor="middle" font-size="12" font-weight="600">SNS capstan-alerts</text>
+<text data-kind="node-text" data-of="sns" x="1025.0" y="627.0" text-anchor="middle" font-size="12" font-weight="400">AWS Budgets $10 / month</text>
+<text data-kind="note" data-note="0" x="730" y="386" font-size="10.5" fill="#6b7280" font-style="italic">engine loops:</text>
+<text data-kind="note" data-note="0" x="730" y="399" font-size="10.5" fill="#6b7280" font-style="italic">timers · tasks</text>
+<text data-kind="note" data-note="0" x="730" y="412" font-size="10.5" fill="#6b7280" font-style="italic">approvals · run timeouts</text>
+<text data-kind="note" data-note="1" x="590" y="654" font-size="10.5" fill="#6b7280" font-style="italic">the only durable state · LISTEN/NOTIFY wakes pollers</text>
+<text data-kind="note" data-note="2" x="75" y="605" font-size="10.5" fill="#6b7280" font-style="italic">workers run outside AWS;</text>
+<text data-kind="note" data-note="2" x="75" y="618" font-size="10.5" fill="#6b7280" font-style="italic">the deploy ships no worker</text>
+</svg>

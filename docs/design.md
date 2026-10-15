@@ -4,8 +4,7 @@ Date: 2026-09-28. Status: approved.
 
 Implementation refinements are recorded in [D1–D30](decisions.md); the frozen
 contracts govern event names, schema, and public signatures where this initial design
-differs. The [independent audit](evidence/audit-2026-09-28.md) records executed
-checks and unresolved claims. AWS proof remains outside that local audit.
+differs. The [conformance suite](../conformance/README.md) defines replay checks.
 
 A capstan is the winch that hauls an anchor chain. It ratchets, so it holds what it has
 gained even under load and never slips back. That is the guarantee this engine makes.
@@ -27,8 +26,8 @@ It exists for three reasons, in order:
 2. **It completes the Gate.** The Gate answers ALLOW / DENY / REQUIRE_APPROVAL and creates
    a durable approval. Nothing on the owner's machine survives the wait. Capstan is what
    waits.
-   session. A lane becomes a workflow: fan out to worktrees, gate the merge on an approval,
-   survive a crash.
+3. **It runs durable tasks.** Parallel activities can wait for an approval and
+   resume from recorded results after a crash.
 
 ### Non-goals
 
@@ -46,6 +45,7 @@ production standards.
 | Worker SDK language | TypeScript, so existing agents are clients |
 | Agent layer | Model calls, tool calls through the Gate, human steps — all durable |
 | Test method | Fault lab: virtual clock, seeded fault injection, properties asserted per seed |
+| Recovery check | Kill the server mid-workflow and compare history after restart |
 | Repo | Private: `Aly700/capstan` |
 
 Rejected: a library-only design with no server (deletes the scheduling and matching
@@ -56,7 +56,7 @@ problems, which are the interesting ones); building the agent layer on real Temp
 
 | Layer | Choice | Note |
 | --- | --- | --- |
-| Server | Go 1.26.4 (the installed toolchain; do not upgrade mid-build) | stdlib-first |
+| Server | Go 1.26.4 | stdlib-first |
 | RPC | Connect (connectrpc.com/connect, `@connectrpc/connect-node` 2.2.0) over HTTP/2 | gRPC-compatible, first-class TypeScript |
 | Schema | Protobuf via `buf`, `@bufbuild/protobuf` 2.15.0 | one `.proto` is the contract |
 | Storage | PostgreSQL 16, `pgx` v5, numbered SQL files in `migrations/` embedded with `embed` and applied in order in one transaction against a `schema_migration` table | single store, no Redis |
@@ -234,13 +234,13 @@ Published as `@capstan/sdk` inside the repo, not to npm.
 functions registered by name.
 
 ```ts
-export async function reviewLane(input: { branch: string }) {
-  const plan = await activity(analyze, { branch: input.branch });
-  const results = await Promise.all(plan.tasks.map((t) => activity(runLane, t)));
+export async function reviewTasks(input: { branch: string }) {
+  const analysis = await activity(analyze, { branch: input.branch });
+  const results = await Promise.all(analysis.tasks.map((t) => activity(runTask, t)));
   const decision = await tool("git.merge", { branch: input.branch });  // may pause for a human
   if (!decision.allowed) return { merged: false, reason: decision.reason };
   await activity(merge, { branch: input.branch });
-  return { merged: true, lanes: results.length };
+  return { merged: true, tasks: results.length };
 }
 ```
 
@@ -285,7 +285,7 @@ on callers supplying upper bounds. Cost for a run is `SUM(cost_usd)` over its
    task. Five minutes or five days later, the workflow continues on the next line.
 
 **`human(prompt, options)`** — the same wait without the Gate, for decisions that are not
-tool calls: pick an art direction, approve a deploy, choose between two plans.
+tool calls: pick an art direction, approve a deploy, choose between two alternatives.
 
 ## 10. Fault lab
 
@@ -323,6 +323,7 @@ One `capstan-server` image on ECS Fargate with RDS Postgres, deployed by CDK wit
 OIDC role, under the ten-dollar ceiling with a Budgets alarm, destroyable to zero. This is
 the pattern AgentOps Gate already proved, reused deliberately rather than reinvented.
 
+Workers run wherever the work is: on a workstation or as a
 second Fargate service. A worker needs the server address and an API key, nothing else.
 
 ## 12. Security
@@ -345,7 +346,7 @@ Every claim in the README must run, the same rule as the Gate.
 
 | Claim | How it is shown |
 | --- | --- |
-| A run survives a crash | Recorded session: kill the server mid-run, restart, the workflow finishes correctly |
+| A run survives a crash | Kill the server mid-run, restart, the workflow finishes correctly |
 | Effects apply once | The fault lab's P1 across thousands of seeds, plus the idempotency table after a duplicate-delivery scenario |
 | A workflow can wait days | An approval-gated run resumed after a clock jump, with the run holding no resources while idle |
 | Code changes do not corrupt live runs | A live run blocked by a changed workflow, then resumed after a patch marker |
@@ -356,7 +357,7 @@ Gate: `make verify` runs `go vet`, `go test ./...` including the fault lab at a 
 count, the SDK's vitest suite, a Postgres integration suite in Testcontainers, `buf lint`,
 and a replay test that runs recorded histories against current code.
 
-## 14. Build order
+## 14. Components
 
 1. **Store and history** — schema, migrations, append transaction with optimistic
    concurrency, run lifecycle, the append-only trigger, Testcontainers suite.
@@ -369,10 +370,7 @@ and a replay test that runs recorded histories against current code.
    waits.
 6. **Fault lab** — virtual clock, in-memory store, injector, the four properties, seed CLI.
 7. **Infrastructure** — CDK stacks, OIDC deploy workflow, Budgets alarm, runbook.
-9. **Adversarial review** — an independent review whose job is to make a run lose an effect,
-   resume wrong, or fire a timer twice, and to check every README claim against evidence.
-
-Order: 1 → (2, 3) → 4 → (5, 6) → 7 → 8 → 9.
+8. **Example workloads** — durable activities, replay recovery, model calls and approvals.
 
 ## 15. Risks
 

@@ -5,6 +5,5 @@ bin/capstan-server
 .env.*
 !.env.example
 *.log
-.lane/
 tmp/
 coverage/

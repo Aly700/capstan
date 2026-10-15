@@ -1,7 +1,7 @@
 .git
 .env
 .env.*
-.lane
+tmp
 sdk/node_modules
 infra/node_modules
 infra/cdk.out
@@ -10,5 +10,4 @@ infra/cdk.out
 **/coverage
 **/dist
 bin
-tmp
 *.log

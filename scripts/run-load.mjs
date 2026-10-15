@@ -20,10 +20,10 @@ const sql = `select json_build_object(
  'database',(select row_to_json(d) from (select xact_commit,xact_rollback,blks_read,blks_hit,deadlocks from pg_stat_database where datname=current_database()) d)
 );`;
 await managed(env, async () => {
-  execFileSync("go", ["build", "-o", ".lane/bin/capstan-load", "./cmd/capstan-load"], { cwd: root, env: { ...process.env, GOTOOLCHAIN: "go1.26.4" } });
+  execFileSync("go", ["build", "-o", "tmp/bin/capstan-load", "./cmd/capstan-load"], { cwd: root, env: { ...process.env, GOTOOLCHAIN: "go1.26.4" } });
   for (let i = 0; i < workerCount; i++) env.worker("load.ts", i);
   await until("all workers ready", () => env.workers.every((worker, i) => {
-    if (worker.exitCode !== null) throw new Error("Worker exited; inspect .lane logs");
+    if (worker.exitCode !== null) throw new Error("Worker exited; inspect tmp logs");
     try { return readFileSync(join(env.logdir, `worker-${i}.log`), "utf8").includes('"workerReady":true'); } catch { return false; }
   }));
   // Untimed warmup checks all five activities before the closed-loop measurement.
@@ -50,9 +50,9 @@ await managed(env, async () => {
   await sample();
   writeFileSync(join(env.logdir, "metrics-before.txt"), await (await fetch(`${env.address}/metrics`)).text());
   const args = ["-address", env.address, "-queue", env.queue, "-concurrency", String(concurrency), "-n", String(n), "-samples", join(env.logdir, "runs.jsonl")];
-  console.log(`$ CAPSTAN_API_KEY=<ephemeral key> .lane/bin/capstan-load -address ${env.address} -queue ${env.queue} -concurrency ${concurrency} -n ${n} -samples .lane/<this-run>/runs.jsonl`);
+  console.log(`$ CAPSTAN_API_KEY=<ephemeral key> tmp/bin/capstan-load -address ${env.address} -queue ${env.queue} -concurrency ${concurrency} -n ${n} -samples tmp/<this-run>/runs.jsonl`);
   env.ensureActive();
-  const child = spawn(join(root, ".lane/bin/capstan-load"), args, { cwd: root, env: { ...process.env, CAPSTAN_API_KEY: env.key }, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+  const child = spawn(join(root, "tmp/bin/capstan-load"), args, { cwd: root, env: { ...process.env, CAPSTAN_API_KEY: env.key }, detached: true, stdio: ["ignore", "pipe", "pipe"] });
   env.children.push(child);
   let output = "", errors = "", done = false;
   child.stdout.on("data", (chunk) => { output += chunk; process.stdout.write(chunk); });

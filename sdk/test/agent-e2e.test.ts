@@ -47,7 +47,7 @@ describe.skipIf(process.env.CAPSTAN_E2E_GATE !== "1")("agent end to end with the
   const suffix = randomBytes(6).toString("hex");
   const database = `capstan_agent_e2e_${suffix}`;
   const queue = `agent-e2e-${suffix}`;
-  const scratch = join(root, ".lane", `agent-e2e-${suffix}`);
+  const scratch = join(root, "tmp", `agent-e2e-${suffix}`);
   const composeFile = join(scratch, "compose.yml");
   const effectsFile = join(scratch, "effects.jsonl");
   const apiKey = `capstan-test-${randomBytes(24).toString("hex")}`;
@@ -138,7 +138,7 @@ describe.skipIf(process.env.CAPSTAN_E2E_GATE !== "1")("agent end to end with the
     } catch (error) {
       const output = error as { stdout?: string; stderr?: string };
       await writeFile(join(scratch, "compose-up.log"), (output.stdout ?? "") + (output.stderr ?? ""));
-      throw new Error("Gate compose setup failed; see .lane agent-e2e compose-up.log");
+      throw new Error("Gate compose setup failed; see tmp agent-e2e compose-up.log");
     }
     await until("Gate health", async () => {
       try { return (await fetch(`${gateUrl}/actuator/health`, { signal: AbortSignal.timeout(2_000) })).ok ? true : undefined; } catch { return undefined; }

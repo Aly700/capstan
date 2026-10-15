@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 test('build context excludes local secrets, evidence, and dependency trees', () => {
   assert.ok(existsSync(`${root}.dockerignore`), '.dockerignore is required');
   const lines = readFileSync(`${root}.dockerignore`, 'utf8').split('\n');
-  for (const path of ['.git', '.env', '.env.*', '.lane', 'sdk/node_modules', 'infra/node_modules', 'infra/cdk.out']) {
+  for (const path of ['.git', '.env', '.env.*', 'tmp', 'sdk/node_modules', 'infra/node_modules', 'infra/cdk.out']) {
     assert.ok(lines.includes(path), `exclude ${path}`);
   }
 });

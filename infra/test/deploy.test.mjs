@@ -22,8 +22,8 @@ test('deployment requires a manual main-branch dispatch and rejects the server s
 
 function deploy(mode = 'missing', identity = 'expected') {
   assert.ok(existsSync(`${root}.github/scripts/deploy.sh`), 'deployment script is required');
-  mkdirSync(`${root}.lane`, { recursive: true });
-  const dir = mkdtempSync(`${root}.lane/deploy-test-`);
+  mkdirSync(`${root}tmp`, { recursive: true });
+  const dir = mkdtempSync(`${root}tmp/deploy-test-`);
   const trace = `${dir}/trace.jsonl`;
   for (const name of ['aws', 'docker', 'npx', 'curl']) {
     writeFileSync(`${dir}/${name}`, `#!/usr/bin/env node

@@ -132,7 +132,7 @@ func Run(ctx context.Context, seed int64, opts Options) (Result, error) {
 }
 
 // The known-defect list is intentionally exact. Add only independently reproduced
-// engine/store defects with an entry in docs/evidence/defects.md.
+// engine/store defects with a permanent regression test.
 func KnownFailure(seed int64, err error) bool { return false }
 func validFault(kind FaultKind) bool {
 	for _, value := range AllFaults() {

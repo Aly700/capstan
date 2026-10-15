@@ -33,7 +33,7 @@ export class Evidence {
     this.dsn = url.toString();
     this.key = `cap_evidence_${randomBytes(24).toString("hex")}`;
     this.queue = `evidence-${name}`;
-    this.logdir = join(root, ".lane", `${name}-${Date.now()}`);
+    this.logdir = join(root, "tmp", `${name}-${Date.now()}`);
     mkdirSync(this.logdir, { recursive: true });
     this.children = [];
     this.workers = [];
@@ -47,8 +47,8 @@ export class Evidence {
   }
   async setup() {
     this.ensureActive();
-    mkdirSync(join(root, ".lane/bin"), { recursive: true });
-    execFileSync("go", ["build", "-o", ".lane/bin/capstan-server", "./cmd/capstan-server"], { cwd: root, env: { ...process.env, GOTOOLCHAIN: "go1.26.4" }, stdio: "inherit" });
+    mkdirSync(join(root, "tmp/bin"), { recursive: true });
+    execFileSync("go", ["build", "-o", "tmp/bin/capstan-server", "./cmd/capstan-server"], { cwd: root, env: { ...process.env, GOTOOLCHAIN: "go1.26.4" }, stdio: "inherit" });
     execFileSync("psql", [this.admin, "-X", "-v", "ON_ERROR_STOP=1", "-qc", `create database ${this.database}`]);
     this.created = true;
     await this.startServer();
@@ -72,12 +72,12 @@ export class Evidence {
       probe.once("error", reject);
       probe.listen(this.port, "127.0.0.1", () => probe.close(resolve));
     });
-    this.server = this.child(join(root, ".lane/bin/capstan-server"), ["serve"], "server", {
+    this.server = this.child(join(root, "tmp/bin/capstan-server"), ["serve"], "server", {
       CAPSTAN_DATABASE_URL: this.dsn, CAPSTAN_API_KEY_HASHES: `evidence:${createHash("sha256").update(this.key).digest("hex")}`,
       CAPSTAN_ADDR: `127.0.0.1:${this.port}`, CAPSTAN_POLL_TIMEOUT: "2s", CAPSTAN_LOG_LEVEL: "warn",
     });
     await until("server readiness", async () => {
-      if (this.server.spawnError || this.server.exitCode !== null) throw new Error("Server exited; inspect .lane logs");
+      if (this.server.spawnError || this.server.exitCode !== null) throw new Error("Server exited; inspect tmp logs");
       try {
         if (!(await fetch(`${this.address}/readyz`)).ok) return false;
         await this.rpc("ListRuns", { pageSize: 1 });

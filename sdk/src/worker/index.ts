@@ -1,5 +1,5 @@
 // The host-side worker: polls the server, runs workflow tasks in the sandbox and activities
-// in normal Node. Frozen contract for the build.
+// in normal Node. Public contract.
 
 import { hostname } from "node:os";
 import { createClient, type Client } from "@connectrpc/connect";

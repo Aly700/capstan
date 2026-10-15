@@ -1,10 +1,9 @@
 # Capstan deployment runbook
 
 This runbook describes the deployment design and operator procedures. The integrated
-server runs locally against PostgreSQL; the [independent audit](evidence/audit-2026-09-28.md)
-exercises that implementation. AWS deployment, identity, prices, alarms and destruction
-were outside the local audit's permitted scope. Obtain current deployment evidence
-before treating those procedures as validated.
+server runs locally against PostgreSQL and is exercised by the
+[integration tests](../internal/engine/). Validate AWS deployment, identity, prices,
+alarms and destruction in the target environment before relying on these procedures.
 
 The documented deployment uses one server task. The local audit's successful two-process
 timer test does not establish general multiple-server support.
@@ -41,8 +40,8 @@ Compose `down`; other work shares it. These checks do not start another database
 
 ```sh
 make verify
-docker build -t capstan-server:lane .
-docker run --rm capstan-server:lane
+docker build -t capstan-server:local .
+docker run --rm capstan-server:local
 # Without required configuration: exit 1; this is not a configured-server smoke test.
 cd infra
 npm ci

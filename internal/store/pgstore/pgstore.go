@@ -31,7 +31,7 @@ var _ store.Store = (*pgStore)(nil)
 // Open connects to PostgreSQL and returns a Store. It does not apply migrations.
 func Open(ctx context.Context, dsn string) (store.Store, error) {
 	// Forty led the 10/20/40/60 pool comparison on the documented load machine.
-	// See docs/evidence/load.md; servers may override it for a different database.
+	// Servers may override it for a different database.
 	return OpenWithMaxConns(ctx, dsn, 40)
 }
 

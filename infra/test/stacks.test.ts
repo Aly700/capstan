@@ -7,9 +7,9 @@ import { Template, Match } from 'aws-cdk-lib/assertions';
 async function synth(extra: Record<string, unknown> = {}) {
   assert.ok(existsSync(new URL('../lib/app.ts', import.meta.url)), 'CDK stacks must be implemented');
   const { createStacks } = await import('../lib/app.ts');
-  mkdirSync(new URL('../../.lane/', import.meta.url), { recursive: true });
+  mkdirSync(new URL('../../tmp/', import.meta.url), { recursive: true });
   const defaults = JSON.parse(readFileSync(new URL('../cdk.json', import.meta.url), 'utf8')).context;
-  const app = new App({ outdir: mkdtempSync(new URL('../../.lane/cdk-test-', import.meta.url).pathname), context: { ...defaults, imageTag: 'test', budgetEmail: 'test@example.com', ...extra } });
+  const app = new App({ outdir: mkdtempSync(new URL('../../tmp/cdk-test-', import.meta.url).pathname), context: { ...defaults, imageTag: 'test', budgetEmail: 'test@example.com', ...extra } });
   const stacks = createStacks(app);
   return Object.fromEntries(Object.entries(stacks).map(([name, stack]) => [name, Template.fromStack(stack)]));
 }

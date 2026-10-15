@@ -256,7 +256,7 @@ func runMutations(ctx context.Context, root string, opts mutationOptions, comman
 		return report, err
 	}
 	if opts.LogDir == "" {
-		opts.LogDir = filepath.Join(root, ".lane", "mutation")
+		opts.LogDir = filepath.Join(root, "tmp", "mutation")
 	}
 	if !filepath.IsAbs(opts.LogDir) {
 		opts.LogDir = filepath.Join(root, opts.LogDir)
@@ -264,10 +264,10 @@ func runMutations(ctx context.Context, root string, opts mutationOptions, comman
 	if err := os.MkdirAll(opts.LogDir, 0755); err != nil {
 		return report, err
 	}
-	if err := os.MkdirAll(filepath.Join(root, ".lane"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(root, "tmp"), 0755); err != nil {
 		return report, err
 	}
-	scratch, err := os.MkdirTemp(filepath.Join(root, ".lane"), "mutation-worktree-")
+	scratch, err := os.MkdirTemp(filepath.Join(root, "tmp"), "mutation-worktree-")
 	if err != nil {
 		return report, err
 	}
@@ -413,7 +413,7 @@ func mutationMarkdown(report mutationReport, opts mutationOptions) string {
 	if valid > equivalent {
 		fmt.Fprintf(&b, "Excluding explicitly justified equivalent survivors: **%d/%d (%.2f%%)**.\n\n", caught, valid-equivalent, 100*float64(caught)/float64(valid-equivalent))
 	}
-	fmt.Fprintf(&b, "Production revision: `%s`. Lab snapshot SHA-256: `%s`.\nScratch snapshot commit: `%s`. Started: %s.\n\nEvery mutant runs TestLab with %d seeds, stopping at its first failure. The unmutated\nbaseline must pass all seeds first. Builds, infrastructure failures and timeouts are\nreported separately and do not count as kills. Production sources are changed only\nin an isolated temporary worktree beneath `.lane/`, removed after the run.\n\n", report.Revision, report.SourceHash, report.Snapshot, report.Started.Format(time.RFC3339), report.Seeds)
+	fmt.Fprintf(&b, "Production revision: `%s`. Lab snapshot SHA-256: `%s`.\nScratch snapshot commit: `%s`. Started: %s.\n\nEvery mutant runs TestLab with %d seeds, stopping at its first failure. The unmutated\nbaseline must pass all seeds first. Builds, infrastructure failures and timeouts are\nreported separately and do not count as kills. Production sources are changed only\nin an isolated temporary worktree beneath `tmp/`, removed after the run.\n\n", report.Revision, report.SourceHash, report.Snapshot, report.Started.Format(time.RFC3339), report.Seeds)
 	fmt.Fprintf(&b, "```sh\nPATH=$HOME/.local/bin:$PATH GOTOOLCHAIN=go1.26.4 go run ./cmd/capstan-lab mutate -catalogue %s -seeds %d -timeout %s -logs %s\n```\n\n", shellQuote(opts.Catalogue), opts.Seeds, opts.Timeout, shellQuote(opts.LogDir))
 	b.WriteString("| ID | Mutation | Result | First seed | Property or check |\n| --- | --- | --- | ---: | --- |\n")
 	clean := func(s string) string { return strings.NewReplacer("|", "\\|", "\n", " ", "\r", "").Replace(s) }
@@ -449,8 +449,8 @@ func runMutationCLI(args []string, output io.Writer) int {
 	flags.StringVar(&opts.Catalogue, "catalogue", "internal/lab/mutants/*.patch", "patch glob or catalogue.json")
 	flags.IntVar(&opts.Seeds, "seeds", 2000, "seed count for baseline and every mutant")
 	flags.DurationVar(&opts.Timeout, "timeout", 2*time.Minute, "maximum duration per lab command")
-	flags.StringVar(&opts.LogDir, "logs", ".lane/mutation", "full command output and JSON results")
-	flags.StringVar(&out, "out", "docs/evidence/lab-mutation.md", "Markdown evidence path")
+	flags.StringVar(&opts.LogDir, "logs", "tmp/mutation", "full command output and JSON results")
+	flags.StringVar(&out, "out", "tmp/evidence/lab-mutation.md", "Markdown evidence path")
 	flags.BoolVar(&opts.Keep, "keep", false, "retain the scratch worktree for inspection")
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {

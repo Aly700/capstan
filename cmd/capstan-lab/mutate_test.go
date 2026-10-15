@@ -79,7 +79,7 @@ func TestMutationRunnerUsesScratchSnapshotAndRestoresProduction(t *testing.T) {
 			return mutationExec(ctx, dir, name, args...)
 		}
 		calls++
-		if dir == root || !strings.HasPrefix(dir, filepath.Join(root, ".lane")) {
+		if dir == root || !strings.HasPrefix(dir, filepath.Join(root, "tmp")) {
 			t.Fatalf("not scratch: %s", dir)
 		}
 		source, e := os.ReadFile(filepath.Join(dir, "internal/lab/lab.go"))
@@ -95,7 +95,7 @@ func TestMutationRunnerUsesScratchSnapshotAndRestoresProduction(t *testing.T) {
 		}
 		return []byte(`{"Action":"pass","Test":"TestLab"}`), nil
 	}
-	opts := mutationOptions{Catalogue: "internal/lab/mutants/*.patch", Seeds: 2000, LogDir: filepath.Join(root, ".lane/logs")}
+	opts := mutationOptions{Catalogue: "internal/lab/mutants/*.patch", Seeds: 2000, LogDir: filepath.Join(root, "tmp/logs")}
 	report, err := runMutations(context.Background(), root, opts, command, nil)
 	if err != nil {
 		t.Fatal(err)

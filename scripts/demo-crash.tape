@@ -1,6 +1,6 @@
-# Render the captured session at its original speed; this does not rerun the demo.
-Output docs/evidence/demo-crash.gif
-Require asciinema
+# Render a fresh crash-and-recovery demonstration.
+Output tmp/evidence/demo-crash.gif
+Require bash
 Set Shell "bash"
 Set FontFamily "Menlo"
 Set FontSize 13
@@ -9,7 +9,7 @@ Set Height 720
 Set Framerate 10
 Set TypingSpeed 1ms
 Hide
-Type "asciinema play --speed 1 docs/evidence/demo-crash.cast"
+Type "bash scripts/demo-crash.sh"
 Enter
 Show
 Sleep 18s

@@ -3,7 +3,7 @@
 // I/O inside a store transaction and reads time only through its Clock.
 //
 // This file is the frozen contract between the engine and the server. The concrete
-// *Engine type implementing API lives in engine.go (lane: engine).
+// *Engine type implementing API lives in engine.go.
 package engine
 
 import (

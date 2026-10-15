@@ -82,7 +82,7 @@ component replaces the stub; nothing else edits it.
 their seq must be greater than every seq already allocated in the run (history plus earlier
 commands in the same task). `RequestActivityCancel` and `CancelTimer` carry the seq of the
 activity or timer they refer to: it must exist in history (or earlier in the same task) and
-not be settled yet. The plan's "strictly increasing" rule applies to allocating commands only.
+not be settled yet. The design's "strictly increasing" rule applies to allocating commands only.
 (SDK issue 1.)
 
 ## D13 — 2026-09-28 — No per-activity cancellation API in v1
@@ -189,14 +189,14 @@ A model call can fail after the provider has billed it (a timeout on a non-strea
 response), with no token counts to report. `FinishAICallRequest` gains
 `bool usage_unknown`. When it is set on a failed call, the engine charges the reservation
 estimate instead of zero, so the ledger over-counts rather than under-counts. The worker
-sets it when a provider request was sent and no usage came back. (Agent issue 1.)
+sets it when a provider request was sent and no usage came back. (Model API issue 1.)
 
 ## D28 — 2026-09-28 — A lost Reserve acknowledgement stays counted until midnight
 
 If a ReserveAICall commits but its response is lost, the worker never calls the provider
 (it has no reservation id), and the orphaned reservation counts at its estimate against
 that Toronto day's cap. No money is spent, and the cap fails closed. This is a documented
-v1 limitation. Reconciling orphaned reservations is later work. (Agent issue 2.)
+v1 limitation. Reconciling orphaned reservations is later work. (Model API issue 2.)
 
 ## D29 — 2026-09-28 — A tool runs with the arguments the Gate decided on
 
@@ -205,7 +205,7 @@ v1 limitation. Reconciling orphaned reservations is later work. (Agent issue 2.)
 arguments recomputed by the current code. When the current code proposes different
 arguments for a step the Gate has already decided, the workflow task fails as a history
 mismatch and the run blocks, naming the step. An approval therefore can never authorise
-arguments nobody saw. (Agent issue 4.)
+arguments nobody saw. (Model API issue 4.)
 
 ## D30 — 2026-09-28 — AwaitRun subscribes to committed run closure
 

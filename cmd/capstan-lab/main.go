@@ -353,7 +353,7 @@ func testReproduction(seed int64) string {
 }
 
 func campaignReproduction(opts campaignOptions, seed int64) string {
-	return fmt.Sprintf("go run ./cmd/capstan-lab -seed %d%s -out docs/evidence/lab-seed-%d.md", seed, runArguments(opts), seed)
+	return fmt.Sprintf("go run ./cmd/capstan-lab -seed %d%s -out tmp/evidence/lab-seed-%d.md", seed, runArguments(opts), seed)
 }
 
 func runArguments(opts campaignOptions) string {

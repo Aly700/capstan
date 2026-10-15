@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { Evidence, managed, root, until, payload } from "./evidence-lib.mjs";
@@ -9,6 +9,7 @@ const packageFile = process.env.PATH.split(":").map((dir) => join(dirname(dir), 
 if (!packageFile) throw new Error("Run scripts/check-ui.sh (Playwright comes from npx)");
 const { chromium } = createRequire(packageFile)("playwright");
 await managed(new Evidence("ui", 7300), async (env) => {
+  mkdirSync(join(root, "tmp/evidence"), { recursive: true });
   let worker = env.worker();
   const injection = '<img src="/ui/leak" onerror="window.historyInjection=true">';
   for (let n = 1; n <= 12; n++) await env.start("viewerCompleted", `evidence-completed-${String(n).padStart(2, "0")}`, { n, note: injection });
@@ -40,7 +41,7 @@ await managed(new Evidence("ui", 7300), async (env) => {
     await page.getByLabel("Per page").selectOption("10");
     await page.getByRole("button", { name: "Apply filters" }).click();
     await page.waitForFunction(() => document.querySelectorAll("#runs tr").length === 10);
-    await page.screenshot({ path: join(root, "docs/evidence/ui-list.png"), fullPage: true });
+    await page.screenshot({ path: join(root, "tmp/evidence/ui-list.png"), fullPage: true });
     await page.getByRole("button", { name: "Next", exact: true }).click();
     await page.waitForFunction(() => document.getElementById("page-label").textContent === "Page 2");
     assert.equal(await page.locator("#runs tr").count(), 3);
@@ -57,7 +58,7 @@ await managed(new Evidence("ui", 7300), async (env) => {
     assert.match(await page.locator("#timeline pre").first().textContent(), /<img src=/);
     assert.equal(await page.evaluate(() => window.historyInjection), undefined);
     await page.locator("#timeline summary").first().click();
-    await page.screenshot({ path: join(root, "docs/evidence/ui-completed.png"), fullPage: true });
+    await page.screenshot({ path: join(root, "tmp/evidence/ui-completed.png"), fullPage: true });
     await page.goto(`${env.address}/ui/#run=evidence-blocked`);
     await page.waitForSelector("#blocked:not([hidden])");
     assert.match(await page.locator("#blocked").textContent(), /capstan resume 'evidence-blocked'/);
@@ -83,9 +84,9 @@ await managed(new Evidence("ui", 7300), async (env) => {
     assert.equal(await linkedPage.locator("#run-title").textContent(), "evidence-blocked");
     await linkedPage.close();
     await page.evaluate(() => scrollTo(0, 0));
-    await page.screenshot({ path: join(root, "docs/evidence/ui-blocked.png"), fullPage: true });
+    await page.screenshot({ path: join(root, "tmp/evidence/ui-blocked.png"), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.screenshot({ path: join(root, "docs/evidence/ui-mobile.png"), fullPage: true });
+    await page.screenshot({ path: join(root, "tmp/evidence/ui-mobile.png"), fullPage: true });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.reload();
     await page.waitForSelector("#blocked:not([hidden])");

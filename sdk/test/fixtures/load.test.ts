@@ -6,8 +6,8 @@ import { loadFixtures } from "./load.ts";
 
 let directory: URL;
 beforeAll(async () => {
-  await mkdir(new URL("../../../.lane/", import.meta.url), { recursive: true });
-  const path = await mkdtemp(fileURLToPath(new URL("../../../.lane/delta1-fixtures-", import.meta.url)));
+  await mkdir(new URL("../../../tmp/", import.meta.url), { recursive: true });
+  const path = await mkdtemp(fileURLToPath(new URL("../../../tmp/delta1-fixtures-", import.meta.url)));
   directory = pathToFileURL(`${path}/`);
   const fixture = run("testWorkflow").task().expectCommands();
   const files = [

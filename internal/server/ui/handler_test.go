@@ -9,7 +9,7 @@ import (
 )
 
 func TestOnlyEmbeddedFiles(t *testing.T) {
-	for _, path := range []string{"/", "/ui/../go.mod", "/ui/%2e%2e/go.mod", "/ui/static/", "/ui/.env", "/ui/handler.go", "/ui/missing.js", "/ui/app.js/"} {
+	for _, path := range []string{"/", "/ui/../README.md", "/ui/%2e%2e/README.md", "/ui/static/", "/ui/.env", "/ui/handler.go", "/ui/missing.js", "/ui/app.js/"} {
 		w := httptest.NewRecorder()
 		ui.NewHandler().ServeHTTP(w, httptest.NewRequest(http.MethodGet, path, nil))
 		if w.Code != http.StatusNotFound {
