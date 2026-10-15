@@ -68,6 +68,12 @@ export async function loadFive(): Promise<number> {  // an exported async functi
 
 `step` is `(n) => n + 1` in the [example worker](examples/evidence/worker.ts). Five activities, five `ActivityScheduled` and `ActivityCompleted` pairs, a result of `5`. Every one of the 11,700 runs in the load measurement below is this workflow.
 
+## Architecture
+
+![Capstan architecture: caller and worker outside AWS, API Gateway in front of one Fargate task that keeps all state in PostgreSQL](docs/architecture.svg)
+
+The numbered arrows are walked one by one in [docs/architecture.md](docs/architecture.md), with the component table, the trust and data boundaries, and where each guarantee is proven.
+
 ## Walk through a crash
 
 [`scripts/demo-crash.sh`](scripts/demo-crash.sh) does what the first section described, with a real server, a real worker and a real database. The evidence page is [crash.md](docs/evidence/crash.md).
